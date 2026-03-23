@@ -12,15 +12,15 @@ public class PlayerHealth : MonoBehaviour
     [Header("UI References")]
     public Slider playerHPProgressBar;
     public TextMeshProUGUI hpText;
-    public GameObject gameOverPanel; 
+    public GameObject gameOverPanel;
 
     void Start()
     {
         currentHealth = maxHealth;
-        
-        if (gameOverPanel != null) 
+
+        if (gameOverPanel != null)
             gameOverPanel.SetActive(false);
-        
+
         UpdateUI();
     }
 
@@ -52,6 +52,11 @@ public class PlayerHealth : MonoBehaviour
             currentHealth = maxHealth;
         }
 
+        if (FXManager.instance != null)
+        {
+            FXManager.instance.SpawnHealText(amount); // Створюємо текст з цифрою heal
+        }
+
         Debug.Log("Гравець підібрав зілля! Поточне здоров'я: " + currentHealth);
         UpdateUI();
     }
@@ -70,7 +75,7 @@ public class PlayerHealth : MonoBehaviour
             hpText.text = currentHealth + " / " + maxHealth;
         }
     }
-    
+
     void Die()
     {
         isDead = true;
@@ -89,7 +94,7 @@ public class PlayerHealth : MonoBehaviour
 
     public void RestartGame()
     {
-        Time.timeScale = 1f; 
+        Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }

@@ -17,7 +17,7 @@ public class PlayerCombat : MonoBehaviour
     [Header("Ranged Settings (Bow)")]
     public GameObject arrowPrefab;
     public float arrowForce = 15f;
-    
+
     [Header("Bow Attack Speed")]
     public float bowCooldown = 0.7f; // Затримка для лука
     private float lastShootTime;     // Час останнього пострілу
@@ -29,7 +29,7 @@ public class PlayerCombat : MonoBehaviour
 
     public void Attack()
     {
-        if (weaponManager == null) 
+        if (weaponManager == null)
         {
             MeleeAttack();
             return;
@@ -68,7 +68,7 @@ public class PlayerCombat : MonoBehaviour
             if (boss != null)
             {
                 boss.TakeDamage(attackDamage);
-                continue; 
+                continue;
             }
 
             // 2. Якщо не Бос, перевіряємо, чи це звичайний ворог
@@ -76,9 +76,9 @@ public class PlayerCombat : MonoBehaviour
             if (enemyHealth != null)
             {
                 Vector3 direction = enemy.transform.position - transform.position;
-                direction.z = 0; 
+                direction.z = 0;
                 Vector2 knockbackDirection = direction.normalized;
-                
+
                 enemyHealth.TakeDamage(attackDamage, knockbackDirection, knockbackForce);
             }
         }
@@ -90,14 +90,17 @@ public class PlayerCombat : MonoBehaviour
 
         // Створюємо стрілу
         GameObject arrow = Instantiate(arrowPrefab, attackPoint.position, Quaternion.identity);
-        
+
         // Визначаємо напрямок
         float direction = transform.localScale.x > 0 ? 1f : -1f;
-        
+
         // Повертаємо стрілу
-        if (direction < 0) {
+        if (direction < 0)
+        {
             arrow.transform.rotation = Quaternion.Euler(0, 0, 180);
-        } else {
+        }
+        else
+        {
             arrow.transform.rotation = Quaternion.Euler(0, 0, 0);
         }
     }

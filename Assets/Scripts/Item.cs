@@ -7,4 +7,5 @@ public class Item : ScriptableObject
     public Sprite icon;
     public bool isStackable; // Чи можна збирати в пачку?
     public int maxStackSize = 10; // Максимум в одній клітинці
+    public int healValue = 20; // Значення за замовчуванням
 }

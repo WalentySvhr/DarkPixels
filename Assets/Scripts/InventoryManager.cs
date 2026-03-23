@@ -38,22 +38,28 @@ public class InventoryManager : MonoBehaviour
     }
     public void UseItemFromHotbar(Item item)
     {
-        // Шукаємо пачку з цим предметом
         ItemStack stack = items.Find(s => s.item == item);
 
         if (stack != null)
         {
-            Debug.Log("Герой випив зілля!");
-            // Тут додай логіку лікування, наприклад: playerHealth += 20;
+            // Звертаємося до твого скрипта PlayerHealth
+            PlayerHealth health = GetComponent<PlayerHealth>();
 
-            stack.amount--; // Зменшуємо кількість
-
-            if (stack.amount <= 0)
+            if (health != null)
             {
-                items.Remove(stack); // Видаляємо, якщо закінчилися
-            }
+                // Викликаємо метод Heal, який ти написав
+                // Можна додати в клас Item змінну healAmount, щоб різні зілля лікували по-різному
+                health.Heal(item.healValue);
 
-            if (inventoryUI != null) inventoryUI.UpdateUI();
+                stack.amount--;
+
+                if (stack.amount <= 0)
+                {
+                    items.Remove(stack);
+                }
+
+                if (inventoryUI != null) inventoryUI.UpdateUI();
+            }
         }
     }
 

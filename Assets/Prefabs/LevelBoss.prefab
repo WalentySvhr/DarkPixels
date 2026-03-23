@@ -127,10 +127,11 @@ GameObject:
   - component: {fileID: 2643674788647358640}
   - component: {fileID: 62583084757316047}
   - component: {fileID: 4808881834341311163}
-  - component: {fileID: -6481726668796630062}
-  - component: {fileID: 3673814511248371614}
-  - component: {fileID: -2078950566914092580}
-  - component: {fileID: 8805847888550438822}
+  - component: {fileID: 7976484479679944355}
+  - component: {fileID: 890970222331804355}
+  - component: {fileID: 4079034309422000265}
+  - component: {fileID: 6041047648775912523}
+  - component: {fileID: 8877306364734169613}
   m_Layer: 7
   m_Name: LevelBoss
   m_TagString: Enemy
@@ -240,7 +241,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
@@ -283,7 +284,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 7
---- !u!114 &-6481726668796630062
+--- !u!114 &7976484479679944355
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -292,13 +293,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 3030369404721306917}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7bdc9c3c76dcfb44ebf61fc8ec20e33e, type: 3}
+  m_Script: {fileID: 11500000, guid: 28f41ca183f84a64ebaf5556d3f7474d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 2
-  checkRadius: 5
-  isAggroedByDamage: 0
---- !u!114 &3673814511248371614
+  player: {fileID: 0}
+  attackRange: 3
+  attackCooldown: 2
+--- !u!114 &890970222331804355
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -307,31 +308,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 3030369404721306917}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 35c825bdc2e2da64292516af9002c60a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  itemToDrop: {fileID: 7565567695131184125, guid: cf2393411c1a440429e970d17ae75d66, type: 3}
-  dropChance: 100
-  minAmount: 10
-  maxAmount: 50
-  spreadRadius: 0.5
---- !u!114 &-2078950566914092580
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3030369404721306917}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8d577340cbf292242a84482ade4964fc, type: 3}
+  m_Script: {fileID: 11500000, guid: 9f5b5a95805559d4392e9472ac99ca74, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 500
   hpSlider: {fileID: 8067477300563951488}
   hpText: {fileID: 4837955086482556561}
-  damagePopupPrefab: {fileID: 7565567695131184125, guid: cf2393411c1a440429e970d17ae75d66, type: 3}
---- !u!114 &8805847888550438822
+  exitDoor: {fileID: 0}
+--- !u!114 &4079034309422000265
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -340,16 +324,50 @@ MonoBehaviour:
   m_GameObject: {fileID: 3030369404721306917}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4828c96daf083a44db952d5a438cd14d, type: 3}
+  m_Script: {fileID: 11500000, guid: 68988bbf0fab0be4bacc9f3bad2f429d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attackDamage: 30
-  attackRange: 5
+  lootTable:
+  - name: Coin
+    itemPrefab: {fileID: 7565567695131184125, guid: cf2393411c1a440429e970d17ae75d66, type: 3}
+    dropChance: 100
+    minAmount: 10
+    maxAmount: 30
+  victoryEffect: {fileID: 0}
+--- !u!114 &6041047648775912523
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3030369404721306917}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6da9dab9674a9b645bac5ba964cca803, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attackRange: 10
+  attackDamage: 20
   attackCooldown: 2
-  attackPoint: {fileID: 2086776719420255107}
+  player: {fileID: 0}
   playerLayer:
     serializedVersion: 2
     m_Bits: 64
+--- !u!114 &8877306364734169613
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3030369404721306917}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6dfc45a671660ac4781affee9f0b1d42, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  minForce: 4
+  maxForce: 7
+  linearDamping: 3
 --- !u!1 &3614067962984975996
 GameObject:
   m_ObjectHideFlags: 0

@@ -3,18 +3,26 @@ using UnityEngine;
 public class LootDropper : MonoBehaviour
 {
     [System.Serializable]
-    public class Loot {
+    public class Loot
+    {
         public string name;
         public GameObject prefab;
-        [Range(0f, 100f)]
-        public float dropChance;
-        
-        [Header("Quantity")]
-        public int minAmount = 1; // Мінімальна кількість
-        public int maxAmount = 1; // Максимальна кількість
+        [Range(0f, 100f)] public float dropChance;
+        public int minAmount = 1;
+        public int maxAmount = 1;
     }
 
     public Loot[] possibleLoot;
+    private LootPhysics lootPhysics;
+
+    void Awake()
+    {
+        // Шукаємо компонент фізики на цьому ж об'єкті
+        lootPhysics = GetComponent<LootPhysics>();
+
+        // Якщо забули додати в інспекторі — додаємо автоматично
+        if (lootPhysics == null) lootPhysics = gameObject.AddComponent<LootPhysics>();
+    }
 
     public void DropLoot()
     {
@@ -25,15 +33,15 @@ public class LootDropper : MonoBehaviour
             float roll = Random.Range(0f, 100f);
             if (roll <= item.dropChance)
             {
-                // Визначаємо кількість для цього конкретного предмета
                 int amountToDrop = Random.Range(item.minAmount, item.maxAmount + 1);
 
-                // Створюємо вказану кількість предметів
                 for (int i = 0; i < amountToDrop; i++)
                 {
-                    // Додаємо невеликий випадковий зсув (offset), щоб предмети не злипалися в одній точці
-                    Vector3 randomOffset = new Vector3(Random.Range(-0.3f, 0.3f), Random.Range(-0.3f, 0.3f), 0);
-                    Instantiate(item.prefab, transform.position + randomOffset, Quaternion.identity);
+                    // Спавнимо об'єкт
+                    GameObject droppedItem = Instantiate(item.prefab, transform.position, Quaternion.identity);
+
+                    // Передаємо його скрипту фізики для розльоту
+                    lootPhysics.ApplyExplosion(droppedItem);
                 }
             }
         }

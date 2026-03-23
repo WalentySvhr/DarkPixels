@@ -15,7 +15,11 @@ public class EnemyHealth : MonoBehaviour
     public TextMeshProUGUI hpText;
 
     [Header("Effects")]
-    public GameObject damagePopupPrefab; 
+    public GameObject damagePopupPrefab;
+
+    [Header("Spawn Context")]
+    // Сюди спавнер сам запише себе при створенні ворога
+    public BoxAreaSpawner mySpawner;
 
     private LootDropper lootDropper;
 
@@ -37,7 +41,7 @@ public class EnemyHealth : MonoBehaviour
 
     public void TakeDamage(int damage, Vector2 knockbackDirection, float force)
     {
-        if (isDead) return; 
+        if (isDead) return;
 
         currentHealth -= damage;
         if (currentHealth < 0) currentHealth = 0;
@@ -45,11 +49,9 @@ public class EnemyHealth : MonoBehaviour
         UpdateHealthUI();
 
         EnemyAI ai = GetComponent<EnemyAI>();
-        if (ai != null) ai.isAggroedByDamage = true; 
+        if (ai != null) ai.isAggroedByDamage = true;
 
         SpawnDamagePopup(damage);
-        
-        // StunRoutine() прибрано, щоб вороги не зупинялися при ударі
 
         if (currentHealth <= 0)
         {
@@ -77,17 +79,22 @@ public class EnemyHealth : MonoBehaviour
     {
         if (isDead) return;
         isDead = true;
-        
-        // Зупиняємо всі активні корутини (наприклад, якщо якісь ще працювали)
+
         StopAllCoroutines();
-        
+
+        // ПОВІДОМЛЯЄМО СПАВНЕР, ЩО МІСЦЕ ВІЛЬНЕ
+        if (mySpawner != null)
+        {
+            mySpawner.EnemyDied();
+        }
+
         if (LevelManager.Instance != null) LevelManager.Instance.UnregisterEnemy();
 
-        if (lootDropper != null) 
+        if (lootDropper != null)
         {
             lootDropper.DropLoot();
         }
-        
+
         Destroy(gameObject);
     }
 }

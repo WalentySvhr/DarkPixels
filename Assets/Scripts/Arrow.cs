@@ -11,13 +11,13 @@ public class Arrow : MonoBehaviour
         Rigidbody2D rb = GetComponent<Rigidbody2D>();
         // Важливо: переконайся, що в інспекторі стріли Rigidbody2D не має гравітації (Gravity Scale = 0)
         rb.linearVelocity = transform.right * speed;
-        
+
         Destroy(gameObject, lifeTime);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        // 1. ПЕРЕВІРКА НА БОСА
+        // 1.ПЕРЕВІРКА НА БОСА
         BossHealth boss = collision.GetComponent<BossHealth>();
         if (boss != null)
         {
