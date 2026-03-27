@@ -15,7 +15,7 @@ D:/GameDev/Brotato
 -logFile
 Logs/AssetImportWorker3.log
 -srvPort
-51282
+58302
 -job-worker-count
 5
 -background-job-worker-count
@@ -59,12 +59,12 @@ D:/GameDev/Brotato
     "memorysetup-temp-allocator-size-gi-baking-worker=262144"
     "memorysetup-temp-allocator-size-gi-baking-worker=262144"
     "memorysetup-temp-allocator-size-gfx=262144"
-Player connection [17584]  Target information:
+Player connection [20864]  Target information:
 
-Player connection [17584]  * "[IP] 192.168.0.28 [Port] 0 [Flags] 2 [Guid] 3421053455 [EditorId] 3421053455 [Version] 1048832 [Id] WindowsEditor(7,DESKTOP-4DD92S9) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" 
+Player connection [20864]  * "[IP] 192.168.0.28 [Port] 0 [Flags] 2 [Guid] 3409431814 [EditorId] 3409431814 [Version] 1048832 [Id] WindowsEditor(7,DESKTOP-4DD92S9) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" 
 
-Player connection [17584] Host joined multi-casting on [225.0.0.222:54997]...
-Player connection [17584] Host joined alternative multi-casting on [225.0.0.222:34997]...
+Player connection [20864] Host joined multi-casting on [225.0.0.222:54997]...
+Player connection [20864] Host joined alternative multi-casting on [225.0.0.222:34997]...
 JobSystem: Creating JobQueue using job-worker-count value 5
 Input System module state changed to: Initialized.
 [Physics::Module] Initialized fallback backend.
@@ -76,7 +76,7 @@ Library Redirect Path: Library/
 [Physics::Module] SDK Version: 4.1.2
 [Physics::Module] Integration Version: 1.0.0
 [Physics::Module] Threading Mode: Multi-Threaded
-Refreshing native plugins compatible for Editor in 5.06 ms, found 4 plugins.
+Refreshing native plugins compatible for Editor in 5.10 ms, found 4 plugins.
 Preloading 0 native plugins for Editor in 0.00 ms.
 Initialize engine version: 6000.0.40f1 (157d81624ddf)
 [Subsystems] Discovering subsystems at path D:/Unity/6000.0.40f1/Editor/Data/Resources/UnitySubsystems
@@ -93,48 +93,48 @@ Initialize mono
 Mono path[0] = 'D:/Unity/6000.0.40f1/Editor/Data/Managed'
 Mono path[1] = 'D:/Unity/6000.0.40f1/Editor/Data/MonoBleedingEdge/lib/mono/unityjit-win32'
 Mono config path = 'D:/Unity/6000.0.40f1/Editor/Data/MonoBleedingEdge/etc'
-Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56864
+Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56532
 Begin MonoManager ReloadAssembly
 Registering precompiled unity dll's ...
 Register platform support module: D:/Unity/6000.0.40f1/Editor/Data/PlaybackEngines/WebGLSupport/UnityEditor.WebGL.Extensions.dll
 Register platform support module: D:/Unity/6000.0.40f1/Editor/Data/PlaybackEngines/WindowsStandaloneSupport/UnityEditor.WindowsStandalone.Extensions.dll
 Register platform support module: D:/Unity/6000.0.40f1/Editor/Data/PlaybackEngines/AndroidPlayer/UnityEditor.Android.Extensions.dll
-Registered in 0.005887 seconds.
-- Loaded All Assemblies, in  0.546 seconds
+Registered in 0.008353 seconds.
+- Loaded All Assemblies, in  0.644 seconds
 Native extension for Android target not found
-Android Extension - Scanning For ADB Devices 294 ms
+Android Extension - Scanning For ADB Devices 379 ms
 Native extension for WindowsStandalone target not found
 Native extension for WebGL target not found
 Mono: successfully reloaded assembly
-- Finished resetting the current domain, in  0.817 seconds
-Domain Reload Profiling: 1362ms
-	BeginReloadAssembly (173ms)
+- Finished resetting the current domain, in  0.925 seconds
+Domain Reload Profiling: 1567ms
+	BeginReloadAssembly (191ms)
 		ExecutionOrderSort (0ms)
 		DisableScriptedObjects (0ms)
 		BackupInstance (0ms)
 		ReleaseScriptingObjects (0ms)
 		CreateAndSetChildDomain (1ms)
-	RebuildCommonClasses (61ms)
-	RebuildNativeTypeToScriptingClass (18ms)
-	initialDomainReloadingComplete (65ms)
-	LoadAllAssembliesAndSetupDomain (227ms)
-		LoadAssemblies (174ms)
+	RebuildCommonClasses (60ms)
+	RebuildNativeTypeToScriptingClass (20ms)
+	initialDomainReloadingComplete (72ms)
+	LoadAllAssembliesAndSetupDomain (300ms)
+		LoadAssemblies (193ms)
 		RebuildTransferFunctionScriptingTraits (0ms)
-		AnalyzeDomain (221ms)
-			TypeCache.Refresh (219ms)
-				TypeCache.ScanAssembly (203ms)
+		AnalyzeDomain (292ms)
+			TypeCache.Refresh (290ms)
+				TypeCache.ScanAssembly (265ms)
 			BuildScriptInfoCaches (0ms)
 			ResolveRequiredComponents (1ms)
-	FinalizeReload (817ms)
+	FinalizeReload (925ms)
 		ReleaseScriptCaches (0ms)
 		RebuildScriptCaches (0ms)
-		SetupLoadedEditorAssemblies (755ms)
+		SetupLoadedEditorAssemblies (846ms)
 			LogAssemblyErrors (0ms)
-			InitializePlatformSupportModulesInManaged (442ms)
+			InitializePlatformSupportModulesInManaged (547ms)
 			SetLoadedEditorAssemblies (5ms)
-			BeforeProcessingInitializeOnLoad (69ms)
-			ProcessInitializeOnLoadAttributes (156ms)
-			ProcessInitializeOnLoadMethodAttributes (82ms)
+			BeforeProcessingInitializeOnLoad (73ms)
+			ProcessInitializeOnLoadAttributes (143ms)
+			ProcessInitializeOnLoadMethodAttributes (77ms)
 			AfterProcessingInitializeOnLoad (0ms)
 			EditorAssembliesLoaded (0ms)
 		ExecutionOrderSort2 (0ms)
@@ -143,1274 +143,391 @@ Domain Reload Profiling: 1362ms
 Worker process is ready to serve import requests
 Import Worker Mode flag is 0x00
 Begin MonoManager ReloadAssembly
-Duplicate assembly 'log4net.dll' with different versions detected, using 'Packages/com.unity.package-validation-suite/Lib/Editor/log4net.dll, AssemblyName=log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a' and ignoring 'Packages/com.unity.collab-proxy/Lib/Editor/log4netPlastic.dll, AssemblyName=log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a'.- Loaded All Assemblies, in  1.096 seconds
-Refreshing native plugins compatible for Editor in 2.49 ms, found 4 plugins.
+Duplicate assembly 'log4net.dll' with different versions detected, using 'Packages/com.unity.package-validation-suite/Lib/Editor/log4net.dll, AssemblyName=log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a' and ignoring 'Packages/com.unity.collab-proxy/Lib/Editor/log4netPlastic.dll, AssemblyName=log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a'.- Loaded All Assemblies, in  1.128 seconds
+Refreshing native plugins compatible for Editor in 2.86 ms, found 4 plugins.
 Native extension for Android target not found
 Native extension for WindowsStandalone target not found
 Native extension for WebGL target not found
 Mono: successfully reloaded assembly
-- Finished resetting the current domain, in  1.100 seconds
-Domain Reload Profiling: 2194ms
-	BeginReloadAssembly (224ms)
+- Finished resetting the current domain, in  1.086 seconds
+Domain Reload Profiling: 2212ms
+	BeginReloadAssembly (236ms)
 		ExecutionOrderSort (0ms)
-		DisableScriptedObjects (11ms)
+		DisableScriptedObjects (8ms)
 		BackupInstance (0ms)
 		ReleaseScriptingObjects (0ms)
-		CreateAndSetChildDomain (39ms)
-	RebuildCommonClasses (51ms)
+		CreateAndSetChildDomain (37ms)
+	RebuildCommonClasses (54ms)
 	RebuildNativeTypeToScriptingClass (17ms)
-	initialDomainReloadingComplete (50ms)
-	LoadAllAssembliesAndSetupDomain (751ms)
-		LoadAssemblies (491ms)
+	initialDomainReloadingComplete (52ms)
+	LoadAllAssembliesAndSetupDomain (767ms)
+		LoadAssemblies (508ms)
 		RebuildTransferFunctionScriptingTraits (0ms)
-		AnalyzeDomain (391ms)
-			TypeCache.Refresh (289ms)
-				TypeCache.ScanAssembly (269ms)
+		AnalyzeDomain (403ms)
+			TypeCache.Refresh (301ms)
+				TypeCache.ScanAssembly (278ms)
 			BuildScriptInfoCaches (79ms)
-			ResolveRequiredComponents (19ms)
-	FinalizeReload (1101ms)
+			ResolveRequiredComponents (18ms)
+	FinalizeReload (1086ms)
 		ReleaseScriptCaches (0ms)
 		RebuildScriptCaches (0ms)
-		SetupLoadedEditorAssemblies (879ms)
+		SetupLoadedEditorAssemblies (873ms)
 			LogAssemblyErrors (0ms)
 			InitializePlatformSupportModulesInManaged (16ms)
 			SetLoadedEditorAssemblies (4ms)
-			BeforeProcessingInitializeOnLoad (145ms)
-			ProcessInitializeOnLoadAttributes (558ms)
-			ProcessInitializeOnLoadMethodAttributes (152ms)
-			AfterProcessingInitializeOnLoad (3ms)
+			BeforeProcessingInitializeOnLoad (143ms)
+			ProcessInitializeOnLoadAttributes (541ms)
+			ProcessInitializeOnLoadMethodAttributes (165ms)
+			AfterProcessingInitializeOnLoad (4ms)
 			EditorAssembliesLoaded (0ms)
 		ExecutionOrderSort2 (0ms)
 		AwakeInstancesAfterBackupRestoration (7ms)
 Shader Hidden/ProbeVolume/VoxelizeScene is not supported: GPU does not support conservative rasterization
 Launched and connected shader compiler UnityShaderCompiler.exe after 0.01 seconds
-Refreshing native plugins compatible for Editor in 2.51 ms, found 4 plugins.
+Refreshing native plugins compatible for Editor in 2.80 ms, found 4 plugins.
 Preloading 0 native plugins for Editor in 0.00 ms.
-Unloading 225 Unused Serialized files (Serialized files now loaded: 0)
-Unloading 7173 unused Assets / (6.5 MB). Loaded Objects now: 7884.
-Memory consumption went from 199.5 MB to 193.0 MB.
-Total: 11.208200 ms (FindLiveObjects: 0.988200 ms CreateObjectMapping: 0.525200 ms MarkObjects: 6.129600 ms  DeleteObjects: 3.563900 ms)
+Unloading 224 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 7170 unused Assets / (6.7 MB). Loaded Objects now: 7880.
+Memory consumption went from 197.3 MB to 190.6 MB.
+Total: 12.792600 ms (FindLiveObjects: 1.083400 ms CreateObjectMapping: 0.672500 ms MarkObjects: 6.409700 ms  DeleteObjects: 4.625500 ms)
 
 ========================================================================
 Received Prepare
 Begin MonoManager ReloadAssembly
-Duplicate assembly 'log4net.dll' with different versions detected, using 'Packages/com.unity.package-validation-suite/Lib/Editor/log4net.dll, AssemblyName=log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a' and ignoring 'Packages/com.unity.collab-proxy/Lib/Editor/log4netPlastic.dll, AssemblyName=log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a'.- Loaded All Assemblies, in  1.054 seconds
-Refreshing native plugins compatible for Editor in 2.56 ms, found 4 plugins.
+Duplicate assembly 'log4net.dll' with different versions detected, using 'Packages/com.unity.package-validation-suite/Lib/Editor/log4net.dll, AssemblyName=log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a' and ignoring 'Packages/com.unity.collab-proxy/Lib/Editor/log4netPlastic.dll, AssemblyName=log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a'.- Loaded All Assemblies, in  1.165 seconds
+Refreshing native plugins compatible for Editor in 2.52 ms, found 4 plugins.
 Native extension for Android target not found
 Native extension for WindowsStandalone target not found
 Native extension for WebGL target not found
 Mono: successfully reloaded assembly
-- Finished resetting the current domain, in  1.130 seconds
-Domain Reload Profiling: 2186ms
-	BeginReloadAssembly (275ms)
-		ExecutionOrderSort (0ms)
-		DisableScriptedObjects (19ms)
-		BackupInstance (0ms)
-		ReleaseScriptingObjects (0ms)
-		CreateAndSetChildDomain (62ms)
-	RebuildCommonClasses (60ms)
-	RebuildNativeTypeToScriptingClass (21ms)
-	initialDomainReloadingComplete (36ms)
-	LoadAllAssembliesAndSetupDomain (664ms)
-		LoadAssemblies (519ms)
-		RebuildTransferFunctionScriptingTraits (0ms)
-		AnalyzeDomain (287ms)
-			TypeCache.Refresh (9ms)
-				TypeCache.ScanAssembly (0ms)
-			BuildScriptInfoCaches (256ms)
-			ResolveRequiredComponents (18ms)
-	FinalizeReload (1130ms)
-		ReleaseScriptCaches (0ms)
-		RebuildScriptCaches (0ms)
-		SetupLoadedEditorAssemblies (816ms)
-			LogAssemblyErrors (0ms)
-			InitializePlatformSupportModulesInManaged (16ms)
-			SetLoadedEditorAssemblies (5ms)
-			BeforeProcessingInitializeOnLoad (159ms)
-			ProcessInitializeOnLoadAttributes (538ms)
-			ProcessInitializeOnLoadMethodAttributes (94ms)
-			AfterProcessingInitializeOnLoad (3ms)
-			EditorAssembliesLoaded (0ms)
-		ExecutionOrderSort2 (0ms)
-		AwakeInstancesAfterBackupRestoration (21ms)
-Shader Hidden/ProbeVolume/VoxelizeScene is not supported: GPU does not support conservative rasterization
-Refreshing native plugins compatible for Editor in 3.75 ms, found 4 plugins.
-Preloading 0 native plugins for Editor in 0.00 ms.
-Unloading 31 Unused Serialized files (Serialized files now loaded: 0)
-Unloading 7172 unused Assets / (7.1 MB). Loaded Objects now: 7888.
-Memory consumption went from 169.2 MB to 162.1 MB.
-Total: 16.192000 ms (FindLiveObjects: 1.083600 ms CreateObjectMapping: 0.765100 ms MarkObjects: 8.306000 ms  DeleteObjects: 6.035500 ms)
-
-Prepare: number of updated asset objects reloaded= 0
-========================================================================
-Received Prepare
-Begin MonoManager ReloadAssembly
-Duplicate assembly 'log4net.dll' with different versions detected, using 'Packages/com.unity.package-validation-suite/Lib/Editor/log4net.dll, AssemblyName=log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a' and ignoring 'Packages/com.unity.collab-proxy/Lib/Editor/log4netPlastic.dll, AssemblyName=log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a'.- Loaded All Assemblies, in  1.075 seconds
-Refreshing native plugins compatible for Editor in 2.69 ms, found 4 plugins.
-Native extension for Android target not found
-Native extension for WindowsStandalone target not found
-Native extension for WebGL target not found
-Mono: successfully reloaded assembly
-- Finished resetting the current domain, in  1.045 seconds
-Domain Reload Profiling: 2123ms
-	BeginReloadAssembly (292ms)
+- Finished resetting the current domain, in  1.243 seconds
+Domain Reload Profiling: 2411ms
+	BeginReloadAssembly (290ms)
 		ExecutionOrderSort (0ms)
 		DisableScriptedObjects (19ms)
 		BackupInstance (0ms)
 		ReleaseScriptingObjects (0ms)
 		CreateAndSetChildDomain (71ms)
-	RebuildCommonClasses (60ms)
-	RebuildNativeTypeToScriptingClass (19ms)
-	initialDomainReloadingComplete (35ms)
-	LoadAllAssembliesAndSetupDomain (671ms)
-		LoadAssemblies (540ms)
+	RebuildCommonClasses (51ms)
+	RebuildNativeTypeToScriptingClass (20ms)
+	initialDomainReloadingComplete (34ms)
+	LoadAllAssembliesAndSetupDomain (772ms)
+		LoadAssemblies (544ms)
 		RebuildTransferFunctionScriptingTraits (0ms)
-		AnalyzeDomain (278ms)
-			TypeCache.Refresh (8ms)
+		AnalyzeDomain (375ms)
+			TypeCache.Refresh (9ms)
 				TypeCache.ScanAssembly (0ms)
-			BuildScriptInfoCaches (249ms)
-			ResolveRequiredComponents (18ms)
-	FinalizeReload (1046ms)
+			BuildScriptInfoCaches (321ms)
+			ResolveRequiredComponents (39ms)
+	FinalizeReload (1244ms)
 		ReleaseScriptCaches (0ms)
 		RebuildScriptCaches (0ms)
-		SetupLoadedEditorAssemblies (758ms)
+		SetupLoadedEditorAssemblies (886ms)
 			LogAssemblyErrors (0ms)
-			InitializePlatformSupportModulesInManaged (16ms)
+			InitializePlatformSupportModulesInManaged (19ms)
 			SetLoadedEditorAssemblies (4ms)
-			BeforeProcessingInitializeOnLoad (140ms)
-			ProcessInitializeOnLoadAttributes (503ms)
-			ProcessInitializeOnLoadMethodAttributes (88ms)
+			BeforeProcessingInitializeOnLoad (184ms)
+			ProcessInitializeOnLoadAttributes (579ms)
+			ProcessInitializeOnLoadMethodAttributes (94ms)
 			AfterProcessingInitializeOnLoad (5ms)
 			EditorAssembliesLoaded (1ms)
 		ExecutionOrderSort2 (0ms)
-		AwakeInstancesAfterBackupRestoration (15ms)
+		AwakeInstancesAfterBackupRestoration (19ms)
 Shader Hidden/ProbeVolume/VoxelizeScene is not supported: GPU does not support conservative rasterization
-Refreshing native plugins compatible for Editor in 3.42 ms, found 4 plugins.
+Refreshing native plugins compatible for Editor in 3.51 ms, found 4 plugins.
 Preloading 0 native plugins for Editor in 0.00 ms.
 Unloading 31 Unused Serialized files (Serialized files now loaded: 0)
-Unloading 7172 unused Assets / (6.1 MB). Loaded Objects now: 7891.
-Memory consumption went from 169.2 MB to 163.0 MB.
-Total: 13.749000 ms (FindLiveObjects: 1.054300 ms CreateObjectMapping: 0.688000 ms MarkObjects: 7.463000 ms  DeleteObjects: 4.542300 ms)
+Unloading 7169 unused Assets / (6.9 MB). Loaded Objects now: 7884.
+Memory consumption went from 169.1 MB to 162.2 MB.
+Total: 21.608700 ms (FindLiveObjects: 1.475600 ms CreateObjectMapping: 2.890400 ms MarkObjects: 10.140300 ms  DeleteObjects: 7.100400 ms)
 
 Prepare: number of updated asset objects reloaded= 0
 ========================================================================
 Received Import Request.
-  Time since last request: 5388.368471 seconds.
-  path: Assets/Prefabs/Enemy_Slime.prefab
-  artifactKey: Guid(67346f887439c4a438fea372fd851ab1) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Prefabs/Enemy_Slime.prefab using Guid(67346f887439c4a438fea372fd851ab1) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'fae4ed08bf0574403b60826904209d70') in 0.7181455 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 84
-
-========================================================================
-Received Import Request.
-  Time since last request: 226.268644 seconds.
-  path: Assets/Resources/Items_Level/roguelikeSheet_transparent_38.asset
-  artifactKey: Guid(9dd1345f0e64ce744ac747f4c53d1002) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Items_Level/roguelikeSheet_transparent_38.asset using Guid(9dd1345f0e64ce744ac747f4c53d1002) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'bcdb611cb1fdea87b96b07df2f7610cb') in 0.060052 seconds
+  Time since last request: 18667.636891 seconds.
+  path: Assets/Resources/Items_Level/roguelikeSheet_transparent_0.asset
+  artifactKey: Guid(e2bf854dab20d5e41bd8e4ca3a5cc31b) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Items_Level/roguelikeSheet_transparent_0.asset using Guid(e2bf854dab20d5e41bd8e4ca3a5cc31b) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '9be52659a154a9e3edd6acae564f919f') in 0.1350415 seconds
 Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
 
 ========================================================================
 Received Import Request.
-  Time since last request: 0.000050 seconds.
-  path: Assets/Resources/Items_Level/roguelikeSheet_transparent_42.asset
-  artifactKey: Guid(21bc6b21a3e45704c88605a6938c45fd) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Items_Level/roguelikeSheet_transparent_42.asset using Guid(21bc6b21a3e45704c88605a6938c45fd) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '2d0b6d96b78c78e62c5d78134447d3c5') in 0.0260293 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000054 seconds.
-  path: Assets/Resources/Items_Level/roguelikeSheet_transparent_49.asset
-  artifactKey: Guid(34c508dc36484814fa931d8909733500) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Items_Level/roguelikeSheet_transparent_49.asset using Guid(34c508dc36484814fa931d8909733500) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '08f8064324afb98c03218c9e848a8740') in 0.0215904 seconds
+  Time since last request: 0.000027 seconds.
+  path: Assets/Resources/Items_Level/roguelikeSheet_transparent_26.asset
+  artifactKey: Guid(2c8309d750e037146827b37d0452b1e0) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Items_Level/roguelikeSheet_transparent_26.asset using Guid(2c8309d750e037146827b37d0452b1e0) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '91af0a4979a45c2a1cca4711b0ad97a5') in 0.0103619 seconds
 Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
 
 ========================================================================
 Received Import Request.
   Time since last request: 0.000038 seconds.
-  path: Assets/Resources/Items_Level/roguelikeSheet_transparent_55.asset
-  artifactKey: Guid(a0a293f515e5cd845b6ff16017de7553) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Items_Level/roguelikeSheet_transparent_55.asset using Guid(a0a293f515e5cd845b6ff16017de7553) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '59cbe0f2dfd0d50bdf337413710e99d3') in 0.0195146 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000029 seconds.
-  path: Assets/Resources/Items_Level/roguelikeSheet_transparent_46.asset
-  artifactKey: Guid(30a445b633181f24fb39ebf9b5918f06) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Items_Level/roguelikeSheet_transparent_46.asset using Guid(30a445b633181f24fb39ebf9b5918f06) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'a40840a87ca17ac4b15f7b276d31a996') in 0.0229407 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000032 seconds.
-  path: Assets/Resources/Items_Level/roguelikeSheet_transparent_50.asset
-  artifactKey: Guid(4e91f09ae5d8af4489098220521b624a) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Items_Level/roguelikeSheet_transparent_50.asset using Guid(4e91f09ae5d8af4489098220521b624a) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '04549d1ef7587c822948931cad601465') in 0.0202183 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000043 seconds.
-  path: Assets/Resources/Items_Level/roguelikeSheet_transparent_41.asset
-  artifactKey: Guid(c6a647c99711a6a4eabf19a878cfa284) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Items_Level/roguelikeSheet_transparent_41.asset using Guid(c6a647c99711a6a4eabf19a878cfa284) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '22efac0c4c88597b195638758026a309') in 0.0207393 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000029 seconds.
-  path: Assets/Resources/Items_Level/roguelikeSheet_transparent_40.asset
-  artifactKey: Guid(c820c251d647e7a4792c1d92c60bd34a) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Items_Level/roguelikeSheet_transparent_40.asset using Guid(c820c251d647e7a4792c1d92c60bd34a) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '20da6aa038ca29e1cc3dbd5756ba63f2') in 0.0194431 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000028 seconds.
-  path: Assets/Resources/Items_Level/roguelikeSheet_transparent_51.asset
-  artifactKey: Guid(ad3d2277c4b15b94f8d241978fc7d261) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Items_Level/roguelikeSheet_transparent_51.asset using Guid(ad3d2277c4b15b94f8d241978fc7d261) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '9094f0e351f23ec7200ddb4c155969a5') in 0.0233357 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000029 seconds.
-  path: Assets/Resources/Items_Level/roguelikeSheet_transparent_59.asset
-  artifactKey: Guid(3c88f4fb1341cf34698198d5f83aa9c9) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Items_Level/roguelikeSheet_transparent_59.asset using Guid(3c88f4fb1341cf34698198d5f83aa9c9) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '3f00a2586c401f4c799a52194c6c6a73') in 0.0185832 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000045 seconds.
-  path: Assets/Resources/Items_Level/roguelikeSheet_transparent_53.asset
-  artifactKey: Guid(c02619e41120b334c9f03a534331be1c) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Items_Level/roguelikeSheet_transparent_53.asset using Guid(c02619e41120b334c9f03a534331be1c) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '5e98cfb0eecfb554f48497cdcf7c0d34') in 0.0211671 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000029 seconds.
-  path: Assets/Resources/Items_Level/roguelikeSheet_transparent_48.asset
-  artifactKey: Guid(b0b63c70879de3f429623786689114cc) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Items_Level/roguelikeSheet_transparent_48.asset using Guid(b0b63c70879de3f429623786689114cc) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '214192fe009b68880c6968b935a6b97f') in 0.0193823 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 169.019358 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_1667.asset
-  artifactKey: Guid(cd500be443824d942b68f732b8645aca) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_1667.asset using Guid(cd500be443824d942b68f732b8645aca) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'd2590904a7d79e6286bdbd3eddd356ba') in 0.0331769 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000036 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_1668.asset
-  artifactKey: Guid(27ee379293f6019449b6be1893b25315) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_1668.asset using Guid(27ee379293f6019449b6be1893b25315) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '8c39f0447ce448037f06e6c78e674ecc') in 0.0185164 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000028 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_1676.asset
-  artifactKey: Guid(08334a911f30a5840a579c5b432612ad) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_1676.asset using Guid(08334a911f30a5840a579c5b432612ad) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '55a4527db8fa81afb201e0bdc34ab145') in 0.0201728 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000041 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_1678.asset
-  artifactKey: Guid(71611431277bbf543b555fdc0040e577) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_1678.asset using Guid(71611431277bbf543b555fdc0040e577) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '238322411f573e895d670d884f985f4f') in 0.017862 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000026 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_1680.asset
-  artifactKey: Guid(70848a9075e83d249858082f0236a49a) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_1680.asset using Guid(70848a9075e83d249858082f0236a49a) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '620fd226f16fe1d2151144130d4896d4') in 0.0158428 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000032 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_1674.asset
-  artifactKey: Guid(c3785a03c26cbb544b1f216589d18e45) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_1674.asset using Guid(c3785a03c26cbb544b1f216589d18e45) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '32c3987e9ae435918a8960b4bb534ac5') in 0.0214057 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000032 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_1677.asset
-  artifactKey: Guid(05624bbc6ef1d084580580b693f55706) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_1677.asset using Guid(05624bbc6ef1d084580580b693f55706) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'ca6995cfd467579364591223c48614cc') in 0.0153114 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000039 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_1679.asset
-  artifactKey: Guid(c5675670fd3f28b498ce182c6d98a3b9) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_1679.asset using Guid(c5675670fd3f28b498ce182c6d98a3b9) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '0cdc88d5243a1e5344efc03d7a199174') in 0.0164122 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 24.520904 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_1655.asset
-  artifactKey: Guid(494cd047b32e7284790168786ff3519b) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_1655.asset using Guid(494cd047b32e7284790168786ff3519b) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '20f3d880d56dba717822177faeb04611') in 0.018871 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000036 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_1644.asset
-  artifactKey: Guid(c2538c92f32950e4ab228765f8904c06) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_1644.asset using Guid(c2538c92f32950e4ab228765f8904c06) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '20ff753b16e4ae3da12f56fb1aceb32e') in 0.0172642 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000039 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_1637.asset
-  artifactKey: Guid(1837a2db852254f41b4acded29b5b10e) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_1637.asset using Guid(1837a2db852254f41b4acded29b5b10e) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '2671db3cd48768181c51049380f1ef47') in 0.0143271 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000025 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_1658.asset
-  artifactKey: Guid(7980cebdcec64754d8c329c36c2d266e) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_1658.asset using Guid(7980cebdcec64754d8c329c36c2d266e) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'b512aa9cd2f6f8ba975899c247c4c45b') in 0.0185786 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000030 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_1638.asset
-  artifactKey: Guid(d68c545d00ab157408647e3c1523722f) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_1638.asset using Guid(d68c545d00ab157408647e3c1523722f) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '077d92d2b43e5b287481786d8c465fe2') in 0.0164218 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000027 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_1624.asset
-  artifactKey: Guid(cb13263de4e893b46b39e521dd28338e) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_1624.asset using Guid(cb13263de4e893b46b39e521dd28338e) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'ce277ee377da76e71f002d8bce36d990') in 0.0192692 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000034 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_1595.asset
-  artifactKey: Guid(576f195db146f8144a2872c82d701dd3) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_1595.asset using Guid(576f195db146f8144a2872c82d701dd3) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'ad44fce42019224dc58ec15a99539905') in 0.015346 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000035 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_1605.asset
-  artifactKey: Guid(1a8be9829d992cc459f6fda554091617) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_1605.asset using Guid(1a8be9829d992cc459f6fda554091617) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '34d80b554293ad314d174ef39f9ba700') in 0.0171025 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000033 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_1585.asset
-  artifactKey: Guid(7700543ee6c0d4844a7057554164fe94) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_1585.asset using Guid(7700543ee6c0d4844a7057554164fe94) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '9da510878c3cb9bcf7af8e36fafec63c') in 0.0204642 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000025 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_1576.asset
-  artifactKey: Guid(ad23e992c80b7ec428626af9825b73fb) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_1576.asset using Guid(ad23e992c80b7ec428626af9825b73fb) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'd919b05daf073a6e6c689e1695456eaa') in 0.0181855 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000024 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_1565.asset
-  artifactKey: Guid(fb161197fe3ef6f4787c63bbe57c5ee4) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_1565.asset using Guid(fb161197fe3ef6f4787c63bbe57c5ee4) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'cbc0d34c62194ccfdae3ae795985f074') in 0.0172925 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000030 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_1588.asset
-  artifactKey: Guid(fc7c7be768c9b6e4a970ec4d173173be) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_1588.asset using Guid(fc7c7be768c9b6e4a970ec4d173173be) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '1a7f3981305e9419783486ebb54f5313') in 0.016879 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000037 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_1575.asset
-  artifactKey: Guid(9c1a42c3455e5ca49915ced96da83167) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_1575.asset using Guid(9c1a42c3455e5ca49915ced96da83167) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '447371ad0d42abaf822a494bac7d9d1c') in 0.0195557 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000032 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_1533.asset
-  artifactKey: Guid(93e97ea43d4c53f4283c44663a325fa9) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_1533.asset using Guid(93e97ea43d4c53f4283c44663a325fa9) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'af563f17c97855b224f2fd25cfaf509e') in 0.0211474 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000034 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_1542.asset
-  artifactKey: Guid(bdf6685b090fe4441a33724322e58126) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_1542.asset using Guid(bdf6685b090fe4441a33724322e58126) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '02b0521cffd1a3c62739782a83a8b1fb') in 0.0191248 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000031 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_1620.asset
-  artifactKey: Guid(9ba43de8a4487cd43b5b423fbcbf78fd) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_1620.asset using Guid(9ba43de8a4487cd43b5b423fbcbf78fd) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '237376adecd44bab04c20f3ba592e327') in 0.0166256 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000029 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_1572.asset
-  artifactKey: Guid(998f90f82bc98654981b5115c1738773) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_1572.asset using Guid(998f90f82bc98654981b5115c1738773) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'a58ec08e053f253a755f9f71251e7664') in 0.0175037 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000034 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_1481.asset
-  artifactKey: Guid(ec5003de9ae45774d85a6a45c9f3bd6a) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_1481.asset using Guid(ec5003de9ae45774d85a6a45c9f3bd6a) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'bb78b6cf2cb0345ec755e68b8786519f') in 0.0150966 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000027 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_1520.asset
-  artifactKey: Guid(3894d3f3ba0493b49a30ddeb6b20499a) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_1520.asset using Guid(3894d3f3ba0493b49a30ddeb6b20499a) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '98b175b46ac503158b3666a753a8110e') in 0.0155149 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000032 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_1518.asset
-  artifactKey: Guid(5e47abc9283bccb41b3ad3e1fc8e57c0) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_1518.asset using Guid(5e47abc9283bccb41b3ad3e1fc8e57c0) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'b602e2d035f99a05046b1d5f15f8651f') in 0.0166187 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000026 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_1487.asset
-  artifactKey: Guid(298cc63d9a541bb4d99f0f731b61ac5d) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_1487.asset using Guid(298cc63d9a541bb4d99f0f731b61ac5d) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'cae0d41c43d7a7d8f6dc4a652d88dcda') in 0.0166396 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000036 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_1556.asset
-  artifactKey: Guid(b1b206efc09fb8245a6cbaeee6232aa0) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_1556.asset using Guid(b1b206efc09fb8245a6cbaeee6232aa0) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '1f66b542df0c0e83f1adcbb0a3a7c1de') in 0.0165206 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000042 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_1473.asset
-  artifactKey: Guid(c19146566008a5449b7e592cd20f5c00) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_1473.asset using Guid(c19146566008a5449b7e592cd20f5c00) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '3b24c2579ec6da79732f299b13276d5d') in 0.0180362 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000022 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_1560.asset
-  artifactKey: Guid(e8e42cddb24ecd8409e3c87971579827) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_1560.asset using Guid(e8e42cddb24ecd8409e3c87971579827) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'e71f5c87ef0facc15e1d9f110e9183a9') in 0.0150594 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000027 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_1502.asset
-  artifactKey: Guid(8a1c5bbfb84dc4e45b62f1eb7c85eada) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_1502.asset using Guid(8a1c5bbfb84dc4e45b62f1eb7c85eada) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '53fb1827a4818bb56d8eaf5ba4c58c85') in 0.0157282 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000024 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_1524.asset
-  artifactKey: Guid(4ee31275fe76a7f4abbdcc87e1c279c9) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_1524.asset using Guid(4ee31275fe76a7f4abbdcc87e1c279c9) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '3c2e70f31ff3ce096210a82820b0f850') in 0.0156805 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000030 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_1466.asset
-  artifactKey: Guid(2b7e0e63dc782274ba54e0880d242c89) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_1466.asset using Guid(2b7e0e63dc782274ba54e0880d242c89) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '2e7b1383cea36a03bf7d1a83ab73a5e4') in 0.0164505 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000038 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_1519.asset
-  artifactKey: Guid(afbdb0666ea178b49a45e9b15d4c99e4) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_1519.asset using Guid(afbdb0666ea178b49a45e9b15d4c99e4) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '978cc918edc623ffeaebbe9d82366e47') in 0.0162185 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000027 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_1568.asset
-  artifactKey: Guid(96ca1c5f336627a479b37595a9e6b779) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_1568.asset using Guid(96ca1c5f336627a479b37595a9e6b779) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'd1b9eea4902f3336eba37bf210f90615') in 0.0156939 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000037 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_1529.asset
-  artifactKey: Guid(892067992a408a048ada7858e30752e3) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_1529.asset using Guid(892067992a408a048ada7858e30752e3) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '9661273cf4898e5ef2736ae87be763e2') in 0.0153873 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000024 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_1663.asset
-  artifactKey: Guid(b19e71e7d7aef81439f0933efec3639b) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_1663.asset using Guid(b19e71e7d7aef81439f0933efec3639b) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'baf081c73b606d376d9141f35ad341bf') in 0.0164726 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000038 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_1555.asset
-  artifactKey: Guid(b4642aa62dcd2274eb616591745b780f) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_1555.asset using Guid(b4642aa62dcd2274eb616591745b780f) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '3dd669df6190c9cf3cbedefd343bc6bc') in 0.0167457 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000044 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_1615.asset
-  artifactKey: Guid(761d9f30f1f67d144b9d72bf0aae8614) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_1615.asset using Guid(761d9f30f1f67d144b9d72bf0aae8614) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '43db03fcd07031d8df99fb0e368fc0a3') in 0.0158824 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000026 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_1559.asset
-  artifactKey: Guid(57239552f40a1bd4c8897d1643a7dbed) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_1559.asset using Guid(57239552f40a1bd4c8897d1643a7dbed) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '69e1d8fa5eb5a948f9035bc4f29f7fde') in 0.0158946 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000026 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_1477.asset
-  artifactKey: Guid(3b3f730ef59f1214a8c979dc668a8a81) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_1477.asset using Guid(3b3f730ef59f1214a8c979dc668a8a81) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'edd9faaff15d43277baf10a1494dd0df') in 0.0166292 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000046 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_1508.asset
-  artifactKey: Guid(58b3a9800d825074fb6357c953fe5c9d) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_1508.asset using Guid(58b3a9800d825074fb6357c953fe5c9d) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '918115d51f4d659075434c457b9128f5') in 0.0180293 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000029 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_1467.asset
-  artifactKey: Guid(beabc34c06633c1488f872f0ba73f1bc) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_1467.asset using Guid(beabc34c06633c1488f872f0ba73f1bc) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '2a50673a965652b3e621c70d7d22221a') in 0.0176472 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000037 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_1611.asset
-  artifactKey: Guid(9310eee974f1fcc4a869b07cd84e6d1c) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_1611.asset using Guid(9310eee974f1fcc4a869b07cd84e6d1c) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '0d5d14cb273e4266276848309eec23d1') in 0.0154651 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000024 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_1639.asset
-  artifactKey: Guid(7170e272793a2a64bb0ee0cf7f24aa01) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_1639.asset using Guid(7170e272793a2a64bb0ee0cf7f24aa01) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '9bae028886f3a0b1a839fe9b3e8f9125') in 0.0174892 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000036 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_1632.asset
-  artifactKey: Guid(6efdaaf0e4833b2448341c0896324c31) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_1632.asset using Guid(6efdaaf0e4833b2448341c0896324c31) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '377fdb797ec3cc176ad5fd76ab6258a1') in 0.0151963 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000029 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_1584.asset
-  artifactKey: Guid(6a1759f72ee2a334ba75b5d393b2cd7d) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_1584.asset using Guid(6a1759f72ee2a334ba75b5d393b2cd7d) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '2e6b66ae60297dbd9113b42d01cb10a8') in 0.0155899 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000034 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_1465.asset
-  artifactKey: Guid(d8222290200f22644ad1fd16406377de) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_1465.asset using Guid(d8222290200f22644ad1fd16406377de) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'c13a2c3f141d4c48182fb82ca2a07afb') in 0.015793 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000037 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_1594.asset
-  artifactKey: Guid(fc8b6287dc9164942a3f6a45d4e3302e) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_1594.asset using Guid(fc8b6287dc9164942a3f6a45d4e3302e) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '620c1971eceea3a55704abf3430ef5ab') in 0.015943 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000024 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_1497.asset
-  artifactKey: Guid(f8cedb6524f42b4439958602c5e450b1) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_1497.asset using Guid(f8cedb6524f42b4439958602c5e450b1) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'ff3e1bee7642be31c961f1421605fec4') in 0.018139 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000027 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_1525.asset
-  artifactKey: Guid(184141219e027f34bb26664b5a753ba2) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_1525.asset using Guid(184141219e027f34bb26664b5a753ba2) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '1403cb070adc77b597ade31ae329e0c7') in 0.0156823 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000031 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_1577.asset
-  artifactKey: Guid(c2db6104ec7765c4b8f3590ee81dbf79) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_1577.asset using Guid(c2db6104ec7765c4b8f3590ee81dbf79) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'd18af0985993e864105b99795b6297e8') in 0.0177316 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000032 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_1550.asset
-  artifactKey: Guid(09865c99a9d75a24292be3409b4494bf) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_1550.asset using Guid(09865c99a9d75a24292be3409b4494bf) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'ccef11251f5be4b49771a1157de211e5') in 0.0150371 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000037 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_1578.asset
-  artifactKey: Guid(028ad0675965a5143a482b0a65bb4815) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_1578.asset using Guid(028ad0675965a5143a482b0a65bb4815) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '5777984535978bd1ae61e95b23d00ef0') in 0.0182939 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000025 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_1642.asset
-  artifactKey: Guid(84f528944c2e59b438c42ff4c64fd2f3) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_1642.asset using Guid(84f528944c2e59b438c42ff4c64fd2f3) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '511cb33219ee777245ef630672d334f4') in 0.0168375 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000046 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_1485.asset
-  artifactKey: Guid(7e670de6be6ddf64fbdc48907801bb42) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_1485.asset using Guid(7e670de6be6ddf64fbdc48907801bb42) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '357ef7c36b6ad7eb308ff67b22c32c9c') in 0.0152135 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000024 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_1628.asset
-  artifactKey: Guid(17b22e4cde26094479309ad32092f9ab) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_1628.asset using Guid(17b22e4cde26094479309ad32092f9ab) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'e555b96e84a0f993ef4aeda70638f1e4') in 0.0162605 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000031 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_1645.asset
-  artifactKey: Guid(02b35e77287413242bbe76bd9c26f691) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_1645.asset using Guid(02b35e77287413242bbe76bd9c26f691) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'd680a2780360e71c72056a8b2215278e') in 0.0163242 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000036 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_1659.asset
-  artifactKey: Guid(ccefa5bf4e6220f45a48253e9eff727c) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_1659.asset using Guid(ccefa5bf4e6220f45a48253e9eff727c) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'a02dc15a54a3a053b98f51161a2a0e1b') in 0.0160383 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000028 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_1535.asset
-  artifactKey: Guid(bd7e7d5efe62c644db0feca832b46bfe) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_1535.asset using Guid(bd7e7d5efe62c644db0feca832b46bfe) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '199f7ff44383e8515f1fe14638cd9317') in 0.0172348 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000028 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_1471.asset
-  artifactKey: Guid(60ba173240f9a8648a174fd6c21542f3) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_1471.asset using Guid(60ba173240f9a8648a174fd6c21542f3) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'c0db7e0102834d37f264c72ca7202426') in 0.0153603 seconds
+  path: Assets/Resources/Items_Level/roguelikeSheet_transparent_5.asset
+  artifactKey: Guid(31145238cf0f66847a0fe17ef9d6d471) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Items_Level/roguelikeSheet_transparent_5.asset using Guid(31145238cf0f66847a0fe17ef9d6d471) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '856272e6cc89df2d267956ab0fc6b34b') in 0.0091694 seconds
 Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
 
 ========================================================================
 Received Import Request.
   Time since last request: 0.000023 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_1491.asset
-  artifactKey: Guid(28fe262ea32e33344b79ccb30914c759) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_1491.asset using Guid(28fe262ea32e33344b79ccb30914c759) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '75ca1d2c0bae1943acc5f8c04100b106') in 0.0162544 seconds
+  path: Assets/Resources/Items_Level/roguelikeSheet_transparent_29.asset
+  artifactKey: Guid(ca809d42f7905414584c97ee0d8b8a1b) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Items_Level/roguelikeSheet_transparent_29.asset using Guid(ca809d42f7905414584c97ee0d8b8a1b) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '171d116ac7123a01e75d51e20a57e684') in 0.0187495 seconds
 Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
 
 ========================================================================
 Received Import Request.
-  Time since last request: 0.000029 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_1571.asset
-  artifactKey: Guid(54fd029513ee9314b99d22d7200fd832) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_1571.asset using Guid(54fd029513ee9314b99d22d7200fd832) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'b5121516d5a2f5ec3cf02b73e58b4a17') in 0.0168581 seconds
+  Time since last request: 0.000022 seconds.
+  path: Assets/Resources/Items_Level/roguelikeSheet_transparent_12.asset
+  artifactKey: Guid(fd16bda73cbba48498dd2ca900862fdf) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Items_Level/roguelikeSheet_transparent_12.asset using Guid(fd16bda73cbba48498dd2ca900862fdf) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '83b2279cc348d88d3bc0c91a2df01677') in 0.0093739 seconds
 Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
 
 ========================================================================
 Received Import Request.
-  Time since last request: 0.000042 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_1438.asset
-  artifactKey: Guid(01991c300c74cd34897f11ab6519596c) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_1438.asset using Guid(01991c300c74cd34897f11ab6519596c) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'cc6f7866ccf47c7c263213099558f879') in 0.0157784 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000034 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_1373.asset
-  artifactKey: Guid(131a95b330a0ef941ab4c3e0ad3c5eba) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_1373.asset using Guid(131a95b330a0ef941ab4c3e0ad3c5eba) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '33b910e8ef022e35954b89af6c8fb64c') in 0.0176283 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000034 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_1382.asset
-  artifactKey: Guid(f1f5b9b7b399fff42820b2f2f346c9da) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_1382.asset using Guid(f1f5b9b7b399fff42820b2f2f346c9da) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '005dde94ec448324813ff414896706cf') in 0.0165802 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000029 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_446.asset
-  artifactKey: Guid(68e0c4bc6086e5e4080c8febe71abed8) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_446.asset using Guid(68e0c4bc6086e5e4080c8febe71abed8) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '68646f6b7e8c68df097d08bff5e2aa1d') in 0.0166337 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000034 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_466.asset
-  artifactKey: Guid(cedbe332afa398040a8fce0415e181aa) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_466.asset using Guid(cedbe332afa398040a8fce0415e181aa) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '5455fc7f5b82fa972c989c747f613dc2') in 0.0218919 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000044 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_674.asset
-  artifactKey: Guid(4935a91a2ab60fa4489c280d7571a7f2) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_674.asset using Guid(4935a91a2ab60fa4489c280d7571a7f2) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'c1c2376f904fe58892ea2768c5e06447') in 0.0139826 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000026 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_264.asset
-  artifactKey: Guid(cb90a5504835fee4a84a8045ccbb8292) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_264.asset using Guid(cb90a5504835fee4a84a8045ccbb8292) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '42b987430a61cac2cdd79af27ecb6d90') in 0.0153705 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000032 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_1369.asset
-  artifactKey: Guid(bb88ecd5a70ea6c4f850c802c2bed6c9) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_1369.asset using Guid(bb88ecd5a70ea6c4f850c802c2bed6c9) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '9c5da3280c4da58f3eb5047d7f53cace') in 0.0147849 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000030 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_699.asset
-  artifactKey: Guid(7141620f2a8d964449e9657a13a3f40a) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_699.asset using Guid(7141620f2a8d964449e9657a13a3f40a) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'cbd3d19f4f06e9f62101ba8ff491c303') in 0.0148653 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000028 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_985.asset
-  artifactKey: Guid(640c1ff1182461d4185dcd1988ce56f7) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_985.asset using Guid(640c1ff1182461d4185dcd1988ce56f7) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '115d01616941721ab2ce785b18131399') in 0.0166631 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000039 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_251.asset
-  artifactKey: Guid(288d0ac9ad66aad42a11fd01adaff8a2) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_251.asset using Guid(288d0ac9ad66aad42a11fd01adaff8a2) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'b07a36a9cd1712ce04185ee5277f4e58') in 0.0172542 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000039 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_999.asset
-  artifactKey: Guid(56a35fc05dd74f141a3c00cf6a178b1a) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_999.asset using Guid(56a35fc05dd74f141a3c00cf6a178b1a) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'e4f7fc9e983b999ee51db40b0f8f978f') in 0.0173541 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000034 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_1427.asset
-  artifactKey: Guid(5eef539d655673d4dbbc2832ae7027e4) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_1427.asset using Guid(5eef539d655673d4dbbc2832ae7027e4) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '347e39b28987d3b26fea3a9d712eaef1') in 0.016542 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000025 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_458.asset
-  artifactKey: Guid(11e4f678a77e90342ae86470be9aa86e) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_458.asset using Guid(11e4f678a77e90342ae86470be9aa86e) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '143b3e02fb423e67b002655acf2e2572') in 0.0160814 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000038 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_462.asset
-  artifactKey: Guid(edc9349ea606c634f922ccd0db5ac84e) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_462.asset using Guid(edc9349ea606c634f922ccd0db5ac84e) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '06556bb931617326eba63c6d877e0c7a') in 0.0186707 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000036 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_685.asset
-  artifactKey: Guid(5967d4df434a5834ab298b371540ea0c) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_685.asset using Guid(5967d4df434a5834ab298b371540ea0c) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '3eb5a55b61f5a727c220aca443da7965') in 0.0157182 seconds
+  Time since last request: 0.000019 seconds.
+  path: Assets/Resources/Items_Level/roguelikeSheet_transparent_3.asset
+  artifactKey: Guid(6939df69f21065d42a2a6d78253093d9) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Items_Level/roguelikeSheet_transparent_3.asset using Guid(6939df69f21065d42a2a6d78253093d9) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '8a18ed0ed6d4e942eef1c09521c819ce') in 0.010202 seconds
 Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
 
 ========================================================================
 Received Import Request.
   Time since last request: 0.000027 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_1376.asset
-  artifactKey: Guid(4632d6cf27d524447b3898cc8a775517) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_1376.asset using Guid(4632d6cf27d524447b3898cc8a775517) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '8cacdf11689e2dae2e315d4e5c412040') in 0.0162944 seconds
+  path: Assets/Resources/Items_Level/roguelikeSheet_transparent_22.asset
+  artifactKey: Guid(bf33f7ab36119374690104313801e9c7) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Items_Level/roguelikeSheet_transparent_22.asset using Guid(bf33f7ab36119374690104313801e9c7) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '894b8ddbc315b36e4fcdbdb235ff91bc') in 0.0166685 seconds
 Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
 
 ========================================================================
 Received Import Request.
-  Time since last request: 0.000028 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_474.asset
-  artifactKey: Guid(7624d61ac44b30a49929529831cd3b5f) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_474.asset using Guid(7624d61ac44b30a49929529831cd3b5f) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '079e809b5255b85eb79bcff5ccd86c40') in 0.0160895 seconds
+  Time since last request: 0.000030 seconds.
+  path: Assets/Resources/Items_Level/roguelikeSheet_transparent_15.asset
+  artifactKey: Guid(86b5f8dd3bb96ab4085e1f68418792c2) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Items_Level/roguelikeSheet_transparent_15.asset using Guid(86b5f8dd3bb96ab4085e1f68418792c2) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '7613c854009552eace80de20e5dc1ed0') in 0.0181114 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000018 seconds.
+  path: Assets/Resources/Items_Level/roguelikeSheet_transparent_10.asset
+  artifactKey: Guid(3a2ca5745ce234c4e971eb0be8d3a65e) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Items_Level/roguelikeSheet_transparent_10.asset using Guid(3a2ca5745ce234c4e971eb0be8d3a65e) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '501379b08b66486207daca0528151ec6') in 0.0178213 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000025 seconds.
+  path: Assets/Resources/Items_Level/roguelikeSheet_transparent_6.asset
+  artifactKey: Guid(af3dd09ff5fd27e4a8b8223ef17a7280) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Items_Level/roguelikeSheet_transparent_6.asset using Guid(af3dd09ff5fd27e4a8b8223ef17a7280) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '55dab317c10b2b7e6ecb7c20c5bfdaf6') in 0.0182244 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000024 seconds.
+  path: Assets/Resources/Items_Level/roguelikeSheet_transparent_17.asset
+  artifactKey: Guid(d846ede6f7282894086cbd3a1252ccae) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Items_Level/roguelikeSheet_transparent_17.asset using Guid(d846ede6f7282894086cbd3a1252ccae) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '7b53ce60937ab1547407246d1626fc23') in 0.0175311 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000025 seconds.
+  path: Assets/Resources/Items_Level/roguelikeSheet_transparent_16.asset
+  artifactKey: Guid(95c1e39346db4b34c9ecaf579d43625b) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Items_Level/roguelikeSheet_transparent_16.asset using Guid(95c1e39346db4b34c9ecaf579d43625b) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '7a09240b8e66db262d69bf5f5c418377') in 0.0172292 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000041 seconds.
+  path: Assets/Resources/Items_Level/roguelikeSheet_transparent_23.asset
+  artifactKey: Guid(1fa602ede139db14dbfb061faea31786) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Items_Level/roguelikeSheet_transparent_23.asset using Guid(1fa602ede139db14dbfb061faea31786) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '0186fa6747f703a23790dee2d6280d9c') in 0.0127888 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000027 seconds.
+  path: Assets/Resources/Items_Level/roguelikeSheet_transparent_25.asset
+  artifactKey: Guid(ea470f858cac1dd48b5f81bf9b8b35a5) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Items_Level/roguelikeSheet_transparent_25.asset using Guid(ea470f858cac1dd48b5f81bf9b8b35a5) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'e42ad960ad4e4591a0175883e85b4544') in 0.0173863 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000022 seconds.
+  path: Assets/Resources/Items_Level/roguelikeSheet_transparent_21.asset
+  artifactKey: Guid(6f91c076f27e44c44bf412c6a2d44473) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Items_Level/roguelikeSheet_transparent_21.asset using Guid(6f91c076f27e44c44bf412c6a2d44473) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '48a3eb9fd44446aa8b840a48c84b5a63') in 0.0236979 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000031 seconds.
+  path: Assets/Resources/Items_Level/roguelikeSheet_transparent_9.asset
+  artifactKey: Guid(ad442ade99846dc41b3462813a618ba4) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Items_Level/roguelikeSheet_transparent_9.asset using Guid(ad442ade99846dc41b3462813a618ba4) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '0eb4c32ea2a83d47109ff509cc476842') in 0.0112069 seconds
 Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
 
 ========================================================================
 Received Import Request.
   Time since last request: 0.000040 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_257.asset
-  artifactKey: Guid(9b9dfd7f58ff7944fbba41097122b447) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_257.asset using Guid(9b9dfd7f58ff7944fbba41097122b447) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '9637f5647fc0af378b413b07c1775fc3') in 0.0167024 seconds
+  path: Assets/Resources/Items_Level/roguelikeSheet_transparent_13.asset
+  artifactKey: Guid(31a9da9e3a61f884e9e5b45acc9855ca) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Items_Level/roguelikeSheet_transparent_13.asset using Guid(31a9da9e3a61f884e9e5b45acc9855ca) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'f548c13d86b9279dc5125d28f26fae84') in 0.0100446 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000023 seconds.
+  path: Assets/Resources/Items_Level/roguelikeSheet_transparent_35.asset
+  artifactKey: Guid(5f8243ad21154c241a377f0f28fde002) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Items_Level/roguelikeSheet_transparent_35.asset using Guid(5f8243ad21154c241a377f0f28fde002) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '56271b91c3c8e5e5f79fccfeff56aa1d') in 0.0087985 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000018 seconds.
+  path: Assets/Resources/Items_Level/roguelikeSheet_transparent_19.asset
+  artifactKey: Guid(b8a538ae039591447b1f9fc310c08725) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Items_Level/roguelikeSheet_transparent_19.asset using Guid(b8a538ae039591447b1f9fc310c08725) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '8df470a1afaccea6f6d41cb00c6b98fe') in 0.0086633 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000020 seconds.
+  path: Assets/Resources/Items_Level/roguelikeSheet_transparent_27.asset
+  artifactKey: Guid(79af7f6117e19bc4dae5ac5707088359) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Items_Level/roguelikeSheet_transparent_27.asset using Guid(79af7f6117e19bc4dae5ac5707088359) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '0221dd720dc1212e94ef08fc7c85bda1') in 0.00808 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000023 seconds.
+  path: Assets/Resources/Items_Level/roguelikeSheet_transparent_31.asset
+  artifactKey: Guid(270b4303c8ea02546ba4fe1e775b62b3) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Items_Level/roguelikeSheet_transparent_31.asset using Guid(270b4303c8ea02546ba4fe1e775b62b3) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '4ed154a53b67df5f04657ce918fe6fff') in 0.0112153 seconds
 Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
 
 ========================================================================
 Received Import Request.
   Time since last request: 0.000032 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_1447.asset
-  artifactKey: Guid(b0e6fbdf74a2c334e8e1d64844db8991) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_1447.asset using Guid(b0e6fbdf74a2c334e8e1d64844db8991) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '85520dec4510e5875b52e8dac8c0c2cd') in 0.0169477 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000036 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_1251.asset
-  artifactKey: Guid(c3a2e4ddfe0c2684290a5ae51a968441) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_1251.asset using Guid(c3a2e4ddfe0c2684290a5ae51a968441) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'c939e43d1ae9c1320127dbe30c29e41b') in 0.0162773 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000030 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_1379.asset
-  artifactKey: Guid(64875c37351123644aceaa9d2111813f) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_1379.asset using Guid(64875c37351123644aceaa9d2111813f) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '95f9eeac6b66e2942a2a67b9ab20cf97') in 0.0157466 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000028 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_270.asset
-  artifactKey: Guid(77067c9fd2f42f44cb27a18300f67f7c) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_270.asset using Guid(77067c9fd2f42f44cb27a18300f67f7c) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'b597bf77aaf450a030ac996c9c381fe3') in 0.0184594 seconds
+  path: Assets/Resources/Items_Level/roguelikeSheet_transparent_8.asset
+  artifactKey: Guid(7c8b4a65813edfd46841c33aefb7bad0) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Items_Level/roguelikeSheet_transparent_8.asset using Guid(7c8b4a65813edfd46841c33aefb7bad0) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '5820769923a351b84d5483a1aea6af9c') in 0.0195669 seconds
 Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
 
 ========================================================================
 Received Import Request.
   Time since last request: 0.000027 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_1375.asset
-  artifactKey: Guid(2742d53c96fbf2c4ea35e1a7a4ff3106) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_1375.asset using Guid(2742d53c96fbf2c4ea35e1a7a4ff3106) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '4b7f31f367c524e0a23c0399a00e1566') in 0.017067 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000030 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_1451.asset
-  artifactKey: Guid(187c8e64118a777499291d89a53e1b07) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_1451.asset using Guid(187c8e64118a777499291d89a53e1b07) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '778d2bcf046747bf85edc70ee19c183e') in 0.0203798 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000041 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_1264.asset
-  artifactKey: Guid(e8dae814aad4da445a1d3181d61b70b3) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_1264.asset using Guid(e8dae814aad4da445a1d3181d61b70b3) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '2267397fde3274b4c2c91d49a9329c2a') in 0.0188868 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000038 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_1400.asset
-  artifactKey: Guid(44a669b6828eb3a40a9e4911758589e7) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_1400.asset using Guid(44a669b6828eb3a40a9e4911758589e7) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'f85215008acc7eacfb24c1c1bdb5a58a') in 0.0175448 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000031 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_1436.asset
-  artifactKey: Guid(ea3b07d4995deef449a7d4dc6d14ebe9) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_1436.asset using Guid(ea3b07d4995deef449a7d4dc6d14ebe9) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'c24a651e76ea722b099f6d7789d90d03') in 0.0150781 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000024 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_672.asset
-  artifactKey: Guid(211e6f63ea0cf8c4591762cdfef737ef) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_672.asset using Guid(211e6f63ea0cf8c4591762cdfef737ef) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '2f0db00596b0dfd8c22281ba4ba7d142') in 0.0154127 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000029 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_1388.asset
-  artifactKey: Guid(1736c545d981a124582314bbb39f0551) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_1388.asset using Guid(1736c545d981a124582314bbb39f0551) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '03337051b1fe4f309e9e80d83c7bf643') in 0.0152138 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000037 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_1246.asset
-  artifactKey: Guid(91bdf1007f970c447a8f21da5e423b78) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_1246.asset using Guid(91bdf1007f970c447a8f21da5e423b78) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '8ee6ba1cf7f5d079696d48244b038a66') in 0.0162644 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000023 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_1399.asset
-  artifactKey: Guid(f3a7f447f0150a54a8db0edbfbf2efbd) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_1399.asset using Guid(f3a7f447f0150a54a8db0edbfbf2efbd) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'd86b835cf07ffe3f7785dc6cc3fb9a7b') in 0.0155093 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000023 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_1000.asset
-  artifactKey: Guid(4f87d9043b228c84fa460e8c22778ea8) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_1000.asset using Guid(4f87d9043b228c84fa460e8c22778ea8) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '1d9adf0cacf9bf1fa525f9df634b7f60') in 0.0167203 seconds
+  path: Assets/Resources/Items_Level/roguelikeSheet_transparent_20.asset
+  artifactKey: Guid(ce76480d5ab1a8e47bd907b64ddb8662) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Items_Level/roguelikeSheet_transparent_20.asset using Guid(ce76480d5ab1a8e47bd907b64ddb8662) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '7eabe6c17cdf85e737dfbb6a8270f196') in 0.0087325 seconds
 Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
 
 ========================================================================
 Received Import Request.
   Time since last request: 0.000025 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_1253.asset
-  artifactKey: Guid(a6acf35d2c1fd664ab70d479bf9e38e3) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_1253.asset using Guid(a6acf35d2c1fd664ab70d479bf9e38e3) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '352e9321ff65dc0475a71565a1ecdd53') in 0.0155495 seconds
+  path: Assets/Resources/Items_Level/roguelikeSheet_transparent_4.asset
+  artifactKey: Guid(5b127681838e5ea438c47612b3d3cd97) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Items_Level/roguelikeSheet_transparent_4.asset using Guid(5b127681838e5ea438c47612b3d3cd97) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'c1ac63130096e86be16d63215c854276') in 0.0155712 seconds
 Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
 
 ========================================================================
 Received Import Request.
-  Time since last request: 0.000031 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_1002.asset
-  artifactKey: Guid(5a46138fc58d9164aa00f0d7dd46bdb6) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_1002.asset using Guid(5a46138fc58d9164aa00f0d7dd46bdb6) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '223800c4829d5c99bd81bfb840a4f388') in 0.0168571 seconds
+  Time since last request: 0.000020 seconds.
+  path: Assets/Resources/Items_Level/roguelikeSheet_transparent_28.asset
+  artifactKey: Guid(0fef42e2783842940829f126790ee2dc) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Items_Level/roguelikeSheet_transparent_28.asset using Guid(0fef42e2783842940829f126790ee2dc) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '1ae533f84de4698f191dc33f70666994') in 0.0094571 seconds
 Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
 
 ========================================================================
 Received Import Request.
-  Time since last request: 0.000037 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_670.asset
-  artifactKey: Guid(2f9d938cff958f7458aa1ea17836ce5b) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_670.asset using Guid(2f9d938cff958f7458aa1ea17836ce5b) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '29603ccf8895dd34256ed42f2f5de650') in 0.0157074 seconds
+  Time since last request: 0.000025 seconds.
+  path: Assets/Resources/Items_Level/roguelikeSheet_transparent_1.asset
+  artifactKey: Guid(c919ffbc531eefa418cbdee3a9333125) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Items_Level/roguelikeSheet_transparent_1.asset using Guid(c919ffbc531eefa418cbdee3a9333125) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'f0f130f2c61b0bd008d2490f8689f6f0') in 0.0089255 seconds
 Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
 
 ========================================================================
 Received Import Request.
-  Time since last request: 0.000024 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_1249.asset
-  artifactKey: Guid(30948473b1152ea4b8b7a556754c88ab) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_1249.asset using Guid(30948473b1152ea4b8b7a556754c88ab) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '179bcd791c729dcf954d43f5ebf026a4') in 0.0159345 seconds
+  Time since last request: 0.000033 seconds.
+  path: Assets/Resources/Items_Level/roguelikeSheet_transparent_2.asset
+  artifactKey: Guid(9c432559bbfe208499afe850faf25479) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Items_Level/roguelikeSheet_transparent_2.asset using Guid(9c432559bbfe208499afe850faf25479) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'bcdfe406b6ae514fc31b775a90969c58') in 0.0161465 seconds
 Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
 
 ========================================================================
 Received Import Request.
   Time since last request: 0.000022 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_1394.asset
-  artifactKey: Guid(50e612040726b4c499ee829e669edee8) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_1394.asset using Guid(50e612040726b4c499ee829e669edee8) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'ed59ea649e29d89bcb8f3ebd5e591736') in 0.0157706 seconds
+  path: Assets/Resources/Items_Level/roguelikeSheet_transparent_14.asset
+  artifactKey: Guid(274209fd7afe8874c8d730a03ce0404d) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Items_Level/roguelikeSheet_transparent_14.asset using Guid(274209fd7afe8874c8d730a03ce0404d) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '1c80697d7838783eedaf40ffcabe5952') in 0.0183101 seconds
 Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
 
 ========================================================================
 Received Import Request.
-  Time since last request: 0.000025 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_467.asset
-  artifactKey: Guid(0cc6cdb657b32af4f9ef84d9461faa3b) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_467.asset using Guid(0cc6cdb657b32af4f9ef84d9461faa3b) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'b1a4dfe11c0fc578be2322758efd3f85') in 0.0148168 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000034 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_1367.asset
-  artifactKey: Guid(15d5af0258c18564097b35256f545ac6) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_1367.asset using Guid(15d5af0258c18564097b35256f545ac6) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '3050b136472c5f778491b11a4c90cc2d') in 0.0140649 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000037 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_1383.asset
-  artifactKey: Guid(5cdb61ea79a45bd42a16fd5baadbef98) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_1383.asset using Guid(5cdb61ea79a45bd42a16fd5baadbef98) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '6f0edec5762e7c28d078eb598a10d687') in 0.0151448 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000023 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_1441.asset
-  artifactKey: Guid(40cdbc0264bfb114ebfd779789a4e189) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_1441.asset using Guid(40cdbc0264bfb114ebfd779789a4e189) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'cce5e58d5ecd32fc96309dde64f503f1') in 0.0140245 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000031 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_456.asset
-  artifactKey: Guid(4ffcf507884a5eb49bd1521f64e26f5a) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_456.asset using Guid(4ffcf507884a5eb49bd1521f64e26f5a) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '234a819082e954d9af0ff4336f0a8ca6') in 0.0144951 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000027 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_475.asset
-  artifactKey: Guid(c6b1cf54f90e25449b8c46098f977a55) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_475.asset using Guid(c6b1cf54f90e25449b8c46098f977a55) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'd90d58b21fff4d518c496cb9625d40df') in 0.014204 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000028 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_986.asset
-  artifactKey: Guid(588aeaff758d9104682158ec655570e5) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_986.asset using Guid(588aeaff758d9104682158ec655570e5) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '86863dfd6aac5b491b1d9c7fc0b4fc21') in 0.0145062 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000032 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_463.asset
-  artifactKey: Guid(f242e9584e15c9548afa1eb91d64ae25) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_463.asset using Guid(f242e9584e15c9548afa1eb91d64ae25) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '9ee5a9617ff152e4ab8eab3badf98e79') in 0.013872 seconds
+  Time since last request: 0.000021 seconds.
+  path: Assets/Resources/Items_Level/roguelikeSheet_transparent_7.asset
+  artifactKey: Guid(f69687a18c4608a43a6016d1b1a67193) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Items_Level/roguelikeSheet_transparent_7.asset using Guid(f69687a18c4608a43a6016d1b1a67193) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '44160d2adc07f69ef66714c0efa7c905') in 0.0095702 seconds
 Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
 
 ========================================================================
 Received Import Request.
   Time since last request: 0.000024 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_705.asset
-  artifactKey: Guid(9202c3ef509f6f646a044cb481cbd71c) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_705.asset using Guid(9202c3ef509f6f646a044cb481cbd71c) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'a051b930acd2553b82fb9c58b5a3f539') in 0.0143482 seconds
+  path: Assets/Resources/Items_Level/roguelikeSheet_transparent_32.asset
+  artifactKey: Guid(bf5f2236711541548a2bee0197aee940) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Items_Level/roguelikeSheet_transparent_32.asset using Guid(bf5f2236711541548a2bee0197aee940) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '764593d71556d91d79247b1340ff05fa') in 0.0093756 seconds
 Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
 
 ========================================================================
 Received Import Request.
-  Time since last request: 0.000024 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_1437.asset
-  artifactKey: Guid(4943d3049d7521b4eac630bdf04c07ec) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_1437.asset using Guid(4943d3049d7521b4eac630bdf04c07ec) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'e7f39cc1d78b1cfd203f8795b076fc3c') in 0.0144852 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000024 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_1452.asset
-  artifactKey: Guid(b963df9f2007f4a4fa2a04d1185a0267) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_1452.asset using Guid(b963df9f2007f4a4fa2a04d1185a0267) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '17db0980b0073c9121d548a46e7df044') in 0.015183 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000028 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_282.asset
-  artifactKey: Guid(51aeb42fcc561f94cb6e3b5d15878891) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_282.asset using Guid(51aeb42fcc561f94cb6e3b5d15878891) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '9ef1709fc0d266b92829fa6d62dc0790') in 0.0145912 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000032 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_680.asset
-  artifactKey: Guid(be8aa06673c71434785c374453d8f2f1) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_680.asset using Guid(be8aa06673c71434785c374453d8f2f1) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '9f8221f9449a4367edec68e08f6e4c15') in 0.0150492 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000024 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_450.asset
-  artifactKey: Guid(16b9b1927d98e464185c92ea0362de26) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_450.asset using Guid(16b9b1927d98e464185c92ea0362de26) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'bec4872836aae4a1c4802623833b3f77') in 0.0161761 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000026 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_1012.asset
-  artifactKey: Guid(049ed86dcb1d5564b99824c8db42b37f) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_1012.asset using Guid(049ed86dcb1d5564b99824c8db42b37f) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '6fbb7ad8a863e3fcfcef8538d82b4db7') in 0.0172375 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000042 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_992.asset
-  artifactKey: Guid(c76f609a64ef8ba41b0732914361e70b) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_992.asset using Guid(c76f609a64ef8ba41b0732914361e70b) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'a1faa301aad1a7e2500b461043295b2a') in 0.0147182 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000027 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_1014.asset
-  artifactKey: Guid(1c8033d598c153445ae826223ec79315) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_1014.asset using Guid(1c8033d598c153445ae826223ec79315) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '2d044633391fc01ee03d5d83d76341a0') in 0.0177371 seconds
+  Time since last request: 0.000022 seconds.
+  path: Assets/Resources/Items_Level/roguelikeSheet_transparent_30.asset
+  artifactKey: Guid(0e94a4077bba5cf47885d1101c53ccd0) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Items_Level/roguelikeSheet_transparent_30.asset using Guid(0e94a4077bba5cf47885d1101c53ccd0) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '4bfeab11347cdab19b1408819ed1afc9') in 0.0080664 seconds
 Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
 
 ========================================================================
 Received Import Request.
   Time since last request: 0.000046 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_1250.asset
-  artifactKey: Guid(5532e7781ca84a645a1e362266e31892) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_1250.asset using Guid(5532e7781ca84a645a1e362266e31892) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '1c2668794cc4bd04be39e6702ad93a50') in 0.0154968 seconds
+  path: Assets/Resources/Items_Level/roguelikeSheet_transparent_33.asset
+  artifactKey: Guid(87bca8032ed7919489b676701106a84f) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Items_Level/roguelikeSheet_transparent_33.asset using Guid(87bca8032ed7919489b676701106a84f) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '634fede5d186ebdedeeb81601a5a7bd5') in 0.0092138 seconds
 Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
 
 ========================================================================
 Received Import Request.
-  Time since last request: 0.000032 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_690.asset
-  artifactKey: Guid(c3dbecf7a4354154886801767d6a8399) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_690.asset using Guid(c3dbecf7a4354154886801767d6a8399) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '722f94833f815cde74c70af1c2a05fcb') in 0.0160738 seconds
+  Time since last request: 0.000020 seconds.
+  path: Assets/Resources/Items_Level/roguelikeSheet_transparent_24.asset
+  artifactKey: Guid(136c3b49ffd78134aa2762b69274ca9b) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Items_Level/roguelikeSheet_transparent_24.asset using Guid(136c3b49ffd78134aa2762b69274ca9b) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '43f30da3b49e0002b3bd216ad3678238') in 0.0078958 seconds
 Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
 
 ========================================================================
 Received Import Request.
   Time since last request: 0.000023 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_1432.asset
-  artifactKey: Guid(9df1fb5d5fa18f24299780bafac60dc3) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_1432.asset using Guid(9df1fb5d5fa18f24299780bafac60dc3) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '48ad3d6537d44027c0e0229478201e64') in 0.0169417 seconds
+  path: Assets/Resources/Items_Level/roguelikeSheet_transparent_11.asset
+  artifactKey: Guid(9f59847e125e8984ca92c0d69f87cc57) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Items_Level/roguelikeSheet_transparent_11.asset using Guid(9f59847e125e8984ca92c0d69f87cc57) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'f30d31f49e4806222a041bc92674cb6f') in 0.0086293 seconds
 Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
 
 ========================================================================
 Received Import Request.
-  Time since last request: 0.000024 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_678.asset
-  artifactKey: Guid(d641e1f3bc404d94d9e8b2323734f142) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_678.asset using Guid(d641e1f3bc404d94d9e8b2323734f142) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '2ac0b86ccbc0dfa7034517e633593e97') in 0.0142892 seconds
+  Time since last request: 0.000021 seconds.
+  path: Assets/Resources/Items_Level/roguelikeSheet_transparent_34.asset
+  artifactKey: Guid(52fc139019e893b4f880a1cedb1e3619) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Items_Level/roguelikeSheet_transparent_34.asset using Guid(52fc139019e893b4f880a1cedb1e3619) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'a6b0c65ae110c17fa9a595817ec76f3e') in 0.0082847 seconds
 Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
 
 ========================================================================
 Received Import Request.
-  Time since last request: 0.000035 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_266.asset
-  artifactKey: Guid(5a5e0484aa9d0e0448007f8cae403e4f) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_266.asset using Guid(5a5e0484aa9d0e0448007f8cae403e4f) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '29c3a27dffd96f58e61fa0f3b322d54c') in 0.0156501 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000054 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_1445.asset
-  artifactKey: Guid(8c531166794bebe4ea7690ada855db35) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_1445.asset using Guid(8c531166794bebe4ea7690ada855db35) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'bc6a1ac41e84147fa7d5bcb72bf63f59') in 0.0141443 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000025 seconds.
-  path: Assets/Resources/Floor/roguelikeSheet_transparent_1241.asset
-  artifactKey: Guid(9346aa5d15c607740bcfc59148fce16e) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Floor/roguelikeSheet_transparent_1241.asset using Guid(9346aa5d15c607740bcfc59148fce16e) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '02cacce64c1537dd54405d59399d7f77') in 0.0223363 seconds
+  Time since last request: 0.000020 seconds.
+  path: Assets/Resources/Items_Level/roguelikeSheet_transparent_18.asset
+  artifactKey: Guid(79e8ac9e3166c57429b3736332754715) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Items_Level/roguelikeSheet_transparent_18.asset using Guid(79e8ac9e3166c57429b3736332754715) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '29788d43cfe10be570d2f764cc5d36ed') in 0.009054 seconds
 Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
 
 Editor requested this worker to shutdown with reason: Scaling down because of idle timeout
