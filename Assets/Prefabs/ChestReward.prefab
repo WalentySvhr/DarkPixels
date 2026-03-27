@@ -30,8 +30,8 @@ Transform:
   m_GameObject: {fileID: 2665386230894290402}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -180.32, y: -123.99, z: 0}
-  m_LocalScale: {x: 0.2, y: 0.2, z: 1}
+  m_LocalPosition: {x: -180.7, y: -123.99, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -79,13 +79,13 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 80
-  m_Sprite: {fileID: 21300000, guid: dfa7573a6acf9e143a09725f05116e1a, type: 3}
-  m_Color: {r: 1, g: 0.80811405, b: 0, a: 1}
+  m_SortingOrder: -1
+  m_Sprite: {fileID: 7555993957945501364, guid: b07764436fd2a1e49a5ad0886564640d, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 1.125, y: 0.9375}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -125,17 +125,17 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -0.8493805, y: -0.14754868}
+  m_Offset: {x: 0.0079956055, y: -0.027252197}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 5.12, y: 5.12}
-    newSize: {x: 1, y: 1}
+    oldSize: {x: 1.125, y: 0.9375}
+    newSize: {x: 1.125, y: 0.9375}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 14.903107, y: 14.556007}
+  m_Size: {x: 0.9776001, y: 0.6971283}
   m_EdgeRadius: 0
 --- !u!114 &4072209146942356479
 MonoBehaviour:
@@ -153,8 +153,8 @@ MonoBehaviour:
   - name: "\u0412\u0430\u043B\u044E\u0442\u0430"
     prefab: {fileID: 7565567695131184125, guid: cf2393411c1a440429e970d17ae75d66, type: 3}
     dropChance: 100
-    minAmount: 1
-    maxAmount: 4
+    minAmount: 10
+    maxAmount: 40
 --- !u!114 &-4736696560151168574
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -182,5 +182,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 073a8680d32d3e249aaadbf99b522126, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  openedSprite: {fileID: 21300000, guid: dfa7573a6acf9e143a09725f05116e1a, type: 3}
+  openedSprite: {fileID: 5008953516620763445, guid: b07764436fd2a1e49a5ad0886564640d, type: 3}
   destroyDelay: 2

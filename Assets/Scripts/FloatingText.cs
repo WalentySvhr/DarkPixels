@@ -1,35 +1,32 @@
 using UnityEngine;
-using TMPro; // Не забудь namespace для TMP
+using TMPro;
 
 public class FloatingText : MonoBehaviour
 {
-    public float moveSpeed = 2f; // Швидкість підйому
-    public float fadeSpeed = 1f; // Швидкість зникнення (alpha)
-    public float lifetime = 1.5f; // Час життя тексту
+    public float moveSpeed = 2f;
+    public float fadeSpeed = 1f;
+    public float lifetime = 1.5f;
 
-    private TextMeshProUGUI textMesh;
+    public TextMeshProUGUI textMesh; // Сюди перетягнемо текст в інспекторі
     private Color textColor;
 
-    void Awake()
+    void Start()
     {
-        textMesh = GetComponent<TextMeshProUGUI>();
-        textColor = textMesh.color;
+        if (textMesh != null) textColor = textMesh.color;
+        Destroy(gameObject, lifetime);
     }
 
-    // Метод, який ми викликаємо при створенні, щоб встановити текст і позицію
     public void SetText(string textValue, Vector2 spawnPosition)
     {
+        if (textMesh == null) return;
         textMesh.text = textValue;
         transform.position = spawnPosition;
-        Destroy(gameObject, lifetime); // Самовидалення через lifetime
     }
 
     void Update()
     {
-        // 1. Рухаємо текст вгору
-        transform.Translate(Vector2.up * moveSpeed * Time.deltaTime);
-
-        // 2. Плавно робимо його прозорим
+        if (textMesh == null) return;
+        transform.Translate(Vector3.up * moveSpeed * Time.deltaTime);
         textColor.a -= fadeSpeed * Time.deltaTime;
         textMesh.color = textColor;
     }
