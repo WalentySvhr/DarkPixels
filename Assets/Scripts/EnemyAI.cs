@@ -3,14 +3,19 @@ using UnityEngine;
 public class EnemyAI : MonoBehaviour
 {
     public float speed = 2f;
-    public float checkRadius = 5f; 
-    
-    // Переконайся, що тут саме false
-    public bool isAggroedByDamage = false; 
+    public float checkRadius = 5f;
+
+    [Header("Settings")]
+    public bool isAggroedByDamage = false;
+    public bool spriteFacingLeft = false;
+
+    [Header("References")]
+    public Transform hpBarTransform;
 
     private Transform target;
     private Rigidbody2D rb;
     private Vector2 moveDirection;
+    private bool isSearching = false; // Змінна для відстеження стану
 
     void Start()
     {
@@ -25,30 +30,47 @@ public class EnemyAI : MonoBehaviour
 
         float distance = Vector2.Distance(transform.position, target.position);
 
-        // Логіка:
-        // 1. Спочатку перевіряємо, чи ми вже "заагрені" від удару
-        if (isAggroedByDamage)
+        // Перевіряємо умови агресії
+        isSearching = isAggroedByDamage || distance <= checkRadius;
+
+        if (isSearching)
         {
             moveDirection = (target.position - transform.position).normalized;
+            // Розвартаємо тільки коли бачимо/агримось
+            HandleFlip();
         }
-        // 2. Якщо ні, то перевіряємо чи гравець в радіусі
-        else if (distance <= checkRadius)
-        {
-            moveDirection = (target.position - transform.position).normalized;
-        }
-        // 3. Якщо нічого не підходить, стоїмо
         else
         {
             moveDirection = Vector2.zero;
+            // Коли гравець далеко — HandleFlip НЕ викликається, 
+            // тому ворог стоїть так, як стояв востаннє.
         }
     }
 
     void FixedUpdate()
     {
-        // Якщо moveDirection == 0, ворог не рухається
         rb.MovePosition(rb.position + moveDirection * speed * Time.fixedDeltaTime);
-        
-        if (moveDirection.x > 0) transform.localScale = new Vector3(1, 1, 1);
-        else if (moveDirection.x < 0) transform.localScale = new Vector3(-1, 1, 1);
+    }
+
+    void HandleFlip()
+    {
+        if (target == null) return;
+
+        float directionToPlayer = target.position.x - transform.position.x;
+
+        if (Mathf.Abs(directionToPlayer) > 0.1f)
+        {
+            float scaleX = (directionToPlayer > 0) ? 1 : -1;
+
+            if (spriteFacingLeft) scaleX *= -1;
+
+            transform.localScale = new Vector3(scaleX, 1, 1);
+
+            if (hpBarTransform != null)
+            {
+                // ХП бар завжди дивиться прямо (компенсуємо розворот батька)
+                hpBarTransform.localScale = new Vector3(scaleX, 1, 1);
+            }
+        }
     }
 }

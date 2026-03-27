@@ -5,11 +5,14 @@ public class ChestTrigger : MonoBehaviour
     [Header("Visuals")]
     public Sprite openedSprite; // Спрайт відкритої скрині
 
+    [Header("Destroy Settings")]
+    [Tooltip("Через скільки секунд скриня зникне після відкриття?")]
+    public float destroyDelay = 60f;
+
     private bool isOpened = false;
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        // Перевіряємо тег гравця і чи скриня ще закрита
         if (other.CompareTag("Player") && !isOpened)
         {
             Open();
@@ -20,17 +23,22 @@ public class ChestTrigger : MonoBehaviour
     {
         isOpened = true;
 
-        // 1. Змінюємо спрайт на відкритий
+        // 1. Змінюємо спрайт
         if (openedSprite != null)
             GetComponent<SpriteRenderer>().sprite = openedSprite;
 
-        // 2. Викликаємо випадіння луту (твій існуючий скрипт)
+        // 2. Викликаємо випадіння луту
         LootDropper dropper = GetComponent<LootDropper>();
         if (dropper != null) dropper.DropLoot();
 
-        // 3. Вимикаємо колайдер, щоб не спрацьовувало вдруге
+        // 3. Вимикаємо колайдер
         GetComponent<Collider2D>().enabled = false;
 
-        Debug.Log("Скриня відкрита торканням!");
+        // --- НОВИЙ ПУНКТ ---
+        // 4. Запускаємо таймер знищення об'єкта
+        // Destroy(gameObject, t) — видалить об'єкт через t секунд
+        Destroy(gameObject, destroyDelay);
+
+        Debug.Log($"Скриня відкрита! Вона зникне через {destroyDelay} секунд.");
     }
 }

@@ -17,9 +17,9 @@ public class BoxAreaSpawner : MonoBehaviour
     [Header("Long Break Settings")]
     [Tooltip("Після якої кількості вбитих ворогів настане довга пауза?")]
     public int deathsBeforeLongBreak = 100;
-    [Tooltip("Мінімальний час довгої паузи (у секундах)")]
+    [Tooltip("Мінімальний час довгої паузи (у хвилинах)")]
     public float minLongBreakMinutes = 2f;
-    [Tooltip("Максимальний час довгої паузи (у секундах)")]
+    [Tooltip("Максимальний час довгої паузи (у хвилинах)")]
     public float maxLongBreakMinutes = 5f;
 
     [Header("Optimization")]
@@ -27,10 +27,14 @@ public class BoxAreaSpawner : MonoBehaviour
 
     private BoxCollider2D spawnArea;
     private int currentEnemyCount = 0;
-    private int totalDeathsInSession = 0; // Лічильник смертей
+    private int totalDeathsInSession = 0;
     private Transform playerTransform;
     private bool isSpawning = false;
-    private bool isOnLongBreak = false;
+
+    // ЗМІНЕНО НА PUBLIC, щоб AreaQuestManager міг бачити цей стан
+    [HideInInspector] // Це сховає її в інспекторі, щоб не заважала, але вона буде доступна коду
+    public bool isOnLongBreak = false;
+
     public AreaQuestManager questManager;
 
     void Awake()
@@ -75,6 +79,7 @@ public class BoxAreaSpawner : MonoBehaviour
         float randomDelay = Random.Range(minSpawnDelay, maxSpawnDelay);
         yield return new WaitForSeconds(randomDelay);
 
+        // Перевіряємо ще раз перед самим спавном
         if (currentEnemyCount < maxEnemies && !isOnLongBreak)
         {
             SpawnInBox();
@@ -87,13 +92,23 @@ public class BoxAreaSpawner : MonoBehaviour
         if (spawnArea == null) return;
 
         Bounds bounds = spawnArea.bounds;
-        float randomX = Random.Range(bounds.min.x, bounds.max.x);
-        float randomY = Random.Range(bounds.min.y, bounds.max.y);
+        float randomXPos = Random.Range(bounds.min.x, bounds.max.x);
+        float randomYPos = Random.Range(bounds.min.y, bounds.max.y);
 
-        Vector2 spawnPos = new Vector2(randomX, randomY);
+        Vector2 spawnPos = new Vector2(randomXPos, randomYPos);
 
         GameObject enemy = Instantiate(enemyPrefab, spawnPos, Quaternion.identity);
         currentEnemyCount++;
+
+        // Рандомний поворот
+        float randomFlip = (Random.value > 0.5f) ? 1f : -1f;
+        enemy.transform.localScale = new Vector3(randomFlip, 1, 1);
+
+        EnemyAI ai = enemy.GetComponent<EnemyAI>();
+        if (ai != null && ai.hpBarTransform != null)
+        {
+            ai.hpBarTransform.localScale = new Vector3(randomFlip, 1, 1);
+        }
 
         EnemyHealth health = enemy.GetComponent<EnemyHealth>();
         if (health != null) health.mySpawner = this;
@@ -103,15 +118,15 @@ public class BoxAreaSpawner : MonoBehaviour
     {
         currentEnemyCount--;
         totalDeathsInSession++;
+
         if (questManager != null)
         {
             questManager.OnEnemyKilled();
         }
 
-        Debug.Log($"Ворог убитий у зоні {gameObject.name}. Усього вбито: {totalDeathsInSession}/{deathsBeforeLongBreak}");
+        Debug.Log($"Ворог убитий у зоні {gameObject.name}. Усього вбито для паузи: {totalDeathsInSession}/{deathsBeforeLongBreak}");
 
-        // Перевірка на довгу паузу
-        if (totalDeathsInSession >= deathsBeforeLongBreak)
+        if (totalDeathsInSession >= deathsBeforeLongBreak && !isOnLongBreak)
         {
             StartCoroutine(LongBreakRoutine());
         }
@@ -120,10 +135,10 @@ public class BoxAreaSpawner : MonoBehaviour
     IEnumerator LongBreakRoutine()
     {
         isOnLongBreak = true;
-        totalDeathsInSession = 0; // Скидаємо лічильник для наступного циклу
+        totalDeathsInSession = 0;
 
         float breakDuration = Random.Range(minLongBreakMinutes * 60f, maxLongBreakMinutes * 60f);
-        Debug.Log($"<color=yellow>Зона {gameObject.name} зачищена! Довга пауза на {breakDuration / 60f:F1} хв.</color>");
+        Debug.Log($"<color=yellow>Зона {gameObject.name} зачищена! Пауза на {breakDuration / 60f:F1} хв.</color>");
 
         yield return new WaitForSeconds(breakDuration);
 
@@ -136,7 +151,6 @@ public class BoxAreaSpawner : MonoBehaviour
         if (spawnArea == null) spawnArea = GetComponent<BoxCollider2D>();
         if (spawnArea != null)
         {
-            // Якщо пауза — малюємо червоним, якщо активна — зеленим
             Gizmos.color = isOnLongBreak ? new Color(1, 0, 0, 0.2f) : new Color(0, 1, 0, 0.2f);
             Gizmos.DrawCube(spawnArea.bounds.center, spawnArea.bounds.size);
             Gizmos.DrawWireCube(spawnArea.bounds.center, spawnArea.bounds.size);
