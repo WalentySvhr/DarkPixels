@@ -7,23 +7,22 @@ public class PlayerCombat : MonoBehaviour
     public LayerMask enemyLayers;
     private WeaponManager weaponManager;
 
-    // ДОДАЄМО ПОСИЛАННЯ НА АНІМАТОРИ
     [Header("Animation Settings")]
-    public Animator swordAnimator; // Перетягніть сюди об'єкт Sword_Animation_0
-    public Animator bowAnimator;   // Перетягніть сюди об'єкт Bow (якщо є)
-    public Animator playerAnimator; // Сам гравець (якщо він має напружуватись при атаці)
+    public Animator swordAnimator;
+    public Animator bowAnimator;
+    public Animator playerAnimator;
 
     [Header("Melee Settings (Sword)")]
-    public float attackRange = 0.5f;
-    public int attackDamage = 20;
+    public float attackRange = 2f;
+    public int attackDamage = 100;
     public float knockbackForce = 10f;
     public float swordCooldown = 0.3f;
     private float lastMeleeTime;
 
     [Header("Ranged Settings (Bow)")]
     public GameObject arrowPrefab;
-    public float arrowForce = 15f;
-    public float bowCooldown = 0.7f;
+    public float arrowForce = 20f;
+    public float bowCooldown = 1f;
     private float lastShootTime;
 
     void Start()
@@ -31,6 +30,7 @@ public class PlayerCombat : MonoBehaviour
         weaponManager = GetComponent<WeaponManager>();
     }
 
+    // ГОЛОВНИЙ МЕТОД АТАКИ
     public void Attack()
     {
         if (weaponManager == null)
@@ -39,34 +39,59 @@ public class PlayerCombat : MonoBehaviour
             return;
         }
 
+        // ЛОГІКА ДЛЯ МЕЧА
         if (weaponManager.currentWeapon == WeaponManager.WeaponType.Sword)
         {
             if (Time.time >= lastMeleeTime + swordCooldown)
             {
-                // ЗАПУСКАЄМО АНІМАЦІЮ МЕЧА
-                if (swordAnimator != null) swordAnimator.SetTrigger("AttackTrigger");
+                if (swordAnimator != null)
+                {
+                    swordAnimator.SetTrigger("SwordAttack");
+                }
 
                 MeleeAttack();
                 lastMeleeTime = Time.time;
             }
         }
+        // ЛОГІКА ДЛЯ ЛУКА
         else if (weaponManager.currentWeapon == WeaponManager.WeaponType.Bow)
         {
             if (Time.time >= lastShootTime + bowCooldown)
             {
-                // ЗАПУСКАЄМО АНІМАЦІЮ ЛУКА
-                if (bowAnimator != null) bowAnimator.SetTrigger("ShootTrigger");
+                if (bowAnimator != null)
+                {
+                    // Налаштування швидкості анімації під кулдаун
+                    float animationLength = GetAnimationLength(bowAnimator, "Bow_animation");
+                    float speedValue = animationLength / bowCooldown;
 
-                Shoot();
+                    bowAnimator.SetFloat("AnimSpeed", speedValue);
+                    bowAnimator.SetTrigger("BowAttack");
+                }
+
+                // Затримка вильоту стріли (наприклад, 0.2 секунди)
+                // Підберіть цей час так, щоб стріла з'являлася саме на кадрі пострілу
+                Invoke("Shoot", 0.3f * bowCooldown);
                 lastShootTime = Time.time;
             }
         }
     }
 
+    // Допоміжна функція для отримання точної довжини анімації
+    float GetAnimationLength(Animator animator, string clipName)
+    {
+        RuntimeAnimatorController ac = animator.runtimeAnimatorController;
+        foreach (AnimationClip clip in ac.animationClips)
+        {
+            if (clip.name == clipName)
+            {
+                return clip.length;
+            }
+        }
+        return 0.5f; // Значення за замовчуванням, якщо не знайдено
+    }
+
     void MeleeAttack()
     {
-        // Можна додати невелику затримку через Invoke, 
-        // щоб урон проходив саме в момент помаху, а не миттєво
         Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayers);
 
         foreach (Collider2D enemy in hitEnemies)
@@ -92,9 +117,21 @@ public class PlayerCombat : MonoBehaviour
     void Shoot()
     {
         if (arrowPrefab == null) return;
+
         GameObject arrow = Instantiate(arrowPrefab, attackPoint.position, Quaternion.identity);
         float direction = transform.localScale.x > 0 ? 1f : -1f;
-        arrow.transform.rotation = direction < 0 ? Quaternion.Euler(0, 0, 180) : Quaternion.Euler(0, 0, 0);
+
+        if (direction < 0)
+            arrow.transform.rotation = Quaternion.Euler(0, 0, 180);
+        else
+            arrow.transform.rotation = Quaternion.Euler(0, 0, 0);
+
+        // Додаємо фізику стрілі
+        Rigidbody2D rb = arrow.GetComponent<Rigidbody2D>();
+        if (rb != null)
+        {
+            rb.linearVelocity = new Vector2(direction * arrowForce, 0);
+        }
     }
 
     void OnDrawGizmosSelected()
