@@ -1,96 +1,144 @@
 using UnityEngine;
+using UnityEngine.UI;
+using System.Collections;
 
 public class WeaponManager : MonoBehaviour
 {
-    // Enum для вибору типу зброї
     public enum WeaponType { Sword, Bow }
+    public enum WeaponState { Locked, Purchased, Equipped }
+
+    // Ця змінна КРИТИЧНО ПРОВИЛЬНА для роботи скриптів AI та Combat
+    [Header("Current Status")]
     public WeaponType currentWeapon = WeaponType.Sword;
 
-    [Header("Ownership")]
-    public bool hasSword = true;
-    public bool hasBow = false;
+    [System.Serializable]
+    public class WeaponData
+    {
+        public string name;
+        public WeaponType type;
+        public WeaponState state;
+        public int price;
+        public GameObject weaponModel;
+        public GameObject shopCheckmark;
+        public TMPro.TextMeshProUGUI priceText;
+        public Button actionButton; // Посилання на кнопку в магазині
+    }
 
-    [Header("Prices")]
-    public int bowPrice = 50;
-    public GameObject bowCheckmark;
-  public GameObject[] weaponChecks;
-  public GameObject[] weapons;
+    [Header("Weapon Settings")]
+    public WeaponData[] allWeapons;
+
+    [Header("UI Feedback")]
+    public TMPro.TextMeshProUGUI warningText;
+    public float warningDuration = 2f;
+
     private PlayerInventory inventory;
 
     void Start()
     {
         inventory = GetComponent<PlayerInventory>();
-        
-        // При старті завжди беремо меч, якщо він є
-        if (hasSword)
+
+        if (warningText != null)
+            warningText.gameObject.SetActive(false);
+
+        // Встановлюємо початковий стан
+        for (int i = 0; i < allWeapons.Length; i++)
         {
-            EquipWeapon(0); // 0 = Меч
+            if (allWeapons[i].state == WeaponState.Equipped)
+            {
+                EquipWeapon(i);
+                break;
+            }
+        }
+        UpdateUI();
+    }
+
+    public void OnWeaponButtonClick(int index)
+    {
+        WeaponData w = allWeapons[index];
+
+        if (w.state == WeaponState.Locked)
+        {
+            if (inventory != null && inventory.currentCoins >= w.price)
+            {
+                BuyWeapon(index);
+            }
+            else
+            {
+                ShowWarning("НЕ ВИСТАЧАЄ КОШТІВ!");
+            }
+        }
+        else if (w.state == WeaponState.Purchased)
+        {
+            EquipWeapon(index);
         }
     }
 
-    // Метод для кнопки "Купити Лук"
-   public void BuyBow()
-{
-    if (hasBow)
+    void BuyWeapon(int index)
     {
-        Debug.Log("Лук вже куплено!");
-        return;
+        inventory.AddCoins(-allWeapons[index].price);
+        allWeapons[index].state = WeaponState.Purchased;
+        EquipWeapon(index);
     }
 
-    if (inventory.currentCoins >= bowPrice)
+    public void EquipWeapon(int index)
     {
-        inventory.AddCoins(-bowPrice);
-        hasBow = true;
+        for (int i = 0; i < allWeapons.Length; i++)
+        {
+            if (allWeapons[i].state == WeaponState.Equipped)
+                allWeapons[i].state = WeaponState.Purchased;
 
-        Debug.Log("Лук куплено!");
+            if (allWeapons[i].weaponModel != null)
+                allWeapons[i].weaponModel.SetActive(false);
+        }
 
-        bowCheckmark.SetActive(true); // показати галочку
+        // Оновлюємо стан об'єкта
+        allWeapons[index].state = WeaponState.Equipped;
 
-        EquipWeapon(1);
-    }
-    else
-    {
-        Debug.Log("Недостатньо монет!");
-    }
-}
-    // Метод для кнопок перемикання (викликається з UI)
-    // 0 = Sword, 1 = Bow
-  public void EquipWeapon(int weaponIndex)
-{
-    WeaponType targetType = (WeaponType)weaponIndex;
+        // Оновлюємо ту саму змінну, на яку скаржиться консоль!
+        currentWeapon = allWeapons[index].type;
 
-    if (targetType == WeaponType.Sword && hasSword)
-    {
-        currentWeapon = WeaponType.Sword;
-        Debug.Log("В руках Меч");
-    }
-    else if (targetType == WeaponType.Bow && hasBow)
-    {
-        currentWeapon = WeaponType.Bow;
-        Debug.Log("В руках Лук");
-    }
-    else
-    {
-        Debug.Log("Цю зброю ще не куплено!");
-        return;
+        if (allWeapons[index].weaponModel != null)
+            allWeapons[index].weaponModel.SetActive(true);
+
+        UpdateUI();
     }
 
-    // вимикаємо всі галочки
-    foreach (GameObject check in weaponChecks)
+    public void UpdateUI()
     {
-        check.SetActive(false);
+        foreach (var w in allWeapons)
+        {
+            if (w.shopCheckmark != null)
+                w.shopCheckmark.SetActive(w.state == WeaponState.Equipped);
+
+            if (w.priceText != null)
+            {
+                if (w.state == WeaponState.Locked)
+                    w.priceText.text = w.price.ToString() + " <color=black>Монет</color>";
+                else if (w.state == WeaponState.Purchased)
+                    w.priceText.text = "<color=black>Взяти</color>";
+                else if (w.state == WeaponState.Equipped)
+                    w.priceText.text = "<color=black>У руках</color>";
+            }
+
+            if (w.actionButton != null)
+            {
+                w.actionButton.interactable = (w.state != WeaponState.Equipped);
+            }
+        }
     }
 
-    // включаємо потрібну галочку
-    weaponChecks[weaponIndex].SetActive(true);
-
-    // вимикаємо всю зброю
-    foreach (GameObject weapon in weapons)
+    public void ShowWarning(string message)
     {
-        weapon.SetActive(false);
+        if (warningText == null) return;
+        StopAllCoroutines();
+        StartCoroutine(WarningRoutine(message));
     }
 
-    // включаємо потрібну зброю
-    weapons[weaponIndex].SetActive(true);
-}
+    private IEnumerator WarningRoutine(string message)
+    {
+        warningText.text = message;
+        warningText.gameObject.SetActive(true);
+        yield return new WaitForSeconds(warningDuration);
+        warningText.gameObject.SetActive(false);
+    }
 }
