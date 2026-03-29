@@ -46,6 +46,11 @@ public class PlayerCombat : MonoBehaviour
             {
                 if (swordAnimator != null)
                 {
+                    // Підлаштовуємо швидкість анімації меча під swordCooldown
+                    float animationLength = GetAnimationLength(swordAnimator, "Sword_Animanion_0");
+                    float speedValue = animationLength / swordCooldown;
+
+                    swordAnimator.SetFloat("AnimSpeed", speedValue);
                     swordAnimator.SetTrigger("SwordAttack");
                 }
 
