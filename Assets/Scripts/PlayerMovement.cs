@@ -21,7 +21,8 @@ public class PlayerMovement : MonoBehaviour
         if (input.magnitude > 1f)
             input = input.normalized;
 
-        rb.linearVelocity = input * moveSpeed;
+        // Замість прямого множення спробуй так:
+        rb.linearVelocity = new Vector2(input.x * moveSpeed, input.y * moveSpeed);
 
         if (anim != null)
         {

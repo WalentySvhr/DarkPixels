@@ -40,23 +40,25 @@ public class FishingZone : MonoBehaviour
 
     void CatchFish()
     {
-        // Отримуємо дані предмета (Item) від FishDrop
         Item caughtItem = fishDropLogic.GetRandomFishItem();
 
         if (caughtItem != null && inventory != null)
         {
-            // Використовуємо твій метод Add(item)
             bool wasAdded = inventory.Add(caughtItem);
 
             if (wasAdded)
             {
                 currentAttempts--;
-                Debug.Log($"Спіймано і додано в інвентар: {caughtItem.name}");
+                Debug.Log($"Успіх! Спіймано: {caughtItem.name}");
+
+                // --- НОВИЙ РЯДОК ---
+                // Звертаємося до Одинака (Instance) і показуємо лут
+                LootPopupManager.Instance.ShowLoot(caughtItem);
+                // ------------------
             }
             else
             {
                 Debug.Log("Інвентар повний!");
-                return; // Не знімаємо спробу, якщо риба не влізла
             }
         }
 
