@@ -58,11 +58,11 @@ public class FisherShopManager : MonoBehaviour
             if (stack == null || stack.item == null) continue;
             GameObject obj = Instantiate(slotPrefab, container);
 
-            // ВИПРАВЛЕНО: тепер шукаємо FisherShopSlot замість UI_ShopSlot
             FisherShopSlot slotScript = obj.GetComponent<FisherShopSlot>();
             if (slotScript != null)
             {
-                slotScript.Setup(stack.item, true);
+                // ПЕРЕДАЄМО stack.amount
+                slotScript.Setup(stack.item, true, stack.amount);
             }
         }
     }
