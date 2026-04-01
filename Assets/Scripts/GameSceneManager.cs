@@ -4,13 +4,14 @@ public class GameSceneManager : MonoBehaviour
 {
     private void Awake()
     {
-        // Фіксуємо ТІЛЬКИ горизонтальний режим (лівий або правий)
-        Screen.orientation = ScreenOrientation.LandscapeRight;
+        // 1. Дозволяємо Unity самій вирішувати, як крутити екран (AutoRotation)
+        Screen.orientation = ScreenOrientation.AutoRotation;
 
-        // Дозволяємо повертати телефон на 180 градусів (в інший ландшафт), 
-        // але забороняємо вертикаль
+        // 2. Забороняємо вертикальні положення
         Screen.autorotateToPortrait = false;
         Screen.autorotateToPortraitUpsideDown = false;
+
+        // 3. Дозволяємо обидва горизонтальні положення
         Screen.autorotateToLandscapeLeft = true;
         Screen.autorotateToLandscapeRight = true;
     }
