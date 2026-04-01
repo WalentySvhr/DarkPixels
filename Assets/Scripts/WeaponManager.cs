@@ -7,7 +7,6 @@ public class WeaponManager : MonoBehaviour
     public enum WeaponType { Sword, Bow }
     public enum WeaponState { Locked, Purchased, Equipped }
 
-    // Ця змінна КРИТИЧНО ПРОВИЛЬНА для роботи скриптів AI та Combat
     [Header("Current Status")]
     public WeaponType currentWeapon = WeaponType.Sword;
 
@@ -21,7 +20,7 @@ public class WeaponManager : MonoBehaviour
         public GameObject weaponModel;
         public GameObject shopCheckmark;
         public TMPro.TextMeshProUGUI priceText;
-        public Button actionButton; // Посилання на кнопку в магазині
+        public Button actionButton;
     }
 
     [Header("Weapon Settings")]
@@ -31,16 +30,16 @@ public class WeaponManager : MonoBehaviour
     public TMPro.TextMeshProUGUI warningText;
     public float warningDuration = 2f;
 
-    private PlayerInventory inventory;
+    // ВИДАЛИЛИ стару змінну private PlayerInventory inventory;
 
     void Start()
     {
-        inventory = GetComponent<PlayerInventory>();
+        // Прибираємо пошук компонента GetComponent<PlayerInventory>(), 
+        // бо тепер працюємо через Singleton InventoryManager.Instance
 
         if (warningText != null)
             warningText.gameObject.SetActive(false);
 
-        // Встановлюємо початковий стан
         for (int i = 0; i < allWeapons.Length; i++)
         {
             if (allWeapons[i].state == WeaponState.Equipped)
@@ -58,7 +57,8 @@ public class WeaponManager : MonoBehaviour
 
         if (w.state == WeaponState.Locked)
         {
-            if (inventory != null && inventory.currentCoins >= w.price)
+            // ЗАМІНА: Перевіряємо монети в InventoryManager.Instance
+            if (InventoryManager.Instance != null && InventoryManager.Instance.coins >= w.price)
             {
                 BuyWeapon(index);
             }
@@ -75,9 +75,13 @@ public class WeaponManager : MonoBehaviour
 
     void BuyWeapon(int index)
     {
-        inventory.AddCoins(-allWeapons[index].price);
-        allWeapons[index].state = WeaponState.Purchased;
-        EquipWeapon(index);
+        // ЗАМІНА: Знімаємо гроші через метод ChangeCoins
+        if (InventoryManager.Instance != null)
+        {
+            InventoryManager.Instance.ChangeCoins(-allWeapons[index].price);
+            allWeapons[index].state = WeaponState.Purchased;
+            EquipWeapon(index);
+        }
     }
 
     public void EquipWeapon(int index)
@@ -91,10 +95,7 @@ public class WeaponManager : MonoBehaviour
                 allWeapons[i].weaponModel.SetActive(false);
         }
 
-        // Оновлюємо стан об'єкта
         allWeapons[index].state = WeaponState.Equipped;
-
-        // Оновлюємо ту саму змінну, на яку скаржиться консоль!
         currentWeapon = allWeapons[index].type;
 
         if (allWeapons[index].weaponModel != null)

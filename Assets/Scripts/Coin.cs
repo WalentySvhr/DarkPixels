@@ -9,15 +9,20 @@ public class Coin : MonoBehaviour
         // Перевіряємо, чи це гравець торкнувся монетки
         if (collision.CompareTag("Player"))
         {
-            // Додаємо монетки гравцеві (створимо цей метод наступним кроком)
-            PlayerInventory inventory = collision.GetComponent<PlayerInventory>();
-            if (inventory != null)
+            // Звертаємося до нашого нового InventoryManager
+            // Використовуємо Instance, щоб не шукати компонент щоразу
+            if (InventoryManager.Instance != null)
             {
-                inventory.AddCoins(coinValue);
-            }
+                InventoryManager.Instance.ChangeCoins(coinValue);
 
-            // Знищуємо монетку після підбору
-            Destroy(gameObject);
+                // Знищуємо монетку після підбору
+                Destroy(gameObject);
+            }
+            else
+            {
+                // Якщо раптом забув додати скрипт на гравця, побачиш помилку в консолі
+                Debug.LogError("InventoryManager не знайдено на сцені!");
+            }
         }
     }
 }
