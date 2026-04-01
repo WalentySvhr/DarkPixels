@@ -3,50 +3,61 @@ using UnityEngine;
 public class FisherNPC : MonoBehaviour
 {
     [Header("UI посилання")]
-    public GameObject shopFishPanel; // Перетягни сюди панель магазину
-    public GameObject interactIcon;  // Іконка рибки над головою
+    public GameObject shopFishPanel;
+    public GameObject interactIcon;
 
     private bool isPlayerNearby = false;
+    private NPCPatrol patrol; // Посилання на скрипт ходьби
 
     void Start()
     {
-        // При старті все ховаємо
+        patrol = GetComponent<NPCPatrol>();
         if (shopFishPanel != null) shopFishPanel.SetActive(false);
         if (interactIcon != null) interactIcon.SetActive(false);
     }
 
-    // Цей метод працює і для Кліку мишкою (ПК), і для Тапу (Android)
     private void OnMouseDown()
     {
-        // Відкриваємо лише якщо гравець підійшов достатньо близько
         if (isPlayerNearby)
         {
-            ToggleShop();
+            OpenShop(); // Змінюємо ToggleShop на OpenShop
+        }
+    }
+
+    public void OpenShop()
+    {
+        if (shopFishPanel != null)
+        {
+            shopFishPanel.SetActive(true);
+            if (patrol != null) patrol.StartInteraction();
+            if (interactIcon != null) interactIcon.SetActive(false);
+            Debug.Log("Магазин має відкритися зараз!");
         }
         else
         {
-            Debug.Log("Гравець занадто далеко, щоб торгувати!");
+            Debug.LogError("Посилання на shopFishPanel порожнє!");
         }
     }
 
-    public void ToggleShop()
+    // Цей метод тепер викликається ТІЛЬКИ кнопкою "Закрити" у самому магазині
+    public void CloseShop()
     {
-        if (shopFishPanel == null) return;
+        if (shopFishPanel != null) shopFishPanel.SetActive(false);
 
-        bool isOpened = !shopFishPanel.activeSelf;
-        shopFishPanel.SetActive(isOpened);
+        // Дозволяємо НПС знову ходити
+        if (patrol != null) patrol.StopInteraction();
 
-        // Якщо відкрили — можна вимкнути іконку над головою, щоб не заважала
-        if (isOpened && interactIcon != null) interactIcon.SetActive(false);
+        // Повертаємо іконку, якщо гравець ще поруч
+        if (isPlayerNearby && interactIcon != null) interactIcon.SetActive(true);
     }
 
-    // Визначаємо, чи поруч гравець (має бути Collider2D з Is Trigger)
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Player"))
         {
             isPlayerNearby = true;
-            if (interactIcon != null) interactIcon.SetActive(true);
+            if (interactIcon != null && !shopFishPanel.activeSelf)
+                interactIcon.SetActive(true);
         }
     }
 
@@ -56,9 +67,7 @@ public class FisherNPC : MonoBehaviour
         {
             isPlayerNearby = false;
             if (interactIcon != null) interactIcon.SetActive(false);
-
-            // Автоматично закриваємо магазин, якщо гравець просто втік
-            if (shopFishPanel != null) shopFishPanel.SetActive(false);
+            CloseShop(); // Використовуємо наш новий метод закриття
         }
     }
 }
