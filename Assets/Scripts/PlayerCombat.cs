@@ -104,10 +104,18 @@ public class PlayerCombat : MonoBehaviour
         }
     }
 
-    private void OnDrawGizmosSelected()
+    private void OnDrawGizmos() // Змінили з OnDrawGizmosSelected на OnDrawGizmos
     {
-        if (attackPoint == null || currentWeaponData == null) return;
+        // Малюємо коло, навіть якщо нічого не вибрано і немає зброї
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(attackPoint.position, currentWeaponData.attackRange);
+
+        // Якщо attackPoint не призначений, малюємо в центрі гравця
+        Vector3 center = attackPoint != null ? attackPoint.position : transform.position;
+
+        // Якщо немає зброї, малюємо радіус 1, інакше - радіус зброї
+        float radius = currentWeaponData != null ? currentWeaponData.attackRange : 1f;
+
+        Gizmos.DrawWireSphere(center, radius);
     }
+
 }
