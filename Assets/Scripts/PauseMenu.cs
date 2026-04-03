@@ -1,9 +1,10 @@
 using UnityEngine;
-using UnityEngine.SceneManagement; // Потрібно для роботи зі сценами
+using UnityEngine.SceneManagement;
 
 public class PauseMenu : MonoBehaviour
 {
     public GameObject pauseMenuUI;
+    public SceneFader fader; // Перетягни сюди об'єкт FadePanel зі скриптом SceneFader
     private bool isPaused = false;
 
     public void ToggleMenu()
@@ -15,28 +16,29 @@ public class PauseMenu : MonoBehaviour
     public void Resume()
     {
         pauseMenuUI.SetActive(false);
-        Time.timeScale = 1f; // Повертаємо швидкість часу в норму
+        Time.timeScale = 1f;
         isPaused = false;
     }
 
     public void Pause()
     {
         pauseMenuUI.SetActive(true);
-        Time.timeScale = 0f; // Зупиняємо все у грі
+        Time.timeScale = 0f;
         isPaused = true;
     }
 
-    // --- НОВИЙ МЕТОД ДЛЯ КНОПКИ "RESTART" ---
     public void Restart()
     {
-        Time.timeScale = 1f; // КРИТИЧНО ВАЖЛИВО: розморозити час перед перезапуском!
-        // Завантажуємо поточну активну сцену за її назвою
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        Time.timeScale = 1f;
+        // Використовуємо фейдер для перезапуску поточної сцени
+        fader.FadeTo(SceneManager.GetActiveScene().name);
     }
 
     public void LoadMainMenu()
     {
         Time.timeScale = 1f;
-        SceneManager.LoadScene("MainMenu");
+        // Використовуємо фейдер для повернення в меню
+        // SceneFader сам переключить орієнтацію на Portrait, поки екран чорний
+        fader.FadeTo("MainMenu");
     }
 }

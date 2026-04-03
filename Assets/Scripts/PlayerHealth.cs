@@ -14,6 +14,10 @@ public class PlayerHealth : MonoBehaviour
     public TextMeshProUGUI hpText;
     public GameObject gameOverPanel;
 
+    [Header("Damage Visuals")]
+    public GameObject damagePopupPrefab; // Префаб із твоїм скриптом DamagePopup
+    public Vector3 popupOffset = new Vector3(0, 1.5f, 0); // Позиція появи тексту над головою
+
     void Start()
     {
         currentHealth = maxHealth;
@@ -30,6 +34,10 @@ public class PlayerHealth : MonoBehaviour
 
         currentHealth -= damage;
 
+        // --- ВІДОБРАЖЕННЯ УРОНУ ---
+        SpawnDamageText(damage);
+        // --------------------------
+
         if (currentHealth <= 0)
         {
             currentHealth = 0;
@@ -39,14 +47,29 @@ public class PlayerHealth : MonoBehaviour
         UpdateUI();
     }
 
-    // --- НОВИЙ МЕТОД ДЛЯ ЛІКУВАННЯ ---
+    // Метод для створення спливаючого тексту урону
+    private void SpawnDamageText(int amount)
+    {
+        if (damagePopupPrefab != null)
+        {
+            // Створюємо префаб у позиції гравця із невеликим зміщенням вгору
+            GameObject popup = Instantiate(damagePopupPrefab, transform.position + popupOffset, Quaternion.identity);
+
+            // Отримуємо компонент DamagePopup і викликаємо Setup
+            DamagePopup popupScript = popup.GetComponent<DamagePopup>();
+            if (popupScript != null)
+            {
+                popupScript.Setup(amount);
+            }
+        }
+    }
+
     public void Heal(int amount)
     {
-        if (isDead) return; // Мертвого не вилікувати
+        if (isDead) return;
 
         currentHealth += amount;
 
-        // Обмежуємо здоров'я максимальним значенням
         if (currentHealth > maxHealth)
         {
             currentHealth = maxHealth;
@@ -54,13 +77,12 @@ public class PlayerHealth : MonoBehaviour
 
         if (FXManager.instance != null)
         {
-            FXManager.instance.SpawnHealText(amount); // Створюємо текст з цифрою heal
+            FXManager.instance.SpawnHealText(amount);
         }
 
         Debug.Log("Гравець підібрав зілля! Поточне здоров'я: " + currentHealth);
         UpdateUI();
     }
-    // --------------------------------
 
     void UpdateUI()
     {
@@ -88,8 +110,11 @@ public class PlayerHealth : MonoBehaviour
             gameOverPanel.SetActive(true);
         }
 
-        if (GetComponent<PlayerMovement>() != null) GetComponent<PlayerMovement>().enabled = false;
-        if (GetComponent<PlayerCombat>() != null) GetComponent<PlayerCombat>().enabled = false;
+        // Вимикаємо рух
+        if (GetComponent<PlayerMovement>() != null)
+            GetComponent<PlayerMovement>().enabled = false;
+
+        // ТУТ БУВ PLAYERCOMBAT - ВИДАЛЕНО
     }
 
     public void RestartGame()

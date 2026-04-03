@@ -311,7 +311,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f5b5a95805559d4392e9472ac99ca74, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 500
+  maxHealth: 100
   hpSlider: {fileID: 8067477300563951488}
   hpText: {fileID: 4837955086482556561}
   exitDoor: {fileID: 0}
@@ -331,8 +331,8 @@ MonoBehaviour:
   - name: Coin
     itemPrefab: {fileID: 7565567695131184125, guid: cf2393411c1a440429e970d17ae75d66, type: 3}
     dropChance: 100
-    minAmount: 10
-    maxAmount: 30
+    minAmount: 20
+    maxAmount: 40
   victoryEffect: {fileID: 0}
 --- !u!114 &6041047648775912523
 MonoBehaviour:
@@ -347,8 +347,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   attackRange: 10
-  attackDamage: 20
-  attackCooldown: 2
+  attackDamage: 25
+  attackCooldown: 3
   player: {fileID: 0}
   playerLayer:
     serializedVersion: 2

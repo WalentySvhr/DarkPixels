@@ -47,6 +47,11 @@ public class BoxAreaSpawner : MonoBehaviour
     {
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         if (player != null) playerTransform = player.transform;
+        // Синхронізуємо спавнер із квестом автоматично
+        if (questManager != null)
+        {
+            deathsBeforeLongBreak = questManager.killsRequired;
+        }
 
         InitialFill();
     }

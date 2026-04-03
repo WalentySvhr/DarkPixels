@@ -20,15 +20,24 @@ public class LootPopupManager : MonoBehaviour
 
     void Awake()
     {
-        // Налаштування Одинака
+        // Налаштування Одинака (Singleton)
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject); // Не видаляти при зміні сцени (за бажанням)
+
+            // ПЕРЕВІРКА: Якщо об'єкт має "батька", від'єднуємо його, 
+            // щоб DontDestroyOnLoad спрацював без помилок
+            if (transform.parent != null)
+            {
+                transform.SetParent(null);
+            }
+
+            DontDestroyOnLoad(gameObject);
         }
         else
         {
             Destroy(gameObject);
+            return; // Виходимо, щоб не виконувати код нижче для дубліката
         }
 
         // При старті ховаємо вікно
