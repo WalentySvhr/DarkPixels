@@ -12,15 +12,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84a1b0989df28304087a77deb58dc419, type: 3}
   m_Name: BowData
   m_EditorClassIdentifier: 
-  weaponName: "\u041B\u0443\u043A \u0414\u0435\u0440\u0435\u0432\u044F\u043D\u0438\u0439"
-  type: 1
-  weaponIcon: {fileID: 5788993174431350908, guid: b852b9315af08ac40bfb961c9b3c28c9, type: 3}
+  itemName: "\u041B\u0443\u043A \u0437\u0432\u0438\u0447\u0430\u0439\u043D\u0438\u0439"
+  type: 4
+  icon: {fileID: 5788993174431350908, guid: b852b9315af08ac40bfb961c9b3c28c9, type: 3}
   price: 75
+  isStackable: 0
+  maxStackSize: 10
+  healValue: 0
+  weaponType: 1
   damage: 25
   attackRange: 2
   cooldown: 3
   damageDelay: 0.2
-  visualPrefab: {fileID: 2660512978131350851, guid: 9f9430e566e69f64b9e2c53f2b34f096, type: 3}
-  speedParameterName: AttackSpeed
+  knockbackForce: 10
   projectilePrefab: {fileID: 2188330599015158566, guid: 1b121cdfa7edb494a929a046749d284a, type: 3}
-  shootForce: 0
+  shootForce: 20
+  visualPrefab: {fileID: 2660512978131350851, guid: 9f9430e566e69f64b9e2c53f2b34f096, type: 3}

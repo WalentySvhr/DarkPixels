@@ -4,7 +4,7 @@ using TMPro;
 
 public class InventoryManager : MonoBehaviour
 {
-    public static InventoryManager Instance; // Додаємо синглтон для легкого доступу
+    public static InventoryManager Instance; // Синглтон
 
     [Header("Налаштування інвентарю")]
     public List<ItemStack> items = new List<ItemStack>();
@@ -13,7 +13,7 @@ public class InventoryManager : MonoBehaviour
 
     [Header("Гроші")]
     public int coins = 0;
-    public TextMeshProUGUI[] coinTexts; // Масив для текстів (в інвентарі та магазині)
+    public TextMeshProUGUI[] coinTexts;
 
     [System.Serializable]
     public class ItemStack
@@ -95,30 +95,50 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
-    // ВИКОРИСТАННЯ ПРЕДМЕТА (Хілки тощо)
-    public void UseItemFromHotbar(Item item)
+    // УНІВЕРСАЛЬНИЙ МЕТОД ВИКОРИСТАННЯ ПРЕДМЕТА (Тепер тільки клік по зіллю)
+    public void UseItem(Item item)
     {
         ItemStack stack = items.Find(s => s.item == item);
+        if (stack == null) return;
 
-        if (stack != null)
+        // ЯКЩО ЦЕ ЗІЛЛЯ (Heal)
+        if (item.healValue > 0)
         {
-            PlayerHealth health = GetComponent<PlayerHealth>();
+            // Найнадійніший спосіб знайти здоров'я гравця, де б не висів Інвентар
+            PlayerHealth health = FindFirstObjectByType<PlayerHealth>();
 
             if (health != null)
             {
-                health.Heal(item.healValue);
-                stack.amount--;
+                health.Heal(item.healValue); // Лікуємо гравця
+
+                stack.amount--; // Забираємо 1 зілля
 
                 if (stack.amount <= 0)
                 {
-                    items.Remove(stack);
+                    items.Remove(stack); // Якщо закінчилися - прибираємо іконку
                 }
 
-                UpdateUI();
+                UpdateUI(); // Оновлюємо інвентар
+                Debug.Log("Випито зілля! Відновлено ХП: " + item.healValue);
             }
+            else
+            {
+                Debug.LogWarning("Помилка: Не знайдено скрипт PlayerHealth на сцені!");
+            }
+        }
+        else if (item is WeaponData)
+        {
+            // Якщо випадково клікнули по зброї, підказуємо в консоль, що її треба тягнути
+            Debug.Log("Зброю потрібно перетягнути у слот екіпіровки!");
+        }
+        else
+        {
+            // Якщо це не зброя і healValue = 0, виводимо підказку
+            Debug.Log("Цей предмет не можна використати таким чином!");
         }
     }
 
+    // ОНОВЛЕННЯ ІНТЕРФЕЙСУ
     public void UpdateUI()
     {
         if (inventoryUI != null) inventoryUI.UpdateUI();

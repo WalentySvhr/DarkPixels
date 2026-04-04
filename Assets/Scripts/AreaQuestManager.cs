@@ -1,6 +1,8 @@
 using UnityEngine;
 using TMPro;
 using System.Collections;
+// Цей скрипт відповідає за логіку квесту в зоні. Він відстежує кількість вбитих ворогів, оновлює UI та видає нагороду при виконанні квесту.
+
 
 public class AreaQuestManager : MonoBehaviour
 {

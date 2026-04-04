@@ -2,16 +2,13 @@ using UnityEngine;
 
 public class Arrow : MonoBehaviour
 {
-    public float speed = 20f;
+    // Змінну speed ми прибрали, бо тепер швидкість стріли залежить від самого Лука
     public int damage = 20;
     public float lifeTime = 3f;
 
     void Start()
     {
-        Rigidbody2D rb = GetComponent<Rigidbody2D>();
-        // Важливо: переконайся, що в інспекторі стріли Rigidbody2D не має гравітації (Gravity Scale = 0)
-        rb.linearVelocity = transform.right * speed;
-
+        // Стрілу вже штовхнув скрипт PlayerCombat, тому тут просто запускаємо таймер знищення
         Destroy(gameObject, lifeTime);
     }
 
@@ -27,13 +24,13 @@ public class Arrow : MonoBehaviour
         }
 
         // 2. ПЕРЕВІРКА НА ЗВИЧАЙНОГО ВОРОГА
-        // Перевіряємо за тегом або за скриптом
         if (collision.CompareTag("Enemy"))
         {
             EnemyHealth enemy = collision.GetComponent<EnemyHealth>();
             if (enemy != null)
             {
-                Vector2 knockbackDir = transform.right;
+                // Напрямок відкидання тепер береться з того, куди розвернута стріла!
+                Vector2 knockbackDir = new Vector2(Mathf.Sign(transform.localScale.x), 0);
                 enemy.TakeDamage(damage, knockbackDir, 2f);
             }
             Destroy(gameObject);

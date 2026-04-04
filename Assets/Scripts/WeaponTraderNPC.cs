@@ -3,43 +3,49 @@ using UnityEngine;
 public class WeaponTraderNPC : MonoBehaviour
 {
     public static WeaponTraderNPC Instance;
-    public PlayerCombat playerCombat;
-    // Цей клас відповідає за логіку торговця зброєю. Він обробляє спроби купівлі зброї, перевіряє наявність грошей у гравця та передає інформацію про куплену зброю до PlayerCombat для екіпірування.
+
+    // Посилання на PlayerCombat більше не потрібне, бо ми одягаємо зброю з Інвентарю!
+
     void Awake() => Instance = this;
 
     public void TryProcessWeaponAction(ShopWeaponSlot slot)
     {
-        // 1. Якщо зброя вже куплена — просто беремо її в руки
-        if (slot.isBought)
-        {
-            Equip(slot.weaponToSell);
-            return;
-        }
+        // Якщо вже купили, нічого не робимо
+        if (slot.isBought) return;
 
-        // 2. Якщо не куплена — звертаємось до InventoryManager за грошима
+        // Перевіряємо, чи вистачає грошей
         if (InventoryManager.Instance.coins >= slot.price)
         {
-            // Вираховуємо гроші через твій метод
-            InventoryManager.Instance.ChangeCoins(-slot.price);
+            // 1. СПЕРШУ ПРОБУЄМО ДОДАТИ В ІНВЕНТАР
+            // Якщо місця немає, метод Add поверне false
+            bool added = InventoryManager.Instance.Add(slot.weaponToSell);
 
-            slot.isBought = true;
-            slot.UpdateUI();
+            if (added)
+            {
+                // 2. І ТІЛЬКИ ЯКЩО ПРЕДМЕТ ДОДАНО, ЗНІМАЄМО ГРОШІ
+                InventoryManager.Instance.ChangeCoins(-slot.price);
 
-            Equip(slot.weaponToSell);
-            Debug.Log("Придбано: " + slot.weaponToSell.weaponName);
+                slot.isBought = true;
+                slot.UpdateUI();
+
+                // 3. Оновлюємо весь магазин (щоб оновити тексти кнопок і баланс)
+                WeaponShopUI shopUI = FindFirstObjectByType<WeaponShopUI>();
+                if (shopUI != null)
+                {
+                    shopUI.RefreshShopUI();
+                }
+
+                Debug.Log("Зброя додана в інвентар!");
+            }
+            else
+            {
+                Debug.Log("Інвентар повний! Немає місця для зброї.");
+                // Тут можна додати виклик повідомлення на екран для гравця
+            }
         }
         else
         {
-            Debug.Log("Недостатньо золота!");
-            // Тут можна додати виклик вікна "Немає грошей", як у рибака
-        }
-    }
-
-    private void Equip(WeaponData weapon)
-    {
-        if (playerCombat != null)
-        {
-            playerCombat.EquipWeapon(weapon);
+            Debug.Log("Недостатньо монет!");
         }
     }
 }

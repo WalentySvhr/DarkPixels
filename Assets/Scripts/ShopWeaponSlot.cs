@@ -25,23 +25,23 @@ public class ShopWeaponSlot : MonoBehaviour
     public void UpdateUI()
     {
         if (weaponToSell == null) return;
+        // Увага: подивись у свій скрипт Item.cs, як точно там називаються ці змінні. 
+        // Зазвичай це просто itemName та icon
+        nameText.text = weaponToSell.itemName;
+        weaponIconImage.sprite = weaponToSell.icon;
 
-        // 1. Заповнюємо візуал даними з ScriptableObject
-        if (nameText != null) nameText.text = weaponToSell.weaponName;
-        if (weaponIconImage != null) weaponIconImage.sprite = weaponToSell.weaponIcon;
-
-        // 2. Логіка стану кнопки (Куплено чи Ціна)
         if (isBought)
         {
-            if (priceText != null) priceText.text = "Куплено";
+            priceText.text = "Куплено";
+            weaponIconImage.color = Color.white; // Повертаємо нормальний колір зброї
+            actionButton.interactable = false;   // Вимикаємо кнопку
             if (soldCheckmark != null) soldCheckmark.SetActive(true);
-
-            // Якщо куплено, можна змінити колір кнопки або іконки
-            // actionButton.image.color = Color.gray; 
         }
         else
         {
-            if (priceText != null) priceText.text = price.ToString() + " Золота";
+            priceText.text = price.ToString() + " Золота";
+            weaponIconImage.color = Color.white;
+            actionButton.interactable = true;
             if (soldCheckmark != null) soldCheckmark.SetActive(false);
         }
     }
