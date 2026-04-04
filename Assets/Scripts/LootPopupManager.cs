@@ -1,50 +1,39 @@
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro; // Якщо використовуєш TextMeshPro, інакше просто UnityEngine.UI.Text
+using TMPro;
 using System.Collections;
 
 public class LootPopupManager : MonoBehaviour
 {
-    // Одинак (Singleton) для легкого доступу з будь-якого скрипта
     public static LootPopupManager Instance { get; private set; }
 
     [Header("UI Елементи")]
-    public TextMeshProUGUI fishNameText; // Або public Text fishNameText;
+    public TextMeshProUGUI fishNameText;
     public Image fishIcon;
-    public GameObject windowContent; // Об'єкт Panel/Image, який ми будемо вмикати/вимикати
+    public GameObject windowContent;
 
     [Header("Налаштування")]
-    public float displayDuration = 2.5f; // Скільки секунд показувати вікно
+    public float displayDuration = 2.5f;
 
     private Coroutine hideCoroutine;
 
     void Awake()
     {
-        // Налаштування Одинака (Singleton)
+        // Безпечний Синглтон для UI-елементів
         if (Instance == null)
         {
             Instance = this;
-
-            // ПЕРЕВІРКА: Якщо об'єкт має "батька", від'єднуємо його, 
-            // щоб DontDestroyOnLoad спрацював без помилок
-            if (transform.parent != null)
-            {
-                transform.SetParent(null);
-            }
-
-            DontDestroyOnLoad(gameObject);
         }
         else
         {
             Destroy(gameObject);
-            return; // Виходимо, щоб не виконувати код нижче для дубліката
+            return;
         }
 
         // При старті ховаємо вікно
         if (windowContent != null) windowContent.SetActive(false);
     }
 
-    // Головний метод, який викликають інші скрипти
     public void ShowLoot(Item caughtItem)
     {
         if (caughtItem == null || windowContent == null) return;
@@ -54,7 +43,7 @@ public class LootPopupManager : MonoBehaviour
         if (fishIcon != null)
         {
             fishIcon.sprite = caughtItem.icon;
-            fishIcon.preserveAspect = true; // Щоб іконка не розтягувалася
+            fishIcon.preserveAspect = true;
         }
 
         // Показуємо вікно

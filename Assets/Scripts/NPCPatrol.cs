@@ -4,7 +4,6 @@ using System.Collections;
 public class NPCPatrol : MonoBehaviour
 {
     [Header("Зона руху")]
-    [Tooltip("BoxCollider2D, який визначає межі прогулянки")]
     public BoxCollider2D patrolZone;
 
     [Header("Налаштування руху")]
@@ -13,18 +12,18 @@ public class NPCPatrol : MonoBehaviour
     public float maxWaitTime = 5f;
 
     [Header("Анімація")]
-    [Tooltip("Назва параметра швидкості в Animator (зазвичай Speed або isWalking)")]
     public string speedParameterName = "Speed";
 
     private Vector2 targetPosition;
     private bool isTalking = false;
+    private bool isBlocked = false; // Прапорець, що ми вперлися в стіну
     private Animator anim;
-    private SpriteRenderer spriteRenderer;
+    private Rigidbody2D rb;
 
     void Start()
     {
         anim = GetComponent<Animator>();
-        spriteRenderer = GetComponent<SpriteRenderer>();
+        rb = GetComponent<Rigidbody2D>();
 
         if (patrolZone == null)
         {
@@ -41,15 +40,14 @@ public class NPCPatrol : MonoBehaviour
         {
             if (!isTalking)
             {
-                // 1. Обираємо нову ціль
+                isBlocked = false; // Скидаємо блокування перед новим рухом
                 targetPosition = GetRandomPointInBounds();
 
-                // 2. Починаємо рух
                 if (anim != null) anim.SetFloat(speedParameterName, 1f);
 
-                while (Vector2.Distance(transform.position, targetPosition) > 0.1f)
+                // Рухаємося до цілі, поки не дійдемо АБО поки нас не заблокують
+                while (Vector2.Distance(transform.position, targetPosition) > 0.2f && !isBlocked)
                 {
-                    // Якщо під час руху почалася розмова — чекаємо
                     if (isTalking)
                     {
                         if (anim != null) anim.SetFloat(speedParameterName, 0f);
@@ -57,17 +55,32 @@ public class NPCPatrol : MonoBehaviour
                         if (anim != null) anim.SetFloat(speedParameterName, 1f);
                     }
 
-                    transform.position = Vector2.MoveTowards(transform.position, targetPosition, moveSpeed * Time.deltaTime);
+                    // Використовуємо MovePosition для Rigidbody, це краще для фізики ніж transform.position
+                    Vector2 newPos = Vector2.MoveTowards(rb.position, targetPosition, moveSpeed * Time.deltaTime);
+                    rb.MovePosition(newPos);
+
                     FlipSprite(targetPosition.x);
                     yield return null;
                 }
 
-                // 3. Зупинка та очікування
+                // Якщо ми вийшли з циклу (дійшли або вдарилися) — зупиняємось
                 if (anim != null) anim.SetFloat(speedParameterName, 0f);
-                float wait = Random.Range(minWaitTime, maxWaitTime);
+
+                // Якщо була колізія, можна почекати менше, щоб швидше змінити маршрут
+                float wait = isBlocked ? 1f : Random.Range(minWaitTime, maxWaitTime);
                 yield return new WaitForSeconds(wait);
             }
             yield return null;
+        }
+    }
+
+    // Цей метод викликається автоматично Unity, коли NPC врізається в щось (стіну)
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        // Якщо це не гравець (можна додати перевірку тегів, наприклад стін)
+        if (!collision.gameObject.CompareTag("Player"))
+        {
+            isBlocked = true; // Кажемо корутині, що ми застрягли
         }
     }
 
@@ -88,7 +101,6 @@ public class NPCPatrol : MonoBehaviour
         );
     }
 
-    // Методи для зупинки NPC під час діалогу
     public void StartInteraction() => isTalking = true;
     public void StopInteraction() => isTalking = false;
 }

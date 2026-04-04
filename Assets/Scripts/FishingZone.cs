@@ -16,14 +16,11 @@ public class FishingZone : MonoBehaviour
     private bool isCoolingDown = false;
     private DateTime nextAvailableTime;
 
-    private InventoryManager inventory; // Змінено на InventoryManager
     private FishDrop fishDropLogic;
 
     void Start()
     {
         currentAttempts = maxAttempts;
-        // Шукаємо InventoryManager на гравцеві
-        inventory = GameObject.FindGameObjectWithTag("Player")?.GetComponent<InventoryManager>();
         fishDropLogic = GetComponent<FishDrop>();
 
         if (hookIcon != null) hookIcon.SetActive(false);
@@ -42,19 +39,26 @@ public class FishingZone : MonoBehaviour
     {
         Item caughtItem = fishDropLogic.GetRandomFishItem();
 
-        if (caughtItem != null && inventory != null)
+        // ВИКОРИСТОВУЄМО INSTANCE (Синглтон) замість GameObject.Find
+        if (caughtItem != null && InventoryManager.Instance != null)
         {
-            bool wasAdded = inventory.Add(caughtItem);
+            bool wasAdded = InventoryManager.Instance.Add(caughtItem);
 
             if (wasAdded)
             {
                 currentAttempts--;
-                Debug.Log($"Успіх! Спіймано: {caughtItem.name}");
+                // Беремо itemName з твого ScriptableObject
+                Debug.Log($"Успіх! Спіймано: {caughtItem.itemName}");
 
-                // --- НОВИЙ РЯДОК ---
-                // Звертаємося до Одинака (Instance) і показуємо лут
-                LootPopupManager.Instance.ShowLoot(caughtItem);
-                // ------------------
+                // Викликаємо віконце
+                if (LootPopupManager.Instance != null)
+                {
+                    LootPopupManager.Instance.ShowLoot(caughtItem);
+                }
+                else
+                {
+                    Debug.LogWarning("LootPopupManager не знайдено на сцені!");
+                }
             }
             else
             {
@@ -65,7 +69,6 @@ public class FishingZone : MonoBehaviour
         if (currentAttempts <= 0) StartCooldown();
     }
 
-    // --- Логіка таймера та тригерів залишається без змін ---
     void StartCooldown()
     {
         isCoolingDown = true;
