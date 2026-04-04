@@ -7,6 +7,7 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 {
     [Header("Налаштування слота")]
     public bool isWeaponEquipmentSlot = false; // ГАЛОЧКА ДЛЯ СЛОТА ЗБРОЇ
+    public bool isAmuletEquipmentSlot = false; // ГАЛОЧКА ДЛЯ СЛОТА КУЛОНА
 
     public Image icon;
     public TextMeshProUGUI stackText;
@@ -47,28 +48,52 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
             PlayerCombat combat = FindFirstObjectByType<PlayerCombat>();
             if (combat != null) combat.EquipWeapon(weaponData);
         }
+        // ЯКЩО ЦЕ СЛОТ КУЛОНА — ЗАСТОСОВУЄМО ЙОГО ЕФЕКТИ
+        if (isAmuletEquipmentSlot && newItem is AmuletData amulet)
+        {
+            PlayerHealth health = FindFirstObjectByType<PlayerHealth>();
+            if (health != null)
+            {
+                health.AddBonusHealth(amulet.bonusMaxHealth);
+                Debug.Log("Одягнено кулон! Додано здоров'я: " + amulet.bonusMaxHealth);
+            }
+        }
     }
 
     public void ClearSlot()
     {
+        // 1. СПОЧАТКУ ЗНІМАЄМО БОНУСИ Й ЕКІПІРОВКУ (Поки currentItem ще не стерто з пам'яті!)
+
+        // Знімаємо зброю
+        if (isWeaponEquipmentSlot)
+        {
+            PlayerCombat combat = FindFirstObjectByType<PlayerCombat>();
+            if (combat != null) combat.EquipWeapon(null);
+        }
+
+        // Знімаємо кулон
+        if (isAmuletEquipmentSlot && currentItem is AmuletData oldAmulet)
+        {
+            PlayerHealth health = FindFirstObjectByType<PlayerHealth>();
+            if (health != null)
+            {
+                health.RemoveBonusHealth(oldAmulet.bonusMaxHealth);
+                Debug.Log("Кулон знято! Здоров'я зменшилось.");
+            }
+        }
+
+        // 2. І ТІЛЬКИ ПОТІМ ОЧИЩАЄМО ДАНІ САМОГО СЛОТА
         currentItem = null;
         currentAmount = 0;
         icon.sprite = null;
         icon.enabled = false;
         if (stackText != null) stackText.gameObject.SetActive(false);
-
-        // ЯКЩО ЦЕ СЛОТ ЗБРОЇ І МИ ЙОГО ОЧИСТИЛИ — ЗНІМАЄМО ЗБРОЮ
-        if (isWeaponEquipmentSlot)
-        {
-            PlayerCombat combat = FindFirstObjectByType<PlayerCombat>();
-            if (combat != null) combat.EquipWeapon(null); // Передаємо null, щоб зняти
-        }
     }
 
     public void OnSlotClicked()
     {
-        // Якщо це слот зброї, клік по ньому нічого не робить (ми тільки тягаємо)
-        if (isWeaponEquipmentSlot) return;
+        // Якщо це слот зброї або кулона, клік по ньому нічого не робить (ми їх тільки тягаємо)
+        if (isWeaponEquipmentSlot || isAmuletEquipmentSlot) return;
 
         if (currentItem != null)
         {
@@ -107,51 +132,41 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 
         if (sourceSlot != null && sourceSlot != this)
         {
-            // ЗАХИСТ: Якщо тягнемо в слот зброї, перевіряємо, чи це зброя
-            if (this.isWeaponEquipmentSlot && sourceSlot.currentItem != null)
-            {
-                if (!(sourceSlot.currentItem is WeaponData))
-                {
-                    Debug.Log("Сюди можна класти ТІЛЬКИ зброю!");
-                    return;
-                }
-            }
+            // УНІВЕРСАЛЬНА ПЕРЕВІРКА: чи є цей слот або слот-джерело слотом екіпіровки?
+            bool thisIsEquipSlot = this.isWeaponEquipmentSlot || this.isAmuletEquipmentSlot;
+            bool sourceIsEquipSlot = sourceSlot.isWeaponEquipmentSlot || sourceSlot.isAmuletEquipmentSlot;
 
-            // ЗАХИСТ: Якщо замінюємо екіпіровану зброю на щось інше
-            if (sourceSlot.isWeaponEquipmentSlot && this.currentItem != null)
-            {
-                if (!(this.currentItem is WeaponData))
-                {
-                    Debug.Log("Не можна замінити екіпіровану зброю на не-зброю!");
-                    return;
-                }
-            }
+            // --- ЗАХИСТ ВІД НЕПРАВИЛЬНИХ ПРЕДМЕТІВ ---
+            if (this.isWeaponEquipmentSlot && sourceSlot.currentItem != null && !(sourceSlot.currentItem is WeaponData)) return;
+            if (this.isAmuletEquipmentSlot && sourceSlot.currentItem != null && !(sourceSlot.currentItem is AmuletData)) return;
+            if (sourceSlot.isWeaponEquipmentSlot && this.currentItem != null && !(this.currentItem is WeaponData)) return;
+            if (sourceSlot.isAmuletEquipmentSlot && this.currentItem != null && !(this.currentItem is AmuletData)) return;
 
             Item itemToMove = sourceSlot.currentItem;
             int amountToMove = sourceSlot.currentAmount;
-
             Item itemToReplace = this.currentItem;
             int amountToReplace = this.currentAmount;
 
-            // СЦЕНАРІЙ 1: Тягнемо З РЮКЗАКА В ЕКІПІРОВКУ
-            if (this.isWeaponEquipmentSlot && !sourceSlot.isWeaponEquipmentSlot)
+            // СЦЕНАРІЙ 1: З РЮКЗАКА В ЕКІПІРОВКУ (Зброя АБО Амулет)
+            if (thisIsEquipSlot && !sourceIsEquipSlot)
             {
-                this.AddItem(itemToMove, amountToMove); // Візуально одягаємо
-                InventoryManager.Instance.Remove(itemToMove); // ВИДАЛЯЄМО З РЮКЗАКА (Бекенд)
+                this.AddItem(itemToMove, amountToMove);
+                sourceSlot.ClearSlot();
+                InventoryManager.Instance.Remove(itemToMove);
 
-                // Якщо зняли стару зброю, кладемо її в рюкзак
                 if (itemToReplace != null)
                 {
+                    sourceSlot.AddItem(itemToReplace, amountToReplace);
                     InventoryManager.Instance.Add(itemToReplace);
                 }
             }
-            // СЦЕНАРІЙ 2: Тягнемо З ЕКІПІРОВКИ В РЮКЗАК (Знімаємо зброю)
-            else if (!this.isWeaponEquipmentSlot && sourceSlot.isWeaponEquipmentSlot)
+            // СЦЕНАРІЙ 2: З ЕКІПІРОВКИ В РЮКЗАК
+            else if (!thisIsEquipSlot && sourceIsEquipSlot)
             {
-                sourceSlot.ClearSlot(); // Знімаємо зброю
-                InventoryManager.Instance.Add(itemToMove); // ДОДАЄМО В РЮКЗАК (Бекенд)
+                this.AddItem(itemToMove, amountToMove);
+                sourceSlot.ClearSlot();
+                InventoryManager.Instance.Add(itemToMove);
 
-                // Якщо кинули прямо на іншу зброю в рюкзаку - екіпіруємо її
                 if (itemToReplace != null)
                 {
                     sourceSlot.AddItem(itemToReplace, amountToReplace);

@@ -84,6 +84,28 @@ public class PlayerHealth : MonoBehaviour
         UpdateUI();
     }
 
+    // --- МЕТОДИ ДЛЯ КУЛОНІВ ТА БРОНІ ---
+
+    public void AddBonusHealth(int bonus)
+    {
+        maxHealth += bonus; // Збільшуємо максимальне ХП
+        currentHealth += bonus; // Даємо трохи здоров'я відразу
+        UpdateUI(); // Миттєво оновлюємо смужку ХП на екрані
+    }
+
+    public void RemoveBonusHealth(int bonus)
+    {
+        maxHealth -= bonus; // Забираємо бонусне ХП
+
+        // Якщо поточне ХП після зняття кулона більше за новий максимум - обрізаємо зайве
+        if (currentHealth > maxHealth)
+        {
+            currentHealth = maxHealth;
+        }
+        UpdateUI(); // Миттєво оновлюємо смужку ХП на екрані
+    }
+    // -----------------------------------
+
     void UpdateUI()
     {
         if (playerHPProgressBar != null)
@@ -113,8 +135,6 @@ public class PlayerHealth : MonoBehaviour
         // Вимикаємо рух
         if (GetComponent<PlayerMovement>() != null)
             GetComponent<PlayerMovement>().enabled = false;
-
-        // ТУТ БУВ PLAYERCOMBAT - ВИДАЛЕНО
     }
 
     public void RestartGame()

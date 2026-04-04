@@ -1,7 +1,7 @@
 using UnityEngine;
 
 // Додаємо категорії, щоб було легше фільтрувати предмети
-public enum ItemType { Food, Potion, Resource, Junk, Weapon }
+public enum ItemType { Food, Potion, Resource, Junk, Weapon, Amulet }
 
 [CreateAssetMenu(fileName = "New Item", menuName = "Inventory/Item")]
 public class Item : ScriptableObject

@@ -246,6 +246,11 @@ MonoBehaviour:
     dropChance: 100
     minAmount: 1
     maxAmount: 3
+  - name: Amulet
+    prefab: {fileID: 6640661003260574739, guid: adb173cbae633034dadb1e442321bb16, type: 3}
+    dropChance: 100
+    minAmount: 1
+    maxAmount: 1
 --- !u!114 &-6895117835881187577
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -686,6 +691,7 @@ GameObject:
   - component: {fileID: 2031690535607927314}
   - component: {fileID: 3425613739046774742}
   - component: {fileID: 5275026435104263230}
+  - component: {fileID: 676547193888980044}
   m_Layer: 7
   m_Name: Canvas
   m_TagString: Untagged
@@ -788,3 +794,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 038a6035a706f7a4e801d62250a8f648, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &676547193888980044
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8884787676459204315}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35c825bdc2e2da64292516af9002c60a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  possibleLoot:
+  - name: Sword
+    prefab: {fileID: 6640661003260574739, guid: 7fac50a36d88ea94389f2745b5e9ba30, type: 3}
+    dropChance: 100
+    minAmount: 1
+    maxAmount: 2
