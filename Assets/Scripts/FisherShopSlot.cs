@@ -1,0 +1,129 @@
+using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
+using UnityEngine.EventSystems;
+using System.Collections;
+
+public class FisherShopSlot : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPointerClickHandler
+{
+    public Image icon;
+    public TextMeshProUGUI nameText;
+    public TextMeshProUGUI priceText;
+    public TextMeshProUGUI amountText;
+
+    [Header("Текст кнопки (Купити/Продати)")]
+    public TextMeshProUGUI actionButtonText;
+
+    private Item currentItem;
+    private bool isSellSlot;
+
+    [Header("Налаштування затискання (Long Press)")]
+    public float holdTime = 0.5f;
+    private Coroutine holdCoroutine;
+
+    [Header("Налаштування дабл-тапу")]
+    private float lastClickTime;
+    private const float doubleClickThreshold = 0.3f; // Час у секундах між тапами
+
+    public void Setup(Item item, bool isSelling, int amount = 1)
+    {
+        currentItem = item;
+        isSellSlot = isSelling;
+
+        if (icon != null) icon.sprite = item.icon;
+        if (nameText != null) nameText.text = item.itemName;
+
+        if (actionButtonText != null)
+            actionButtonText.text = isSellSlot ? "Продати" : "Купити";
+
+        if (priceText != null)
+        {
+            if (isSellSlot && ShopManager.Instance != null && ShopManager.Instance.currentShop != null)
+            {
+                int displayPrice = Mathf.RoundToInt(item.price * ShopManager.Instance.currentShop.sellMultiplier);
+                if (displayPrice < 1) displayPrice = 1;
+                priceText.text = displayPrice.ToString() + " gold";
+            }
+            else
+            {
+                priceText.text = item.price.ToString() + " gold";
+            }
+        }
+
+        if (amountText != null)
+        {
+            amountText.text = amount.ToString();
+            amountText.gameObject.SetActive(amount > 1);
+        }
+    }
+
+    // --- ЛОГІКА LONG PRESS (ІНФО) ---
+
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        if (currentItem != null)
+            holdCoroutine = StartCoroutine(HoldTimer());
+    }
+
+    public void OnPointerUp(PointerEventData eventData)
+    {
+        StopHoldTimer();
+        if (ItemInfoManager.Instance != null)
+            ItemInfoManager.Instance.HideInfo();
+    }
+
+    private IEnumerator HoldTimer()
+    {
+        yield return new WaitForSeconds(holdTime);
+        if (currentItem != null && ItemInfoManager.Instance != null)
+            ItemInfoManager.Instance.UpdateInfo(currentItem);
+    }
+
+    private void StopHoldTimer()
+    {
+        if (holdCoroutine != null)
+        {
+            StopCoroutine(holdCoroutine);
+            holdCoroutine = null;
+        }
+    }
+
+    // --- ЛОГІКА ВЛАСНОГО DOUBLE TAP (КУПІВЛЯ) ---
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        if (currentItem == null) return;
+
+        float timeSinceLastClick = Time.time - lastClickTime;
+
+        if (timeSinceLastClick <= doubleClickThreshold)
+        {
+            // Успішний дабл-тап
+            Debug.Log("Власний дабл-тап: ВИКОНАННЯ ДІЇ");
+            StopHoldTimer(); // Щоб інфо не вилізло випадково
+            ExecuteAction();
+            lastClickTime = 0; // Скидаємо таймер
+        }
+        else
+        {
+            // Одиночний тап (нічого не робимо, бо інфо на затисканні)
+            Debug.Log("Одиночний тап зафіксовано");
+            lastClickTime = Time.time;
+        }
+    }
+
+    private void ExecuteAction()
+    {
+        if (ItemInfoManager.Instance != null)
+            ItemInfoManager.Instance.HideInfo();
+
+        if (isSellSlot)
+            ShopManager.Instance.SellItem(currentItem);
+        else
+            ShopManager.Instance.BuyItem(currentItem);
+
+        Debug.Log($"Предмет {currentItem.itemName} оброблено!");
+    }
+
+    public void OnClick() { }
+}
