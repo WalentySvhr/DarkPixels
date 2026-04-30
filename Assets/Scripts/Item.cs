@@ -43,7 +43,7 @@ public class Item : ScriptableObject
         string main = $"Type: {typeDisplay}\n";
 
         if (healValue > 0)
-            main += $"Heal: +{healValue} HP";
+            main += $"<color=green>Heal: +{healValue} HP</color>";
         else if (type == ItemType.Resource) ;
         // main += "Material for crafting";
         else if (type == ItemType.Junk)

@@ -3,23 +3,23 @@ using UnityEngine;
 public class BossCombat : MonoBehaviour
 {
     public enum GameType { Platformer, TopDown }
-    public enum BossType { Melee, Ranged } // Новий вибір типу боса
+    public enum BossType { Melee, Ranged }
 
     [Header("General Settings")]
     public GameType gameType = GameType.Platformer;
     public BossType bossType = BossType.Melee;
     public float moveSpeed = 3f;
-    public float stopDistance = 1.5f;    // Дистанція зупинки
-    public float detectRange = 12f;      // Дистанція зору
+    public float stopDistance = 1.5f;
+    public float detectRange = 12f;
 
     [Header("Attack Settings")]
-    public float attackRange = 2.5f;     // Радіус для удару або дистанція пострілу
+    public float attackRange = 2.5f;
     public int attackDamage = 20;
     public float attackCooldown = 2f;
 
     [Header("Ranged Settings (Тільки для Ranged)")]
-    public GameObject projectilePrefab;  // Префаб стріли/магії
-    public Transform firePoint;          // Точка вильоту снаряда
+    public GameObject projectilePrefab;
+    public Transform firePoint;
     public float projectileSpeed = 10f;
 
     [Header("References")]
@@ -32,6 +32,10 @@ public class BossCombat : MonoBehaviour
     private bool facingRight = true;
     private bool isAttacking = false;
     private bool isAggroedByDamage = false;
+
+    // Хеш-коди параметрів для оптимізації (працюють швидше, ніж рядки)
+    private readonly int speedHash = Animator.StringToHash("Speed");
+    private readonly int attackHash = Animator.StringToHash("Attack");
 
     void Start()
     {
@@ -51,7 +55,7 @@ public class BossCombat : MonoBehaviour
 
         float distance = Vector2.Distance(transform.position, player.position);
 
-        // 1. Перевірка Агро (зір або провокація шкодою)
+        // 1. Перевірка Агро
         if (distance > detectRange && !isAggroedByDamage)
         {
             StopMovement();
@@ -79,12 +83,11 @@ public class BossCombat : MonoBehaviour
         }
     }
 
-    // Викликається зі скрипта здоров'я (TakeDamage)
     public void OnDamageReceived()
     {
         if (!isAggroedByDamage)
         {
-            Debug.Log("<color=red>Боса спровоковано шкодою здалеку!</color>");
+            Debug.Log("<color=red>Боса спровоковано шкодою!</color>");
             isAggroedByDamage = true;
         }
     }
@@ -94,22 +97,21 @@ public class BossCombat : MonoBehaviour
         isAttacking = true;
         nextAttackTime = Time.time + attackCooldown;
 
-        if (anim != null) anim.SetTrigger("attack");
+        // ВИКЛИК АНІМАЦІЇ АТАКИ
+        if (anim != null) anim.SetTrigger(attackHash);
 
-        // Викликаємо метод атаки залежно від типу
         if (bossType == BossType.Melee)
         {
-            Invoke("ApplyMeleeDamage", 0.5f); // Ближній бій
+            Invoke(nameof(ApplyMeleeDamage), 0.5f);
         }
         else
         {
-            Invoke("ShootProjectile", 0.5f); // Дальній бій
+            Invoke(nameof(ShootProjectile), 0.5f);
         }
 
-        Invoke("ResetAttackFlag", 1.0f);
+        Invoke(nameof(ResetAttackFlag), 1.0f);
     }
 
-    // --- ЛОГІКА БЛИЖНЬОГО БОЮ ---
     void ApplyMeleeDamage()
     {
         Collider2D hitPlayer = Physics2D.OverlapCircle(transform.position, attackRange, playerLayer);
@@ -120,23 +122,16 @@ public class BossCombat : MonoBehaviour
         }
     }
 
-    // --- ЛОГІКА ДАЛЬНЬОГО БОЮ ---
     void ShootProjectile()
     {
         if (projectilePrefab == null || firePoint == null) return;
 
-        // Створюємо снаряд
         GameObject projectileObj = Instantiate(projectilePrefab, firePoint.position, Quaternion.identity);
-
-        // Отримуємо скрипт снаряда
         Projectile projScript = projectileObj.GetComponent<Projectile>();
 
         if (projScript != null)
         {
-            // Розраховуємо напрямок до гравця в момент пострілу
             Vector2 direction = (player.position - firePoint.position).normalized;
-
-            // Запускаємо його!
             projScript.Launch(direction, projectileSpeed);
         }
     }
@@ -152,13 +147,24 @@ public class BossCombat : MonoBehaviour
         Vector2 newPos = Vector2.MoveTowards(rb.position, targetPosition, moveSpeed * Time.deltaTime);
         rb.MovePosition(newPos);
 
-        if (anim != null) anim.SetBool("isRunning", true);
+        // КЕРУВАННЯ АНІМАЦІЄЮ ХОДЬБИ
+        if (anim != null)
+        {
+            // Передаємо 1, коли бос рухається
+            anim.SetFloat(speedHash, 1f);
+        }
     }
 
     void StopMovement()
     {
         if (rb != null) rb.linearVelocity = Vector2.zero;
-        if (anim != null) anim.SetBool("isRunning", false);
+
+        // ЗУПИНКА АНІМАЦІЇ ХОДЬБИ
+        if (anim != null)
+        {
+            // Передаємо 0, коли бос стоїть
+            anim.SetFloat(speedHash, 0f);
+        }
     }
 
     void LookAtPlayer()

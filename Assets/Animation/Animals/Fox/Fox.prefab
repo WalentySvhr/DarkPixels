@@ -236,8 +236,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 30
   currentHealth: 0
-  hpSlider: {fileID: 8281667085606485880}
-  hpText: {fileID: 3230014719505421113}
+  hpSlider: {fileID: 0}
+  hpText: {fileID: 0}
   mySpawner: {fileID: 0}
   towerSpawner: {fileID: 0}
   damagePopupPrefab: {fileID: 754589129107080054, guid: 7724944ccc0288d4e86f01937b868403, type: 3}
@@ -259,6 +259,16 @@ MonoBehaviour:
     dropChance: 100
     minAmount: 1
     maxAmount: 4
+  - name: Fox Tail
+    prefab: {fileID: 6640661003260574739, guid: d6e70a3d123f4194c80633a675084e6b, type: 3}
+    dropChance: 100
+    minAmount: 1
+    maxAmount: 1
+  - name: Fox Hide
+    prefab: {fileID: 6640661003260574739, guid: 0cb4ec57141d6ba4fbee8f0310f15713, type: 3}
+    dropChance: 100
+    minAmount: 1
+    maxAmount: 2
   destroyItemsAfterTime: 1
   itemLifetime: 10
 --- !u!114 &3700625067027646142
@@ -710,7 +720,7 @@ MonoBehaviour:
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 0
-  m_FillAmount: 0
+  m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
