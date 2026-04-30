@@ -6,11 +6,13 @@ public enum ItemType { Food, Potion, Resource, Junk, Weapon, Amulet }
 // Структура для розділеного опису предмета
 public struct ItemDescription
 {
-    public string mainStats;   // Блок 1: Тип та основна дія (напр. Лікування)
-    public string extraStats;  // Блок 2: Опис або додаткові ефекти
+    public string mainStats;   // Блок 1: Тип та основна дія
+    public string shortDesc;   // НОВЕ: Короткий художній опис
+    public string extraStats;  // Блок 2: Додаткові ефекти або стак
     public string priceText;   // Блок 3: Ціна
 }
 
+[CreateAssetMenu(fileName = "New Item", menuName = "RPG/Item")]
 public class Item : ScriptableObject
 {
     [Header("Загальна інформація")]
@@ -19,7 +21,8 @@ public class Item : ScriptableObject
     public Sprite icon;
     public int price;
 
-    public ItemType category; // Додай це поле
+    [TextArea(2, 5)] // Додаємо зручне поле для тексту в інспекторі
+    public string shortDescription;
 
     [Header("Налаштування стаку")]
     public bool isStackable;
@@ -29,41 +32,35 @@ public class Item : ScriptableObject
     public int healValue = 0;
 
     /// <summary>
-    /// Формує детальний опис для будь-якого базового предмета (їжа, зілля, ресурси)
+    /// Формує детальний опис для будь-якого базового предмета
     /// </summary>
     public virtual ItemDescription GetDetailedInfo()
     {
         ItemDescription desc = new ItemDescription();
 
-        // 1. Визначаємо назву типу українською
+        // 1. Основні характеристики (Тип + сила)
         string typeDisplay = GetUkrainianTypeName();
-
-        // Формуємо основний блок (Тип + характеристика)
         string main = $"Type: {typeDisplay}\n";
 
         if (healValue > 0)
-        {
-            // Для їжі та зілля додаємо показник лікування
             main += $"Heal: +{healValue} HP";
-        }
-        else if (type == ItemType.Resource)
-        {
-            main += "Material for crafting";
-        }
+        else if (type == ItemType.Resource) ;
+        // main += "Material for crafting";
         else if (type == ItemType.Junk)
-        {
             main += "Has no practical value";
-        }
 
         desc.mainStats = main;
 
-        // 2. Блок додаткової інформації (наприклад, про стак)
+        // 2. Короткий опис (передаємо з поля)
+        desc.shortDesc = shortDescription;
+
+        // 3. Блок додаткової інформації (стак)
         if (isStackable)
         {
             desc.extraStats = $"Stackable up to: {maxStackSize} items";
         }
 
-        // 3. Блок ціни
+        // 4. Блок ціни
         if (price > 0)
         {
             desc.priceText = $"Price: {price} gold";
@@ -72,7 +69,6 @@ public class Item : ScriptableObject
         return desc;
     }
 
-    // Допоміжний метод для гарного відображення типу
     private string GetUkrainianTypeName()
     {
         switch (type)

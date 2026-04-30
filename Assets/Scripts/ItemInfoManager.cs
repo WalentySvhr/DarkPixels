@@ -11,8 +11,9 @@ public class ItemInfoManager : MonoBehaviour
     public TextMeshProUGUI nameText;
 
     [Space]
+    public TextMeshProUGUI shortDescText;  // НОВЕ: Текст для короткого художнього опису
     public TextMeshProUGUI mainStatsText;  // Текст для основних характеристик
-    public TextMeshProUGUI extraStatsText; // Текст для швидкості/відкидання
+    public TextMeshProUGUI extraStatsText; // Текст для стаку/ефектів
     public TextMeshProUGUI priceText;      // Текст для ціни
 
     private Item lastOpenedItem;
@@ -49,10 +50,12 @@ public class ItemInfoManager : MonoBehaviour
         // Встановлюємо назву предмета
         nameText.text = item.itemName;
 
-        // Отримуємо структуру з трьома розділеними блоками тексту
+        // Отримуємо структуру з усіма блоками тексту (включаючи shortDesc)
         ItemDescription description = item.GetDetailedInfo();
 
         // Заповнюємо тексти
+        // Тепер shortDesc відображається у відповідному полі
+        SetTextAndActive(shortDescText, description.shortDesc);
         SetTextAndActive(mainStatsText, description.mainStats);
         SetTextAndActive(extraStatsText, description.extraStats);
         SetTextAndActive(priceText, description.priceText);
@@ -80,6 +83,7 @@ public class ItemInfoManager : MonoBehaviour
 
     private void UpdatePosition()
     {
+        // Покращена логіка: використовуємо RectTransform для точнішого позиціонування
         Vector3 position = Input.mousePosition;
         position.y += 150f;
         infoPanel.transform.position = position;
