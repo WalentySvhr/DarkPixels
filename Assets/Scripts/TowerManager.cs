@@ -132,6 +132,12 @@ public class TowerManager : MonoBehaviour
         if (TowerUIManager.Instance != null)
             TowerUIManager.Instance.ShowNotification(startRunMessage);
         StartSpawners();
+
+        // --- НОВЕ: Показуємо кнопку бусту при вході в башту ---
+        if (DungeonAdUI.Instance != null)
+        {
+            DungeonAdUI.Instance.ShowBoostButton();
+        }
     }
 
     public void GoToNextFloor()
@@ -145,6 +151,12 @@ public class TowerManager : MonoBehaviour
         {
             string msg = IsBossFloor() ? bossFloorStartMessage : normalFloorStartMessage;
             TowerUIManager.Instance.ShowNotification(msg);
+        }
+
+        // --- НОВЕ: Показуємо кнопку бусту при переході на новий поверх ---
+        if (DungeonAdUI.Instance != null)
+        {
+            DungeonAdUI.Instance.ShowBoostButton();
         }
     }
 
@@ -205,6 +217,12 @@ public class TowerManager : MonoBehaviour
         StopSpawners();
         ClearLoot();
         if (chestSpawner != null) chestSpawner.ClearChests();
+
+        // --- НОВЕ: Ховаємо кнопку, якщо вийшли або померли ---
+        if (DungeonAdUI.Instance != null)
+        {
+            DungeonAdUI.Instance.HideBoostButton();
+        }
     }
 
     private void StopSpawners()

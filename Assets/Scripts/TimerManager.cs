@@ -38,10 +38,13 @@ public class TimeManager : MonoBehaviour
             }
             else
             {
-                // Якщо немає інтернету, беремо час телефону (але це вразливо до читів)
+                // Беремо час телефону
                 _currentUnixTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
                 _isTimeReady = true;
-                Debug.LogWarning("[TimeManager] Немає інтернету, використано час пристрою.");
+
+                // Замість загального тексту виводимо реальну причину відмови сервера.
+                // Або просто закоментуй цей рядок (додай // на початку), якщо він тобі зараз заважає в консолі.
+                Debug.LogWarning($"[TimeManager] Сервер часу не відповів ({webRequest.error}). Використано час пристрою.");
             }
         }
     }

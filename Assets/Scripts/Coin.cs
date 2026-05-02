@@ -6,21 +6,17 @@ public class Coin : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        // Перевіряємо, чи це гравець торкнувся монетки
         if (collision.CompareTag("Player"))
         {
-            // Звертаємося до нашого нового InventoryManager
-            // Використовуємо Instance, щоб не шукати компонент щоразу
             if (InventoryManager.Instance != null)
             {
-                InventoryManager.Instance.ChangeCoins(coinValue);
+                // ВИКЛИКАЄМО НАШУ НОВУ ФУНКЦІЮ ЗАМІСТЬ СТАРОЇ
+                InventoryManager.Instance.AddMobCoins(coinValue);
 
-                // Знищуємо монетку після підбору
                 Destroy(gameObject);
             }
             else
             {
-                // Якщо раптом забув додати скрипт на гравця, побачиш помилку в консолі
                 Debug.LogError("InventoryManager не знайдено на сцені!");
             }
         }

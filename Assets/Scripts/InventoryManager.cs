@@ -22,6 +22,14 @@ public class InventoryManager : MonoBehaviour
     public int coins = 0;
     public TextMeshProUGUI[] coinTexts;
 
+    [Header("Система Бафів")]
+    public float coinMultiplier = 1f; // Стандартний множник (х1)
+    private Coroutine activeBoostCoroutine; // Зберігаємо посилання на таймер
+
+    [Header("UI Бафів (Таймер)")]
+    public GameObject buffUIContainer; // Об'єкт, який тримає іконку і текст бафу (BuffPanel)
+    public TextMeshProUGUI buffTimerText; // Сам текст таймера
+
     [System.Serializable]
     public class ItemStack
     {
@@ -39,7 +47,10 @@ public class InventoryManager : MonoBehaviour
     void Start()
     {
         UpdateCoinUI();
-        UpdateUI(); // Додай цей рядок, якщо його немає
+        UpdateUI();
+
+        // Ховаємо UI бафу на старті гри, якщо він призначений
+        if (buffUIContainer != null) buffUIContainer.SetActive(false);
     }
 
     public bool Add(Item item)
@@ -115,7 +126,6 @@ public class InventoryManager : MonoBehaviour
                 stack.amount--;
                 if (stack.amount <= 0) items.Remove(stack);
 
-                // Після використання оновлюємо все
                 UpdateUI();
             }
         }
@@ -123,16 +133,66 @@ public class InventoryManager : MonoBehaviour
 
     public void UpdateUI()
     {
-        // 1. Оновлюємо основну сумку
         if (inventoryUI != null) inventoryUI.UpdateUI();
-
-        // 2. Оновлюємо хотбар через його власну логіку
         if (hotbarScript != null) hotbarScript.UpdateHotbar();
 
         if (ShopManager.Instance != null && ShopManager.Instance.gameObject.activeInHierarchy)
         {
             try { ShopManager.Instance.RefreshShop(); }
             catch (System.Exception) { }
+        }
+    }
+
+    // Функція запуску таймера
+    public void ActivateCoinBoost(float multiplier, float durationInSeconds)
+    {
+        if (activeBoostCoroutine != null) StopCoroutine(activeBoostCoroutine);
+        activeBoostCoroutine = StartCoroutine(CoinBoostRoutine(multiplier, durationInSeconds));
+    }
+
+    // ОНОВЛЕНИЙ таймер (Корутина) з оновленням UI
+    private System.Collections.IEnumerator CoinBoostRoutine(float multiplier, float duration)
+    {
+        coinMultiplier = multiplier;
+        float timeRemaining = duration;
+
+        // Вмикаємо UI бафу
+        if (buffUIContainer != null) buffUIContainer.SetActive(true);
+        Debug.Log($"<color=green>Баф активовано! Множник монет: х{multiplier} на {duration} сек.</color>");
+
+        // Цикл буде працювати, поки час не закінчиться
+        while (timeRemaining > 0)
+        {
+            // Оновлюємо текст (форматуємо як Хвилини:Секунди)
+            if (buffTimerText != null)
+            {
+                int minutes = Mathf.FloorToInt(timeRemaining / 60);
+                int seconds = Mathf.FloorToInt(timeRemaining % 60);
+                buffTimerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+            }
+
+            // Чекаємо рівно 1 секунду
+            yield return new WaitForSeconds(1f);
+
+            // Віднімаємо 1 секунду від загального часу
+            timeRemaining -= 1f;
+        }
+
+        // Коли час вийшов - повертаємо все як було
+        coinMultiplier = 1f;
+        if (buffUIContainer != null) buffUIContainer.SetActive(false);
+        Debug.Log("<color=red>Час бафу вийшов! Множник знову х1.</color>");
+    }
+
+    // Функція ТІЛЬКИ для мобів
+    public void AddMobCoins(int baseAmount)
+    {
+        int finalAmount = Mathf.RoundToInt(baseAmount * coinMultiplier);
+        ChangeCoins(finalAmount);
+
+        if (coinMultiplier > 1f)
+        {
+            Debug.Log($"З моба випало {baseAmount} золота. Завдяки бафу гравець отримує {finalAmount}!");
         }
     }
 }

@@ -83,7 +83,7 @@ public class NPCPatrol : MonoBehaviour
                             stuckTimer += Time.deltaTime;
                             if (stuckTimer >= timeToGiveUp)
                             {
-                                Debug.Log($"{gameObject.name}: Не можу пройти, йду в інше місце.");
+                                // Debug.Log($"{gameObject.name}: Не можу пройти, йду в інше місце.");
                                 break;
                             }
                         }
