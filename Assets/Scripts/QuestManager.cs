@@ -1,7 +1,7 @@
 using UnityEngine;
 using TMPro;
 using System.Collections;
-using System.Collections.Generic; // Потрібно для списку точок
+using System.Collections.Generic;
 
 public class QuestManager : MonoBehaviour
 {
@@ -9,10 +9,12 @@ public class QuestManager : MonoBehaviour
 
     [Header("Current Quest State")]
     public QuestData currentQuest;
-    private int currentProgress = 0;
+    public int currentProgress = 0; // Змінено на public для легшої перевірки в NPC
     private bool isTransitioning = false;
 
-    // Список усіх квестових точок на сцені для точної навігації стрілки
+    // Список завершених квестів (для збереження та NPC)
+    public List<string> completedQuests = new List<string>();
+
     private List<QuestPoint> allPoints = new List<QuestPoint>();
 
     [Header("UI References")]
@@ -42,15 +44,11 @@ public class QuestManager : MonoBehaviour
 
     public void RegisterPoint(QuestPoint point)
     {
-        if (!allPoints.Contains(point))
-        {
-            allPoints.Add(point);
-        }
+        if (!allPoints.Contains(point)) allPoints.Add(point);
     }
 
     public Transform GetTargetTransform(string id)
     {
-        // Шукаємо ціль серед зареєстрованих точок
         foreach (var point in allPoints)
         {
             if (point != null && point.pointID == id)
@@ -63,6 +61,9 @@ public class QuestManager : MonoBehaviour
 
     public void InitializeQuest(QuestData newQuest)
     {
+        // Якщо цей квест вже у списку виконаних — ігноруємо
+        if (completedQuests.Contains(newQuest.name)) return;
+
         currentQuest = newQuest;
         currentProgress = 0;
         isTransitioning = false;
@@ -77,36 +78,23 @@ public class QuestManager : MonoBehaviour
     {
         if (currentQuest == null || isTransitioning) return;
 
-        // 1. Перевіряємо відповідність типу дії та ID цілі
         if (currentQuest.type == actionType && currentQuest.targetID == id)
         {
-            // 2. Додаткова перевірка для квестів у вежі
-            // Якщо у QuestData вказано requiredTowerLevel > 0, перевіряємо поточний поверх
             if (currentQuest.requiredTowerLevel > 0)
             {
-                // Передбачаємо, що у тебе є TowerManager, який знає поточний поверх
                 int currentFloor = TowerManager.Instance.currentFloor;
-
-                if (currentFloor != currentQuest.requiredTowerLevel)
-                {
-                    // Якщо гравець вбив моба не на тому поверсі — ігноруємо
-                    return;
-                }
+                if (currentFloor != currentQuest.requiredTowerLevel) return;
             }
 
-            // 3. Зараховуємо прогрес
             currentProgress += amount;
             UpdateUI();
 
-            // 4. Перевірка завершення умови (наприклад, вбив 10 мобів)
             if (currentProgress >= currentQuest.requiredAmount)
             {
-                // Якщо квест передбачає повернення до NPC, ми не викликаємо CompleteQuestRoutine автоматично.
-                // Замість цього просто оновлюємо текст у UpdateUI на "Повернись до міста".
-
+                // Якщо треба повернутися до NPC — чекаємо взаємодії з ним
                 if (currentQuest.requiresReturnToNPC)
                 {
-                    UpdateUI(); // Текст зміниться на "Повернись за нагородою"
+                    UpdateUI();
                 }
                 else
                 {
@@ -116,10 +104,25 @@ public class QuestManager : MonoBehaviour
         }
     }
 
+    // Метод для виклику з скрипта NPC, коли гравець прийшов здавати квест
+    public void FinishQuestFromNPC()
+    {
+        if (currentQuest != null && currentProgress >= currentQuest.requiredAmount)
+        {
+            StartCoroutine(CompleteQuestRoutine());
+        }
+    }
+
     private IEnumerator CompleteQuestRoutine()
     {
         isTransitioning = true;
-        Debug.Log("Квест виконано: " + currentQuest.questName);
+
+        // Фіксуємо виконання в списку
+        if (currentQuest != null)
+        {
+            if (!completedQuests.Contains(currentQuest.name))
+                completedQuests.Add(currentQuest.name);
+        }
 
         if (goalText != null)
         {
@@ -148,6 +151,12 @@ public class QuestManager : MonoBehaviour
     {
         if (currentQuest != null && goalText != null)
         {
+            if (currentQuest.requiresReturnToNPC && currentProgress >= currentQuest.requiredAmount)
+            {
+                goalText.text = "Повернись до NPC за нагородою";
+                return;
+            }
+
             string progressInfo = currentQuest.requiredAmount > 1
                 ? $" ({currentProgress}/{currentQuest.requiredAmount})"
                 : "";
@@ -159,5 +168,45 @@ public class QuestManager : MonoBehaviour
     private void OnDestroy()
     {
         allPoints.Clear();
+    }
+
+    // --- ЗБЕРЕЖЕННЯ ---
+
+    public GameData CaptureQuestState(GameData data)
+    {
+        if (currentQuest != null)
+        {
+            data.currentQuestID = currentQuest.name;
+            data.questProgress = currentProgress;
+        }
+        else
+        {
+            data.currentQuestID = "";
+        }
+
+        // Зберігаємо копію списку завершених квестів
+        data.completedQuestIDs = new List<string>(completedQuests);
+        return data;
+    }
+
+    public void LoadQuestState(GameData data)
+    {
+        // Відновлюємо список завершених
+        completedQuests = new List<string>(data.completedQuestIDs);
+
+        if (!string.IsNullOrEmpty(data.currentQuestID))
+        {
+            QuestData loadedQuest = Resources.Load<QuestData>("Quests/" + data.currentQuestID);
+
+            if (loadedQuest != null)
+            {
+                currentQuest = loadedQuest;
+                currentProgress = data.questProgress;
+                isTransitioning = false;
+
+                if (questPanel != null) questPanel.SetActive(true);
+                UpdateUI();
+            }
+        }
     }
 }

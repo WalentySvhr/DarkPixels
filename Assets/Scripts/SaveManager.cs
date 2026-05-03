@@ -12,7 +12,10 @@ public class GameData
     public List<ItemSaveEntry> backpack = new List<ItemSaveEntry>();
     public string equippedWeaponName;
     public string equippedAmuletName;
+    public string currentQuestID;
+    public int questProgress;
     public List<FishingSpotSaveEntry> activeCooldowns = new List<FishingSpotSaveEntry>();
+    public List<string> completedQuestIDs = new List<string>();
 }
 
 [System.Serializable]
@@ -62,15 +65,16 @@ public class SaveManager : MonoBehaviour
 
     public void PrepareLoad() => needsToLoad = true;
 
+    // ... (початок коду без змін)
+
     public void SaveGame()
     {
-        // Перевіряємо статичну змінну з нашого тригера
         if (!SaveForbiddenZone.CanSave)
         {
             Debug.LogWarning("Збереження неможливе всередині башти!");
-            // Тут можна вивести повідомлення на екран для гравця
             return;
         }
+
         GameData data = new GameData();
         GameObject player = GameObject.FindGameObjectWithTag("Player");
 
@@ -81,6 +85,7 @@ public class SaveManager : MonoBehaviour
             data.posZ = player.transform.position.z;
         }
 
+        // --- ЗБЕРЕЖЕННЯ ІНВЕНТАРЯ ТА ГРОШЕЙ ---
         if (InventoryManager.Instance != null)
         {
             data.coins = InventoryManager.Instance.coins;
@@ -95,9 +100,16 @@ public class SaveManager : MonoBehaviour
             }
         }
 
+        // --- ДОДАНО: ЗБЕРЕЖЕННЯ КВЕСТІВ ---
+        if (QuestManager.Instance != null)
+        {
+            data = QuestManager.Instance.CaptureQuestState(data);
+        }
+
         PlayerHealth health = Object.FindFirstObjectByType<PlayerHealth>();
         if (health != null) data.currentHealth = health.currentHealth;
 
+        // Записуємо все в JSON
         File.WriteAllText(savePath, JsonUtility.ToJson(data, true));
         Debug.Log("<color=green>[SaveSystem]</color> Дані успішно зафіксовані.");
     }
@@ -109,6 +121,7 @@ public class SaveManager : MonoBehaviour
         GameData data = JsonUtility.FromJson<GameData>(File.ReadAllText(savePath));
         GameObject player = GameObject.FindGameObjectWithTag("Player");
 
+        // --- ВІДНОВЛЕННЯ ПОЗИЦІЇ ---
         if (player != null)
         {
             Rigidbody2D rb = player.GetComponent<Rigidbody2D>();
@@ -120,14 +133,12 @@ public class SaveManager : MonoBehaviour
             player.transform.position = new Vector3(data.posX, data.posY, data.posZ);
         }
 
+        // --- ВІДНОВЛЕННЯ ІНВЕНТАРЯ ---
         if (InventoryManager.Instance != null)
         {
             InventoryManager.Instance.coins = data.coins;
-
-            // ВАЖЛИВО: Очищаємо назви перед тим, як слоти їх знову "одягнуть"
             InventoryManager.Instance.currentWeaponName = "";
             InventoryManager.Instance.currentAmuletName = "";
-
             InventoryManager.Instance.UpdateCoinUI();
 
             InventoryManager.Instance.items.Clear();
@@ -140,12 +151,20 @@ public class SaveManager : MonoBehaviour
             InventoryManager.Instance.UpdateUI();
         }
 
+        // --- ДОДАНО: ВІДНОВЛЕННЯ КВЕСТІВ ---
+        if (QuestManager.Instance != null)
+        {
+            QuestManager.Instance.LoadQuestState(data);
+        }
+
         PlayerHealth health = Object.FindFirstObjectByType<PlayerHealth>();
         if (health != null) health.currentHealth = (int)data.currentHealth;
 
         StopAllCoroutines();
         StartCoroutine(ApplyEquipmentAfterLoad(data));
     }
+
+    // ... (решта коду ApplyEquipmentAfterLoad та методів для рибалки без змін)
 
     private System.Collections.IEnumerator ApplyEquipmentAfterLoad(GameData data)
     {

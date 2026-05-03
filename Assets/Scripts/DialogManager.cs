@@ -15,8 +15,9 @@ public class DialogManager : MonoBehaviour
     public Image portraitImage;
 
     [Header("Кнопки Квесту")]
-    public GameObject questButtonsPanel; // Об'єкт-батько для двох кнопок
+    public GameObject questButtonsPanel;
     public Button acceptButton;
+    public TextMeshProUGUI acceptButtonText;
     public Button declineButton;
 
     [Header("Налаштування")]
@@ -25,8 +26,8 @@ public class DialogManager : MonoBehaviour
     private Queue<string> sentences;
     private bool isTyping = false;
     private string currentSentence = "";
+    private QuestGiver currentGiver;
     private NPCPatrol currentNPC;
-    private DialogData currentDialogData; // Зберігаємо посилання на дані діалогу
 
     void Awake()
     {
@@ -40,7 +41,6 @@ public class DialogManager : MonoBehaviour
 
     void Update()
     {
-        // Додаємо перевірку: якщо панель кнопок активна, ми не перемикаємо текст кліком
         bool buttonsActive = questButtonsPanel != null && questButtonsPanel.activeInHierarchy;
 
         if (dialogPanel != null && dialogPanel.activeInHierarchy && Input.GetMouseButtonDown(0) && !buttonsActive)
@@ -49,27 +49,51 @@ public class DialogManager : MonoBehaviour
         }
     }
 
-    public void StartDialog(DialogData dialog, NPCPatrol npc = null)
+    // --- ОСНОВНІ МЕТОДИ ЗАПУСКУ ---
+
+    // 1. СТАТИЧНИЙ ДІАЛОГ (Подяка або фрази в процесі)
+    public void StartStaticDialog(string text, DialogData data)
     {
-        currentNPC = npc;
-        currentDialogData = dialog; // Запам'ятовуємо дані діалогу
+        PrepareDialogUI(data);
+        if (questButtonsPanel != null) questButtonsPanel.SetActive(false);
 
-        if (currentNPC != null) currentNPC.StartInteraction();
+        sentences.Clear();
+        sentences.Enqueue(text);
+        DisplayNextSentence();
+    }
 
-        dialogPanel.SetActive(true);
-        if (questButtonsPanel != null) questButtonsPanel.SetActive(false); // Ховаємо кнопки на початку
+    // 2. ДІАЛОГ ВИДАЧІ КВЕСТУ
+    public void StartQuestDialog(string text, QuestGiver giver, DialogData data)
+    {
+        currentGiver = giver;
+        PrepareDialogUI(data);
 
-        nameText.text = dialog.npcName;
+        if (acceptButtonText != null) acceptButtonText.text = "Прийняти";
 
-        if (portraitImage != null)
-        {
-            if (dialog.npcPortrait != null)
-            {
-                portraitImage.sprite = dialog.npcPortrait;
-                portraitImage.enabled = true;
-            }
-            else portraitImage.enabled = false;
-        }
+        sentences.Clear();
+        sentences.Enqueue(text);
+        DisplayNextSentence();
+    }
+
+    // 3. ДІАЛОГ ЗАВЕРШЕННЯ КВЕСТУ (Нагорода)
+    public void StartCompletionDialog(string text, QuestGiver giver, DialogData data)
+    {
+        currentGiver = giver;
+        PrepareDialogUI(data);
+
+        if (acceptButtonText != null) acceptButtonText.text = "Забрати нагороду";
+
+        sentences.Clear();
+        sentences.Enqueue(text);
+        DisplayNextSentence();
+    }
+
+    // 4. УНІВЕРСАЛЬНИЙ ДІАЛОГ (Для DialogTrigger)
+    public void StartDialog(DialogData dialog)
+    {
+        PrepareDialogUI(dialog);
+
+        if (questButtonsPanel != null) questButtonsPanel.SetActive(false);
 
         sentences.Clear();
         foreach (string sentence in dialog.sentences)
@@ -78,6 +102,32 @@ public class DialogManager : MonoBehaviour
         }
 
         DisplayNextSentence();
+    }
+
+    // --- ДОПОМІЖНІ МЕТОДИ ---
+
+    private void PrepareDialogUI(DialogData data)
+    {
+        dialogPanel.SetActive(true);
+
+        // Встановлюємо ім'я
+        if (nameText != null) nameText.text = data.npcName;
+
+        // Встановлюємо портрет
+        if (portraitImage != null)
+        {
+            if (data.npcPortrait != null)
+            {
+                portraitImage.sprite = data.npcPortrait;
+                portraitImage.enabled = true;
+            }
+            else
+            {
+                portraitImage.enabled = false;
+            }
+        }
+
+        if (questButtonsPanel != null) questButtonsPanel.SetActive(false);
     }
 
     public void DisplayNextSentence()
@@ -90,10 +140,9 @@ public class DialogManager : MonoBehaviour
             return;
         }
 
-        // Якщо черга порожня - це був останній текст, тепер перевіряємо квест
         if (sentences.Count == 0)
         {
-            CheckForQuest();
+            CheckForFinalState();
             return;
         }
 
@@ -101,32 +150,14 @@ public class DialogManager : MonoBehaviour
         StartCoroutine(TypeSentence(currentSentence));
     }
 
-    private void CheckForQuest()
+    private void CheckForFinalState()
     {
-        if (currentDialogData == null)
+        if (currentGiver != null)
         {
-            Debug.LogError("Помилка: currentDialogData порожній!");
-            EndDialog();
-            return;
-        }
-
-        if (currentDialogData.questToStart != null)
-        {
-            Debug.Log("Спроба активувати панель кнопок...");
-            if (questButtonsPanel != null)
-            {
-                questButtonsPanel.SetActive(true);
-                // Перевірка, чи він дійсно став активним
-                Debug.Log("Стан панелі після SetActive: " + questButtonsPanel.activeSelf);
-            }
-            else
-            {
-                Debug.LogError("Помилка: questButtonsPanel не призначений в інспекторі!");
-            }
+            if (questButtonsPanel != null) questButtonsPanel.SetActive(true);
         }
         else
         {
-            Debug.Log("Квесту немає, просто завершуємо діалог.");
             EndDialog();
         }
     }
@@ -145,15 +176,18 @@ public class DialogManager : MonoBehaviour
 
     public void OnAcceptQuest()
     {
-        if (currentDialogData != null && currentDialogData.questToStart != null)
+        if (currentGiver != null)
         {
-            QuestManager.Instance.InitializeQuest(currentDialogData.questToStart);
+            QuestManager qm = QuestManager.Instance;
+            string qName = currentGiver.questToOffer.name;
 
-            // Важливо: повідомити NPC, що квест прийнято, щоб він прибрав знак "?"
-            if (currentNPC != null)
+            if (qm.currentQuest != null && qName == qm.currentQuest.name && qm.currentProgress >= qm.currentQuest.requiredAmount)
             {
-                QuestGiver giver = currentNPC.GetComponent<QuestGiver>();
-                if (giver != null) giver.AcceptQuest();
+                qm.FinishQuestFromNPC();
+            }
+            else
+            {
+                currentGiver.AcceptQuest();
             }
         }
         EndDialog();
@@ -168,6 +202,7 @@ public class DialogManager : MonoBehaviour
     {
         dialogPanel.SetActive(false);
         if (questButtonsPanel != null) questButtonsPanel.SetActive(false);
+        currentGiver = null;
         if (currentNPC != null) currentNPC.StopInteraction();
     }
 }
