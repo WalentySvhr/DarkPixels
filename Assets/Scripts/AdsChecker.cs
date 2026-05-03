@@ -4,6 +4,10 @@ using System; // Потрібно для Action
 
 public class AdsChecker : MonoBehaviour
 {
+    [Header("Налаштування нагород (Можна міняти в Інспекторі)")]
+    public int freeGoldAmount = 100;      // Скільки золота давати за звичайну рекламу
+    public float boostMultiplier = 3f;    // Множник для бафу (х3)
+    public float boostDuration = 120f;    // Час дії бафу в секундах
     public static AdsChecker Instance;
 
     private string appKey = "2638917fd";
@@ -48,29 +52,21 @@ public class AdsChecker : MonoBehaviour
     {
         switch (currentRewardType)
         {
-
             case RewardType.FreeGold:
-                InventoryManager.Instance.ChangeCoins(100);
-                Debug.Log("<color=yellow>Нагорода видана: 100 золота!</color>");
+                // Використовуємо змінну freeGoldAmount замість цифри 100
+                InventoryManager.Instance.ChangeCoins(freeGoldAmount);
+                Debug.Log($"<color=yellow>Нагорода видана: {freeGoldAmount} золота!</color>");
                 break;
 
             case RewardType.CoinBoostX3:
-                // 2. Викликаємо наш таймер: х3 на 120 секунд (2 хвилини)
-                InventoryManager.Instance.ActivateCoinBoost(3f, 10f);
-                Debug.Log("<color=yellow>Нагорода видана: Буст монет х3 на 2 хвилини!</color>");
-                break;
-
-            case RewardType.DoubleLoot:
-                // Тут буде код для подвоєння луту
-                InventoryManager.Instance.ChangeCoins(500); // наприклад, даємо багато золота
-                Debug.Log("<color=yellow>Нагорода видана: Подвійний лут з боса (500 золота)!</color>");
+                // Використовуємо змінні для бафу
+                InventoryManager.Instance.ActivateCoinBoost(boostMultiplier, boostDuration);
+                Debug.Log($"<color=yellow>Нагорода видана: Буст монет х{boostMultiplier} на {boostDuration} сек!</color>");
                 break;
 
                 // case RewardType.RevivePlayer:
-                //     // Тут буде код для воскресіння
                 //     Debug.Log("<color=green>Гравець воскрес!</color>");
                 //     break;
-
         }
     }
 }

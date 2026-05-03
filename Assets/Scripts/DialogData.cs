@@ -5,9 +5,11 @@ using UnityEngine;
 // Щоб створити новий діалог, потрібно клікнути правою кнопкою миші в папці Assets, вибрати Create -> RPG -> Dialog, і заповнити поля в Інспекторі. Потім цей DialogData можна передати в метод StartDialog класу DialogManager для початку діалогу з NPC.
 [CreateAssetMenu(fileName = "NewDialog", menuName = "RPG/Dialog")]
 public class DialogData : ScriptableObject
+
 {
     [Header("Інформація про NPC")]
     public string npcName;
+    public QuestData questToStart;
     public Sprite npcPortrait; // Іконка обличчя (за бажанням)
 
     [Header("Репліки")]

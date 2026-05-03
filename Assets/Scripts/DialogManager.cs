@@ -1,28 +1,32 @@
+using UnityEngine;
+using TMPro;
+using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
-using TMPro;
-// Цей клас керує діалогами в грі. Він відповідає за відкриття/закриття панелі діалогу, відображення тексту та імені NPC, а також за ефект друкування тексту по одній літері.
-// Він кріпиться на окремому об'єкті в сцені (наприклад, DialogManager) і має статичну властивість Instance для легкого доступу з інших скриптів (наприклад, з NPCPatrol).
 
 public class DialogManager : MonoBehaviour
 {
     public static DialogManager Instance { get; private set; }
 
     [Header("UI Елементи")]
-    public GameObject dialogPanel; // Сама панель діалогу
-    public TextMeshProUGUI nameText; // Текст імені
-    public TextMeshProUGUI dialogText; // Текст репліки
-    public Image portraitImage; // Картинка NPC (опціонально)
+    public GameObject dialogPanel;
+    public TextMeshProUGUI nameText;
+    public TextMeshProUGUI dialogText;
+    public Image portraitImage;
+
+    [Header("Кнопки Квесту")]
+    public GameObject questButtonsPanel; // Об'єкт-батько для двох кнопок
+    public Button acceptButton;
+    public Button declineButton;
 
     [Header("Налаштування")]
-    public float typingSpeed = 0.02f; // Швидкість друку літер
+    public float typingSpeed = 0.02f;
 
     private Queue<string> sentences;
     private bool isTyping = false;
     private string currentSentence = "";
-    private NPCPatrol currentNPC; // Щоб знати, кого відпустити після діалогу
+    private NPCPatrol currentNPC;
+    private DialogData currentDialogData; // Зберігаємо посилання на дані діалогу
 
     void Awake()
     {
@@ -31,12 +35,15 @@ public class DialogManager : MonoBehaviour
 
         sentences = new Queue<string>();
         if (dialogPanel != null) dialogPanel.SetActive(false);
+        if (questButtonsPanel != null) questButtonsPanel.SetActive(false);
     }
 
     void Update()
     {
-        // Якщо діалог відкритий і гравець клікає мишкою — йдемо до наступної репліки
-        if (dialogPanel != null && dialogPanel.activeInHierarchy && Input.GetMouseButtonDown(0))
+        // Додаємо перевірку: якщо панель кнопок активна, ми не перемикаємо текст кліком
+        bool buttonsActive = questButtonsPanel != null && questButtonsPanel.activeInHierarchy;
+
+        if (dialogPanel != null && dialogPanel.activeInHierarchy && Input.GetMouseButtonDown(0) && !buttonsActive)
         {
             DisplayNextSentence();
         }
@@ -44,15 +51,16 @@ public class DialogManager : MonoBehaviour
 
     public void StartDialog(DialogData dialog, NPCPatrol npc = null)
     {
-        currentNPC = npc; // Запам'ятовуємо, з ким говоримо
+        currentNPC = npc;
+        currentDialogData = dialog; // Запам'ятовуємо дані діалогу
 
-        // Зупиняємо NPC
         if (currentNPC != null) currentNPC.StartInteraction();
 
         dialogPanel.SetActive(true);
+        if (questButtonsPanel != null) questButtonsPanel.SetActive(false); // Ховаємо кнопки на початку
+
         nameText.text = dialog.npcName;
 
-        // Якщо є портрет — показуємо, якщо ні — ховаємо
         if (portraitImage != null)
         {
             if (dialog.npcPortrait != null)
@@ -64,8 +72,6 @@ public class DialogManager : MonoBehaviour
         }
 
         sentences.Clear();
-
-        // Завантажуємо всі репліки в чергу
         foreach (string sentence in dialog.sentences)
         {
             sentences.Enqueue(sentence);
@@ -76,7 +82,6 @@ public class DialogManager : MonoBehaviour
 
     public void DisplayNextSentence()
     {
-        // Якщо текст ще друкується, а гравець клікнув — виводимо текст миттєво цілком
         if (isTyping)
         {
             StopAllCoroutines();
@@ -85,10 +90,10 @@ public class DialogManager : MonoBehaviour
             return;
         }
 
-        // Якщо репліки закінчилися — закриваємо діалог
+        // Якщо черга порожня - це був останній текст, тепер перевіряємо квест
         if (sentences.Count == 0)
         {
-            EndDialog();
+            CheckForQuest();
             return;
         }
 
@@ -96,25 +101,73 @@ public class DialogManager : MonoBehaviour
         StartCoroutine(TypeSentence(currentSentence));
     }
 
+    private void CheckForQuest()
+    {
+        if (currentDialogData == null)
+        {
+            Debug.LogError("Помилка: currentDialogData порожній!");
+            EndDialog();
+            return;
+        }
+
+        if (currentDialogData.questToStart != null)
+        {
+            Debug.Log("Спроба активувати панель кнопок...");
+            if (questButtonsPanel != null)
+            {
+                questButtonsPanel.SetActive(true);
+                // Перевірка, чи він дійсно став активним
+                Debug.Log("Стан панелі після SetActive: " + questButtonsPanel.activeSelf);
+            }
+            else
+            {
+                Debug.LogError("Помилка: questButtonsPanel не призначений в інспекторі!");
+            }
+        }
+        else
+        {
+            Debug.Log("Квесту немає, просто завершуємо діалог.");
+            EndDialog();
+        }
+    }
+
     IEnumerator TypeSentence(string sentence)
     {
         isTyping = true;
         dialogText.text = "";
-
-        // Виводимо по одній літері
         foreach (char letter in sentence.ToCharArray())
         {
             dialogText.text += letter;
             yield return new WaitForSeconds(typingSpeed);
         }
-
         isTyping = false;
+    }
+
+    public void OnAcceptQuest()
+    {
+        if (currentDialogData != null && currentDialogData.questToStart != null)
+        {
+            QuestManager.Instance.InitializeQuest(currentDialogData.questToStart);
+
+            // Важливо: повідомити NPC, що квест прийнято, щоб він прибрав знак "?"
+            if (currentNPC != null)
+            {
+                QuestGiver giver = currentNPC.GetComponent<QuestGiver>();
+                if (giver != null) giver.AcceptQuest();
+            }
+        }
+        EndDialog();
+    }
+
+    public void OnDeclineQuest()
+    {
+        EndDialog();
     }
 
     void EndDialog()
     {
         dialogPanel.SetActive(false);
-        // Відпускаємо NPC, щоб він пішов далі
+        if (questButtonsPanel != null) questButtonsPanel.SetActive(false);
         if (currentNPC != null) currentNPC.StopInteraction();
     }
 }
