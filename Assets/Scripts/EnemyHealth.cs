@@ -116,6 +116,14 @@ public class EnemyHealth : MonoBehaviour
         if (LevelManager.Instance != null) LevelManager.Instance.UnregisterEnemy();
         if (lootDropper != null) lootDropper.DropLoot();
 
+        // --- ДОДАНО: Повідомляємо квестову систему ---
+        if (QuestManager.Instance != null)
+        {
+            // Передаємо тип квесту і порожній рядок (будь-який моб)
+            QuestManager.Instance.OnQuestAction(QuestType.KillInTower, "");
+        }
+        // ---------------------------------------------
+
         Destroy(gameObject);
     }
 }

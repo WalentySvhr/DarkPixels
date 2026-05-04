@@ -4,8 +4,11 @@ public class QuestGiver : MonoBehaviour
 {
     [Header("Data References")]
     public QuestData questToOffer;
-    public DialogData npcDialogData; // ДОДАНО: файл з ім'ям та портретом NPC
-    public GameObject questionMarkIcon;
+    public DialogData npcDialogData; // Файл з ім'ям та портретом NPC
+
+    [Header("Icons")]
+    public GameObject questionMarkIcon; // Твій звичайний об'єкт "?" над головою
+    public GameObject minimapQuestionMarkIcon; // ДОДАНО: Велика іконка для мінімапи
 
     [Header("Dialog Texts")]
     public string welcomeDialog = "Вітаю! Допоможи мені з однією справою...";
@@ -20,7 +23,7 @@ public class QuestGiver : MonoBehaviour
 
     public void UpdateIcon()
     {
-        if (questionMarkIcon == null || questToOffer == null) return;
+        if (questToOffer == null) return;
 
         string qName = questToOffer.name;
 
@@ -28,8 +31,20 @@ public class QuestGiver : MonoBehaviour
         bool isCompleted = QuestManager.Instance.completedQuests.Contains(qName);
         bool isActive = QuestManager.Instance.currentQuest != null && QuestManager.Instance.currentQuest.name == qName;
 
-        // Знак питання зникає, якщо квест активний або вже виконаний
-        questionMarkIcon.SetActive(!isCompleted && !isActive);
+        // Визначаємо, чи потрібно показувати іконки (квест не прийнято і не виконано)
+        bool shouldShowIcon = !isCompleted && !isActive;
+
+        // Керуємо звичайним знаком питання
+        if (questionMarkIcon != null)
+        {
+            questionMarkIcon.SetActive(shouldShowIcon);
+        }
+
+        // Керуємо знаком питання для мінімапи (логіка абсолютно така ж)
+        if (minimapQuestionMarkIcon != null)
+        {
+            minimapQuestionMarkIcon.SetActive(shouldShowIcon);
+        }
     }
 
     public void Interact()
@@ -47,7 +62,6 @@ public class QuestGiver : MonoBehaviour
         // 1. Якщо квест вже виконаний назавжди
         if (qm.completedQuests.Contains(qName))
         {
-            // Тепер передаємо ТЕКСТ та ДАНІ NPC (для портрета)
             dm.StartStaticDialog(alreadyDoneDialog, npcDialogData);
             return;
         }
@@ -57,12 +71,10 @@ public class QuestGiver : MonoBehaviour
         {
             if (questToOffer.requiresReturnToNPC && qm.currentProgress >= questToOffer.requiredAmount)
             {
-                // Діалог завершення з даними NPC
                 dm.StartCompletionDialog(completeDialog, this, npcDialogData);
             }
             else
             {
-                // Діалог прогресу з даними NPC
                 dm.StartStaticDialog(progressDialog, npcDialogData);
             }
             return;

@@ -11,6 +11,9 @@ public class QuestManager : MonoBehaviour
     public QuestData currentQuest;
     public int currentProgress = 0; // Змінено на public для легшої перевірки в NPC
     private bool isTransitioning = false;
+    [Header("UI Texts")]
+    [Tooltip("Текст, який показується, коли квест виконано, але треба здати його NPC")]
+    public string returnToNPCText = "Повернись до NPC за нагородою";
 
     // Список завершених квестів (для збереження та NPC)
     public List<string> completedQuests = new List<string>();
@@ -78,7 +81,10 @@ public class QuestManager : MonoBehaviour
     {
         if (currentQuest == null || isTransitioning) return;
 
-        if (currentQuest.type == actionType && currentQuest.targetID == id)
+        // ДОДАНО: Перевіряємо, чи ID збігається, АБО чи поле Target ID в квесті порожнє (тобто зараховуємо будь-яку ціль)
+        bool isTargetMatch = string.IsNullOrEmpty(currentQuest.targetID) || currentQuest.targetID == id;
+
+        if (currentQuest.type == actionType && isTargetMatch)
         {
             if (currentQuest.requiredTowerLevel > 0)
             {
@@ -153,7 +159,8 @@ public class QuestManager : MonoBehaviour
         {
             if (currentQuest.requiresReturnToNPC && currentProgress >= currentQuest.requiredAmount)
             {
-                goalText.text = "Повернись до NPC за нагородою";
+                // Використовуємо змінну замість жорсткого тексту
+                goalText.text = returnToNPCText;
                 return;
             }
 
