@@ -14,11 +14,18 @@ public class DialogManager : MonoBehaviour
     public TextMeshProUGUI dialogText;
     public Image portraitImage;
 
-    [Header("Кнопки Квесту")]
+    [Header("Кнопки Квесту (Посилання)")]
     public GameObject questButtonsPanel;
     public Button acceptButton;
     public TextMeshProUGUI acceptButtonText;
     public Button declineButton;
+    public TextMeshProUGUI declineButtonText; // ДОДАНО: Текст кнопки відмови
+
+    [Header("Тексти кнопок (Налаштування)")]
+    public string questAcceptText = "Прийняти";
+    public string questDeclineText = "Відмовитись";
+    public string rewardAcceptText = "Забрати нагороду";
+    public string rewardDeclineText = "Пізніше"; // Текст кнопки відмови, коли ми прийшли здавати квест
 
     [Header("Налаштування")]
     public float typingSpeed = 0.02f;
@@ -68,7 +75,9 @@ public class DialogManager : MonoBehaviour
         currentGiver = giver;
         PrepareDialogUI(data);
 
-        if (acceptButtonText != null) acceptButtonText.text = "Прийняти";
+        // Встановлюємо тексти з Інспектора для видачі квесту
+        if (acceptButtonText != null) acceptButtonText.text = questAcceptText;
+        if (declineButtonText != null) declineButtonText.text = questDeclineText;
 
         sentences.Clear();
         sentences.Enqueue(text);
@@ -81,7 +90,9 @@ public class DialogManager : MonoBehaviour
         currentGiver = giver;
         PrepareDialogUI(data);
 
-        if (acceptButtonText != null) acceptButtonText.text = "Забрати нагороду";
+        // Встановлюємо тексти з Інспектора для здачі квесту
+        if (acceptButtonText != null) acceptButtonText.text = rewardAcceptText;
+        if (declineButtonText != null) declineButtonText.text = rewardDeclineText;
 
         sentences.Clear();
         sentences.Enqueue(text);
@@ -179,15 +190,20 @@ public class DialogManager : MonoBehaviour
         if (currentGiver != null)
         {
             QuestManager qm = QuestManager.Instance;
-            string qName = currentGiver.questToOffer.name;
+            QuestData activeQuest = currentGiver.GetRelevantQuest();
 
-            if (qm.currentQuest != null && qName == qm.currentQuest.name && qm.currentProgress >= qm.currentQuest.requiredAmount)
+            if (activeQuest != null)
             {
-                qm.FinishQuestFromNPC();
-            }
-            else
-            {
-                currentGiver.AcceptQuest();
+                string qName = activeQuest.name;
+
+                if (qm.currentQuest != null && qName == qm.currentQuest.name && qm.currentProgress >= qm.currentQuest.requiredAmount)
+                {
+                    qm.FinishQuestFromNPC();
+                }
+                else
+                {
+                    currentGiver.AcceptQuest();
+                }
             }
         }
         EndDialog();

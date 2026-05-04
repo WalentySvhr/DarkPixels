@@ -1,75 +1,156 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
+using System.Linq;
+using System.Collections.Generic;
 
 public class QuestGiver : MonoBehaviour
 {
     [Header("Data References")]
     public QuestData questToOffer;
-    public DialogData npcDialogData; // Файл з ім'ям та портретом NPC
+    public DialogData npcDialogData;
 
-    [Header("Icons")]
-    public GameObject questionMarkIcon; // Твій звичайний об'єкт "?" над головою
-    public GameObject minimapQuestionMarkIcon; // ДОДАНО: Велика іконка для мінімапи
+    [Header("Icons: Новий квест")]
+    public GameObject questionMarkIcon;
+    public GameObject minimapQuestionMarkIcon;
+
+    [Header("Icons: Квест готовий до здачі")]
+    public GameObject exclamationMarkIcon;
+    public GameObject minimapExclamationMarkIcon;
 
     [Header("Dialog Texts")]
     public string welcomeDialog = "Вітаю! Допоможи мені з однією справою...";
     public string progressDialog = "Ти ще не виконав моє прохання.";
     public string completeDialog = "Чудова робота! Ось твоя нагорода.";
     public string alreadyDoneDialog = "Дякую ще раз за допомогу!";
+    public string busyDialog = "Я бачу, ти вже маєш завдання. Спочатку заверши його!";
 
     void Start()
     {
-        UpdateIcon();
+        // Цей рядок змінить колір об'єкта в ієрархії, щоб ти бачив, який саме скрипт працює
+        Debug.Log($"<color=white>Я скрипт на об'єкті: </color> <color=orange>{gameObject.name}</color>. Повний шлях: {GetGameObjectPath(gameObject)}");
+
+        InvokeRepeating(nameof(UpdateIcon), 0.5f, 0.5f);
+    }
+
+    // Допоміжний метод, щоб побачити точне місце в Hierarchy
+    private string GetGameObjectPath(GameObject obj)
+    {
+        string path = "/" + obj.name;
+        while (obj.transform.parent != null)
+        {
+            obj = obj.transform.parent.gameObject;
+            path = "/" + obj.name + path;
+        }
+        return path;
+    }
+    private string CleanName(string rawName)
+    {
+        if (string.IsNullOrEmpty(rawName)) return "";
+        // Видаляємо пробіли, (Clone) та переводимо в нижній регістр для 100% порівняння
+        return rawName.Replace("(Clone)", "").Trim().ToLower();
+    }
+
+    private bool IsQuestCompleted(string questName)
+    {
+        // ЗАХИСТ: Якщо менеджер ще не ініціалізувався, просто кажемо "ні"
+        if (QuestManager.Instance == null) return false;
+
+        string cleanedSearchName = CleanName(questName);
+        List<string> completedList = QuestManager.Instance.completedQuests;
+
+        // ЗАХИСТ: Якщо список чомусь не створений
+        if (completedList == null) return false;
+
+        return completedList.Any(q => CleanName(q) == cleanedSearchName);
+    }
+
+    public QuestData GetRelevantQuest()
+    {
+        QuestData current = questToOffer;
+        QuestManager qm = QuestManager.Instance;
+
+        // ЗАХИСТ: Якщо менеджера немає, нічого не робимо
+        if (qm == null) return null;
+
+        // ЗМІНА: Тепер ми використовуємо метод з QuestManager, а не локальний!
+        while (current != null && qm.IsQuestCompleted(current.name))
+        {
+            current = current.nextQuest;
+        }
+
+        if (current != null && (string.IsNullOrWhiteSpace(current.description) || current.requiredAmount <= 0))
+        {
+            return null;
+        }
+
+        // --- ДЕБАГ ДЛЯ ВИЯВЛЕННЯ ДУБЛІКАТІВ ---
+        if (current != null)
+        {
+            Debug.Log($"<color=yellow>[QUEST GIVER]</color> {gameObject.name} бачить квест: <color=green>{current.name}</color>.\n" +
+                      $"Звертаємось до менеджера на об'єкті: <b>{qm.gameObject.name}</b>. У його списку виконаних: <b>{qm.completedQuests.Count}</b> шт.");
+        }
+
+        return current;
     }
 
     public void UpdateIcon()
     {
-        if (questToOffer == null) return;
-
-        string qName = questToOffer.name;
-
-        // Перевіряємо стан через менеджер
-        bool isCompleted = QuestManager.Instance.completedQuests.Contains(qName);
-        bool isActive = QuestManager.Instance.currentQuest != null && QuestManager.Instance.currentQuest.name == qName;
-
-        // Визначаємо, чи потрібно показувати іконки (квест не прийнято і не виконано)
-        bool shouldShowIcon = !isCompleted && !isActive;
-
-        // Керуємо звичайним знаком питання
+        // 1. Спробуємо вимкнути і виведемо результат у консоль
         if (questionMarkIcon != null)
         {
-            questionMarkIcon.SetActive(shouldShowIcon);
+            questionMarkIcon.SetActive(false);
+            // Цей лог скаже нам, чи справді ми вимикаємо той об'єкт
+            // Debug.Log($"[ICON] Спроба вимкнути {questionMarkIcon.name} на {gameObject.name}");
         }
 
-        // Керуємо знаком питання для мінімапи (логіка абсолютно така ж)
-        if (minimapQuestionMarkIcon != null)
+        if (minimapQuestionMarkIcon != null) minimapQuestionMarkIcon.SetActive(false);
+        if (exclamationMarkIcon != null) exclamationMarkIcon.SetActive(false);
+        if (minimapExclamationMarkIcon != null) minimapExclamationMarkIcon.SetActive(false);
+
+        QuestData activeQuestForNPC = GetRelevantQuest();
+        if (activeQuestForNPC == null) return;
+
+        QuestManager qm = QuestManager.Instance;
+
+        // Якщо квест уже в руках — ми вже вимкнули іконки вище, 
+        // тому просто нічого не вмикаємо назад.
+        if (qm.currentQuest != null)
         {
-            minimapQuestionMarkIcon.SetActive(shouldShowIcon);
+            string heldQuestName = CleanName(qm.currentQuest.name);
+            string npcQuestName = CleanName(activeQuestForNPC.name);
+
+            if (heldQuestName == npcQuestName)
+            {
+                if (activeQuestForNPC.requiresReturnToNPC && qm.currentProgress >= activeQuestForNPC.requiredAmount)
+                {
+                    if (exclamationMarkIcon != null) exclamationMarkIcon.SetActive(true);
+                    if (minimapExclamationMarkIcon != null) minimapExclamationMarkIcon.SetActive(true);
+                }
+                return; // Квест наш, умови не виконані — виходимо (іконки вимкнені)
+            }
+        }
+        else
+        {
+            // Тільки якщо квесту немає — вмикаємо "?"
+            if (questionMarkIcon != null) questionMarkIcon.SetActive(true);
+            if (minimapQuestionMarkIcon != null) minimapQuestionMarkIcon.SetActive(true);
         }
     }
-
     public void Interact()
     {
-        if (questToOffer == null || npcDialogData == null)
-        {
-            Debug.LogWarning("QuestGiver: Відсутній QuestData або DialogData!");
-            return;
-        }
-
-        string qName = questToOffer.name;
+        QuestData activeQuestForNPC = GetRelevantQuest();
         QuestManager qm = QuestManager.Instance;
         DialogManager dm = DialogManager.Instance;
 
-        // 1. Якщо квест вже виконаний назавжди
-        if (qm.completedQuests.Contains(qName))
+        if (activeQuestForNPC == null)
         {
             dm.StartStaticDialog(alreadyDoneDialog, npcDialogData);
             return;
         }
 
-        // 2. Якщо цей квест зараз активний
-        if (qm.currentQuest != null && qm.currentQuest.name == qName)
+        if (qm.currentQuest != null && CleanName(qm.currentQuest.name) == CleanName(activeQuestForNPC.name))
         {
-            if (questToOffer.requiresReturnToNPC && qm.currentProgress >= questToOffer.requiredAmount)
+            if (activeQuestForNPC.requiresReturnToNPC && qm.currentProgress >= activeQuestForNPC.requiredAmount)
             {
                 dm.StartCompletionDialog(completeDialog, this, npcDialogData);
             }
@@ -80,13 +161,30 @@ public class QuestGiver : MonoBehaviour
             return;
         }
 
-        // 3. Якщо квест новий
+        if (qm.currentQuest != null)
+        {
+            dm.StartStaticDialog(busyDialog, npcDialogData);
+            return;
+        }
+
         dm.StartQuestDialog(welcomeDialog, this, npcDialogData);
     }
 
     public void AcceptQuest()
     {
-        QuestManager.Instance.InitializeQuest(questToOffer);
+        QuestData activeQuestForNPC = GetRelevantQuest();
+        if (activeQuestForNPC != null)
+        {
+            QuestManager.Instance.InitializeQuest(activeQuestForNPC);
+            // Додай це для перевірки:
+            Debug.Log($"[QUEST] Прийнято: {QuestManager.Instance.currentQuest?.name}");
+        }
         UpdateIcon();
+    }
+
+    private void OnMouseDown()
+    {
+        if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject()) return;
+        Interact();
     }
 }

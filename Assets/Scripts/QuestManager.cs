@@ -2,22 +2,24 @@ using UnityEngine;
 using TMPro;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq; // Додано для зручної роботи зі списками
 
 public class QuestManager : MonoBehaviour
 {
     public static QuestManager Instance;
 
+    // Подія, яка сповіщає всіх NPC, що стан квестів змінився
+    public System.Action OnQuestStateChanged;
+
     [Header("Current Quest State")]
     public QuestData currentQuest;
-    public int currentProgress = 0; // Змінено на public для легшої перевірки в NPC
+    public int currentProgress = 0;
     private bool isTransitioning = false;
+
     [Header("UI Texts")]
-    [Tooltip("Текст, який показується, коли квест виконано, але треба здати його NPC")]
     public string returnToNPCText = "Повернись до NPC за нагородою";
 
-    // Список завершених квестів (для збереження та NPC)
     public List<string> completedQuests = new List<string>();
-
     private List<QuestPoint> allPoints = new List<QuestPoint>();
 
     [Header("UI References")]
@@ -25,10 +27,14 @@ public class QuestManager : MonoBehaviour
     public GameObject questPanel;
     public Animator uiAnimator;
 
-    void Awake()
+    private void Awake()
     {
-        if (Instance == null) Instance = this;
-        else Destroy(gameObject);
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        Instance = this;
     }
 
     void Start()
@@ -43,29 +49,65 @@ public class QuestManager : MonoBehaviour
         }
     }
 
-    // --- СИСТЕМА РЕЄСТРАЦІЇ ТОЧОК ---
+    // --- ДОПОМІЖНІ МЕТОДИ ---
 
-    public void RegisterPoint(QuestPoint point)
+    // Очищає ім'я від (Clone) та пробілів для надійного порівняння
+    private string CleanName(string rawName)
     {
-        if (!allPoints.Contains(point)) allPoints.Add(point);
+        if (string.IsNullOrEmpty(rawName)) return "";
+        return rawName.Replace("(Clone)", "").Trim();
     }
 
-    public Transform GetTargetTransform(string id)
+    // Глобальна перевірка: чи виконаний квест? (Викликати з QuestGiver)
+    public bool IsQuestCompleted(string questName)
     {
-        foreach (var point in allPoints)
+        if (string.IsNullOrWhiteSpace(questName)) return false;
+        if (completedQuests == null) return false;
+
+        // "Бульдозер": залишаємо виключно букви і цифри, все переводимо в нижній регістр
+        string search = new string(questName.ToLower().Where(char.IsLetterOrDigit).ToArray());
+
+        bool isFound = false;
+
+        string debugMsg = $"<color=cyan>[QuestManager ПЕРЕВІРКА]</color> Шукаємо квест: <b>[{search}]</b>. У списку {completedQuests.Count} квестів:\n";
+
+        foreach (string q in completedQuests)
         {
-            if (point != null && point.pointID == id)
-                return point.transform;
+            if (string.IsNullOrWhiteSpace(q)) continue;
+
+            // Застосовуємо таку ж жорстку очистку до елементів у списку
+            string cleanedQ = new string(q.ToLower().Where(char.IsLetterOrDigit).ToArray());
+            debugMsg += $" - В списку: <b>[{cleanedQ}]</b> (Оригінал: '{q}')\n";
+
+            if (cleanedQ == search)
+            {
+                isFound = true;
+            }
         }
-        return null;
+
+        debugMsg += $"Результат пошуку: <color={(isFound ? "green>ЗНАЙДЕНО</color>" : "red>НЕ ЗНАЙДЕНО</color>")}";
+        Debug.Log(debugMsg);
+
+        return isFound;
     }
 
     // --- ЛОГІКА КВЕСТІВ ---
 
     public void InitializeQuest(QuestData newQuest)
     {
-        // Якщо цей квест вже у списку виконаних — ігноруємо
-        if (completedQuests.Contains(newQuest.name)) return;
+        if (newQuest == null)
+        {
+            Debug.LogWarning("<color=red>[QuestManager]</color> Спроба ініціалізувати пустий квест (null)!");
+            return;
+        }
+
+        if (IsQuestCompleted(newQuest.name))
+        {
+            Debug.Log($"<color=orange>[QuestManager]</color> Квест <b>{newQuest.name}</b> вже є у списку виконаних. Ініціалізація скасована.");
+            return;
+        }
+
+        Debug.Log($"<color=green>[QuestManager]</color> Починаємо новий квест: <b>{newQuest.name}</b>");
 
         currentQuest = newQuest;
         currentProgress = 0;
@@ -75,34 +117,29 @@ public class QuestManager : MonoBehaviour
         if (uiAnimator != null) uiAnimator.SetTrigger("Appear");
 
         UpdateUI();
+        OnQuestStateChanged?.Invoke(); // Сповіщаємо NPC
     }
 
     public void OnQuestAction(QuestType actionType, string id, int amount = 1)
     {
         if (currentQuest == null || isTransitioning) return;
 
-        // ДОДАНО: Перевіряємо, чи ID збігається, АБО чи поле Target ID в квесті порожнє (тобто зараховуємо будь-яку ціль)
         bool isTargetMatch = string.IsNullOrEmpty(currentQuest.targetID) || currentQuest.targetID == id;
 
         if (currentQuest.type == actionType && isTargetMatch)
         {
             if (currentQuest.requiredTowerLevel > 0)
             {
-                int currentFloor = TowerManager.Instance.currentFloor;
-                if (currentFloor != currentQuest.requiredTowerLevel) return;
+                if (TowerManager.Instance.currentFloor != currentQuest.requiredTowerLevel) return;
             }
 
             currentProgress += amount;
             UpdateUI();
+            OnQuestStateChanged?.Invoke(); // Оновлюємо іконки (на випадок появи "!")
 
             if (currentProgress >= currentQuest.requiredAmount)
             {
-                // Якщо треба повернутися до NPC — чекаємо взаємодії з ним
-                if (currentQuest.requiresReturnToNPC)
-                {
-                    UpdateUI();
-                }
-                else
+                if (!currentQuest.requiresReturnToNPC)
                 {
                     StartCoroutine(CompleteQuestRoutine());
                 }
@@ -110,7 +147,6 @@ public class QuestManager : MonoBehaviour
         }
     }
 
-    // Метод для виклику з скрипта NPC, коли гравець прийшов здавати квест
     public void FinishQuestFromNPC()
     {
         if (currentQuest != null && currentProgress >= currentQuest.requiredAmount)
@@ -122,24 +158,30 @@ public class QuestManager : MonoBehaviour
     private IEnumerator CompleteQuestRoutine()
     {
         isTransitioning = true;
+        QuestData completedQuest = currentQuest; // Запам'ятовуємо, що виконали
 
-        // Фіксуємо виконання в списку
-        if (currentQuest != null)
+        // 1. Додаємо в список виконаних (очищене ім'я)
+        string nameToAdd = CleanName(completedQuest.name);
+        if (!completedQuests.Contains(nameToAdd))
         {
-            if (!completedQuests.Contains(currentQuest.name))
-                completedQuests.Add(currentQuest.name);
+            completedQuests.Add(nameToAdd);
         }
 
+        // 2. Візуальне відображення в UI
         if (goalText != null)
         {
-            goalText.text = $"<s>{currentQuest.description}</s>";
+            goalText.text = $"<s>{completedQuest.description}</s>";
             goalText.color = Color.green;
         }
 
-        yield return new WaitForSeconds(2.5f);
+        // 3. МИТТЄВО сповіщаємо NPC, щоб вони прибрали іконки "!" або "?"
+        // Ми робимо це до затримки, щоб гравець бачив результат відразу
+        OnQuestStateChanged?.Invoke();
 
-        QuestData next = currentQuest.nextQuest;
+        yield return new WaitForSeconds(2.0f);
 
+        // 4. Перехід до наступного
+        QuestData next = completedQuest.nextQuest;
         if (next != null)
         {
             if (goalText != null) goalText.color = Color.white;
@@ -149,7 +191,7 @@ public class QuestManager : MonoBehaviour
         {
             currentQuest = null;
             if (questPanel != null) questPanel.SetActive(false);
-            Debug.Log("Всі сюжетні квести завершені!");
+            OnQuestStateChanged?.Invoke(); // Фінальне оновлення іконок
         }
     }
 
@@ -159,7 +201,6 @@ public class QuestManager : MonoBehaviour
         {
             if (currentQuest.requiresReturnToNPC && currentProgress >= currentQuest.requiredAmount)
             {
-                // Використовуємо змінну замість жорсткого тексту
                 goalText.text = returnToNPCText;
                 return;
             }
@@ -172,47 +213,34 @@ public class QuestManager : MonoBehaviour
         }
     }
 
-    private void OnDestroy()
-    {
-        allPoints.Clear();
-    }
+    // --- РЕЄСТРАЦІЯ ТОЧОК ---
+    public void RegisterPoint(QuestPoint point) { if (!allPoints.Contains(point)) allPoints.Add(point); }
+    public Transform GetTargetTransform(string id) { return allPoints.FirstOrDefault(p => p != null && p.pointID == id)?.transform; }
+    private void OnDestroy() { allPoints.Clear(); }
 
     // --- ЗБЕРЕЖЕННЯ ---
-
     public GameData CaptureQuestState(GameData data)
     {
-        if (currentQuest != null)
-        {
-            data.currentQuestID = currentQuest.name;
-            data.questProgress = currentProgress;
-        }
-        else
-        {
-            data.currentQuestID = "";
-        }
-
-        // Зберігаємо копію списку завершених квестів
+        data.currentQuestID = currentQuest != null ? CleanName(currentQuest.name) : "";
+        data.questProgress = currentProgress;
         data.completedQuestIDs = new List<string>(completedQuests);
         return data;
     }
 
     public void LoadQuestState(GameData data)
     {
-        // Відновлюємо список завершених
         completedQuests = new List<string>(data.completedQuestIDs);
-
         if (!string.IsNullOrEmpty(data.currentQuestID))
         {
             QuestData loadedQuest = Resources.Load<QuestData>("Quests/" + data.currentQuestID);
-
             if (loadedQuest != null)
             {
                 currentQuest = loadedQuest;
                 currentProgress = data.questProgress;
                 isTransitioning = false;
-
                 if (questPanel != null) questPanel.SetActive(true);
                 UpdateUI();
+                OnQuestStateChanged?.Invoke();
             }
         }
     }
