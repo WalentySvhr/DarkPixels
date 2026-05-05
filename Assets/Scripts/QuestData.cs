@@ -19,6 +19,15 @@ public class QuestData : ScriptableObject
     public int requiredTowerLevel; // Наприклад, 10
     public bool requiresReturnToNPC;
 
+    [Header("Нагороди за квест")]
+    public int goldReward;
+    public int experienceReward;
+
+    [Header("Нагороди (Предмети)")]
+    // Якщо WeaponData і AmuletData наслідуються від ItemData (public class WeaponData : ItemData),
+    // то сюди можна буде перетягувати БУДЬ-ЯКІ предмети з твого проєкту!
+    public Item[] itemRewards;
+
     [Header("Прогресія")]
     [Tooltip("Квест, який активується автоматично після завершення цього")]
     public QuestData nextQuest; // Тепер це поле всередині класу

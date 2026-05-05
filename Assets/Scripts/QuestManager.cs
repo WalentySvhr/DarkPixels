@@ -19,6 +19,9 @@ public class QuestManager : MonoBehaviour
     [Header("UI Texts")]
     public string returnToNPCText = "Повернись до NPC за нагородою";
 
+    [Header("Логіка випадіння нагород")]
+    public GameObject droppedItemPrefab; // Твій базовий префаб предмета, який лежить на землі
+
     public List<string> completedQuests = new List<string>();
     private List<QuestPoint> allPoints = new List<QuestPoint>();
 
@@ -69,15 +72,14 @@ public class QuestManager : MonoBehaviour
 
         bool isFound = false;
 
-        string debugMsg = $"<color=cyan>[QuestManager ПЕРЕВІРКА]</color> Шукаємо квест: <b>[{search}]</b>. У списку {completedQuests.Count} квестів:\n";
+        // string debugMsg = $"<color=cyan>[QuestManager ПЕРЕВІРКА]</color> Шукаємо квест: <b>[{search}]</b>. У списку {completedQuests.Count} квестів:\n";
 
         foreach (string q in completedQuests)
         {
             if (string.IsNullOrWhiteSpace(q)) continue;
 
-            // Застосовуємо таку ж жорстку очистку до елементів у списку
             string cleanedQ = new string(q.ToLower().Where(char.IsLetterOrDigit).ToArray());
-            debugMsg += $" - В списку: <b>[{cleanedQ}]</b> (Оригінал: '{q}')\n";
+            // debugMsg += $" - В списку: <b>[{cleanedQ}]</b> (Оригінал: '{q}')\n";
 
             if (cleanedQ == search)
             {
@@ -85,8 +87,8 @@ public class QuestManager : MonoBehaviour
             }
         }
 
-        debugMsg += $"Результат пошуку: <color={(isFound ? "green>ЗНАЙДЕНО</color>" : "red>НЕ ЗНАЙДЕНО</color>")}";
-        Debug.Log(debugMsg);
+        // debugMsg += $"Результат пошуку: <color={(isFound ? "green>ЗНАЙДЕНО</color>" : "red>НЕ ЗНАЙДЕНО</color>")}";
+        // Debug.Log(debugMsg);
 
         return isFound;
     }
@@ -134,6 +136,13 @@ public class QuestManager : MonoBehaviour
             }
 
             currentProgress += amount;
+
+            // Запобігаємо переповненню прогресу (щоб не було 11/10)
+            if (currentProgress > currentQuest.requiredAmount)
+            {
+                currentProgress = currentQuest.requiredAmount;
+            }
+
             UpdateUI();
             OnQuestStateChanged?.Invoke(); // Оновлюємо іконки (на випадок появи "!")
 
@@ -141,18 +150,109 @@ public class QuestManager : MonoBehaviour
             {
                 if (!currentQuest.requiresReturnToNPC)
                 {
+                    Debug.Log("<color=green>Квест виконано автоматично (у полі)!</color>");
+                    GiveQuestRewards(); // Видаємо нагороду автоматично
                     StartCoroutine(CompleteQuestRoutine());
                 }
             }
         }
     }
 
+    // Метод для завершення квесту через діалог з NPC
     public void FinishQuestFromNPC()
     {
         if (currentQuest != null && currentProgress >= currentQuest.requiredAmount)
         {
-            StartCoroutine(CompleteQuestRoutine());
+            GiveQuestRewards(); // Видаємо нагороду
+            StartCoroutine(CompleteQuestRoutine()); // Завершуємо квест
         }
+    }
+
+    // --- УНІВЕРСАЛЬНА ЛОГІКА ВИДАЧІ НАГОРОД ---
+    private void GiveQuestRewards()
+    {
+        if (currentQuest == null) return;
+
+        // 1. Валюта
+        if (currentQuest.goldReward > 0 && InventoryManager.Instance != null)
+        {
+            InventoryManager.Instance.ChangeCoins(currentQuest.goldReward);
+            Debug.Log($"<color=yellow>Нагорода: Отримано {currentQuest.goldReward} монет!</color>");
+        }
+
+        // 2. Досвід
+        if (currentQuest.experienceReward > 0)
+        {
+            // PlayerStats.Instance.AddExperience(currentQuest.experienceReward);
+            Debug.Log($"<color=cyan>Нагорода: Отримано {currentQuest.experienceReward} XP!</color>");
+        }
+
+        // 3. Предмети
+        if (currentQuest.itemRewards != null && currentQuest.itemRewards.Length > 0)
+        {
+            foreach (Item rewardItem in currentQuest.itemRewards)
+            {
+                if (rewardItem != null && InventoryManager.Instance != null)
+                {
+                    bool isAdded = InventoryManager.Instance.Add(rewardItem);
+                    if (isAdded)
+                    {
+                        Debug.Log($"<color=magenta>Нагорода: Отримано предмет [{rewardItem.itemName}]!</color>");
+                    }
+                    else
+                    {
+                        DropItemOnGround(rewardItem);
+                    }
+                }
+            }
+        }
+    }
+
+    private void DropItemOnGround(Item itemData)
+    {
+        if (droppedItemPrefab == null)
+        {
+            Debug.LogError("<color=red>[QuestManager]</color> Не призначено droppedItemPrefab в Інспекторі! Предмет втрачено.");
+            return;
+        }
+
+        // 1. Шукаємо координати гравця
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        Vector3 dropPosition = player != null ? player.transform.position : transform.position;
+
+        // --- НОВА ЛОГІКА ПОЗИЦІЇ (Спавн над гравцем) ---
+        // Жорстко піднімаємо точку випадіння вище персонажа на 1.5 юніта
+        dropPosition.y += 2.5f;
+
+        // Робимо випадковий розкид переважно по горизонталі (X) та зовсім трохи по вертикалі (Y), 
+        // щоб предмети лягали гарним півколом або в лінію НАД гравцем, якщо їх випало декілька
+        float randomX = UnityEngine.Random.Range(-1.2f, 1.2f);
+        float randomY = UnityEngine.Random.Range(-0.2f, 0.5f);
+        dropPosition += new Vector3(randomX, randomY, 0);
+        // ------------------------------------------------
+
+        // 3. Створюємо префаб на землі
+        GameObject droppedItem = Instantiate(droppedItemPrefab, dropPosition, Quaternion.identity);
+
+        // 4. Передаємо дані предмета у твій скрипт ItemPickup
+        ItemPickup pickupScript = droppedItem.GetComponent<ItemPickup>();
+        if (pickupScript != null)
+        {
+            pickupScript.item = itemData;
+        }
+        else
+        {
+            Debug.LogWarning("<color=red>На префабі droppedItemPrefab немає скрипта ItemPickup!</color>");
+        }
+
+        // 5. Змінюємо іконку префабу
+        SpriteRenderer sr = droppedItem.GetComponent<SpriteRenderer>();
+        if (sr != null && itemData.icon != null)
+        {
+            sr.sprite = itemData.icon;
+        }
+
+        Debug.Log($"<color=orange>Нагорода: Предмет [{itemData.itemName}] з'явився вище гравця.</color>");
     }
 
     private IEnumerator CompleteQuestRoutine()
@@ -175,7 +275,6 @@ public class QuestManager : MonoBehaviour
         }
 
         // 3. МИТТЄВО сповіщаємо NPC, щоб вони прибрали іконки "!" або "?"
-        // Ми робимо це до затримки, щоб гравець бачив результат відразу
         OnQuestStateChanged?.Invoke();
 
         yield return new WaitForSeconds(2.0f);
