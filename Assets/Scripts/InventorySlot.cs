@@ -9,6 +9,7 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     [Header("Налаштування слота")]
     public bool isWeaponEquipmentSlot = false;
     public bool isAmuletEquipmentSlot = false;
+    public bool isRingEquipmentSlot = false; // НОВА ГАЛОЧКА
     public bool isHotbarSlot = false;
 
     public Image icon;
@@ -66,12 +67,11 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     {
         if (currentItem == null) return;
 
-        // Для Хотбару використовуємо відразу (один клік)
         if (isHotbarSlot)
         {
             HandleAction();
         }
-        else // Для інвентарю - подвійний клік
+        else
         {
             float timeSinceLastClick = Time.time - lastClickTime;
             if (timeSinceLastClick <= doubleClickThreshold)
@@ -87,8 +87,8 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     {
         if (ItemInfoManager.Instance != null) ItemInfoManager.Instance.HideInfo();
 
-        // Якщо це слот екіпіровки, дія по кліку зазвичай не потрібна (або зняття)
-        if (isWeaponEquipmentSlot || isAmuletEquipmentSlot) return;
+        // Якщо це слот екіпіровки, дія по кліку зазвичай не потрібна
+        if (isWeaponEquipmentSlot || isAmuletEquipmentSlot || isRingEquipmentSlot) return;
 
         if (currentItem is AmuletData amulet)
         {
@@ -100,9 +100,14 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
             PlayerCombat combat = FindFirstObjectByType<PlayerCombat>();
             if (combat != null) combat.EquipWeapon(weapon);
         }
+        // НОВА ЛОГІКА ДЛЯ КІЛЬЦЯ
+        else if (currentItem is RingData ring)
+        {
+            PlayerEquipment eq = FindFirstObjectByType<PlayerEquipment>();
+            if (eq != null) eq.EquipRing(ring); // Припускаємо, що такий метод є в PlayerEquipment
+        }
         else
         {
-            // Використання зілля
             InventoryManager.Instance.UseItem(currentItem);
         }
     }
@@ -143,8 +148,6 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 
         if (stackText != null)
         {
-            // ВИПРАВЛЕННЯ: Показуємо текст стаку завжди, якщо предмет стакається 
-            // Це важливо для Хотбару, щоб бачити кількість
             if (newItem.isStackable)
             {
                 stackText.text = amount.ToString();
@@ -156,36 +159,47 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
             }
         }
 
-        // Повідомляємо системи про екіпірування, якщо предмет потрапив у спец-слот
+        // Повідомляємо системи про екіпірування
         if (isWeaponEquipmentSlot && newItem is WeaponData weaponData)
         {
             PlayerCombat combat = FindFirstObjectByType<PlayerCombat>();
             if (combat != null) combat.EquipWeapon(weaponData);
             InventoryManager.Instance.EquipItem(newItem, true);
         }
-
-        if (isAmuletEquipmentSlot && newItem is AmuletData amulet)
+        else if (isAmuletEquipmentSlot && newItem is AmuletData amulet)
         {
             PlayerEquipment equipment = FindFirstObjectByType<PlayerEquipment>();
             if (equipment != null) equipment.EquipAmulet(amulet);
+            InventoryManager.Instance.EquipItem(newItem, false);
+        }
+        // НОВА ЛОГІКА ЕКІПІРУВАННЯ КІЛЬЦЯ
+        else if (isRingEquipmentSlot && newItem is RingData ring)
+        {
+            PlayerEquipment equipment = FindFirstObjectByType<PlayerEquipment>();
+            if (equipment != null) equipment.EquipRing(ring);
             InventoryManager.Instance.EquipItem(newItem, false);
         }
     }
 
     public void ClearSlot()
     {
-        // Якщо очищаємо слот екіпіровки - знімаємо предмет з гравця
         if (isWeaponEquipmentSlot)
         {
             PlayerCombat combat = FindFirstObjectByType<PlayerCombat>();
             if (combat != null) combat.EquipWeapon(null);
             InventoryManager.Instance.UnequipItem(true);
         }
-
-        if (isAmuletEquipmentSlot)
+        else if (isAmuletEquipmentSlot)
         {
             PlayerEquipment equipment = FindFirstObjectByType<PlayerEquipment>();
             if (equipment != null) equipment.UnequipAmulet();
+            InventoryManager.Instance.UnequipItem(false);
+        }
+        // НОВА ЛОГІКА ЗНЯТТЯ КІЛЬЦЯ
+        else if (isRingEquipmentSlot)
+        {
+            PlayerEquipment equipment = FindFirstObjectByType<PlayerEquipment>();
+            if (equipment != null) equipment.UnequipRing(); // Припускаємо наявність методу
             InventoryManager.Instance.UnequipItem(false);
         }
 
@@ -201,16 +215,17 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         InventorySlot sourceSlot = eventData.pointerDrag.GetComponent<InventorySlot>();
         if (sourceSlot != null && sourceSlot != this)
         {
-            // Перевірка на тип (зброя до зброї і т.д.)
+            // Перевірка на тип (зброя до зброї, амулет до амулета, кільце до кільця)
             if (this.isWeaponEquipmentSlot && sourceSlot.currentItem != null && !(sourceSlot.currentItem is WeaponData)) return;
             if (this.isAmuletEquipmentSlot && sourceSlot.currentItem != null && !(sourceSlot.currentItem is AmuletData)) return;
+            // НОВА ПЕРЕВІРКА ДЛЯ КІЛЬЦЯ
+            if (this.isRingEquipmentSlot && sourceSlot.currentItem != null && !(sourceSlot.currentItem is RingData)) return;
 
             Item itemToMove = sourceSlot.currentItem;
             int amountToMove = sourceSlot.currentAmount;
             Item itemToReplace = this.currentItem;
             int amountToReplace = this.currentAmount;
 
-            // Логіка обміну
             this.AddItem(itemToMove, amountToMove);
 
             if (itemToReplace != null)
@@ -218,7 +233,6 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
             else
                 sourceSlot.ClearSlot();
 
-            // Оновлюємо весь UI через менеджер, щоб спрацювала фільтрація "Equipped"
             InventoryManager.Instance.UpdateUI();
         }
     }

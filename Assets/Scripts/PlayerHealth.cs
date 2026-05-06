@@ -15,10 +15,12 @@ public class PlayerHealth : MonoBehaviour
     public GameObject gameOverPanel;
 
     [Header("Damage Visuals")]
-    public GameObject damagePopupPrefab; // Префаб із твоїм скриптом DamagePopup
-    public Vector3 popupOffset = new Vector3(0, 1.5f, 0); // Позиція появи тексту над головою
+    public GameObject damagePopupPrefab;
+    public Vector3 popupOffset = new Vector3(0, 1.5f, 0);
 
-    // Змінна для збереження посилання на активну регенерацію
+    // --- НОВІ ПОЛЯ ДЛЯ СУМАРНОЇ РЕГЕНЕРАЦІЇ ---
+    private int amuletRegen = 0;
+    private int ringRegen = 0;
     private Coroutine regenCoroutine;
 
     void Start()
@@ -35,9 +37,8 @@ public class PlayerHealth : MonoBehaviour
     {
         if (isDead) return;
 
-        // --- ДОДАЙ ЦЕЙ РЯДОК ДЛЯ ПОШУКУ БАГА ---
-        Debug.LogWarning("<color=red>Хтось наніс мені " + damage + " урону! Хто це зробив?</color>\n" + StackTraceUtility.ExtractStackTrace());
-        // ---------------------------------------
+        // Debug лог для пошуку джерела урону
+        // Debug.LogWarning("<color=red>Damage: " + damage + "</color>\n" + StackTraceUtility.ExtractStackTrace());
 
         currentHealth -= damage;
         SpawnDamageText(damage);
@@ -50,20 +51,14 @@ public class PlayerHealth : MonoBehaviour
 
         UpdateUI();
     }
-    // Метод для створення спливаючого тексту урону
+
     private void SpawnDamageText(int amount)
     {
         if (damagePopupPrefab != null)
         {
-            // Створюємо префаб у позиції гравця із невеликим зміщенням вгору
             GameObject popup = Instantiate(damagePopupPrefab, transform.position + popupOffset, Quaternion.identity);
-
-            // Отримуємо компонент DamagePopup і викликаємо Setup
             DamagePopup popupScript = popup.GetComponent<DamagePopup>();
-            if (popupScript != null)
-            {
-                popupScript.Setup(amount);
-            }
+            if (popupScript != null) popupScript.Setup(amount);
         }
     }
 
@@ -72,111 +67,93 @@ public class PlayerHealth : MonoBehaviour
         if (isDead) return;
 
         currentHealth += amount;
+        if (currentHealth > maxHealth) currentHealth = maxHealth;
 
-        if (currentHealth > maxHealth)
-        {
-            currentHealth = maxHealth;
-        }
+        if (FXManager.instance != null) FXManager.instance.SpawnHealText(amount);
 
-        if (FXManager.instance != null)
-        {
-            FXManager.instance.SpawnHealText(amount);
-        }
-
-        Debug.Log("Гравець підібрав зілля! Поточне здоров'я: " + currentHealth);
         UpdateUI();
     }
 
-    // --- МЕТОДИ ДЛЯ КУЛОНІВ ТА БРОНІ ---
-
+    // --- ОНОВЛЕНІ МЕТОДИ ДЛЯ БОНУСНОГО ХП ---
+    // Вони працюють універсально і для амулетів, і для кілець
     public void AddBonusHealth(int bonus)
     {
-        maxHealth += bonus; // Збільшуємо максимальне ХП
-        currentHealth += bonus; // Даємо трохи здоров'я відразу
-        UpdateUI(); // Миттєво оновлюємо смужку ХП на екрані
+        maxHealth += bonus;
+        currentHealth += bonus;
+        UpdateUI();
     }
 
     public void RemoveBonusHealth(int bonus)
     {
-        maxHealth -= bonus; // Забираємо бонусне ХП
-
-        // Якщо поточне ХП після зняття кулона більше за новий максимум - обрізаємо зайве
-        if (currentHealth > maxHealth)
-        {
-            currentHealth = maxHealth;
-        }
-        UpdateUI(); // Миттєво оновлюємо смужку ХП на екрані
+        maxHealth -= bonus;
+        if (currentHealth > maxHealth) currentHealth = maxHealth;
+        UpdateUI();
     }
 
-    // Запуск регенерації
-    public void StartRegen(int regenAmount)
+    // --- ОНОВЛЕНА ЛОГІКА РЕГЕНЕРАЦІЇ ---
+
+    public void StartRegen(int amount, bool isAmulet = true)
     {
-        Debug.Log("<color=cyan>StartRegen викликано!</color> Значення: " + regenAmount); // ДОДАЙ ЦЕ
-        if (regenCoroutine != null)
+        if (isAmulet) amuletRegen = amount;
+        else ringRegen = amount;
+
+        // Перезапускаємо корутину тільки якщо вона ще не запущена
+        if (regenCoroutine == null)
         {
-            StopCoroutine(regenCoroutine);
+            regenCoroutine = StartCoroutine(RegenRoutine());
         }
-        regenCoroutine = StartCoroutine(RegenRoutine(regenAmount));
     }
-    // Зупинка регенерації
-    public void StopRegen()
+
+    public void StopRegen(bool isAmulet = true)
     {
-        if (regenCoroutine != null)
+        if (isAmulet) amuletRegen = 0;
+        else ringRegen = 0;
+
+        // Якщо обидва джерела регену по 0 — зупиняємо корутину повністю
+        if (amuletRegen == 0 && ringRegen == 0 && regenCoroutine != null)
         {
             StopCoroutine(regenCoroutine);
             regenCoroutine = null;
         }
     }
 
-    //регенерація від зони (метод, який викликає зона)
-    // Регенерація від зони (метод, який викликає зона)
-    public void ApplyHeal(int amount)
+    private System.Collections.IEnumerator RegenRoutine()
     {
-        if (isDead) return;
-
-        currentHealth += amount;
-        if (currentHealth > maxHealth) currentHealth = maxHealth;
-
-        // --- ДОДАЙ ЦЕЙ БЛОК СЮДИ ---
-        if (FXManager.instance != null)
-        {
-            FXManager.instance.SpawnHealText(amount);
-        }
-        // ---------------------------
-
-        UpdateUI();
-        Debug.Log("<color=green>Лікування від зони:</color> " + amount);
-    }
-
-    // Сама логіка регенерації (Корутина)
-    private System.Collections.IEnumerator RegenRoutine(int regenAmount)
-    {
-        Debug.Log("<color=yellow>Корутина RegenRoutine почала цикл!</color>");
         while (true)
         {
             yield return new WaitForSeconds(1f);
 
-            // Перевіряємо, чи живий гравець і чи потрібно йому ХП
-            if (currentHealth < maxHealth && !isDead)
-            {
-                currentHealth += regenAmount;
+            int totalRegen = amuletRegen + ringRegen;
 
-                // Обмежуємо максимум
+            if (totalRegen > 0 && currentHealth < maxHealth && !isDead)
+            {
+                currentHealth += totalRegen;
                 if (currentHealth > maxHealth) currentHealth = maxHealth;
 
-                // --- ДОДАЄМО ТЕКСТ ДЛЯ АМУЛЕТА ТУТ ---
                 if (FXManager.instance != null)
                 {
-                    FXManager.instance.SpawnHealText(regenAmount);
+                    FXManager.instance.SpawnHealText(totalRegen);
                 }
-                // -------------------------------------
 
                 UpdateUI();
-                Debug.Log("<color=white>Регенерація амулета спрацювала! Поточне ХП:</color> " + currentHealth);
+                Debug.Log($"<color=white>Регенерація спрацювала: +{totalRegen} (A:{amuletRegen} + R:{ringRegen})</color>");
             }
+
+            // Якщо регену більше немає, виходимо з циклу
+            if (amuletRegen == 0 && ringRegen == 0) break;
         }
+        regenCoroutine = null;
     }
-    // -----------------------------------
+
+    // Лікування від зони (ApplyHeal) залишається без змін
+    public void ApplyHeal(int amount)
+    {
+        if (isDead) return;
+        currentHealth += amount;
+        if (currentHealth > maxHealth) currentHealth = maxHealth;
+        if (FXManager.instance != null) FXManager.instance.SpawnHealText(amount);
+        UpdateUI();
+    }
 
     void UpdateUI()
     {
@@ -195,21 +172,13 @@ public class PlayerHealth : MonoBehaviour
     void Die()
     {
         isDead = true;
-        Debug.Log("Гравець загинув!");
-
-        // Зупиняємо регенерацію при смерті
-        StopRegen();
+        amuletRegen = 0;
+        ringRegen = 0;
+        if (regenCoroutine != null) StopCoroutine(regenCoroutine);
 
         Time.timeScale = 0f;
-
-        if (gameOverPanel != null)
-        {
-            gameOverPanel.SetActive(true);
-        }
-
-        // Вимикаємо рух
-        if (GetComponent<PlayerMovement>() != null)
-            GetComponent<PlayerMovement>().enabled = false;
+        if (gameOverPanel != null) gameOverPanel.SetActive(true);
+        if (GetComponent<PlayerMovement>() != null) GetComponent<PlayerMovement>().enabled = false;
     }
 
     public void RestartGame()

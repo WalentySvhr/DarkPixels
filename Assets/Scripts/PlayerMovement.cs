@@ -5,8 +5,11 @@ public class PlayerMovement : MonoBehaviour
     public float moveSpeed = 5f;
     public Joystick joystick;
 
+    [Header("Бонуси від екіпіровки")]
     [HideInInspector]
-    public float extraSpeedMultiplier = 0f; // Сюди скрипт екіпіровки передаватиме бонус (наприклад, 0.2 для +20%)
+    public float extraSpeedMultiplier = 0f;     // Бонус від амулета (наприклад, 0.2 для +20%)
+    [HideInInspector]
+    public float extraRingSpeedMultiplier = 0f; // НОВЕ: Бонус від кільця
 
     private Rigidbody2D rb;
     private Animator anim;
@@ -25,12 +28,19 @@ public class PlayerMovement : MonoBehaviour
             input = input.normalized;
 
         // --- МАГІЯ ТУТ: Рахуємо фінальну швидкість ---
-        // Якщо бонус 0, то finalSpeed буде такою ж, як moveSpeed.
-        // Якщо бонус 0.5 (амулет на 50%), то finalSpeed буде в 1.5 рази більшою.
-        float finalSpeed = moveSpeed * (1f + extraSpeedMultiplier);
-        if (extraSpeedMultiplier != 0) Debug.Log("Швидкість змінена! Множник: " + extraSpeedMultiplier);
+        // Підсумовуємо всі бонуси швидкості
+        float totalSpeedBonus = extraSpeedMultiplier + extraRingSpeedMultiplier;
 
-        // Замість moveSpeed тепер використовуємо finalSpeed
+        // Розрахунок: Базова швидкість * (1 + сума всіх бонусів)
+        float finalSpeed = moveSpeed * (1f + totalSpeedBonus);
+
+        // Debug лог для перевірки (можна прибрати після тестів)
+        if (totalSpeedBonus != 0)
+        {
+            // Debug.Log($"Швидкість змінена! Сумарний бонус: {totalSpeedBonus * 100}% | Фінальна швидкість: {finalSpeed}");
+        }
+
+        // Використовуємо finalSpeed для руху фізичного тіла
         rb.linearVelocity = new Vector2(input.x * finalSpeed, input.y * finalSpeed);
 
         if (anim != null)
@@ -38,16 +48,14 @@ public class PlayerMovement : MonoBehaviour
             anim.SetFloat("Speed", input.magnitude);
         }
 
-        // Логіка повороту персонажа без зміни розміру
+        // Логіка повороту персонажа
         Flip(input.x);
     }
 
     void Flip(float horizontalInput)
     {
-        // Отримуємо поточний масштаб з інспектора
         Vector3 currentScale = transform.localScale;
 
-        // Якщо йдемо вправо і scale від'ємний, АБО йдемо вліво і scale додатній — розвертаємо
         if (horizontalInput > 0.1f && currentScale.x < 0 || horizontalInput < -0.1f && currentScale.x > 0)
         {
             currentScale.x *= -1;

@@ -1,13 +1,13 @@
 using UnityEngine;
 
-// Категорії предметів
-public enum ItemType { Food, Potion, Resource, Junk, Weapon, Amulet }
+// Категорії предметів - ДОДАНО Ring
+public enum ItemType { Food, Potion, Resource, Junk, Weapon, Amulet, Ring }
 
 // Структура для розділеного опису предмета
 public struct ItemDescription
 {
     public string mainStats;   // Блок 1: Тип та основна дія
-    public string shortDesc;   // НОВЕ: Короткий художній опис
+    public string shortDesc;   // Короткий художній опис
     public string extraStats;  // Блок 2: Додаткові ефекти або стак
     public string priceText;   // Блок 3: Ціна
 }
@@ -21,7 +21,7 @@ public class Item : ScriptableObject
     public Sprite icon;
     public int price;
 
-    [TextArea(2, 5)] // Додаємо зручне поле для тексту в інспекторі
+    [TextArea(2, 5)]
     public string shortDescription;
 
     [Header("Налаштування стаку")]
@@ -31,14 +31,11 @@ public class Item : ScriptableObject
     [Header("Ефекти (якщо є)")]
     public int healValue = 0;
 
-    /// <summary>
-    /// Формує детальний опис для будь-якого базового предмета
-    /// </summary>
     public virtual ItemDescription GetDetailedInfo()
     {
         ItemDescription desc = new ItemDescription();
 
-        // 1. Основні характеристики (Тип + сила)
+        // 1. Основні характеристики
         string typeDisplay = GetUkrainianTypeName();
         string main = $"Type: {typeDisplay}\n";
 
@@ -48,19 +45,18 @@ public class Item : ScriptableObject
             main += "Material for crafting";
         else if (type == ItemType.Junk)
             main += "Has no practical value";
+        // Додаємо опис для кільця за замовчуванням, якщо це не кастомний RingData
+        else if (type == ItemType.Ring)
+            main += "Magical accessory";
 
         desc.mainStats = main;
-
-        // 2. Короткий опис (передаємо з поля)
         desc.shortDesc = shortDescription;
 
-        // 3. Блок додаткової інформації (стак)
         if (isStackable)
         {
             desc.extraStats = $"Stackable up to: {maxStackSize} items";
         }
 
-        // 4. Блок ціни
         if (price > 0)
         {
             desc.priceText = $"Price: {price} gold";
@@ -79,6 +75,7 @@ public class Item : ScriptableObject
             case ItemType.Junk: return "Junk";
             case ItemType.Weapon: return "Weapon";
             case ItemType.Amulet: return "Amulet";
+            case ItemType.Ring: return "Ring"; // ДОДАНО ПЕРЕКЛАД/НАЗВУ
             default: return "Item";
         }
     }

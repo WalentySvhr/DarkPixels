@@ -23,9 +23,15 @@ public class PlayerCombat : MonoBehaviour
 
     [Header("Бонуси від екіпіровки")]
     [HideInInspector]
-    public int extraAmuletDamage = 0;   // Бонус до урону
+    public int extraAmuletDamage = 0;
     [HideInInspector]
-    public float extraAttackSpeed = 0f; // Бонус до швидкості (наприклад, 0.2f для +20%)
+    public float extraAttackSpeed = 0f;
+
+    // --- НОВІ ПОЛЯ ДЛЯ КІЛЬЦЯ ---
+    [HideInInspector]
+    public int extraRingDamage = 0;        // Бонус урону від кільця
+    [HideInInspector]
+    public float extraRingAttackSpeed = 0f; // Бонус швидкості від кільця
 
     void Start()
     {
@@ -69,8 +75,11 @@ public class PlayerCombat : MonoBehaviour
     {
         if (Time.time < nextAttackTime) return;
 
+        // Підсумовуємо швидкість атаки з усіх джерел
+        float totalSpeedBonus = extraAttackSpeed + extraRingAttackSpeed;
+
         float baseCooldown = (currentWeaponData != null) ? currentWeaponData.cooldown : unarmedCooldown;
-        float finalCooldown = baseCooldown / (1f + extraAttackSpeed);
+        float finalCooldown = baseCooldown / (1f + totalSpeedBonus);
 
         StartCoroutine(PerformAttack());
         nextAttackTime = Time.time + finalCooldown;
@@ -78,18 +87,20 @@ public class PlayerCombat : MonoBehaviour
 
     IEnumerator PerformAttack()
     {
+        float totalSpeedBonus = extraAttackSpeed + extraRingAttackSpeed;
+
         if (spawnedWeapon != null)
         {
             Animator anim = spawnedWeapon.GetComponent<Animator>();
             if (anim != null)
             {
-                anim.speed = 1f + extraAttackSpeed;
+                anim.speed = 1f + totalSpeedBonus;
                 anim.SetTrigger("Attack");
             }
         }
 
         float baseDelay = (currentWeaponData != null) ? currentWeaponData.damageDelay : unarmedDamageDelay;
-        float finalDelay = baseDelay / (1f + extraAttackSpeed);
+        float finalDelay = baseDelay / (1f + totalSpeedBonus);
 
         yield return new WaitForSeconds(finalDelay);
 
@@ -113,7 +124,9 @@ public class PlayerCombat : MonoBehaviour
     void UnarmedDamage()
     {
         Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, unarmedRange, enemyLayers);
-        int totalDamage = unarmedDamage + extraAmuletDamage;
+
+        // Підсумовуємо весь бонусний урон
+        int totalDamage = unarmedDamage + extraAmuletDamage + extraRingDamage;
 
         foreach (Collider2D enemy in hitEnemies)
         {
@@ -132,7 +145,9 @@ public class PlayerCombat : MonoBehaviour
     void MeleeDamage()
     {
         Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, currentWeaponData.attackRange, enemyLayers);
-        int totalDamage = currentWeaponData.damage + extraAmuletDamage;
+
+        // Підсумовуємо весь бонусний урон
+        int totalDamage = currentWeaponData.damage + extraAmuletDamage + extraRingDamage;
 
         foreach (Collider2D enemy in hitEnemies)
         {
@@ -178,11 +193,11 @@ public class PlayerCombat : MonoBehaviour
 
             GameObject proj = Instantiate(currentWeaponData.projectilePrefab, attackPoint.position, rotation);
 
-            // --- ДОДАНО: Передача урону снаряду ---
             Arrow arrowScript = proj.GetComponent<Arrow>();
             if (arrowScript != null)
             {
-                arrowScript.damage = currentWeaponData.damage + extraAmuletDamage;
+                // Передаємо сумарний урон снаряду
+                arrowScript.damage = currentWeaponData.damage + extraAmuletDamage + extraRingDamage;
             }
 
             Rigidbody2D rb = proj.GetComponent<Rigidbody2D>();
