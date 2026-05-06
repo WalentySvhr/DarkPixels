@@ -187,22 +187,15 @@ public class QuestManager : MonoBehaviour
             Debug.Log($"<color=cyan>Нагорода: Отримано {currentQuest.experienceReward} XP!</color>");
         }
 
-        // 3. Предмети
+        // 3. Предмети (ТЕПЕР ЗАВЖДИ ПАДАЮТЬ НА ЗЕМЛЮ)
         if (currentQuest.itemRewards != null && currentQuest.itemRewards.Length > 0)
         {
             foreach (Item rewardItem in currentQuest.itemRewards)
             {
-                if (rewardItem != null && InventoryManager.Instance != null)
+                if (rewardItem != null)
                 {
-                    bool isAdded = InventoryManager.Instance.Add(rewardItem);
-                    if (isAdded)
-                    {
-                        Debug.Log($"<color=magenta>Нагорода: Отримано предмет [{rewardItem.itemName}]!</color>");
-                    }
-                    else
-                    {
-                        DropItemOnGround(rewardItem);
-                    }
+                    // Ми більше не перевіряємо інвентар, а одразу спавнимо предмет на сцені!
+                    DropItemOnGround(rewardItem);
                 }
             }
         }
@@ -216,25 +209,14 @@ public class QuestManager : MonoBehaviour
             return;
         }
 
-        // 1. Шукаємо координати гравця
+        // 1. Спавнимо предмет РІВНО в центрі гравця (весь розліт і стрибок зробить скрипт TopDownLoot)
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         Vector3 dropPosition = player != null ? player.transform.position : transform.position;
 
-        // --- НОВА ЛОГІКА ПОЗИЦІЇ (Спавн над гравцем) ---
-        // Жорстко піднімаємо точку випадіння вище персонажа на 1.5 юніта
-        dropPosition.y += 2.5f;
-
-        // Робимо випадковий розкид переважно по горизонталі (X) та зовсім трохи по вертикалі (Y), 
-        // щоб предмети лягали гарним півколом або в лінію НАД гравцем, якщо їх випало декілька
-        float randomX = UnityEngine.Random.Range(-1.2f, 1.2f);
-        float randomY = UnityEngine.Random.Range(-0.2f, 0.5f);
-        dropPosition += new Vector3(randomX, randomY, 0);
-        // ------------------------------------------------
-
-        // 3. Створюємо префаб на землі
+        // 2. Створюємо префаб
         GameObject droppedItem = Instantiate(droppedItemPrefab, dropPosition, Quaternion.identity);
 
-        // 4. Передаємо дані предмета у твій скрипт ItemPickup
+        // 3. Передаємо дані предмета у скрипт ItemPickup
         ItemPickup pickupScript = droppedItem.GetComponent<ItemPickup>();
         if (pickupScript != null)
         {
@@ -245,14 +227,19 @@ public class QuestManager : MonoBehaviour
             Debug.LogWarning("<color=red>На префабі droppedItemPrefab немає скрипта ItemPickup!</color>");
         }
 
-        // 5. Змінюємо іконку префабу
-        SpriteRenderer sr = droppedItem.GetComponent<SpriteRenderer>();
+        // 4. ВАЖЛИВО: Шукаємо SpriteRenderer у ДОЧІРНЬОМУ об'єкті (visualChild), 
+        // тому що головний об'єкт тепер лежить на землі, а дочірній - підстрибує!
+        SpriteRenderer sr = droppedItem.GetComponentInChildren<SpriteRenderer>();
         if (sr != null && itemData.icon != null)
         {
             sr.sprite = itemData.icon;
         }
+        else
+        {
+            Debug.LogWarning("<color=orange>Не знайдено SpriteRenderer на дочірньому об'єкті префаба!</color>");
+        }
 
-        Debug.Log($"<color=orange>Нагорода: Предмет [{itemData.itemName}] з'явився вище гравця.</color>");
+        Debug.Log($"<color=orange>Нагорода: Предмет [{itemData.itemName}] красиво вилетів з гравця!</color>");
     }
 
     private IEnumerator CompleteQuestRoutine()
