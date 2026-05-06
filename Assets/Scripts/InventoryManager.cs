@@ -11,24 +11,27 @@ public class InventoryManager : MonoBehaviour
     public int space = 20;
 
     [Header("UI посилання (Окремі)")]
-    public InventoryUI inventoryUI; // Скрипт для основної сітки сумки
-    public HotbarUI hotbarScript;   // НОВИЙ окремий скрипт для хотбару
+    public InventoryUI inventoryUI;
+    public HotbarUI hotbarScript;
 
     [Header("Поточна екіпіровка (Тільки назви)")]
     public string currentWeaponName;
     public string currentAmuletName;
+    // НОВЕ: Окремі назви для двох кілець
+    public string currentRing1Name;
+    public string currentRing2Name;
 
     [Header("Гроші")]
     public int coins = 0;
     public TextMeshProUGUI[] coinTexts;
 
     [Header("Система Бафів")]
-    public float coinMultiplier = 1f; // Стандартний множник (х1)
-    private Coroutine activeBoostCoroutine; // Зберігаємо посилання на таймер
+    public float coinMultiplier = 1f;
+    private Coroutine activeBoostCoroutine;
 
     [Header("UI Бафів (Таймер)")]
-    public GameObject buffUIContainer; // Об'єкт, який тримає іконку і текст бафу (BuffPanel)
-    public TextMeshProUGUI buffTimerText; // Сам текст таймера
+    public GameObject buffUIContainer;
+    public TextMeshProUGUI buffTimerText;
 
     [System.Serializable]
     public class ItemStack
@@ -48,8 +51,6 @@ public class InventoryManager : MonoBehaviour
     {
         UpdateCoinUI();
         UpdateUI();
-
-        // Ховаємо UI бафу на старті гри, якщо він призначений
         if (buffUIContainer != null) buffUIContainer.SetActive(false);
     }
 
@@ -73,6 +74,7 @@ public class InventoryManager : MonoBehaviour
         return true;
     }
 
+    // Метод видалення працює правильно: він зменшує кількість і видаляє тільки одну пачку (stack)
     public void Remove(Item item)
     {
         ItemStack stack = items.Find(s => s.item == item);
@@ -84,16 +86,28 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
-    public void EquipItem(Item item, bool isWeapon)
+    // ОНОВЛЕНО: Тепер приймає номер слота для кілець
+    public void EquipItem(Item item, string slotType, int ringSlotIndex = 0)
     {
-        if (isWeapon) currentWeaponName = item.name;
-        else currentAmuletName = item.name;
+        if (slotType == "Weapon") currentWeaponName = item.name;
+        else if (slotType == "Amulet") currentAmuletName = item.name;
+        else if (slotType == "Ring")
+        {
+            if (ringSlotIndex == 1) currentRing1Name = item.name;
+            else if (ringSlotIndex == 2) currentRing2Name = item.name;
+        }
     }
 
-    public void UnequipItem(bool isWeapon)
+    // ОНОВЛЕНО: Для зняття предмета
+    public void UnequipItem(string slotType, int ringSlotIndex = 0)
     {
-        if (isWeapon) currentWeaponName = "";
-        else currentAmuletName = "";
+        if (slotType == "Weapon") currentWeaponName = "";
+        else if (slotType == "Amulet") currentAmuletName = "";
+        else if (slotType == "Ring")
+        {
+            if (ringSlotIndex == 1) currentRing1Name = "";
+            else if (ringSlotIndex == 2) currentRing2Name = "";
+        }
     }
 
     public void ChangeCoins(int amount)
@@ -125,7 +139,6 @@ public class InventoryManager : MonoBehaviour
                 health.Heal(item.healValue);
                 stack.amount--;
                 if (stack.amount <= 0) items.Remove(stack);
-
                 UpdateUI();
             }
         }
@@ -143,56 +156,38 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
-    // Функція запуску таймера
     public void ActivateCoinBoost(float multiplier, float durationInSeconds)
     {
         if (activeBoostCoroutine != null) StopCoroutine(activeBoostCoroutine);
         activeBoostCoroutine = StartCoroutine(CoinBoostRoutine(multiplier, durationInSeconds));
     }
 
-    // ОНОВЛЕНИЙ таймер (Корутина) з оновленням UI
     private System.Collections.IEnumerator CoinBoostRoutine(float multiplier, float duration)
     {
         coinMultiplier = multiplier;
         float timeRemaining = duration;
 
-        // Вмикаємо UI бафу
         if (buffUIContainer != null) buffUIContainer.SetActive(true);
-        Debug.Log($"<color=green>Баф активовано! Множник монет: х{multiplier} на {duration} сек.</color>");
 
-        // Цикл буде працювати, поки час не закінчиться
         while (timeRemaining > 0)
         {
-            // Оновлюємо текст (форматуємо як Хвилини:Секунди)
             if (buffTimerText != null)
             {
                 int minutes = Mathf.FloorToInt(timeRemaining / 60);
                 int seconds = Mathf.FloorToInt(timeRemaining % 60);
                 buffTimerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
             }
-
-            // Чекаємо рівно 1 секунду
             yield return new WaitForSeconds(1f);
-
-            // Віднімаємо 1 секунду від загального часу
             timeRemaining -= 1f;
         }
 
-        // Коли час вийшов - повертаємо все як було
         coinMultiplier = 1f;
         if (buffUIContainer != null) buffUIContainer.SetActive(false);
-        Debug.Log("<color=red>Час бафу вийшов! Множник знову х1.</color>");
     }
 
-    // Функція ТІЛЬКИ для мобів
     public void AddMobCoins(int baseAmount)
     {
         int finalAmount = Mathf.RoundToInt(baseAmount * coinMultiplier);
         ChangeCoins(finalAmount);
-
-        if (coinMultiplier > 1f)
-        {
-            Debug.Log($"З моба випало {baseAmount} золота. Завдяки бафу гравець отримує {finalAmount}!");
-        }
     }
 }

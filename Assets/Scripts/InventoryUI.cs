@@ -33,26 +33,42 @@ public class InventoryUI : MonoBehaviour
         if (inventory == null) return;
         if (slots == null || slots.Length == 0) RefreshSlots();
 
-        // 1. Створюємо список предметів, які НЕ екіпіровані
         List<InventoryManager.ItemStack> itemsToDisplay = new List<InventoryManager.ItemStack>();
 
+        // 1. Створюємо список всіх ОДЯГНЕНИХ предметів
+        // Якщо одягнено два однакових кільця, ця назва буде в списку двічі
+        List<string> equippedNames = new List<string>();
+
+        if (!string.IsNullOrEmpty(inventory.currentWeaponName)) equippedNames.Add(inventory.currentWeaponName);
+        if (!string.IsNullOrEmpty(inventory.currentAmuletName)) equippedNames.Add(inventory.currentAmuletName);
+        if (!string.IsNullOrEmpty(inventory.currentRing1Name)) equippedNames.Add(inventory.currentRing1Name);
+        if (!string.IsNullOrEmpty(inventory.currentRing2Name)) equippedNames.Add(inventory.currentRing2Name);
+
+        // 2. Фільтруємо сумку
         foreach (var stack in inventory.items)
         {
             if (stack != null && stack.item != null && stack.amount > 0)
             {
-                // Перевіряємо, чи цей предмет зараз в руках або на шиї
-                bool isEquipped = (stack.item.name == inventory.currentWeaponName ||
-                                   stack.item.name == inventory.currentAmuletName);
+                bool hideThisItem = false;
 
-                // Додаємо в сумку ТІЛЬКИ якщо предмет не екіпірований
-                if (!isEquipped)
+                // Якщо назва цього предмета є в списку "одягнених"
+                if (equippedNames.Contains(stack.item.name))
+                {
+                    hideThisItem = true;
+                    // ВИКРЕСЛЮЄМО одну копію зі списку. 
+                    // Наступне кільце з такою ж назвою вже не сховається!
+                    equippedNames.Remove(stack.item.name);
+                }
+
+                // Додаємо в сумку ТІЛЬКИ якщо ми не вирішили його сховати
+                if (!hideThisItem)
                 {
                     itemsToDisplay.Add(stack);
                 }
             }
         }
 
-        // 2. Малюємо відфільтровані предмети у слоти сумки
+        // 3. Малюємо відфільтровані предмети у слоти сумки
         for (int i = 0; i < slots.Length; i++)
         {
             if (i < itemsToDisplay.Count)

@@ -9,9 +9,16 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     [Header("Налаштування слота")]
     public bool isWeaponEquipmentSlot = false;
     public bool isAmuletEquipmentSlot = false;
-    public bool isRingEquipmentSlot = false; // НОВА ГАЛОЧКА
+    public bool isRingEquipmentSlot = false;
+    [Tooltip("Для кілець: вкажи 1 або 2. Для інших слотів залиш 0.")]
+    public int ringSlotIndex = 0;
     public bool isHotbarSlot = false;
 
+    [Header("Візуал (Плейсхолдер)")]
+    [Tooltip("Сюди перетягни сіру фонову іконку (ImageWeapon, ImageAmulet тощо)")]
+    public GameObject placeholderImage; // НОВЕ ПОЛЕ ДЛЯ СІРОЇ ІКОНКИ
+
+    [Header("Елементи UI")]
     public Image icon;
     public TextMeshProUGUI stackText;
 
@@ -87,7 +94,6 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     {
         if (ItemInfoManager.Instance != null) ItemInfoManager.Instance.HideInfo();
 
-        // Якщо це слот екіпіровки, дія по кліку зазвичай не потрібна
         if (isWeaponEquipmentSlot || isAmuletEquipmentSlot || isRingEquipmentSlot) return;
 
         if (currentItem is AmuletData amulet)
@@ -100,11 +106,10 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
             PlayerCombat combat = FindFirstObjectByType<PlayerCombat>();
             if (combat != null) combat.EquipWeapon(weapon);
         }
-        // НОВА ЛОГІКА ДЛЯ КІЛЬЦЯ
         else if (currentItem is RingData ring)
         {
             PlayerEquipment eq = FindFirstObjectByType<PlayerEquipment>();
-            if (eq != null) eq.EquipRing(ring); // Припускаємо, що такий метод є в PlayerEquipment
+            if (eq != null) eq.EquipRing(ring, 1); // Одягаємо в 1-й слот по дефолту при кліку
         }
         else
         {
@@ -112,7 +117,6 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         }
     }
 
-    // --- DRAG & DROP ---
     public void OnBeginDrag(PointerEventData eventData)
     {
         StopHoldTimer();
@@ -146,6 +150,9 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         icon.enabled = true;
         icon.color = Color.white;
 
+        // --- ХОВАЄМО ПЛЕЙСХОЛДЕР ---
+        if (placeholderImage != null) placeholderImage.SetActive(false);
+
         if (stackText != null)
         {
             if (newItem.isStackable)
@@ -159,25 +166,23 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
             }
         }
 
-        // Повідомляємо системи про екіпірування
         if (isWeaponEquipmentSlot && newItem is WeaponData weaponData)
         {
             PlayerCombat combat = FindFirstObjectByType<PlayerCombat>();
             if (combat != null) combat.EquipWeapon(weaponData);
-            InventoryManager.Instance.EquipItem(newItem, true);
+            InventoryManager.Instance.EquipItem(newItem, "Weapon");
         }
         else if (isAmuletEquipmentSlot && newItem is AmuletData amulet)
         {
             PlayerEquipment equipment = FindFirstObjectByType<PlayerEquipment>();
             if (equipment != null) equipment.EquipAmulet(amulet);
-            InventoryManager.Instance.EquipItem(newItem, false);
+            InventoryManager.Instance.EquipItem(newItem, "Amulet");
         }
-        // НОВА ЛОГІКА ЕКІПІРУВАННЯ КІЛЬЦЯ
         else if (isRingEquipmentSlot && newItem is RingData ring)
         {
             PlayerEquipment equipment = FindFirstObjectByType<PlayerEquipment>();
-            if (equipment != null) equipment.EquipRing(ring);
-            InventoryManager.Instance.EquipItem(newItem, false);
+            if (equipment != null) equipment.EquipRing(ring, ringSlotIndex);
+            InventoryManager.Instance.EquipItem(newItem, "Ring", ringSlotIndex);
         }
     }
 
@@ -187,26 +192,29 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         {
             PlayerCombat combat = FindFirstObjectByType<PlayerCombat>();
             if (combat != null) combat.EquipWeapon(null);
-            InventoryManager.Instance.UnequipItem(true);
+            InventoryManager.Instance.UnequipItem("Weapon");
         }
         else if (isAmuletEquipmentSlot)
         {
             PlayerEquipment equipment = FindFirstObjectByType<PlayerEquipment>();
             if (equipment != null) equipment.UnequipAmulet();
-            InventoryManager.Instance.UnequipItem(false);
+            InventoryManager.Instance.UnequipItem("Amulet");
         }
-        // НОВА ЛОГІКА ЗНЯТТЯ КІЛЬЦЯ
         else if (isRingEquipmentSlot)
         {
             PlayerEquipment equipment = FindFirstObjectByType<PlayerEquipment>();
-            if (equipment != null) equipment.UnequipRing(); // Припускаємо наявність методу
-            InventoryManager.Instance.UnequipItem(false);
+            if (equipment != null) equipment.UnequipRing(ringSlotIndex);
+            InventoryManager.Instance.UnequipItem("Ring", ringSlotIndex);
         }
 
         currentItem = null;
         currentAmount = 0;
         icon.sprite = null;
         icon.enabled = false;
+
+        // --- ПОКАЗУЄМО ПЛЕЙСХОЛДЕР ЗНОВУ ---
+        if (placeholderImage != null) placeholderImage.SetActive(true);
+
         if (stackText != null) stackText.gameObject.SetActive(false);
     }
 
@@ -215,10 +223,8 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         InventorySlot sourceSlot = eventData.pointerDrag.GetComponent<InventorySlot>();
         if (sourceSlot != null && sourceSlot != this)
         {
-            // Перевірка на тип (зброя до зброї, амулет до амулета, кільце до кільця)
             if (this.isWeaponEquipmentSlot && sourceSlot.currentItem != null && !(sourceSlot.currentItem is WeaponData)) return;
             if (this.isAmuletEquipmentSlot && sourceSlot.currentItem != null && !(sourceSlot.currentItem is AmuletData)) return;
-            // НОВА ПЕРЕВІРКА ДЛЯ КІЛЬЦЯ
             if (this.isRingEquipmentSlot && sourceSlot.currentItem != null && !(sourceSlot.currentItem is RingData)) return;
 
             Item itemToMove = sourceSlot.currentItem;

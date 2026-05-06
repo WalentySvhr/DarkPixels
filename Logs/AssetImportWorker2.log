@@ -1,11 +1,11 @@
 [Licensing::Module] Trying to connect to existing licensing client channel...
 Built from '6000.3/staging' branch; Version is '6000.3.13f1 (8c4f11e4fb20) revision 9195281'; Using compiler version '194234433'; Build Type 'Release'
 OS: 'Windows 10  (10.0.19045) 64bit Professional' Language: 'uk' Physical Memory: 16334 MB
-[Licensing::IpcConnector] Successfully connected to: "LicenseClient-limon" at "2026-05-06T15:31:49.8100357Z"
 BatchMode: 1, IsHumanControllingUs: 0, StartBugReporterOnCrash: 0, Is64bit: 1
 System  architecture: x64
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-limon" at "2026-05-06T22:49:58.1297698Z"
 Process architecture: x64
-Date: 2026-05-06T15:31:49Z
+Date: 2026-05-06T22:49:58Z
 
 COMMAND LINE ARGUMENTS:
 D:\Unity\6000.3.13f1\Editor\Unity.exe
@@ -19,7 +19,7 @@ D:/GameDev/DarkPixels-main
 -logFile
 Logs/AssetImportWorker2.log
 -srvPort
-49999
+57685
 -licensingIpc
 LicenseClient-limon
 -job-worker-count
@@ -67,12 +67,12 @@ D:/GameDev/DarkPixels-main
     "memorysetup-job-temp-allocator-block-size-background=1048576"
     "memorysetup-job-temp-allocator-reduction-small-platforms=262144"
     "memorysetup-temp-allocator-size-cloud-worker=32768"
-Player connection [10492]  Target information:
+Player connection [21168]  Target information:
 
-Player connection [10492]  * "[IP] 192.168.0.28 [Port] 0 [Flags] 2 [Guid] 1152913992 [EditorId] 1152913992 [Version] 1048832 [Id] WindowsEditor(7,DESKTOP-4DD92S9) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" 
+Player connection [21168]  * "[IP] 192.168.0.28 [Port] 0 [Flags] 2 [Guid] 104918865 [EditorId] 104918865 [Version] 1048832 [Id] WindowsEditor(7,DESKTOP-4DD92S9) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" 
 
-Player connection [10492] Host joined multi-casting on [225.0.0.222:54997]...
-Player connection [10492] Host joined alternative multi-casting on [225.0.0.222:34997]...
+Player connection [21168] Host joined multi-casting on [225.0.0.222:54997]...
+Player connection [21168] Host joined alternative multi-casting on [225.0.0.222:34997]...
 JobSystem: Creating JobQueue using job-worker-count value 5
 Input System module state changed to: Initialized.
 [Physics::Module] Initialized fallback backend.
@@ -84,7 +84,7 @@ Library Redirect Path: Library/
 [Physics::Module] SDK Version: 4.1.2
 [Physics::Module] Integration Version: 1.0.0
 [Physics::Module] Threading Mode: Multi-Threaded
-Refreshing native plugins compatible for Editor in 23.31 ms, found 5 plugins.
+Refreshing native plugins compatible for Editor in 23.42 ms, found 5 plugins.
 Preloading 0 native plugins for Editor in 0.00 ms.
 Initialize engine version: 6000.3.13f1 (8c4f11e4fb20)
 [Subsystems] Discovering subsystems at path D:/Unity/6000.3.13f1/Editor/Data/Resources/UnitySubsystems
@@ -100,7 +100,7 @@ Initialize mono
 Mono path[0] = 'D:/Unity/6000.3.13f1/Editor/Data/Managed'
 Mono path[1] = 'D:/Unity/6000.3.13f1/Editor/Data/MonoBleedingEdge/lib/mono/unityjit-win32'
 Mono config path = 'D:/Unity/6000.3.13f1/Editor/Data/MonoBleedingEdge/etc'
-Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56220
+Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56660
 Begin MonoManager ReloadAssembly
 Registering precompiled unity dll's ...
 Register platform support module: D:/Unity/6000.3.13f1/Editor/Data/PlaybackEngines/WindowsStandaloneSupport/UnityEditor.WindowsStandalone.Extensions.dll
@@ -110,17 +110,17 @@ Register platform support module: D:/Unity/6000.3.13f1/Editor/Data/PlaybackEngin
 	ResponseStatus: Unsupported protocol version '1.18.1'.
 [Licensing::Module] Error: Failed to handshake to channel: "LicenseClient-limon"
 [Licensing::IpcConnector] LicenseClient-limon channel disconnected successfully.
-[Licensing::IpcConnector] Successfully connected to: "LicenseClient-limon-6000.3.13" at "2026-05-06T15:31:51.3792025Z"
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-limon-6000.3.13" at "2026-05-06T22:49:59.6753918Z"
 [Licensing::Client] Handshaking with LicensingClient:
   Version:                 1.18.1+9fbee8e
-  Session Id:              3ecd8e558ccb4effbb6e34d6c1d3b5d6
-  Correlation Id:          23cbb0f75efcc6e60987acad716d20b7
-  External correlation Id: 1897493015235633023
+  Session Id:              ab0d64df892643e9b65d9bb601c823c0
+  Correlation Id:          70eb1a83ce6178267aad8ceabd1a4184
+  External correlation Id: 7902854869237629202
   Machine Id:              4D8GW8ETA38K6LsA7GOMWmqZxN4=
-[Licensing::Module] Successfully connected to LicensingClient on channel: "LicenseClient-limon-6000.3.13" (connect: 0.00s, validation: 0.00s, handshake: 1.12s)
-[Licensing::IpcConnector] Successfully connected to: "LicenseClient-limon-6000.3.13-notifications" at "2026-05-06T15:31:52.5021653Z"
-[Licensing::Module] Licensing Background thread has ended after 2.69s
-[Licensing::Module] Licensing is initialized (took 1.54s).
+[Licensing::Module] Successfully connected to LicensingClient on channel: "LicenseClient-limon-6000.3.13" (connect: 0.00s, validation: 0.00s, handshake: 1.25s)
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-limon-6000.3.13-notifications" at "2026-05-06T22:50:00.927277Z"
+[Licensing::Module] Licensing Background thread has ended after 2.80s
+[Licensing::Module] Licensing is initialized (took 1.75s).
 [Licensing::Client] Successfully resolved entitlement details
 [Licensing::Module] License group:
   Id: 7971680487528-UnityPersXXXX
@@ -128,8 +128,8 @@ Register platform support module: D:/Unity/6000.3.13f1/Editor/Data/PlaybackEngin
   Type: Assigned
   Expiration: Unlimited
 Register platform support module: D:/Unity/6000.3.13f1/Editor/Data/PlaybackEngines/AndroidPlayer/UnityEditor.Android.Extensions.dll
-Registered in 1.548136 seconds.
-- Loaded All Assemblies, in  2.295 seconds
+Registered in 1.756924 seconds.
+- Loaded All Assemblies, in  2.497 seconds
 Native extension for Android target not found
 Native extension for WindowsStandalone target not found
 Package Manager log level set to [2]
@@ -138,35 +138,35 @@ Package Manager log level set to [2]
 [Package Manager] Cannot connect to Unity Package Manager local server
 ScheduleIndexationOnStartup MainProcess:False IndexOnStartup:True
 Mono: successfully reloaded assembly
-- Finished resetting the current domain, in  0.588 seconds
-Domain Reload Profiling: 2882ms
-	BeginReloadAssembly (276ms)
+- Finished resetting the current domain, in  0.688 seconds
+Domain Reload Profiling: 3184ms
+	BeginReloadAssembly (236ms)
 		ExecutionOrderSort (0ms)
 		DisableScriptedObjects (0ms)
 		BackupInstance (0ms)
 		ReleaseScriptingObjects (0ms)
 		CreateAndSetChildDomain (1ms)
-	RebuildCommonClasses (84ms)
-	RebuildNativeTypeToScriptingClass (32ms)
-	initialDomainReloadingComplete (1626ms)
-	LoadAllAssembliesAndSetupDomain (274ms)
-		LoadAssemblies (276ms)
+	RebuildCommonClasses (74ms)
+	RebuildNativeTypeToScriptingClass (29ms)
+	initialDomainReloadingComplete (1831ms)
+	LoadAllAssembliesAndSetupDomain (326ms)
+		LoadAssemblies (235ms)
 		RebuildTransferFunctionScriptingTraits (0ms)
-		AnalyzeDomain (267ms)
-			TypeCache.Refresh (265ms)
-				TypeCache.ScanAssembly (243ms)
+		AnalyzeDomain (320ms)
+			TypeCache.Refresh (317ms)
+				TypeCache.ScanAssembly (295ms)
 			BuildScriptInfoCaches (0ms)
 			ResolveRequiredComponents (1ms)
-	FinalizeReload (589ms)
+	FinalizeReload (689ms)
 		ReleaseScriptCaches (0ms)
 		RebuildScriptCaches (0ms)
-		SetupLoadedEditorAssemblies (538ms)
+		SetupLoadedEditorAssemblies (625ms)
 			LogAssemblyErrors (0ms)
-			InitializePlatformSupportModulesInManaged (93ms)
-			SetLoadedEditorAssemblies (6ms)
-			BeforeProcessingInitializeOnLoad (123ms)
-			ProcessInitializeOnLoadAttributes (209ms)
-			ProcessInitializeOnLoadMethodAttributes (107ms)
+			InitializePlatformSupportModulesInManaged (107ms)
+			SetLoadedEditorAssemblies (7ms)
+			BeforeProcessingInitializeOnLoad (142ms)
+			ProcessInitializeOnLoadAttributes (249ms)
+			ProcessInitializeOnLoadMethodAttributes (119ms)
 			AfterProcessingInitializeOnLoad (0ms)
 			EditorAssembliesLoaded (0ms)
 		ExecutionOrderSort2 (0ms)
@@ -177,8 +177,8 @@ Import Worker Mode flag is 0x00
 Begin MonoManager ReloadAssembly
 [Licensing::Client] Successfully resolved entitlement details
 Duplicate assembly 'log4net.dll' with different versions detected, using 'Packages/com.unity.package-validation-suite/Lib/Editor/log4net.dll, AssemblyName=log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a' and ignoring 'Packages/com.unity.collab-proxy/Lib/Editor/log4netPlastic.dll, AssemblyName=log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a'.Symbol file LoadedFromMemory is not a mono symbol file
-- Loaded All Assemblies, in  1.613 seconds
-Refreshing native plugins compatible for Editor in 14.02 ms, found 5 plugins.
+- Loaded All Assemblies, in  1.760 seconds
+Refreshing native plugins compatible for Editor in 15.30 ms, found 5 plugins.
 Native extension for Android target not found
 Native extension for WindowsStandalone target not found
 [Package Manager] Failed to launch server process. Reason: Unity was launched with the -noUpm command-line argument
@@ -187,100 +187,124 @@ Native extension for WindowsStandalone target not found
 [Package Manager] Failed to launch server process. Reason: Unity was launched with the -noUpm command-line argument
 [Package Manager] Unable to send message (not connected to server process).
 [Package Manager] Cannot connect to Unity Package Manager local server
-Refreshing native plugins compatible for Editor in 14.32 ms, found 5 plugins.
+Refreshing native plugins compatible for Editor in 13.78 ms, found 5 plugins.
 [Package Manager] Failed to launch server process. Reason: Unity was launched with the -noUpm command-line argument
 [Package Manager] Unable to send message (not connected to server process).
 [Package Manager] Cannot connect to Unity Package Manager local server
 ScheduleIndexationOnStartup MainProcess:False IndexOnStartup:True
 Mono: successfully reloaded assembly
-- Finished resetting the current domain, in  1.607 seconds
-Domain Reload Profiling: 3218ms
-	BeginReloadAssembly (285ms)
+- Finished resetting the current domain, in  1.751 seconds
+Domain Reload Profiling: 3508ms
+	BeginReloadAssembly (308ms)
 		ExecutionOrderSort (0ms)
-		DisableScriptedObjects (8ms)
+		DisableScriptedObjects (10ms)
 		BackupInstance (0ms)
 		ReleaseScriptingObjects (0ms)
-		CreateAndSetChildDomain (38ms)
-	RebuildCommonClasses (60ms)
-	RebuildNativeTypeToScriptingClass (21ms)
-	initialDomainReloadingComplete (59ms)
-	LoadAllAssembliesAndSetupDomain (1184ms)
-		LoadAssemblies (730ms)
+		CreateAndSetChildDomain (41ms)
+	RebuildCommonClasses (66ms)
+	RebuildNativeTypeToScriptingClass (23ms)
+	initialDomainReloadingComplete (67ms)
+	LoadAllAssembliesAndSetupDomain (1293ms)
+		LoadAssemblies (786ms)
 		RebuildTransferFunctionScriptingTraits (0ms)
-		AnalyzeDomain (627ms)
-			TypeCache.Refresh (457ms)
-				TypeCache.ScanAssembly (421ms)
-			BuildScriptInfoCaches (142ms)
-			ResolveRequiredComponents (22ms)
-	FinalizeReload (1608ms)
+		AnalyzeDomain (687ms)
+			TypeCache.Refresh (468ms)
+				TypeCache.ScanAssembly (433ms)
+			BuildScriptInfoCaches (182ms)
+			ResolveRequiredComponents (29ms)
+	FinalizeReload (1751ms)
 		ReleaseScriptCaches (0ms)
 		RebuildScriptCaches (0ms)
-		SetupLoadedEditorAssemblies (1381ms)
+		SetupLoadedEditorAssemblies (1487ms)
 			LogAssemblyErrors (0ms)
-			InitializePlatformSupportModulesInManaged (11ms)
+			InitializePlatformSupportModulesInManaged (14ms)
 			SetLoadedEditorAssemblies (7ms)
-			BeforeProcessingInitializeOnLoad (254ms)
-			ProcessInitializeOnLoadAttributes (698ms)
-			ProcessInitializeOnLoadMethodAttributes (406ms)
+			BeforeProcessingInitializeOnLoad (289ms)
+			ProcessInitializeOnLoadAttributes (772ms)
+			ProcessInitializeOnLoadMethodAttributes (401ms)
 			AfterProcessingInitializeOnLoad (3ms)
 			EditorAssembliesLoaded (1ms)
 		ExecutionOrderSort2 (0ms)
-		AwakeInstancesAfterBackupRestoration (8ms)
+		AwakeInstancesAfterBackupRestoration (7ms)
 Launched and connected shader compiler UnityShaderCompiler.exe after 0.01 seconds
-Refreshing native plugins compatible for Editor in 14.38 ms, found 5 plugins.
+Refreshing native plugins compatible for Editor in 16.77 ms, found 5 plugins.
 Preloading 0 native plugins for Editor in 0.00 ms.
 Unloading 17 Unused Serialized files (Serialized files now loaded: 0)
-Unloading 9445 unused Assets / (5.7 MB). Loaded Objects now: 10251.
-Memory consumption went from 171.7 MB to 166.1 MB.
-Total: 15.141500 ms (FindLiveObjects: 1.418400 ms CreateObjectMapping: 1.393700 ms MarkObjects: 8.646500 ms  DeleteObjects: 3.681300 ms)
+Unloading 9447 unused Assets / (5.6 MB). Loaded Objects now: 10269.
+Memory consumption went from 188.7 MB to 183.1 MB.
+Total: 16.906400 ms (FindLiveObjects: 1.562000 ms CreateObjectMapping: 1.874600 ms MarkObjects: 9.270100 ms  DeleteObjects: 4.197900 ms)
 
 ========================================================================
 Received Import Request.
-  Time since last request: 6107.371074 seconds.
-  path: Assets/Prefabs/DroppedItem_Prefab.prefab
-  artifactKey: Guid(65c489b46343b8b4da44b7be8299b2c6) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
-Start importing Assets/Prefabs/DroppedItem_Prefab.prefab using Guid(65c489b46343b8b4da44b7be8299b2c6) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (artifact id: 'b0550735ed2c0bd7bc9fe99376accc9a') in 0.1807104 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 10
+  Time since last request: 32396.344977 seconds.
+  path: Assets/Resources/400+ Rpg items16x16/tile058.png
+  artifactKey: Guid(80ef3691d2f33cd439f0b1c8e1920548) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/400+ Rpg items16x16/tile058.png using Guid(80ef3691d2f33cd439f0b1c8e1920548) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'fe628e47d56b990d4d159288330c4f71') in 0.8181832 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5031
 
 ========================================================================
 Received Import Request.
-  Time since last request: 0.000022 seconds.
-  path: Assets/Scripts/QuestManager.cs
-  artifactKey: Guid(c1b91a28882cbb549b42fa634712882e) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
-Start importing Assets/Scripts/QuestManager.cs using Guid(c1b91a28882cbb549b42fa634712882e) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (artifact id: '0b5fbd36391f1cea5bb0dcaa2fe36d89') in 0.016081 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 0
+  Time since last request: 0.000044 seconds.
+  path: Assets/Resources/400+ Rpg items16x16/tile061.png
+  artifactKey: Guid(ac3e201e7c0525947aeeb848a920d1b5) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/400+ Rpg items16x16/tile061.png using Guid(ac3e201e7c0525947aeeb848a920d1b5) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'e2a74e43517c95a4159651f0f7e5248a') in 0.4286999 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5031
 
 ========================================================================
 Received Import Request.
-  Time since last request: 279.970232 seconds.
-  path: Assets/Tile_Palette/Dungeon_Floor.prefab
-  artifactKey: Guid(1ca4c3d4d5acc8d4e91011812db2584a) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Tile_Palette/Dungeon_Floor.prefab using Guid(1ca4c3d4d5acc8d4e91011812db2584a) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'd8f603a0b6c43717577d72b9474a40b5') in 18.3772106 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 7371
+  Time since last request: 0.000039 seconds.
+  path: Assets/Resources/400+ Rpg items16x16/tile068.png
+  artifactKey: Guid(abd8fb8a32efc8547a143d419a0f9151) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/400+ Rpg items16x16/tile068.png using Guid(abd8fb8a32efc8547a143d419a0f9151) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '048d7183f3b58e88b121c32d721c8d3f') in 0.4318965 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5031
 
 ========================================================================
 Received Import Request.
-  Time since last request: 4.491953 seconds.
-  path: Assets/Scripts/FloatingText.cs
-  artifactKey: Guid(9953d6e931947f84b86db74a064b4d53) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Scripts/FloatingText.cs using Guid(9953d6e931947f84b86db74a064b4d53) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'd6d016c7b3b677b06f50d632383018af') in 0.0007299 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 0
+  Time since last request: 0.000043 seconds.
+  path: Assets/Resources/400+ Rpg items16x16/tile076.png
+  artifactKey: Guid(98809666f15190145a956db386dcbdac) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/400+ Rpg items16x16/tile076.png using Guid(98809666f15190145a956db386dcbdac) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'ff2d504bd1c8e1b2c74612e419cf2c11') in 0.5217824 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5031
 
 ========================================================================
 Received Import Request.
-  Time since last request: 36.819507 seconds.
-  path: Assets/Prefabs/Enemy_Wolf.prefab
-  artifactKey: Guid(a18df3f2375875d49921011445bdc4b0) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Prefabs/Enemy_Wolf.prefab using Guid(a18df3f2375875d49921011445bdc4b0) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '511f8ffd53fa3ef24e9f04dafc4f6940') in 6.3051765 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5119
+  Time since last request: 0.000041 seconds.
+  path: Assets/Resources/400+ Rpg items16x16/tile054.png
+  artifactKey: Guid(261ace4e0760a994491c3161b2696758) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/400+ Rpg items16x16/tile054.png using Guid(261ace4e0760a994491c3161b2696758) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'fca45bfee372533ca8267854980ccb15') in 0.4514349 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5031
 
 ========================================================================
 Received Import Request.
-  Time since last request: 0.000062 seconds.
-  path: Assets/Prefabs/LevelBoss.prefab
-  artifactKey: Guid(6321081257c9ec348bf61d7bf96c97a4) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Prefabs/LevelBoss.prefab using Guid(6321081257c9ec348bf61d7bf96c97a4) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '75f7acda81007a2e7d47c2cf164613c1') in 3.4294813 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5093
+  Time since last request: 0.000041 seconds.
+  path: Assets/Resources/400+ Rpg items16x16/tile077.png
+  artifactKey: Guid(c11bb5752b53f4849be643e379aa9a28) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/400+ Rpg items16x16/tile077.png using Guid(c11bb5752b53f4849be643e379aa9a28) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '1d0edb4b805feda9e6d294dbe1fb2228') in 0.4976639 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5031
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000050 seconds.
+  path: Assets/Resources/400+ Rpg items16x16/tile072.png
+  artifactKey: Guid(d56972d79428d4d4c92c53640f4b0564) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/400+ Rpg items16x16/tile072.png using Guid(d56972d79428d4d4c92c53640f4b0564) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'c95006791929233f40b03e92df4f0028') in 0.4453053 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5031
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000036 seconds.
+  path: Assets/Resources/400+ Rpg items16x16/tile060.png
+  artifactKey: Guid(6234dbab33442264b9ef5d91424322a5) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/400+ Rpg items16x16/tile060.png using Guid(6234dbab33442264b9ef5d91424322a5) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'db92fa5f94df480442a4f99968cc87e5') in 0.500009 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5031
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000046 seconds.
+  path: Assets/Resources/400+ Rpg items16x16/tile079.png
+  artifactKey: Guid(b96d04af8a6d89e48a942f15704d01ed) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/400+ Rpg items16x16/tile079.png using Guid(b96d04af8a6d89e48a942f15704d01ed) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'a198486ff413cda7ea15e5a93c84084a') in 0.4650716 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5031
 
 Editor requested this worker to shutdown with reason: Scaling down because of idle timeout
 AssetImportWorker is now disconnected from the server
