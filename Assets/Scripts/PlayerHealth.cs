@@ -18,6 +18,10 @@ public class PlayerHealth : MonoBehaviour
     public GameObject damagePopupPrefab;
     public Vector3 popupOffset = new Vector3(0, 1.5f, 0);
 
+    [Header("Захист (Armor)")]
+    [Range(0, 1f)] public float amuletArmorPercent = 0f; // 0.1 = 10% захисту
+    [Range(0, 1f)] public float ringArmorPercent = 0f;   // 0.1 = 10% захисту
+
     // --- НОВІ ПОЛЯ ДЛЯ СУМАРНОЇ РЕГЕНЕРАЦІЇ ---
     private int amuletRegen = 0;
     private int ringRegen = 0;
@@ -37,11 +41,24 @@ public class PlayerHealth : MonoBehaviour
     {
         if (isDead) return;
 
-        // Debug лог для пошуку джерела урону
-        // Debug.LogWarning("<color=red>Damage: " + damage + "</color>\n" + StackTraceUtility.ExtractStackTrace());
+        // --- ЛОГІКА ЗАХИСТУ ---
+        // Підсумовуємо весь захист
+        float totalArmor = amuletArmorPercent + ringArmorPercent;
 
-        currentHealth -= damage;
-        SpawnDamageText(damage);
+        // Обмежуємо захист на рівні 90% (0.9f), щоб гравець не став абсолютно безсмертним
+        totalArmor = Mathf.Clamp(totalArmor, 0f, 0.9f);
+
+        // Рахуємо фінальний урон: урон * (1 - відсоток захисту)
+        // Наприклад: 10 урону * (1 - 0.2) = 8 урону.
+        float multiplier = 1f - totalArmor;
+        // Стане (завжди округлює вгору, 2.5 перетвориться на 3):
+        int finalDamage = Mathf.CeilToInt(damage * multiplier);
+
+        // Гарантуємо, що якщо ворог вдарив, то хоча б 1 одиниця урону пройде (якщо захист не 100%)
+        if (finalDamage <= 0 && damage > 0 && totalArmor < 1f) finalDamage = 1;
+
+        currentHealth -= finalDamage;
+        SpawnDamageText(finalDamage);
 
         if (currentHealth <= 0)
         {
@@ -50,7 +67,13 @@ public class PlayerHealth : MonoBehaviour
         }
 
         UpdateUI();
+
+        if (totalArmor > 0)
+        {
+            Debug.Log($"<color=blue>Броня спрацювала! Заблоковано: {damage - finalDamage} урону. Отримано: {finalDamage}</color>");
+        }
     }
+
 
     private void SpawnDamageText(int amount)
     {
@@ -74,8 +97,6 @@ public class PlayerHealth : MonoBehaviour
         UpdateUI();
     }
 
-    // --- ОНОВЛЕНІ МЕТОДИ ДЛЯ БОНУСНОГО ХП ---
-    // Вони працюють універсально і для амулетів, і для кілець
     public void AddBonusHealth(int bonus)
     {
         maxHealth += bonus;
@@ -90,26 +111,40 @@ public class PlayerHealth : MonoBehaviour
         UpdateUI();
     }
 
-    // --- ОНОВЛЕНА ЛОГІКА РЕГЕНЕРАЦІЇ ---
+    // --- ОНОВЛЕНА ЛОГІКА РЕГЕНЕРАЦІЇ ТА ЗАХИСТУ ---
 
-    public void StartRegen(int amount, bool isAmulet = true)
+    public void StartBuffs(int regen, float armor, bool isAmulet = true)
     {
-        if (isAmulet) amuletRegen = amount;
-        else ringRegen = amount;
+        if (isAmulet)
+        {
+            amuletRegen = regen;
+            amuletArmorPercent = armor;
+        }
+        else
+        {
+            ringRegen = regen;
+            ringArmorPercent = armor;
+        }
 
-        // Перезапускаємо корутину тільки якщо вона ще не запущена
-        if (regenCoroutine == null)
+        if (regenCoroutine == null && (amuletRegen > 0 || ringRegen > 0))
         {
             regenCoroutine = StartCoroutine(RegenRoutine());
         }
     }
 
-    public void StopRegen(bool isAmulet = true)
+    public void StopBuffs(bool isAmulet = true)
     {
-        if (isAmulet) amuletRegen = 0;
-        else ringRegen = 0;
+        if (isAmulet)
+        {
+            amuletRegen = 0;
+            amuletArmorPercent = 0f;
+        }
+        else
+        {
+            ringRegen = 0;
+            ringArmorPercent = 0f;
+        }
 
-        // Якщо обидва джерела регену по 0 — зупиняємо корутину повністю
         if (amuletRegen == 0 && ringRegen == 0 && regenCoroutine != null)
         {
             StopCoroutine(regenCoroutine);
@@ -136,16 +171,14 @@ public class PlayerHealth : MonoBehaviour
                 }
 
                 UpdateUI();
-                Debug.Log($"<color=white>Регенерація спрацювала: +{totalRegen} (A:{amuletRegen} + R:{ringRegen})</color>");
+                Debug.Log($"<color=white>Регенерація: +{totalRegen}</color>");
             }
 
-            // Якщо регену більше немає, виходимо з циклу
             if (amuletRegen == 0 && ringRegen == 0) break;
         }
         regenCoroutine = null;
     }
 
-    // Лікування від зони (ApplyHeal) залишається без змін
     public void ApplyHeal(int amount)
     {
         if (isDead) return;
@@ -174,6 +207,8 @@ public class PlayerHealth : MonoBehaviour
         isDead = true;
         amuletRegen = 0;
         ringRegen = 0;
+        amuletArmorPercent = 0f;
+        ringArmorPercent = 0f;
         if (regenCoroutine != null) StopCoroutine(regenCoroutine);
 
         Time.timeScale = 0f;

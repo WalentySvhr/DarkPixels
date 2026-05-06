@@ -19,6 +19,16 @@ public class AmuletData : Item
     [Tooltip("Скільки ХП відновлює кожну секунду (наприклад: 2)")]
     public int healthRegenPerSecond = 0;
 
+    [Header("Нові механіки (Кріт та Захист)")]
+    [Tooltip("Шанс критичного удару (наприклад: 0.1 для 10%)")]
+    public float bonusCritChance = 0f;
+
+    [Tooltip("Множник критичного урону (наприклад: 2.0 для подвійного урону)")]
+    public float bonusCritMultiplier = 2f;
+
+    [Tooltip("Відсоток поглинання урону (наприклад: 0.1 для 10% броні)")]
+    public float bonusArmorPercent = 0f;
+
     /// <summary>
     /// Перевизначений метод для розподілу бонусів амулета по трьох блоках UI
     /// </summary>
@@ -28,28 +38,35 @@ public class AmuletData : Item
 
         // 1. БЛОК: Основні показники (Виживання та Сила)
         string main = "";
-        // ДОДАЄМО ТИП ПРЕДМЕТА (як у зброї)
-        // Використовуємо стандартне поле 'type', яке є в Item, для визначення категорії амулета
         main += $"Type: {type}\n";
+
         if (bonusMaxHealth > 0) main += $"Max HP: +{bonusMaxHealth}\n";
         if (bonusDamage > 0) main += $"Damage: +{bonusDamage}\n";
 
-        // Додаємо лікування, якщо воно прописане в базі
+        // Відображення броні в основних показниках
+        if (bonusArmorPercent > 0) main += $"Armor: +{bonusArmorPercent * 100}%\n";
+
         if (healValue > 0) main += $"Instant Heal: +{healValue}\n";
 
         desc.mainStats = main.TrimEnd();
 
-        // 2. БЛОК: Спеціальні ефекти та швидкості
+        // 2. БЛОК: Короткий художній опис (з базового класу Item)
+        desc.shortDesc = shortDescription;
+
+        // 3. БЛОК: Спеціальні ефекти та швидкості
         string extra = "";
 
-        // Форматуємо відсотки (наприклад, 0.2 -> 20%)
         if (bonusMoveSpeed > 0) extra += $"Move Speed: +{bonusMoveSpeed * 100}%\n";
         if (bonusAttackSpeed > 0) extra += $"Attack Speed: +{bonusAttackSpeed * 100}%\n";
         if (healthRegenPerSecond > 0) extra += $"Health Regen: {healthRegenPerSecond}/sec\n";
 
+        // Відображення критів у спеціальних ефектах
+        if (bonusCritChance > 0) extra += $"Crit Chance: +{bonusCritChance * 100}%\n";
+        if (bonusCritMultiplier > 2f) extra += $"Crit Multiplier: x{bonusCritMultiplier}\n";
+
         desc.extraStats = extra.TrimEnd();
 
-        // 3. БЛОК: Економіка
+        // 4. БЛОК: Економіка
         if (price > 0)
         {
             desc.priceText = $"Price: {price} gold";

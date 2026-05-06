@@ -22,16 +22,14 @@ public class PlayerCombat : MonoBehaviour
     public float unarmedKnockback = 5f;
 
     [Header("Бонуси від екіпіровки")]
-    [HideInInspector]
-    public int extraAmuletDamage = 0;
-    [HideInInspector]
-    public float extraAttackSpeed = 0f;
+    [HideInInspector] public int extraAmuletDamage = 0;
+    [HideInInspector] public float extraAttackSpeed = 0f;
+    [HideInInspector] public int extraRingDamage = 0;
+    [HideInInspector] public float extraRingAttackSpeed = 0f;
 
-    // --- НОВІ ПОЛЯ ДЛЯ КІЛЬЦЯ ---
-    [HideInInspector]
-    public int extraRingDamage = 0;        // Бонус урону від кільця
-    [HideInInspector]
-    public float extraRingAttackSpeed = 0f; // Бонус швидкості від кільця
+    [Header("Механіка Критичного Удару")]
+    [HideInInspector] public float critChance = 0f;       // 0.1 = 10%
+    [HideInInspector] public float critMultiplier = 2f;   // х2 урон за замовчуванням
 
     void Start()
     {
@@ -52,7 +50,6 @@ public class PlayerCombat : MonoBehaviour
         if (newData == null)
         {
             currentWeaponData = null;
-            Debug.Log("Зброю знято! Персонаж б'ється руками.");
             return;
         }
 
@@ -66,8 +63,6 @@ public class PlayerCombat : MonoBehaviour
 
             if (spawnedWeapon.GetComponent<Animator>() != null)
                 newData.UpdateAnimationSpeed(spawnedWeapon.GetComponent<Animator>());
-
-            Debug.Log("Взято в руки: " + newData.itemName);
         }
     }
 
@@ -75,9 +70,7 @@ public class PlayerCombat : MonoBehaviour
     {
         if (Time.time < nextAttackTime) return;
 
-        // Підсумовуємо швидкість атаки з усіх джерел
         float totalSpeedBonus = extraAttackSpeed + extraRingAttackSpeed;
-
         float baseCooldown = (currentWeaponData != null) ? currentWeaponData.cooldown : unarmedCooldown;
         float finalCooldown = baseCooldown / (1f + totalSpeedBonus);
 
@@ -104,63 +97,62 @@ public class PlayerCombat : MonoBehaviour
 
         yield return new WaitForSeconds(finalDelay);
 
-        if (currentWeaponData == null)
-        {
-            UnarmedDamage();
-        }
+        if (currentWeaponData == null) UnarmedDamage();
         else
         {
-            if (currentWeaponData.weaponType == WeaponType.Melee)
-            {
-                MeleeDamage();
-            }
-            else if (currentWeaponData.weaponType == WeaponType.Ranged)
-            {
-                RangedShot();
-            }
+            if (currentWeaponData.weaponType == WeaponType.Melee) MeleeDamage();
+            else if (currentWeaponData.weaponType == WeaponType.Ranged) RangedShot();
         }
+    }
+
+    // --- Допоміжний метод для розрахунку фінального урону з урахуванням кріта ---
+    private int CalculateFinalDamage(int baseDmg, out bool isCrit)
+    {
+        int totalBase = baseDmg + extraAmuletDamage + extraRingDamage;
+        isCrit = Random.value < critChance;
+
+        if (isCrit)
+        {
+            return Mathf.RoundToInt(totalBase * critMultiplier);
+        }
+        return totalBase;
     }
 
     void UnarmedDamage()
     {
         Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, unarmedRange, enemyLayers);
-
-        // Підсумовуємо весь бонусний урон
-        int totalDamage = unarmedDamage + extraAmuletDamage + extraRingDamage;
+        int finalDamage = CalculateFinalDamage(unarmedDamage, out bool isCrit);
 
         foreach (Collider2D enemy in hitEnemies)
         {
-            EnemyHealth enemyHealth = enemy.GetComponent<EnemyHealth>();
-            if (enemyHealth != null)
-            {
-                Vector2 knockbackDir = (enemy.transform.position - transform.position).normalized;
-                enemyHealth.TakeDamage(totalDamage, knockbackDir, unarmedKnockback);
-            }
-
-            BossHealth bossHealth = enemy.GetComponent<BossHealth>();
-            if (bossHealth != null) bossHealth.TakeDamage(totalDamage);
+            ApplyDamageToEnemy(enemy, finalDamage, isCrit, unarmedKnockback);
         }
     }
 
     void MeleeDamage()
     {
         Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, currentWeaponData.attackRange, enemyLayers);
-
-        // Підсумовуємо весь бонусний урон
-        int totalDamage = currentWeaponData.damage + extraAmuletDamage + extraRingDamage;
+        int finalDamage = CalculateFinalDamage(currentWeaponData.damage, out bool isCrit);
 
         foreach (Collider2D enemy in hitEnemies)
         {
-            EnemyHealth enemyHealth = enemy.GetComponent<EnemyHealth>();
-            if (enemyHealth != null)
-            {
-                Vector2 knockbackDir = (enemy.transform.position - transform.position).normalized;
-                enemyHealth.TakeDamage(totalDamage, knockbackDir, 10f);
-            }
-
-            BossHealth bossHealth = enemy.GetComponent<BossHealth>();
-            if (bossHealth != null) bossHealth.TakeDamage(totalDamage);
+            ApplyDamageToEnemy(enemy, finalDamage, isCrit, 10f);
         }
+    }
+
+    void ApplyDamageToEnemy(Collider2D enemy, int damage, bool isCrit, float knockbackForce)
+    {
+        EnemyHealth enemyHealth = enemy.GetComponent<EnemyHealth>();
+        if (enemyHealth != null)
+        {
+            Vector2 knockbackDir = (enemy.transform.position - transform.position).normalized;
+            // Тут можна додати передачу прапорця isCrit в EnemyHealth, щоб малювати інший колір тексту
+            enemyHealth.TakeDamage(damage, knockbackDir, knockbackForce);
+            if (isCrit) Debug.Log("<color=yellow>CRITICAL HIT!</color> " + damage);
+        }
+
+        BossHealth bossHealth = enemy.GetComponent<BossHealth>();
+        if (bossHealth != null) bossHealth.TakeDamage(damage);
     }
 
     void RangedShot()
@@ -173,46 +165,41 @@ public class PlayerCombat : MonoBehaviour
             if (target != null)
             {
                 shootDirection = (target.position - attackPoint.position).normalized;
-
-                Vector3 currentScale = transform.localScale;
-                if (target.position.x > transform.position.x)
-                    currentScale.x = Mathf.Abs(currentScale.x);
-                else
-                    currentScale.x = -Mathf.Abs(currentScale.x);
-
-                transform.localScale = currentScale;
+                FlipTowards(target.position.x);
             }
             else
             {
-                float facingDirection = Mathf.Sign(transform.localScale.x);
-                shootDirection = new Vector2(facingDirection, 0);
+                shootDirection = new Vector2(Mathf.Sign(transform.localScale.x), 0);
             }
 
             float angle = Mathf.Atan2(shootDirection.y, shootDirection.x) * Mathf.Rad2Deg;
-            Quaternion rotation = Quaternion.AngleAxis(angle, Vector3.forward);
-
-            GameObject proj = Instantiate(currentWeaponData.projectilePrefab, attackPoint.position, rotation);
+            GameObject proj = Instantiate(currentWeaponData.projectilePrefab, attackPoint.position, Quaternion.AngleAxis(angle, Vector3.forward));
 
             Arrow arrowScript = proj.GetComponent<Arrow>();
             if (arrowScript != null)
             {
-                // Передаємо сумарний урон снаряду
-                arrowScript.damage = currentWeaponData.damage + extraAmuletDamage + extraRingDamage;
+                // Для стріл теж рахуємо кріт в момент пострілу
+                arrowScript.damage = CalculateFinalDamage(currentWeaponData.damage, out bool isCrit);
+                if (isCrit) Debug.Log("<color=yellow>Ranged Crit!</color>");
             }
 
-            Rigidbody2D rb = proj.GetComponent<Rigidbody2D>();
-            if (rb != null)
-            {
-                rb.AddForce(shootDirection * currentWeaponData.shootForce, ForceMode2D.Impulse);
-            }
+            Rigidbody2D rbProj = proj.GetComponent<Rigidbody2D>();
+            if (rbProj != null) rbProj.AddForce(shootDirection * currentWeaponData.shootForce, ForceMode2D.Impulse);
         }
+    }
+
+    void FlipTowards(float targetX)
+    {
+        Vector3 scale = transform.localScale;
+        if (targetX > transform.position.x) scale.x = Mathf.Abs(scale.x);
+        else scale.x = -Mathf.Abs(scale.x);
+        transform.localScale = scale;
     }
 
     Transform FindNearestEnemy()
     {
         float detectionRadius = currentWeaponData.attackRange * 2f;
         Collider2D[] enemies = Physics2D.OverlapCircleAll(transform.position, detectionRadius, enemyLayers);
-
         Transform nearest = null;
         float minDistance = Mathf.Infinity;
 
@@ -225,7 +212,6 @@ public class PlayerCombat : MonoBehaviour
                 nearest = enemy.transform;
             }
         }
-
         return nearest;
     }
 

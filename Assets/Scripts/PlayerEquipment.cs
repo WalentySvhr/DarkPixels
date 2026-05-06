@@ -26,14 +26,18 @@ public class PlayerEquipment : MonoBehaviour
         if (playerHealth != null)
         {
             playerHealth.AddBonusHealth(currentAmulet.bonusMaxHealth);
-            if (currentAmulet.healthRegenPerSecond > 0)
-                playerHealth.StartRegen(currentAmulet.healthRegenPerSecond);
+            // Передаємо регенерацію та броню через об'єднаний метод
+            playerHealth.StartBuffs(currentAmulet.healthRegenPerSecond, currentAmulet.bonusArmorPercent, true);
         }
 
         if (playerCombat != null)
         {
             playerCombat.extraAmuletDamage = currentAmulet.bonusDamage;
             playerCombat.extraAttackSpeed = currentAmulet.bonusAttackSpeed;
+
+            // Додаємо кріти (якщо в Амулеті є такі поля, інакше просто 0)
+            playerCombat.critChance = currentAmulet.bonusCritChance;
+            playerCombat.critMultiplier = currentAmulet.bonusCritMultiplier;
         }
 
         if (playerMovement != null)
@@ -49,13 +53,15 @@ public class PlayerEquipment : MonoBehaviour
         if (playerHealth != null)
         {
             playerHealth.RemoveBonusHealth(currentAmulet.bonusMaxHealth);
-            playerHealth.StopRegen();
+            playerHealth.StopBuffs(true);
         }
 
         if (playerCombat != null)
         {
             playerCombat.extraAmuletDamage = 0;
             playerCombat.extraAttackSpeed = 0f;
+            playerCombat.critChance = 0f;
+            playerCombat.critMultiplier = 2f; // Скидаємо до стандарту х2
         }
 
         if (playerMovement != null)
@@ -75,24 +81,26 @@ public class PlayerEquipment : MonoBehaviour
         if (playerHealth != null)
         {
             playerHealth.AddBonusHealth(currentRing.bonusMaxHealth);
-            if (currentRing.healthRegenPerSecond > 0)
-                playerHealth.StartRegen(currentRing.healthRegenPerSecond);
+            // Передаємо регенерацію та броню кільця (isAmulet = false)
+            playerHealth.StartBuffs(currentRing.healthRegenPerSecond, currentRing.bonusArmorPercent, false);
         }
 
         if (playerCombat != null)
         {
-            // ВАЖЛИВО: Переконайся, що в PlayerCombat є ці змінні
             playerCombat.extraRingDamage = currentRing.bonusDamage;
             playerCombat.extraRingAttackSpeed = currentRing.bonusAttackSpeed;
+
+            // Передаємо шанс кріта та множник від кільця
+            playerCombat.critChance = currentRing.bonusCritChance;
+            playerCombat.critMultiplier = currentRing.bonusCritMultiplier;
         }
 
         if (playerMovement != null)
         {
-            // ВАЖЛИВО: Переконайся, що в PlayerMovement є ця змінна
             playerMovement.extraRingSpeedMultiplier = currentRing.bonusMoveSpeed;
         }
 
-        Debug.Log($"<color=cyan>Одягнено кільце:</color> {currentRing.name}");
+        Debug.Log($"<color=cyan>Одягнено кільце:</color> {currentRing.name}. Захист: {currentRing.bonusArmorPercent * 100}%");
     }
 
     public void UnequipRing()
@@ -102,13 +110,15 @@ public class PlayerEquipment : MonoBehaviour
         if (playerHealth != null)
         {
             playerHealth.RemoveBonusHealth(currentRing.bonusMaxHealth);
-            playerHealth.StopRegen();
+            playerHealth.StopBuffs(false);
         }
 
         if (playerCombat != null)
         {
             playerCombat.extraRingDamage = 0;
             playerCombat.extraRingAttackSpeed = 0f;
+            playerCombat.critChance = 0f;
+            playerCombat.critMultiplier = 2f;
         }
 
         if (playerMovement != null)
