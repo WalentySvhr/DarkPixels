@@ -21,9 +21,11 @@ public class QuestManager : MonoBehaviour
 
     [Header("Логіка випадіння нагород")]
     public GameObject droppedItemPrefab; // Твій базовий префаб предмета, який лежить на землі
+    public GameObject goldPopupPrefab;   // НОВЕ: Префаб для тексту золота
 
     public List<string> completedQuests = new List<string>();
     private List<QuestPoint> allPoints = new List<QuestPoint>();
+
 
     [Header("UI References")]
     public TextMeshProUGUI goalText;
@@ -72,23 +74,17 @@ public class QuestManager : MonoBehaviour
 
         bool isFound = false;
 
-        // string debugMsg = $"<color=cyan>[QuestManager ПЕРЕВІРКА]</color> Шукаємо квест: <b>[{search}]</b>. У списку {completedQuests.Count} квестів:\n";
-
         foreach (string q in completedQuests)
         {
             if (string.IsNullOrWhiteSpace(q)) continue;
 
             string cleanedQ = new string(q.ToLower().Where(char.IsLetterOrDigit).ToArray());
-            // debugMsg += $" - В списку: <b>[{cleanedQ}]</b> (Оригінал: '{q}')\n";
 
             if (cleanedQ == search)
             {
                 isFound = true;
             }
         }
-
-        // debugMsg += $"Результат пошуку: <color={(isFound ? "green>ЗНАЙДЕНО</color>" : "red>НЕ ЗНАЙДЕНО</color>")}";
-        // Debug.Log(debugMsg);
 
         return isFound;
     }
@@ -177,6 +173,10 @@ public class QuestManager : MonoBehaviour
         if (currentQuest.goldReward > 0 && InventoryManager.Instance != null)
         {
             InventoryManager.Instance.ChangeCoins(currentQuest.goldReward);
+
+            // --- ВИКЛИК ПОПАПУ ЗОЛОТА ---
+            ShowGoldPopup(currentQuest.goldReward);
+
             Debug.Log($"<color=yellow>Нагорода: Отримано {currentQuest.goldReward} монет!</color>");
         }
 
@@ -198,6 +198,27 @@ public class QuestManager : MonoBehaviour
                     DropItemOnGround(rewardItem);
                 }
             }
+        }
+    }
+
+    // --- МЕТОД ДЛЯ ПОПАПУ ЗОЛОТА ---
+    private void ShowGoldPopup(int amount)
+    {
+        if (goldPopupPrefab == null) return;
+
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        Vector3 spawnPos = player != null ? player.transform.position : transform.position;
+        spawnPos.y += 1.0f; // З'являється над головою
+
+        // Додаємо мікро-розкид по X, якщо випаде кілька попапів одночасно
+        spawnPos.x += UnityEngine.Random.Range(-0.3f, 0.3f);
+
+        GameObject popup = Instantiate(goldPopupPrefab, spawnPos, Quaternion.identity);
+
+        GoldPopup script = popup.GetComponent<GoldPopup>();
+        if (script != null)
+        {
+            script.Setup(amount);
         }
     }
 

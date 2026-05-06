@@ -32,6 +32,32 @@ public class QuestGiver : MonoBehaviour
         InvokeRepeating(nameof(UpdateIcon), 0.5f, 0.5f);
     }
 
+    // --- НОВИЙ БЛОК: ФІКСАЦІЯ ІКОНОК ---
+    void LateUpdate()
+    {
+        // Щокадру фіксуємо положення іконок, щоб вони не перевертались разом з NPC
+        FixIconTransform(questionMarkIcon);
+        FixIconTransform(exclamationMarkIcon);
+        FixIconTransform(minimapQuestionMarkIcon);
+        FixIconTransform(minimapExclamationMarkIcon);
+    }
+
+    private void FixIconTransform(GameObject icon)
+    {
+        if (icon != null && icon.activeSelf)
+        {
+            // 1. Захист від повороту (якщо NPC розвертається через Rotation Y = 180)
+            icon.transform.rotation = Quaternion.identity;
+
+            // 2. Захист від віддзеркалення (якщо NPC розвертається через Scale X = -1)
+            Vector3 localScale = icon.transform.localScale;
+            // "Мінус на мінус дає плюс": якщо батько має мінус, ставимо мінус іконці, щоб вона виглядала нормально
+            localScale.x = Mathf.Abs(localScale.x) * Mathf.Sign(transform.lossyScale.x);
+            icon.transform.localScale = localScale;
+        }
+    }
+    // ------------------------------------
+
     // Допоміжний метод, щоб побачити точне місце в Hierarchy
     private string GetGameObjectPath(GameObject obj)
     {
@@ -43,6 +69,7 @@ public class QuestGiver : MonoBehaviour
         }
         return path;
     }
+
     private string CleanName(string rawName)
     {
         if (string.IsNullOrEmpty(rawName)) return "";
@@ -83,26 +110,12 @@ public class QuestGiver : MonoBehaviour
             return null;
         }
 
-        // --- ДЕБАГ ДЛЯ ВИЯВЛЕННЯ ДУБЛІКАТІВ ---
-        if (current != null)
-        {
-            Debug.Log($"<color=yellow>[QUEST GIVER]</color> {gameObject.name} бачить квест: <color=green>{current.name}</color>.\n" +
-                      $"Звертаємось до менеджера на об'єкті: <b>{qm.gameObject.name}</b>. У його списку виконаних: <b>{qm.completedQuests.Count}</b> шт.");
-        }
-
         return current;
     }
 
     public void UpdateIcon()
     {
-        // 1. Спробуємо вимкнути і виведемо результат у консоль
-        if (questionMarkIcon != null)
-        {
-            questionMarkIcon.SetActive(false);
-            // Цей лог скаже нам, чи справді ми вимикаємо той об'єкт
-            // Debug.Log($"[ICON] Спроба вимкнути {questionMarkIcon.name} на {gameObject.name}");
-        }
-
+        if (questionMarkIcon != null) questionMarkIcon.SetActive(false);
         if (minimapQuestionMarkIcon != null) minimapQuestionMarkIcon.SetActive(false);
         if (exclamationMarkIcon != null) exclamationMarkIcon.SetActive(false);
         if (minimapExclamationMarkIcon != null) minimapExclamationMarkIcon.SetActive(false);
@@ -112,8 +125,6 @@ public class QuestGiver : MonoBehaviour
 
         QuestManager qm = QuestManager.Instance;
 
-        // Якщо квест уже в руках — ми вже вимкнули іконки вище, 
-        // тому просто нічого не вмикаємо назад.
         if (qm.currentQuest != null)
         {
             string heldQuestName = CleanName(qm.currentQuest.name);
@@ -126,7 +137,7 @@ public class QuestGiver : MonoBehaviour
                     if (exclamationMarkIcon != null) exclamationMarkIcon.SetActive(true);
                     if (minimapExclamationMarkIcon != null) minimapExclamationMarkIcon.SetActive(true);
                 }
-                return; // Квест наш, умови не виконані — виходимо (іконки вимкнені)
+                return;
             }
         }
         else
@@ -136,6 +147,7 @@ public class QuestGiver : MonoBehaviour
             if (minimapQuestionMarkIcon != null) minimapQuestionMarkIcon.SetActive(true);
         }
     }
+
     public void Interact()
     {
         QuestData activeQuestForNPC = GetRelevantQuest();
@@ -176,7 +188,6 @@ public class QuestGiver : MonoBehaviour
         if (activeQuestForNPC != null)
         {
             QuestManager.Instance.InitializeQuest(activeQuestForNPC);
-            // Додай це для перевірки:
             Debug.Log($"[QUEST] Прийнято: {QuestManager.Instance.currentQuest?.name}");
         }
         UpdateIcon();
