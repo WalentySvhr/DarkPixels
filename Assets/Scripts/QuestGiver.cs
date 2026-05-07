@@ -31,6 +31,9 @@ public class QuestGiver : MonoBehaviour
     [Header("Shop Settings (Після завершення квесту)")]
     public ShopData shopData;
 
+    // Змінна для перевірки дистанції до гравця
+    private bool playerInRange = false;
+
     void Start()
     {
         InvokeRepeating(nameof(UpdateIcon), 0.5f, 0.5f);
@@ -178,11 +181,42 @@ public class QuestGiver : MonoBehaviour
         UpdateIcon();
     }
 
+    // --- НОВИЙ БЛОК ДЛЯ ВІДСТЕЖЕННЯ ЗОНИ ---
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Player"))
+        {
+            playerInRange = true;
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Player"))
+        {
+            playerInRange = false;
+        }
+    }
+
+    // Оновлений метод кліку
     private void OnMouseDown()
     {
+        // Захист від кліку крізь інтерфейс
         if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject()) return;
-        Interact();
+
+        // Перевіряємо дистанцію
+        if (playerInRange)
+        {
+            Interact();
+        }
+        else
+        {
+            Debug.Log($"Гравець занадто далеко від {gameObject.name} для взаємодії!");
+        }
     }
+
+    // ---------------------------------------
 
     private string GetGameObjectPath(GameObject obj)
     {
