@@ -26,16 +26,12 @@ public class QuestGiver : MonoBehaviour
 
     void Start()
     {
-        // Цей рядок змінить колір об'єкта в ієрархії, щоб ти бачив, який саме скрипт працює
         Debug.Log($"<color=white>Я скрипт на об'єкті: </color> <color=orange>{gameObject.name}</color>. Повний шлях: {GetGameObjectPath(gameObject)}");
-
         InvokeRepeating(nameof(UpdateIcon), 0.5f, 0.5f);
     }
 
-    // --- НОВИЙ БЛОК: ФІКСАЦІЯ ІКОНОК ---
     void LateUpdate()
     {
-        // Щокадру фіксуємо положення іконок, щоб вони не перевертались разом з NPC
         FixIconTransform(questionMarkIcon);
         FixIconTransform(exclamationMarkIcon);
         FixIconTransform(minimapQuestionMarkIcon);
@@ -46,19 +42,13 @@ public class QuestGiver : MonoBehaviour
     {
         if (icon != null && icon.activeSelf)
         {
-            // 1. Захист від повороту (якщо NPC розвертається через Rotation Y = 180)
             icon.transform.rotation = Quaternion.identity;
-
-            // 2. Захист від віддзеркалення (якщо NPC розвертається через Scale X = -1)
             Vector3 localScale = icon.transform.localScale;
-            // "Мінус на мінус дає плюс": якщо батько має мінус, ставимо мінус іконці, щоб вона виглядала нормально
             localScale.x = Mathf.Abs(localScale.x) * Mathf.Sign(transform.lossyScale.x);
             icon.transform.localScale = localScale;
         }
     }
-    // ------------------------------------
 
-    // Допоміжний метод, щоб побачити точне місце в Hierarchy
     private string GetGameObjectPath(GameObject obj)
     {
         string path = "/" + obj.name;
@@ -73,19 +63,16 @@ public class QuestGiver : MonoBehaviour
     private string CleanName(string rawName)
     {
         if (string.IsNullOrEmpty(rawName)) return "";
-        // Видаляємо пробіли, (Clone) та переводимо в нижній регістр для 100% порівняння
         return rawName.Replace("(Clone)", "").Trim().ToLower();
     }
 
     private bool IsQuestCompleted(string questName)
     {
-        // ЗАХИСТ: Якщо менеджер ще не ініціалізувався, просто кажемо "ні"
         if (QuestManager.Instance == null) return false;
 
         string cleanedSearchName = CleanName(questName);
         List<string> completedList = QuestManager.Instance.completedQuests;
 
-        // ЗАХИСТ: Якщо список чомусь не створений
         if (completedList == null) return false;
 
         return completedList.Any(q => CleanName(q) == cleanedSearchName);
@@ -96,10 +83,8 @@ public class QuestGiver : MonoBehaviour
         QuestData current = questToOffer;
         QuestManager qm = QuestManager.Instance;
 
-        // ЗАХИСТ: Якщо менеджера немає, нічого не робимо
         if (qm == null) return null;
 
-        // ЗМІНА: Тепер ми використовуємо метод з QuestManager, а не локальний!
         while (current != null && qm.IsQuestCompleted(current.name))
         {
             current = current.nextQuest;
@@ -142,7 +127,6 @@ public class QuestGiver : MonoBehaviour
         }
         else
         {
-            // Тільки якщо квесту немає — вмикаємо "?"
             if (questionMarkIcon != null) questionMarkIcon.SetActive(true);
             if (minimapQuestionMarkIcon != null) minimapQuestionMarkIcon.SetActive(true);
         }
@@ -190,6 +174,32 @@ public class QuestGiver : MonoBehaviour
             QuestManager.Instance.InitializeQuest(activeQuestForNPC);
             Debug.Log($"[QUEST] Прийнято: {QuestManager.Instance.currentQuest?.name}");
         }
+        UpdateIcon();
+    }
+
+    public void CompleteQuest()
+    {
+        QuestManager qm = QuestManager.Instance;
+
+        if (qm.currentQuest != null)
+        {
+            // 1. Якщо це квест на збір, забираємо предмети перед тим, як видати нагороду
+            if (qm.currentQuest.type == QuestType.CollectItems)
+            {
+                // === ОНОВЛЕНО: Тепер реально забираємо предмети з інвентарю ===
+                if (InventoryManager.Instance != null && qm.currentQuest.itemToCollect != null)
+                {
+                    InventoryManager.Instance.RemoveItems(qm.currentQuest.itemToCollect, qm.currentQuest.requiredAmount);
+                    Debug.Log($"[QUEST] NPC забрав {qm.currentQuest.requiredAmount} шт. {qm.currentQuest.itemToCollect.name}");
+                }
+            }
+
+            // 2. Викликаємо метод менеджера для видачі нагород і закриття квесту
+            qm.FinishQuestFromNPC();
+
+            Debug.Log($"[QUEST] Здано: {qm.currentQuest.name}");
+        }
+
         UpdateIcon();
     }
 

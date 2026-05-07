@@ -8,16 +8,44 @@ public class DamagePopup : MonoBehaviour
     private TextMeshProUGUI textMesh;
     private Color textColor;
 
+    [Header("Звичайний урон")]
+    public Color normalColor = Color.white;
+    public float normalFontSize = 36f; // Підбери розмір під свій Canvas
+
+    [Header("Критичний урон")]
+    public Color critColor = Color.red;
+    public float critFontSize = 55f; // Більший розмір для крита
+    public string critPrefix = "КРІТ! ";
+
     void Awake()
     {
         textMesh = GetComponentInChildren<TextMeshProUGUI>();
-        textColor = textMesh.color;
     }
 
-    public void Setup(int damageAmount)
+    // ОНОВЛЕНО: Тепер метод приймає параметр isCrit (за замовчуванням false, щоб не зламати старий код)
+    public void Setup(int damageAmount, bool isCrit = false)
     {
-        // ДОДАНО: Знак мінуса перед числом
-        textMesh.text = "-" + damageAmount.ToString();
+        if (isCrit)
+        {
+            // Налаштування для критичного удару
+            textMesh.text = $"{critPrefix}-{damageAmount}";
+            textMesh.color = critColor;
+            textMesh.fontSize = critFontSize;
+
+            // Робимо так, щоб критичний урон висів трохи довше і летів трохи швидше (за бажанням)
+            moveSpeed *= 1.2f;
+            disappearTime += 0.2f;
+        }
+        else
+        {
+            // Налаштування для звичайного удару
+            textMesh.text = $"-{damageAmount}";
+            textMesh.color = normalColor;
+            textMesh.fontSize = normalFontSize;
+        }
+
+        // Запам'ятовуємо поточний колір для логіки зникнення (альфа-каналу)
+        textColor = textMesh.color;
 
         // Випадкове зміщення
         transform.position += new Vector3(Random.Range(-0.5f, 0.5f), Random.Range(-0.2f, 0.2f), 0);

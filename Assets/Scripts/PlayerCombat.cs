@@ -146,13 +146,19 @@ public class PlayerCombat : MonoBehaviour
         if (enemyHealth != null)
         {
             Vector2 knockbackDir = (enemy.transform.position - transform.position).normalized;
-            // Тут можна додати передачу прапорця isCrit в EnemyHealth, щоб малювати інший колір тексту
-            enemyHealth.TakeDamage(damage, knockbackDir, knockbackForce);
+
+            // === ОНОВЛЕНО: Передаємо isCrit у EnemyHealth ===
+            enemyHealth.TakeDamage(damage, knockbackDir, knockbackForce, isCrit);
+
             if (isCrit) Debug.Log("<color=yellow>CRITICAL HIT!</color> " + damage);
         }
 
         BossHealth bossHealth = enemy.GetComponent<BossHealth>();
-        if (bossHealth != null) bossHealth.TakeDamage(damage);
+        if (bossHealth != null)
+        {
+            // Якщо у тебе бос має свій попап урону, туди теж можна буде додати isCrit
+            bossHealth.TakeDamage(damage);
+        }
     }
 
     void RangedShot()
@@ -180,6 +186,12 @@ public class PlayerCombat : MonoBehaviour
             {
                 // Для стріл теж рахуємо кріт в момент пострілу
                 arrowScript.damage = CalculateFinalDamage(currentWeaponData.damage, out bool isCrit);
+
+                // ВАЖЛИВО ДЛЯ ДАЛЬНЬОГО БОЮ:
+
+
+                arrowScript.isCrit = isCrit;
+
                 if (isCrit) Debug.Log("<color=yellow>Ranged Crit!</color>");
             }
 

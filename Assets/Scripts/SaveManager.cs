@@ -10,8 +10,13 @@ public class GameData
     public int coins;
     public float currentHealth;
     public List<ItemSaveEntry> backpack = new List<ItemSaveEntry>();
+
     public string equippedWeaponName;
     public string equippedAmuletName;
+    // --- ДОДАНО: Змінні для кілець ---
+    public string equippedRing1Name;
+    public string equippedRing2Name;
+
     public string currentQuestID;
     public int questProgress;
     public List<FishingSpotSaveEntry> activeCooldowns = new List<FishingSpotSaveEntry>();
@@ -24,6 +29,7 @@ public class ItemSaveEntry
     public string itemName;
     public int amount;
 }
+
 [System.Serializable]
 public class FishingSpotSaveEntry
 {
@@ -65,8 +71,6 @@ public class SaveManager : MonoBehaviour
 
     public void PrepareLoad() => needsToLoad = true;
 
-    // ... (початок коду без змін)
-
     public void SaveGame()
     {
         if (!SaveForbiddenZone.CanSave)
@@ -92,6 +96,10 @@ public class SaveManager : MonoBehaviour
             data.equippedWeaponName = InventoryManager.Instance.currentWeaponName;
             data.equippedAmuletName = InventoryManager.Instance.currentAmuletName;
 
+            // --- ДОДАНО: Збереження назв екіпірованих кілець ---
+            data.equippedRing1Name = InventoryManager.Instance.currentRing1Name;
+            data.equippedRing2Name = InventoryManager.Instance.currentRing2Name;
+
             data.backpack.Clear();
             foreach (var stack in InventoryManager.Instance.items)
             {
@@ -100,7 +108,7 @@ public class SaveManager : MonoBehaviour
             }
         }
 
-        // --- ДОДАНО: ЗБЕРЕЖЕННЯ КВЕСТІВ ---
+        // ЗБЕРЕЖЕННЯ КВЕСТІВ
         if (QuestManager.Instance != null)
         {
             data = QuestManager.Instance.CaptureQuestState(data);
@@ -121,7 +129,7 @@ public class SaveManager : MonoBehaviour
         GameData data = JsonUtility.FromJson<GameData>(File.ReadAllText(savePath));
         GameObject player = GameObject.FindGameObjectWithTag("Player");
 
-        // --- ВІДНОВЛЕННЯ ПОЗИЦІЇ ---
+        // ВІДНОВЛЕННЯ ПОЗИЦІЇ
         if (player != null)
         {
             Rigidbody2D rb = player.GetComponent<Rigidbody2D>();
@@ -133,12 +141,17 @@ public class SaveManager : MonoBehaviour
             player.transform.position = new Vector3(data.posX, data.posY, data.posZ);
         }
 
-        // --- ВІДНОВЛЕННЯ ІНВЕНТАРЯ ---
+        // ВІДНОВЛЕННЯ ІНВЕНТАРЯ
         if (InventoryManager.Instance != null)
         {
             InventoryManager.Instance.coins = data.coins;
             InventoryManager.Instance.currentWeaponName = "";
             InventoryManager.Instance.currentAmuletName = "";
+
+            // --- ДОДАНО: Очищаємо слоти кілець перед завантаженням ---
+            InventoryManager.Instance.currentRing1Name = "";
+            InventoryManager.Instance.currentRing2Name = "";
+
             InventoryManager.Instance.UpdateCoinUI();
 
             InventoryManager.Instance.items.Clear();
@@ -151,7 +164,7 @@ public class SaveManager : MonoBehaviour
             InventoryManager.Instance.UpdateUI();
         }
 
-        // --- ДОДАНО: ВІДНОВЛЕННЯ КВЕСТІВ ---
+        // ВІДНОВЛЕННЯ КВЕСТІВ
         if (QuestManager.Instance != null)
         {
             QuestManager.Instance.LoadQuestState(data);
@@ -164,12 +177,8 @@ public class SaveManager : MonoBehaviour
         StartCoroutine(ApplyEquipmentAfterLoad(data));
     }
 
-    // ... (решта коду ApplyEquipmentAfterLoad та методів для рибалки без змін)
-
     private System.Collections.IEnumerator ApplyEquipmentAfterLoad(GameData data)
     {
-        // Збільшив час затримки, щоб UI точно встиг намалюватися.
-        // Це часто буває проблемою в збірках на телефоні/симуляторі.
         yield return new WaitForSeconds(0.5f);
 
         InventorySlot[] allSlots = Object.FindObjectsByType<InventorySlot>(FindObjectsInactive.Include, FindObjectsSortMode.None);
@@ -195,12 +204,36 @@ public class SaveManager : MonoBehaviour
                     Debug.Log($"<color=yellow>[SaveSystem]</color> Відновлено амулет: {amu.name}");
                 }
             }
+
+            // --- ДОДАНО: Відновлення кілець ---
+            // Зверни увагу: переконайся, що в твоєму скрипті InventorySlot є змінні isRingEquipmentSlot та ringSlotIndex
+            if (slot.isRingEquipmentSlot)
+            {
+                if (slot.ringSlotIndex == 1 && !string.IsNullOrEmpty(data.equippedRing1Name))
+                {
+                    Item ring1 = Resources.Load<Item>("Items/" + data.equippedRing1Name);
+                    if (ring1 != null)
+                    {
+                        slot.AddItem(ring1, 1);
+                        Debug.Log($"<color=yellow>[SaveSystem]</color> Відновлено кільце 1: {ring1.name}");
+                    }
+                }
+                else if (slot.ringSlotIndex == 2 && !string.IsNullOrEmpty(data.equippedRing2Name))
+                {
+                    Item ring2 = Resources.Load<Item>("Items/" + data.equippedRing2Name);
+                    if (ring2 != null)
+                    {
+                        slot.AddItem(ring2, 1);
+                        Debug.Log($"<color=yellow>[SaveSystem]</color> Відновлено кільце 2: {ring2.name}");
+                    }
+                }
+            }
         }
     }
+
     // --- МЕТОДИ ДЛЯ РИБАЛКИ ---
     public List<FishingSpotSaveEntry> GetActiveCooldowns()
     {
-        // Читаємо файл, щоб дізнатися поточні перезарядки
         if (!File.Exists(savePath)) return new List<FishingSpotSaveEntry>();
         GameData data = JsonUtility.FromJson<GameData>(File.ReadAllText(savePath));
         return data.activeCooldowns;
@@ -211,7 +244,6 @@ public class SaveManager : MonoBehaviour
         GameData data = new GameData();
         if (File.Exists(savePath)) data = JsonUtility.FromJson<GameData>(File.ReadAllText(savePath));
 
-        // Видаляємо старий запис, якщо він був, і додаємо новий
         data.activeCooldowns.RemoveAll(x => x.spotID == id);
         data.activeCooldowns.Add(new FishingSpotSaveEntry { spotID = id, unlockTime = time });
 

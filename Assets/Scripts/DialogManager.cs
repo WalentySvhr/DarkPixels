@@ -19,13 +19,13 @@ public class DialogManager : MonoBehaviour
     public Button acceptButton;
     public TextMeshProUGUI acceptButtonText;
     public Button declineButton;
-    public TextMeshProUGUI declineButtonText; // ДОДАНО: Текст кнопки відмови
+    public TextMeshProUGUI declineButtonText;
 
     [Header("Тексти кнопок (Налаштування)")]
     public string questAcceptText = "Прийняти";
     public string questDeclineText = "Відмовитись";
     public string rewardAcceptText = "Забрати нагороду";
-    public string rewardDeclineText = "Пізніше"; // Текст кнопки відмови, коли ми прийшли здавати квест
+    public string rewardDeclineText = "Пізніше";
 
     [Header("Налаштування")]
     public float typingSpeed = 0.02f;
@@ -34,7 +34,7 @@ public class DialogManager : MonoBehaviour
     private bool isTyping = false;
     private string currentSentence = "";
     private QuestGiver currentGiver;
-    private NPCPatrol currentNPC;
+    private NPCPatrol currentNPC; // Якщо використовується патрулювання
 
     void Awake()
     {
@@ -58,7 +58,6 @@ public class DialogManager : MonoBehaviour
 
     // --- ОСНОВНІ МЕТОДИ ЗАПУСКУ ---
 
-    // 1. СТАТИЧНИЙ ДІАЛОГ (Подяка або фрази в процесі)
     public void StartStaticDialog(string text, DialogData data)
     {
         PrepareDialogUI(data);
@@ -69,13 +68,11 @@ public class DialogManager : MonoBehaviour
         DisplayNextSentence();
     }
 
-    // 2. ДІАЛОГ ВИДАЧІ КВЕСТУ
     public void StartQuestDialog(string text, QuestGiver giver, DialogData data)
     {
         currentGiver = giver;
         PrepareDialogUI(data);
 
-        // Встановлюємо тексти з Інспектора для видачі квесту
         if (acceptButtonText != null) acceptButtonText.text = questAcceptText;
         if (declineButtonText != null) declineButtonText.text = questDeclineText;
 
@@ -84,13 +81,11 @@ public class DialogManager : MonoBehaviour
         DisplayNextSentence();
     }
 
-    // 3. ДІАЛОГ ЗАВЕРШЕННЯ КВЕСТУ (Нагорода)
     public void StartCompletionDialog(string text, QuestGiver giver, DialogData data)
     {
         currentGiver = giver;
         PrepareDialogUI(data);
 
-        // Встановлюємо тексти з Інспектора для здачі квесту
         if (acceptButtonText != null) acceptButtonText.text = rewardAcceptText;
         if (declineButtonText != null) declineButtonText.text = rewardDeclineText;
 
@@ -99,7 +94,6 @@ public class DialogManager : MonoBehaviour
         DisplayNextSentence();
     }
 
-    // 4. УНІВЕРСАЛЬНИЙ ДІАЛОГ (Для DialogTrigger)
     public void StartDialog(DialogData dialog)
     {
         PrepareDialogUI(dialog);
@@ -121,10 +115,8 @@ public class DialogManager : MonoBehaviour
     {
         dialogPanel.SetActive(true);
 
-        // Встановлюємо ім'я
         if (nameText != null) nameText.text = data.npcName;
 
-        // Встановлюємо портрет
         if (portraitImage != null)
         {
             if (data.npcPortrait != null)
@@ -185,6 +177,8 @@ public class DialogManager : MonoBehaviour
         isTyping = false;
     }
 
+    // --- ОБРОБКА КНОПОК ---
+
     public void OnAcceptQuest()
     {
         if (currentGiver != null)
@@ -196,10 +190,14 @@ public class DialogManager : MonoBehaviour
             {
                 string qName = activeQuest.name;
 
+                // Перевіряємо, чи ми ЗДАЄМО квест
                 if (qm.currentQuest != null && qName == qm.currentQuest.name && qm.currentProgress >= qm.currentQuest.requiredAmount)
                 {
-                    qm.FinishQuestFromNPC();
+                    // === ЗМІНЕНО ===
+                    // Викликаємо метод на NPC, щоб він спершу забрав предмети, якщо це квест на збір
+                    currentGiver.CompleteQuest();
                 }
+                // Інакше ми ПРИЙМАЄМО квест
                 else
                 {
                     currentGiver.AcceptQuest();

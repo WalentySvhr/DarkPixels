@@ -63,6 +63,10 @@ public class InventoryManager : MonoBehaviour
             {
                 stack.amount++;
                 UpdateUI();
+
+                // === ДОДАНО: Оновлюємо квест на збір одразу при піднятті ===
+                if (QuestManager.Instance != null) QuestManager.Instance.UpdateCollectItemProgress();
+
                 return true;
             }
         }
@@ -71,6 +75,10 @@ public class InventoryManager : MonoBehaviour
 
         items.Add(new ItemStack(item, 1));
         UpdateUI();
+
+        // === ДОДАНО: Оновлюємо квест на збір одразу при піднятті ===
+        if (QuestManager.Instance != null) QuestManager.Instance.UpdateCollectItemProgress();
+
         return true;
     }
 
@@ -84,6 +92,53 @@ public class InventoryManager : MonoBehaviour
             if (stack.amount <= 0) items.Remove(stack);
             UpdateUI();
         }
+    }
+
+    // === НОВИЙ МЕТОД: Підрахунок загальної кількості конкретного предмета у всіх стаках ===
+    public int GetItemCount(Item itemToFind)
+    {
+        int count = 0;
+        foreach (ItemStack stack in items)
+        {
+            if (stack.item == itemToFind)
+            {
+                count += stack.amount;
+            }
+        }
+        return count;
+    }
+
+    // === НОВИЙ МЕТОД: Видалення вказаної кількості предметів (для здачі квестів) ===
+    public void RemoveItems(Item itemToRemove, int amountToRemove)
+    {
+        int remainingToRemove = amountToRemove;
+
+        // Йдемо по списку з кінця на початок, бо ми можемо видаляти елементи (стаки) зі списку
+        for (int i = items.Count - 1; i >= 0; i--)
+        {
+            ItemStack stack = items[i];
+
+            if (stack.item == itemToRemove)
+            {
+                if (stack.amount >= remainingToRemove)
+                {
+                    // В цьому стаку достатньо предметів
+                    stack.amount -= remainingToRemove;
+                    remainingToRemove = 0;
+
+                    // Якщо стак спорожнів - видаляємо його
+                    if (stack.amount <= 0) items.RemoveAt(i);
+                    break; // Ми видалили необхідну кількість
+                }
+                else
+                {
+                    // В цьому стаку менше предметів, ніж треба. Забираємо всі і йдемо до наступного
+                    remainingToRemove -= stack.amount;
+                    items.RemoveAt(i); // Стак повністю пустий
+                }
+            }
+        }
+        UpdateUI();
     }
 
     // ОНОВЛЕНО: Тепер приймає номер слота для кілець
@@ -154,6 +209,11 @@ public class InventoryManager : MonoBehaviour
             try { ShopManager.Instance.RefreshShop(); }
             catch (System.Exception) { }
         }
+        // === ПРАВИЛЬНЕ МІСЦЕ: Оновлюємо вікно статів при зміні інвентарю ===
+        if (StatsUI.Instance != null && StatsUI.Instance.gameObject.activeInHierarchy)
+        {
+            StatsUI.Instance.UpdateStatsUI();
+        }
     }
 
     public void ActivateCoinBoost(float multiplier, float durationInSeconds)
@@ -183,6 +243,9 @@ public class InventoryManager : MonoBehaviour
 
         coinMultiplier = 1f;
         if (buffUIContainer != null) buffUIContainer.SetActive(false);
+
+
+
     }
 
     public void AddMobCoins(int baseAmount)

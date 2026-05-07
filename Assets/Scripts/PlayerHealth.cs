@@ -23,8 +23,8 @@ public class PlayerHealth : MonoBehaviour
     [Range(0, 1f)] public float ringArmorPercent = 0f;   // 0.1 = 10% захисту
 
     // --- НОВІ ПОЛЯ ДЛЯ СУМАРНОЇ РЕГЕНЕРАЦІЇ ---
-    private int amuletRegen = 0;
-    private int ringRegen = 0;
+    [HideInInspector] public int amuletRegen = 0;
+    [HideInInspector] public int ringRegen = 0;
     private Coroutine regenCoroutine;
 
     void Start()

@@ -2,7 +2,7 @@ using UnityEngine;
 using TMPro;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq; // Додано для зручної роботи зі списками
+using System.Linq;
 
 public class QuestManager : MonoBehaviour
 {
@@ -21,11 +21,10 @@ public class QuestManager : MonoBehaviour
 
     [Header("Логіка випадіння нагород")]
     public GameObject droppedItemPrefab; // Твій базовий префаб предмета, який лежить на землі
-    public GameObject goldPopupPrefab;   // НОВЕ: Префаб для тексту золота
+    public GameObject goldPopupPrefab;   // Префаб для тексту золота
 
     public List<string> completedQuests = new List<string>();
     private List<QuestPoint> allPoints = new List<QuestPoint>();
-
 
     [Header("UI References")]
     public TextMeshProUGUI goalText;
@@ -56,36 +55,29 @@ public class QuestManager : MonoBehaviour
 
     // --- ДОПОМІЖНІ МЕТОДИ ---
 
-    // Очищає ім'я від (Clone) та пробілів для надійного порівняння
     private string CleanName(string rawName)
     {
         if (string.IsNullOrEmpty(rawName)) return "";
         return rawName.Replace("(Clone)", "").Trim();
     }
 
-    // Глобальна перевірка: чи виконаний квест? (Викликати з QuestGiver)
     public bool IsQuestCompleted(string questName)
     {
         if (string.IsNullOrWhiteSpace(questName)) return false;
         if (completedQuests == null) return false;
 
-        // "Бульдозер": залишаємо виключно букви і цифри, все переводимо в нижній регістр
         string search = new string(questName.ToLower().Where(char.IsLetterOrDigit).ToArray());
-
         bool isFound = false;
 
         foreach (string q in completedQuests)
         {
             if (string.IsNullOrWhiteSpace(q)) continue;
-
             string cleanedQ = new string(q.ToLower().Where(char.IsLetterOrDigit).ToArray());
-
             if (cleanedQ == search)
             {
                 isFound = true;
             }
         }
-
         return isFound;
     }
 
@@ -111,11 +103,49 @@ public class QuestManager : MonoBehaviour
         currentProgress = 0;
         isTransitioning = false;
 
+        // Якщо це квест на збір предметів, одразу перевіряємо інвентар
+        if (currentQuest.type == QuestType.CollectItems)
+        {
+            UpdateCollectItemProgress();
+        }
+
         if (questPanel != null) questPanel.SetActive(true);
         if (uiAnimator != null) uiAnimator.SetTrigger("Appear");
 
         UpdateUI();
         OnQuestStateChanged?.Invoke(); // Сповіщаємо NPC
+    }
+
+    // === ОНОВЛЕНО: Тепер реально підраховує предмети з InventoryManager ===
+    public void UpdateCollectItemProgress()
+    {
+        if (currentQuest == null || currentQuest.type != QuestType.CollectItems || isTransitioning) return;
+
+        int itemsInInventory = 0;
+
+        // Звертаємось до менеджера інвентарю для перевірки кількості
+        if (InventoryManager.Instance != null && currentQuest.itemToCollect != null)
+        {
+            itemsInInventory = InventoryManager.Instance.GetItemCount(currentQuest.itemToCollect);
+        }
+
+        currentProgress = itemsInInventory;
+
+        if (currentProgress > currentQuest.requiredAmount)
+        {
+            currentProgress = currentQuest.requiredAmount;
+        }
+
+        UpdateUI();
+        OnQuestStateChanged?.Invoke();
+
+        // Якщо квест не потребує здачі NPC, завершуємо його автоматично
+        if (currentProgress >= currentQuest.requiredAmount && !currentQuest.requiresReturnToNPC)
+        {
+            Debug.Log("<color=green>Квест на збір виконано автоматично!</color>");
+            GiveQuestRewards();
+            StartCoroutine(CompleteQuestRoutine());
+        }
     }
 
     public void OnQuestAction(QuestType actionType, string id, int amount = 1)
@@ -133,34 +163,32 @@ public class QuestManager : MonoBehaviour
 
             currentProgress += amount;
 
-            // Запобігаємо переповненню прогресу (щоб не було 11/10)
             if (currentProgress > currentQuest.requiredAmount)
             {
                 currentProgress = currentQuest.requiredAmount;
             }
 
             UpdateUI();
-            OnQuestStateChanged?.Invoke(); // Оновлюємо іконки (на випадок появи "!")
+            OnQuestStateChanged?.Invoke();
 
             if (currentProgress >= currentQuest.requiredAmount)
             {
                 if (!currentQuest.requiresReturnToNPC)
                 {
                     Debug.Log("<color=green>Квест виконано автоматично (у полі)!</color>");
-                    GiveQuestRewards(); // Видаємо нагороду автоматично
+                    GiveQuestRewards();
                     StartCoroutine(CompleteQuestRoutine());
                 }
             }
         }
     }
 
-    // Метод для завершення квесту через діалог з NPC
     public void FinishQuestFromNPC()
     {
         if (currentQuest != null && currentProgress >= currentQuest.requiredAmount)
         {
-            GiveQuestRewards(); // Видаємо нагороду
-            StartCoroutine(CompleteQuestRoutine()); // Завершуємо квест
+            GiveQuestRewards();
+            StartCoroutine(CompleteQuestRoutine());
         }
     }
 
@@ -173,10 +201,7 @@ public class QuestManager : MonoBehaviour
         if (currentQuest.goldReward > 0 && InventoryManager.Instance != null)
         {
             InventoryManager.Instance.ChangeCoins(currentQuest.goldReward);
-
-            // --- ВИКЛИК ПОПАПУ ЗОЛОТА ---
             ShowGoldPopup(currentQuest.goldReward);
-
             Debug.Log($"<color=yellow>Нагорода: Отримано {currentQuest.goldReward} монет!</color>");
         }
 
@@ -187,32 +212,28 @@ public class QuestManager : MonoBehaviour
             Debug.Log($"<color=cyan>Нагорода: Отримано {currentQuest.experienceReward} XP!</color>");
         }
 
-        // 3. Предмети (ТЕПЕР ЗАВЖДИ ПАДАЮТЬ НА ЗЕМЛЮ)
+        // 3. Предмети
         if (currentQuest.itemRewards != null && currentQuest.itemRewards.Length > 0)
         {
             foreach (Item rewardItem in currentQuest.itemRewards)
             {
                 if (rewardItem != null)
                 {
-                    // Ми більше не перевіряємо інвентар, а одразу спавнимо предмет на сцені!
                     DropItemOnGround(rewardItem);
                 }
             }
         }
     }
 
-    // --- МЕТОД ДЛЯ ПОПАПУ ЗОЛОТА ---
     private void ShowGoldPopup(int amount)
     {
         if (goldPopupPrefab == null) return;
 
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         Vector3 spawnPos = player != null ? player.transform.position : transform.position;
-        spawnPos.y += 1.0f; // З'являється над головою
+        spawnPos.y += 1.0f;
 
-        // Додаємо мікро-розкид по X, якщо випаде кілька попапів одночасно
         spawnPos.x += UnityEngine.Random.Range(-0.3f, 0.3f);
-
         GameObject popup = Instantiate(goldPopupPrefab, spawnPos, Quaternion.identity);
 
         GoldPopup script = popup.GetComponent<GoldPopup>();
@@ -230,14 +251,11 @@ public class QuestManager : MonoBehaviour
             return;
         }
 
-        // 1. Спавнимо предмет РІВНО в центрі гравця (весь розліт і стрибок зробить скрипт TopDownLoot)
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         Vector3 dropPosition = player != null ? player.transform.position : transform.position;
 
-        // 2. Створюємо префаб
         GameObject droppedItem = Instantiate(droppedItemPrefab, dropPosition, Quaternion.identity);
 
-        // 3. Передаємо дані предмета у скрипт ItemPickup
         ItemPickup pickupScript = droppedItem.GetComponent<ItemPickup>();
         if (pickupScript != null)
         {
@@ -248,8 +266,6 @@ public class QuestManager : MonoBehaviour
             Debug.LogWarning("<color=red>На префабі droppedItemPrefab немає скрипта ItemPickup!</color>");
         }
 
-        // 4. ВАЖЛИВО: Шукаємо SpriteRenderer у ДОЧІРНЬОМУ об'єкті (visualChild), 
-        // тому що головний об'єкт тепер лежить на землі, а дочірній - підстрибує!
         SpriteRenderer sr = droppedItem.GetComponentInChildren<SpriteRenderer>();
         if (sr != null && itemData.icon != null)
         {
@@ -266,28 +282,24 @@ public class QuestManager : MonoBehaviour
     private IEnumerator CompleteQuestRoutine()
     {
         isTransitioning = true;
-        QuestData completedQuest = currentQuest; // Запам'ятовуємо, що виконали
+        QuestData completedQuest = currentQuest;
 
-        // 1. Додаємо в список виконаних (очищене ім'я)
         string nameToAdd = CleanName(completedQuest.name);
         if (!completedQuests.Contains(nameToAdd))
         {
             completedQuests.Add(nameToAdd);
         }
 
-        // 2. Візуальне відображення в UI
         if (goalText != null)
         {
             goalText.text = $"<s>{completedQuest.description}</s>";
             goalText.color = Color.green;
         }
 
-        // 3. МИТТЄВО сповіщаємо NPC, щоб вони прибрали іконки "!" або "?"
         OnQuestStateChanged?.Invoke();
 
         yield return new WaitForSeconds(2.0f);
 
-        // 4. Перехід до наступного
         QuestData next = completedQuest.nextQuest;
         if (next != null)
         {
@@ -298,7 +310,7 @@ public class QuestManager : MonoBehaviour
         {
             currentQuest = null;
             if (questPanel != null) questPanel.SetActive(false);
-            OnQuestStateChanged?.Invoke(); // Фінальне оновлення іконок
+            OnQuestStateChanged?.Invoke();
         }
     }
 
@@ -345,6 +357,13 @@ public class QuestManager : MonoBehaviour
                 currentQuest = loadedQuest;
                 currentProgress = data.questProgress;
                 isTransitioning = false;
+
+                // Якщо завантажили квест на збір, оновлюємо кількість з інвентарю
+                if (currentQuest.type == QuestType.CollectItems)
+                {
+                    UpdateCollectItemProgress();
+                }
+
                 if (questPanel != null) questPanel.SetActive(true);
                 UpdateUI();
                 OnQuestStateChanged?.Invoke();

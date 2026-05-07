@@ -1,7 +1,7 @@
 using UnityEngine;
 
-// 1. Перерахування типів квестів (публічне, щоб інші скрипти його бачили)
-public enum QuestType { Talk, ReachLocation, KillSpecific, SurviveTime, KillInTower }
+// 1. Додано новий тип: CollectItems
+public enum QuestType { Talk, ReachLocation, KillSpecific, SurviveTime, KillInTower, CollectItems }
 
 [CreateAssetMenu(fileName = "NewQuest", menuName = "Quests/StoryQuest")]
 public class QuestData : ScriptableObject
@@ -12,23 +12,31 @@ public class QuestData : ScriptableObject
 
     [Header("Ціль квесту")]
     public QuestType type;
-    [Tooltip("ID NPC, назва зони або ім'я ворога")]
+    [Tooltip("ID NPC, назва зони або ім'я ворога (не використовується для збору предметів)")]
     public string targetID;
+
+    [Tooltip("Кількість (ворогів, часу або предметів для збору)")]
     public int requiredAmount = 1;
-    // У твій ScriptableObject QuestData додай:
     public int requiredTowerLevel; // Наприклад, 10
     public bool requiresReturnToNPC;
+
+    [Header("Для квестів типу CollectItems")]
+    [Tooltip("Предмет, який потрібно зібрати (сюди перетягуємо ScriptableObject шкіри, руди тощо)")]
+    public Item itemToCollect;
+
+    // Якщо тобі обов'язково потрібен саме префаб (наприклад, щоб квест сам спавнив цей предмет у світі),
+    // розкоментуй цей рядок:
+    // [Tooltip("Префаб предмета, який випадає в світі")]
+    // public GameObject itemPrefabToDrop;
 
     [Header("Нагороди за квест")]
     public int goldReward;
     public int experienceReward;
 
     [Header("Нагороди (Предмети)")]
-    // Якщо WeaponData і AmuletData наслідуються від ItemData (public class WeaponData : ItemData),
-    // то сюди можна буде перетягувати БУДЬ-ЯКІ предмети з твого проєкту!
     public Item[] itemRewards;
 
     [Header("Прогресія")]
     [Tooltip("Квест, який активується автоматично після завершення цього")]
-    public QuestData nextQuest; // Тепер це поле всередині класу
+    public QuestData nextQuest;
 }

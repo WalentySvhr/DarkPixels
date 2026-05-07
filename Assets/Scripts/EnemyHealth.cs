@@ -20,29 +20,21 @@ public class EnemyHealth : MonoBehaviour
     public GameObject damagePopupPrefab;
 
     [Header("Spawn Context")]
-    // Сюди спавнер сам запише себе при створенні ворога
-    // public PolygonAreaSpawner mySpawner;
-
     private LootDropper lootDropper;
 
     void Start()
     {
-        // 1. Спочатку дізнаємося, на якому ми поверсі та наскільки треба посилити моба
         if (TowerManager.Instance != null)
         {
-            float multiplier = TowerManager.Instance.GetDifficultyMultiplier(); // тут помилка
+            float multiplier = TowerManager.Instance.GetDifficultyMultiplier();
 
             // Збільшуємо максимальне здоров'я згідно з поверхом башти
-            // Mathf.RoundToInt використано, щоб здоров'я було цілим числом
             maxHealth = Mathf.RoundToInt(maxHealth * multiplier);
         }
 
-        // 2. Встановлюємо поточне здоров'я вже з урахуванням бонусу
         currentHealth = maxHealth;
-
         lootDropper = GetComponent<LootDropper>();
 
-        // 3. Оновлюємо слайдер (смужку ХП) новими значеннями
         if (hpSlider != null)
         {
             hpSlider.maxValue = maxHealth;
@@ -54,7 +46,8 @@ public class EnemyHealth : MonoBehaviour
         UpdateHealthUI();
     }
 
-    public void TakeDamage(int damage, Vector2 knockbackDirection, float force)
+    // === ОНОВЛЕНО: Додано параметр bool isCrit = false ===
+    public void TakeDamage(int damage, Vector2 knockbackDirection, float force, bool isCrit = false)
     {
         if (isDead) return;
 
@@ -63,16 +56,15 @@ public class EnemyHealth : MonoBehaviour
 
         UpdateHealthUI();
 
-        // Отримуємо посилання на EnemyAI
         EnemyAI ai = GetComponent<EnemyAI>();
         if (ai != null)
         {
             ai.isAggroedByDamage = true;
-            // ВИКЛИК НОВОЇ МЕХАНІКИ: ворог перевірить, чи повинен він тікати
             ai.OnTakeDamage();
         }
 
-        SpawnDamagePopup(damage);
+        // === ОНОВЛЕНО: Передаємо isCrit у метод створення попапу ===
+        SpawnDamagePopup(damage, isCrit);
 
         if (currentHealth <= 0)
         {
@@ -80,13 +72,16 @@ public class EnemyHealth : MonoBehaviour
         }
     }
 
-    void SpawnDamagePopup(int damageAmount)
+    // === ОНОВЛЕНО: Метод тепер приймає bool isCrit ===
+    void SpawnDamagePopup(int damageAmount, bool isCrit)
     {
         if (damagePopupPrefab != null)
         {
             GameObject popup = Instantiate(damagePopupPrefab, transform.position + Vector3.up, Quaternion.identity);
             DamagePopup popupScript = popup.GetComponent<DamagePopup>();
-            if (popupScript != null) popupScript.Setup(damageAmount);
+
+            // === ОНОВЛЕНО: Передаємо isCrit у скрипт попапу ===
+            if (popupScript != null) popupScript.Setup(damageAmount, isCrit);
         }
     }
 
@@ -95,6 +90,7 @@ public class EnemyHealth : MonoBehaviour
         if (hpSlider != null) hpSlider.value = currentHealth;
         if (hpText != null) hpText.text = $"{currentHealth} / {maxHealth}";
     }
+
     void Die()
     {
         if (isDead) return;
@@ -102,7 +98,6 @@ public class EnemyHealth : MonoBehaviour
 
         StopAllCoroutines();
 
-        // ПОВІДОМЛЯЄМО ВІДПОВІДНИЙ СПАВНЕР
         if (mySpawner != null)
         {
             mySpawner.EnemyDied();
@@ -116,13 +111,10 @@ public class EnemyHealth : MonoBehaviour
         if (LevelManager.Instance != null) LevelManager.Instance.UnregisterEnemy();
         if (lootDropper != null) lootDropper.DropLoot();
 
-        // --- ДОДАНО: Повідомляємо квестову систему ---
         if (QuestManager.Instance != null)
         {
-            // Передаємо тип квесту і порожній рядок (будь-який моб)
             QuestManager.Instance.OnQuestAction(QuestType.KillInTower, "");
         }
-        // ---------------------------------------------
 
         Destroy(gameObject);
     }
