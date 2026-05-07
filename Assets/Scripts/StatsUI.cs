@@ -103,8 +103,7 @@ public class StatsUI : MonoBehaviour
             if (healthRegenText != null)
             {
                 int totalRegen = playerHealth.amuletRegen + playerHealth.ringRegen;
-                string color = totalRegen > 0 ? bonusColorTag : "#FFFFFF";
-                healthRegenText.text = $"{regenLabel}<color={color}>+{totalRegen} HP/сек</color>";
+                healthRegenText.text = $"{regenLabel}+{totalRegen} HP/сек";
             }
         }
 

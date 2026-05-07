@@ -139,6 +139,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -540,10 +541,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7bdc9c3c76dcfb44ebf61fc8ec20e33e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentState: 0
   speed: 5
+  fleeSpeed: 3.5
   checkRadius: 10
   attackRange: 2
   stopDistance: 0.8
+  canFlee: 0
+  fleeDuration: 2
+  fleeChancePercent: 15
+  loseAggroDistance: 8
+  loseAggroTime: 2
   damage: 10
   attackCooldown: 2
   isAggroedByDamage: 0
@@ -562,10 +570,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 20
+  currentHealth: 0
   hpSlider: {fileID: 3527759317778260310}
   hpText: {fileID: 948781942679848252}
-  damagePopupPrefab: {fileID: 754589129107080054, guid: 7724944ccc0288d4e86f01937b868403, type: 3}
   mySpawner: {fileID: 0}
+  towerSpawner: {fileID: 0}
+  damagePopupPrefab: {fileID: 754589129107080054, guid: 7724944ccc0288d4e86f01937b868403, type: 3}
 --- !u!114 &1616812931906655235
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -618,6 +628,8 @@ MonoBehaviour:
     dropChance: 100
     minAmount: 1
     maxAmount: 3
+  destroyItemsAfterTime: 1
+  itemLifetime: 30
 --- !u!114 &2991753075670589045
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -657,6 +669,7 @@ Animator:
   m_WriteDefaultValuesOnDisable: 0
 --- !u!212 &1204368656980043296
 SpriteRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -675,6 +688,8 @@ SpriteRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -696,9 +711,11 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_Sprite: {fileID: 3719010626058602801, guid: 0af1cef31a9dd3846a6f2929ab41b3c2, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -708,7 +725,6 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &6839496585043160122
 GameObject:
@@ -859,6 +875,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &491606523551571983
 SpriteRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -877,6 +894,8 @@ SpriteRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -898,9 +917,11 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_Sprite: {fileID: 3719010626058602801, guid: 0af1cef31a9dd3846a6f2929ab41b3c2, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -910,5 +931,4 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
   m_SpriteSortPoint: 0

@@ -17,6 +17,10 @@ public class QuestGiver : MonoBehaviour
     public GameObject exclamationMarkIcon;
     public GameObject minimapExclamationMarkIcon;
 
+    [Header("Icons: Магазин (після квесту)")]
+    public GameObject shopIcon; // Іконка кошика або монетки
+    public GameObject minimapShopIcon;
+
     [Header("Dialog Texts")]
     public string welcomeDialog = "Вітаю! Допоможи мені з однією справою...";
     public string progressDialog = "Ти ще не виконав моє прохання.";
@@ -24,18 +28,23 @@ public class QuestGiver : MonoBehaviour
     public string alreadyDoneDialog = "Дякую ще раз за допомогу!";
     public string busyDialog = "Я бачу, ти вже маєш завдання. Спочатку заверши його!";
 
+    [Header("Shop Settings (Після завершення квесту)")]
+    public ShopData shopData;
+
     void Start()
     {
-        Debug.Log($"<color=white>Я скрипт на об'єкті: </color> <color=orange>{gameObject.name}</color>. Повний шлях: {GetGameObjectPath(gameObject)}");
         InvokeRepeating(nameof(UpdateIcon), 0.5f, 0.5f);
     }
 
     void LateUpdate()
     {
+        // Додаємо нові іконки в список для виправлення повороту
         FixIconTransform(questionMarkIcon);
         FixIconTransform(exclamationMarkIcon);
+        FixIconTransform(shopIcon);
         FixIconTransform(minimapQuestionMarkIcon);
         FixIconTransform(minimapExclamationMarkIcon);
+        FixIconTransform(minimapShopIcon);
     }
 
     private void FixIconTransform(GameObject icon)
@@ -49,67 +58,44 @@ public class QuestGiver : MonoBehaviour
         }
     }
 
-    private string GetGameObjectPath(GameObject obj)
-    {
-        string path = "/" + obj.name;
-        while (obj.transform.parent != null)
-        {
-            obj = obj.transform.parent.gameObject;
-            path = "/" + obj.name + path;
-        }
-        return path;
-    }
-
-    private string CleanName(string rawName)
-    {
-        if (string.IsNullOrEmpty(rawName)) return "";
-        return rawName.Replace("(Clone)", "").Trim().ToLower();
-    }
-
-    private bool IsQuestCompleted(string questName)
-    {
-        if (QuestManager.Instance == null) return false;
-
-        string cleanedSearchName = CleanName(questName);
-        List<string> completedList = QuestManager.Instance.completedQuests;
-
-        if (completedList == null) return false;
-
-        return completedList.Any(q => CleanName(q) == cleanedSearchName);
-    }
-
     public QuestData GetRelevantQuest()
     {
         QuestData current = questToOffer;
         QuestManager qm = QuestManager.Instance;
-
         if (qm == null) return null;
 
         while (current != null && qm.IsQuestCompleted(current.name))
         {
             current = current.nextQuest;
         }
-
-        if (current != null && (string.IsNullOrWhiteSpace(current.description) || current.requiredAmount <= 0))
-        {
-            return null;
-        }
-
         return current;
     }
 
     public void UpdateIcon()
     {
+        // Спочатку вимикаємо ВСІ іконки
         if (questionMarkIcon != null) questionMarkIcon.SetActive(false);
         if (minimapQuestionMarkIcon != null) minimapQuestionMarkIcon.SetActive(false);
         if (exclamationMarkIcon != null) exclamationMarkIcon.SetActive(false);
         if (minimapExclamationMarkIcon != null) minimapExclamationMarkIcon.SetActive(false);
+        if (shopIcon != null) shopIcon.SetActive(false);
+        if (minimapShopIcon != null) minimapShopIcon.SetActive(false);
 
         QuestData activeQuestForNPC = GetRelevantQuest();
-        if (activeQuestForNPC == null) return;
-
         QuestManager qm = QuestManager.Instance;
 
+        // ЛОГІКА МАГАЗИНУ: Якщо квестів немає, але є ShopData
+        if (activeQuestForNPC == null)
+        {
+            if (shopData != null)
+            {
+                if (shopIcon != null) shopIcon.SetActive(true);
+                if (minimapShopIcon != null) minimapShopIcon.SetActive(true);
+            }
+            return;
+        }
+
+        // ЛОГІКА КВЕСТІВ (залишається як була)
         if (qm.currentQuest != null)
         {
             string heldQuestName = CleanName(qm.currentQuest.name);
@@ -132,6 +118,8 @@ public class QuestGiver : MonoBehaviour
         }
     }
 
+    private string CleanName(string rawName) => rawName.Replace("(Clone)", "").Trim().ToLower();
+
     public void Interact()
     {
         QuestData activeQuestForNPC = GetRelevantQuest();
@@ -140,20 +128,23 @@ public class QuestGiver : MonoBehaviour
 
         if (activeQuestForNPC == null)
         {
-            dm.StartStaticDialog(alreadyDoneDialog, npcDialogData);
+            if (shopData != null)
+            {
+                ShopManager.Instance.OpenShop(shopData);
+            }
+            else if (!string.IsNullOrEmpty(alreadyDoneDialog))
+            {
+                dm.StartStaticDialog(alreadyDoneDialog, npcDialogData);
+            }
             return;
         }
 
         if (qm.currentQuest != null && CleanName(qm.currentQuest.name) == CleanName(activeQuestForNPC.name))
         {
             if (activeQuestForNPC.requiresReturnToNPC && qm.currentProgress >= activeQuestForNPC.requiredAmount)
-            {
                 dm.StartCompletionDialog(completeDialog, this, npcDialogData);
-            }
             else
-            {
                 dm.StartStaticDialog(progressDialog, npcDialogData);
-            }
             return;
         }
 
@@ -169,37 +160,21 @@ public class QuestGiver : MonoBehaviour
     public void AcceptQuest()
     {
         QuestData activeQuestForNPC = GetRelevantQuest();
-        if (activeQuestForNPC != null)
-        {
-            QuestManager.Instance.InitializeQuest(activeQuestForNPC);
-            Debug.Log($"[QUEST] Прийнято: {QuestManager.Instance.currentQuest?.name}");
-        }
+        if (activeQuestForNPC != null) QuestManager.Instance.InitializeQuest(activeQuestForNPC);
         UpdateIcon();
     }
 
     public void CompleteQuest()
     {
         QuestManager qm = QuestManager.Instance;
-
         if (qm.currentQuest != null)
         {
-            // 1. Якщо це квест на збір, забираємо предмети перед тим, як видати нагороду
-            if (qm.currentQuest.type == QuestType.CollectItems)
+            if (qm.currentQuest.type == QuestType.CollectItems && InventoryManager.Instance != null && qm.currentQuest.itemToCollect != null)
             {
-                // === ОНОВЛЕНО: Тепер реально забираємо предмети з інвентарю ===
-                if (InventoryManager.Instance != null && qm.currentQuest.itemToCollect != null)
-                {
-                    InventoryManager.Instance.RemoveItems(qm.currentQuest.itemToCollect, qm.currentQuest.requiredAmount);
-                    Debug.Log($"[QUEST] NPC забрав {qm.currentQuest.requiredAmount} шт. {qm.currentQuest.itemToCollect.name}");
-                }
+                InventoryManager.Instance.RemoveItems(qm.currentQuest.itemToCollect, qm.currentQuest.requiredAmount);
             }
-
-            // 2. Викликаємо метод менеджера для видачі нагород і закриття квесту
             qm.FinishQuestFromNPC();
-
-            Debug.Log($"[QUEST] Здано: {qm.currentQuest.name}");
         }
-
         UpdateIcon();
     }
 
@@ -207,5 +182,12 @@ public class QuestGiver : MonoBehaviour
     {
         if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject()) return;
         Interact();
+    }
+
+    private string GetGameObjectPath(GameObject obj)
+    {
+        string path = "/" + obj.name;
+        while (obj.transform.parent != null) { obj = obj.transform.parent.gameObject; path = "/" + obj.name + path; }
+        return path;
     }
 }
