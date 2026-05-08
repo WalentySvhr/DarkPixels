@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections;
+using System.Collections.Generic; // Обов'язково для List<>
 
 public class EnemyHealth : MonoBehaviour
 {
@@ -21,6 +22,11 @@ public class EnemyHealth : MonoBehaviour
 
     [Header("Spawn Context")]
     private LootDropper lootDropper;
+
+    // --- НОВЕ: Налаштування для унікального луту ---
+    [Header("Quest Drop Settings")]
+    [Tooltip("Список Target ID квестів, які можуть випасти саме з цього моба")]
+    public List<string> allowedQuestItemIDs = new List<string>();
 
     void Start()
     {
@@ -46,7 +52,6 @@ public class EnemyHealth : MonoBehaviour
         UpdateHealthUI();
     }
 
-    // === ОНОВЛЕНО: Додано параметр bool isCrit = false ===
     public void TakeDamage(int damage, Vector2 knockbackDirection, float force, bool isCrit = false)
     {
         if (isDead) return;
@@ -63,7 +68,6 @@ public class EnemyHealth : MonoBehaviour
             ai.OnTakeDamage();
         }
 
-        // === ОНОВЛЕНО: Передаємо isCrit у метод створення попапу ===
         SpawnDamagePopup(damage, isCrit);
 
         if (currentHealth <= 0)
@@ -72,7 +76,6 @@ public class EnemyHealth : MonoBehaviour
         }
     }
 
-    // === ОНОВЛЕНО: Метод тепер приймає bool isCrit ===
     void SpawnDamagePopup(int damageAmount, bool isCrit)
     {
         if (damagePopupPrefab != null)
@@ -80,7 +83,6 @@ public class EnemyHealth : MonoBehaviour
             GameObject popup = Instantiate(damagePopupPrefab, transform.position + Vector3.up, Quaternion.identity);
             DamagePopup popupScript = popup.GetComponent<DamagePopup>();
 
-            // === ОНОВЛЕНО: Передаємо isCrit у скрипт попапу ===
             if (popupScript != null) popupScript.Setup(damageAmount, isCrit);
         }
     }
@@ -109,7 +111,11 @@ public class EnemyHealth : MonoBehaviour
         }
 
         if (LevelManager.Instance != null) LevelManager.Instance.UnregisterEnemy();
-        if (lootDropper != null) lootDropper.DropLoot();
+
+        // --- ЛОГІКА УНІКАЛЬНОГО КВЕСТОВОГО ЛУТУ ---
+        CheckForUniqueQuestDrop();
+
+        if (lootDropper != null) lootDropper.DropLoot(); // Звичайний лут
 
         if (QuestManager.Instance != null)
         {
@@ -117,5 +123,32 @@ public class EnemyHealth : MonoBehaviour
         }
 
         Destroy(gameObject);
+    }
+
+    void CheckForUniqueQuestDrop()
+    {
+        // Переконуємось, що менеджер і квест існують
+        if (QuestManager.Instance == null || QuestManager.Instance.currentQuest == null) return;
+
+        // Беремо ID цілі поточного квесту
+        string questTargetID = QuestManager.Instance.currentQuest.targetID;
+
+        // --- ПЕРЕВІРКА НА ДОЗВІЛ ---
+        // Якщо список цього моба не містить потрібного ID, перериваємо метод (предмет не випаде)
+        if (!allowedQuestItemIDs.Contains(questTargetID)) return;
+
+        // Перевіряємо, чи є взагалі targetID, і чи дозволяє QuestManager йому випасти
+        if (!string.IsNullOrEmpty(questTargetID) && QuestManager.Instance.TryDropQuestItem(questTargetID))
+        {
+            // Отримуємо предмет із поточного квесту
+            Item itemToDrop = QuestManager.Instance.currentQuest.itemToCollect;
+
+            if (itemToDrop != null)
+            {
+                // Використовуємо твій існуючий метод для фізичного дропу на землю
+                QuestManager.Instance.DropItemOnGround(itemToDrop);
+                Debug.Log($"<color=magenta>Унікальний квестовий предмет ({itemToDrop.itemName}) випав!</color>");
+            }
+        }
     }
 }

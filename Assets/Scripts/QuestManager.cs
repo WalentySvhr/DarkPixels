@@ -25,6 +25,9 @@ public class QuestManager : MonoBehaviour
 
     public List<string> completedQuests = new List<string>();
     private List<QuestPoint> allPoints = new List<QuestPoint>();
+    // Додай ці змінні на початку класу QuestManager
+    [Header("Unique Drops Logic")]
+    public List<string> droppedUniqueItems = new List<string>(); // Список ID предметів, що вже випали
 
     [Header("UI References")]
     public TextMeshProUGUI goalText;
@@ -243,7 +246,7 @@ public class QuestManager : MonoBehaviour
         }
     }
 
-    private void DropItemOnGround(Item itemData)
+    public void DropItemOnGround(Item itemData)
     {
         if (droppedItemPrefab == null)
         {
@@ -314,6 +317,22 @@ public class QuestManager : MonoBehaviour
         }
     }
 
+    // Метод для перевірки та реєстрації випадіння
+    public bool TryDropQuestItem(string itemID)
+    {
+        if (currentQuest == null) return false;
+
+        // Перевіряємо, чи цей предмет взагалі потрібен для поточного квесту
+        // (Припускаємо, що в QuestData є поле targetID або ми порівнюємо з itemToCollect.itemName)
+        bool isNeeded = (currentQuest.targetID == itemID);
+
+        if (isNeeded && !droppedUniqueItems.Contains(itemID))
+        {
+            droppedUniqueItems.Add(itemID);
+            return true;
+        }
+        return false;
+    }
     void UpdateUI()
     {
         if (currentQuest != null && goalText != null)

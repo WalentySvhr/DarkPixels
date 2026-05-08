@@ -1,6 +1,6 @@
 using UnityEngine;
 
-// Категорії предметів - ДОДАНО Ring
+// Категорії предметів
 public enum ItemType { Food, Potion, Resource, Junk, Weapon, Amulet, Ring }
 
 // Структура для розділеного опису предмета
@@ -31,6 +31,10 @@ public class Item : ScriptableObject
     [Header("Ефекти (якщо є)")]
     public int healValue = 0;
 
+    // --- ДОДАНО: Налаштування квестів ---
+    [Header("Квестові налаштування")]
+    public bool isQuestItem = false;
+
     public virtual ItemDescription GetDetailedInfo()
     {
         ItemDescription desc = new ItemDescription();
@@ -45,9 +49,14 @@ public class Item : ScriptableObject
             main += "Material for crafting";
         else if (type == ItemType.Junk)
             main += "Has no practical value";
-        // Додаємо опис для кільця за замовчуванням, якщо це не кастомний RingData
         else if (type == ItemType.Ring)
             main += "Magical accessory";
+
+        // Додаємо позначку квестового предмета в основний опис
+        if (isQuestItem)
+        {
+            main += "\n<color=magenta>Quest Item</color>";
+        }
 
         desc.mainStats = main;
         desc.shortDesc = shortDescription;
@@ -57,7 +66,12 @@ public class Item : ScriptableObject
             desc.extraStats = $"Stackable up to: {maxStackSize} items";
         }
 
-        if (price > 0)
+        // --- ОНОВЛЕНО: Відображення ціни або заборони продажу ---
+        if (isQuestItem)
+        {
+            desc.priceText = "<color=red>Cannot be sold</color>";
+        }
+        else if (price > 0)
         {
             desc.priceText = $"Price: {price} gold";
         }
@@ -75,7 +89,7 @@ public class Item : ScriptableObject
             case ItemType.Junk: return "Junk";
             case ItemType.Weapon: return "Weapon";
             case ItemType.Amulet: return "Amulet";
-            case ItemType.Ring: return "Ring"; // ДОДАНО ПЕРЕКЛАД/НАЗВУ
+            case ItemType.Ring: return "Ring";
             default: return "Item";
         }
     }
