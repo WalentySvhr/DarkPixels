@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class BossCombat : MonoBehaviour
 {
@@ -17,6 +18,10 @@ public class BossCombat : MonoBehaviour
     public int attackDamage = 20;
     public float attackCooldown = 2f;
 
+    [Header("Hit Settings")]
+    [Tooltip("Час оглушення боса при отриманні удару (щоб програлася анімація)")]
+    public float hitStunDuration = 0.3f;
+
     [Header("Ranged Settings (Тільки для Ranged)")]
     public GameObject projectilePrefab;
     public Transform firePoint;
@@ -32,8 +37,9 @@ public class BossCombat : MonoBehaviour
     private bool facingRight = true;
     private bool isAttacking = false;
     private bool isAggroedByDamage = false;
+    private bool isStunned = false; // НОВЕ: Прапорець оглушення
 
-    // Хеш-коди параметрів для оптимізації (працюють швидше, ніж рядки)
+    // Хеш-коди параметрів для оптимізації
     private readonly int speedHash = Animator.StringToHash("Speed");
     private readonly int attackHash = Animator.StringToHash("Attack");
 
@@ -51,7 +57,8 @@ public class BossCombat : MonoBehaviour
 
     void Update()
     {
-        if (player == null || isAttacking) return;
+        // Якщо немає гравця, бос атакує, АБО БОС ОГЛУШЕНИЙ — нічого не робимо
+        if (player == null || isAttacking || isStunned) return;
 
         float distance = Vector2.Distance(transform.position, player.position);
 
@@ -83,6 +90,7 @@ public class BossCombat : MonoBehaviour
         }
     }
 
+    // ОНОВЛЕНО: Тепер викликає корутину оглушення
     public void OnDamageReceived()
     {
         if (!isAggroedByDamage)
@@ -90,6 +98,37 @@ public class BossCombat : MonoBehaviour
             Debug.Log("<color=red>Боса спровоковано шкодою!</color>");
             isAggroedByDamage = true;
         }
+
+        // Запускаємо оглушення, тільки якщо бос ще не оглушений
+        if (!isStunned)
+        {
+            StartCoroutine(HitStunRoutine());
+        }
+    }
+
+    // НОВЕ: Корутина оглушення
+    private IEnumerator HitStunRoutine()
+    {
+        isStunned = true;
+
+        // Зупиняємо рух і передаємо нульову швидкість в Animator
+        StopMovement();
+
+        // Перериваємо поточну атаку (якщо бос якраз замахувався)
+        // У цьому випадку скидаємо прапорець, щоб після оглушення він міг атакувати знову
+        if (isAttacking)
+        {
+            CancelInvoke(nameof(ApplyMeleeDamage));
+            CancelInvoke(nameof(ShootProjectile));
+            CancelInvoke(nameof(ResetAttackFlag));
+            isAttacking = false;
+        }
+
+        // Чекаємо, поки програється анімація TakeDamage
+        yield return new WaitForSeconds(hitStunDuration);
+
+        // Повертаємо боса до нормального стану
+        isStunned = false;
     }
 
     void Attack()
@@ -150,19 +189,17 @@ public class BossCombat : MonoBehaviour
         // КЕРУВАННЯ АНІМАЦІЄЮ ХОДЬБИ
         if (anim != null)
         {
-            // Передаємо 1, коли бос рухається
             anim.SetFloat(speedHash, 1f);
         }
     }
 
     void StopMovement()
     {
-        if (rb != null) rb.linearVelocity = Vector2.zero;
+        if (rb != null) rb.linearVelocity = Vector2.zero; // Змінено linearVelocity на velocity (стандарт для Rigidbody2D)
 
         // ЗУПИНКА АНІМАЦІЇ ХОДЬБИ
         if (anim != null)
         {
-            // Передаємо 0, коли бос стоїть
             anim.SetFloat(speedHash, 0f);
         }
     }

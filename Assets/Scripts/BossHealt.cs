@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.Collections;
 
 public class BossHealth : MonoBehaviour
 {
@@ -9,18 +10,32 @@ public class BossHealth : MonoBehaviour
     private int currentHealth;
     private bool isDead = false;
 
+    [Header("Animation & Visuals")]
+    public Animator animator;
+    public SpriteRenderer spriteRenderer;
+    [Tooltip("Колір, в який фарбується бос при отриманні шкоди")]
+    public Color flashColor = Color.red;
+    [Tooltip("Тривалість блимання кольором")]
+    public float flashDuration = 0.15f;
+    [Tooltip("Затримка перед видаленням, щоб анімація смерті встигла програтися")]
+    public float deathAnimationDuration = 2f; // Для босів зазвичай потрібно більше часу
+
+    private Color originalColor;
+    private Coroutine flashCoroutine;
+
     [Header("UI")]
     public Slider hpSlider;
     public TextMeshProUGUI hpText;
+
+    [Header("Effects")]
+    public GameObject damagePopupPrefab;
 
     [Header("Exit Logic")]
     [Tooltip("Об'єкт дверей на сцені має називатися 'DoorToWorld'")]
     public GameObject exitDoor;
 
-    // Додай цей метод у BossHealth.cs
     public void SetHealth(float multiplier)
     {
-        // Множимо базове HP на множник складності
         maxHealth = Mathf.RoundToInt(maxHealth * multiplier);
         currentHealth = maxHealth;
         UpdateUI();
@@ -30,24 +45,27 @@ public class BossHealth : MonoBehaviour
 
     void Start()
     {
-        // Якщо бос заспавнився НЕ через TowerManager (наприклад, просто кинули на сцену),
-        // то ініціалізуємо його стандартно
+        if (animator == null) animator = GetComponent<Animator>();
+        if (spriteRenderer == null) spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+
+        if (spriteRenderer != null)
+        {
+            originalColor = spriteRenderer.color;
+        }
+
         if (currentHealth <= 0)
         {
             currentHealth = maxHealth;
             UpdateUI();
         }
 
-        // 1. Шукаємо двері на сцені за іменем
         if (exitDoor == null)
         {
             exitDoor = GameObject.Find("DoorToWorld");
         }
 
-        // 2. Якщо знайшли, робимо їх невидимими, але залишаємо "активними" для коду
         if (exitDoor != null)
         {
-            // Вимикаємо візуал і колайдер, щоб гравець не міг вийти раніше часу
             var renderer = exitDoor.GetComponent<SpriteRenderer>();
             var col = exitDoor.GetComponent<Collider2D>();
 
@@ -60,27 +78,55 @@ public class BossHealth : MonoBehaviour
         }
     }
 
-    public void TakeDamage(int damage)
+    public void TakeDamage(int damage, bool isCrit = false)
     {
         if (isDead) return;
 
         currentHealth -= damage;
+        if (currentHealth < 0) currentHealth = 0; // Щоб HP не пішло в мінус візуально
+
         UpdateUI();
 
-        // --- НОВИЙ БЛОК: ПРОВОКАЦІЯ БОСА ---
-        // Шукаємо скрипт BossCombat на цьому ж об'єкті
+        // Анімація та ефект удару
+        if (animator != null) animator.SetTrigger("TakeDamage");
+
+        if (spriteRenderer != null)
+        {
+            if (flashCoroutine != null) StopCoroutine(flashCoroutine);
+            flashCoroutine = StartCoroutine(FlashRoutine());
+        }
+
+        SpawnDamagePopup(damage, isCrit);
+
+        // ПРОВОКАЦІЯ БОСА
         BossCombat combatScript = GetComponent<BossCombat>();
         if (combatScript != null)
         {
-            // Повідомляємо босу, що його вдарили, щоб він почав погоню
             combatScript.OnDamageReceived();
         }
-        // ----------------------------------
 
         if (currentHealth <= 0)
         {
-            currentHealth = 0;
             Die();
+        }
+    }
+
+    private IEnumerator FlashRoutine()
+    {
+        spriteRenderer.color = flashColor;
+        yield return new WaitForSeconds(flashDuration);
+        spriteRenderer.color = originalColor;
+    }
+
+    void SpawnDamagePopup(int damageAmount, bool isCrit)
+    {
+        if (damagePopupPrefab != null)
+        {
+            // Для боса спливаючий текст піднімаємо трохи вище (Vector3.up * 1.5f), бо його спрайт зазвичай більший
+            GameObject popup = Instantiate(damagePopupPrefab, transform.position + (Vector3.up * 1.5f), Quaternion.identity);
+            DamagePopup popupScript = popup.GetComponent<DamagePopup>();
+
+            if (popupScript != null) popupScript.Setup(damageAmount, isCrit);
         }
     }
 
@@ -97,21 +143,43 @@ public class BossHealth : MonoBehaviour
 
         Debug.Log("БОС ПЕРЕМОЖЕНИЙ!");
 
-        // 1. Дроп луту
+        StopAllCoroutines();
+        if (spriteRenderer != null) spriteRenderer.color = originalColor;
+
+        if (animator != null) animator.SetTrigger("Die");
+
+        // Зупиняємо фізику, щоб бос не ковзав
+        Rigidbody2D rb = GetComponent<Rigidbody2D>();
+        if (rb != null)
+        {
+            rb.linearVelocity = Vector2.zero;
+            rb.isKinematic = true;
+        }
+
+        Collider2D bossCollider = GetComponent<Collider2D>();
+        if (bossCollider != null) bossCollider.enabled = false;
+
+        // Вимикаємо скрипти логіки бою явно, замість циклу foreach
+        BossCombat combatScript = GetComponent<BossCombat>();
+        if (combatScript != null) combatScript.enabled = false;
+
+        // Вимикаємо UI смужку здоров'я над босом (якщо вона прив'язана до нього)
+        if (hpSlider != null) hpSlider.gameObject.SetActive(false);
+        if (hpText != null) hpText.gameObject.SetActive(false);
+
+        // Дроп луту
         BossLootDropper dropper = GetComponent<BossLootDropper>();
         if (dropper != null) dropper.DropBossLoot();
 
-        // 2. АКТИВАЦІЯ ВИХОДУ
+        // Відкриття дверей
         if (exitDoor != null)
         {
-            // Вмикаємо назад візуал і фізику
             var renderer = exitDoor.GetComponent<SpriteRenderer>();
             var col = exitDoor.GetComponent<Collider2D>();
 
             if (renderer != null) renderer.enabled = true;
             if (col != null) col.enabled = true;
 
-            // Активуємо логіку телепорту всередині скрипта дверей
             LocalTeleport teleportScript = exitDoor.GetComponent<LocalTeleport>();
             if (teleportScript != null)
             {
@@ -120,17 +188,6 @@ public class BossHealth : MonoBehaviour
             }
         }
 
-        // 3. Плавне зникнення боса
-        if (GetComponent<SpriteRenderer>() != null) GetComponent<SpriteRenderer>().enabled = false;
-        if (GetComponent<Collider2D>() != null) GetComponent<Collider2D>().enabled = false;
-
-        // Вимикаємо скрипти логіки, щоб бос не бився після смерті
-        MonoBehaviour[] scripts = GetComponents<MonoBehaviour>();
-        foreach (var script in scripts)
-        {
-            if (script != this) script.enabled = false;
-        }
-
-        Destroy(gameObject, 0.5f);
+        Destroy(gameObject, deathAnimationDuration);
     }
 }

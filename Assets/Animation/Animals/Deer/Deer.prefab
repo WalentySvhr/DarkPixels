@@ -554,7 +554,8 @@ MonoBehaviour:
   fleeSpeed: 3.5
   checkRadius: 4
   attackRange: 2
-  stopDistance: 1
+  stopDistance: 1.5
+  hitStunDuration: 1
   canFlee: 1
   fleeDuration: 2
   fleeChancePercent: 50
@@ -579,11 +580,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 45
   currentHealth: 0
+  animator: {fileID: 3700353572340458252}
+  spriteRenderer: {fileID: 6182772724640637640}
+  flashColor: {r: 1, g: 0, b: 0, a: 1}
+  flashDuration: 0.15
+  deathAnimationDuration: 1
   hpSlider: {fileID: 724586395638136574}
   hpText: {fileID: 4807959318818253739}
   mySpawner: {fileID: 0}
   towerSpawner: {fileID: 0}
   damagePopupPrefab: {fileID: 754589129107080054, guid: 7724944ccc0288d4e86f01937b868403, type: 3}
+  allowedQuestItemIDs: []
 --- !u!114 &4400431671711474728
 MonoBehaviour:
   m_ObjectHideFlags: 0

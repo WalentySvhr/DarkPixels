@@ -7,9 +7,13 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("Бонуси від екіпіровки")]
     [HideInInspector]
-    public float extraSpeedMultiplier = 0f;     // Бонус від амулета (наприклад, 0.2 для +20%)
+    public float extraSpeedMultiplier = 0f;     // Бонус від амулета
     [HideInInspector]
-    public float extraRingSpeedMultiplier = 0f; // НОВЕ: Бонус від кільця
+    public float extraRingSpeedMultiplier = 0f; // Бонус від кільця
+
+    // --- НОВЕ: Прапорець оглушення ---
+    [HideInInspector]
+    public bool isStunned = false;
 
     private Rigidbody2D rb;
     private Animator anim;
@@ -22,23 +26,22 @@ public class PlayerMovement : MonoBehaviour
 
     void FixedUpdate()
     {
+        // --- НОВЕ: Якщо гравець оглушений або мертвий, повністю зупиняємо його ---
+        if (isStunned)
+        {
+            rb.linearVelocity = Vector2.zero; // Гасимо інерцію
+            if (anim != null) anim.SetFloat("Speed", 0f); // Зупиняємо "місячну ходу"
+            return; // Перериваємо виконання коду, щоб джойстик не працював
+        }
+
         Vector2 input = new Vector2(joystick.Horizontal, joystick.Vertical);
 
         if (input.magnitude > 1f)
             input = input.normalized;
 
-        // --- МАГІЯ ТУТ: Рахуємо фінальну швидкість ---
-        // Підсумовуємо всі бонуси швидкості
+        // Рахуємо фінальну швидкість
         float totalSpeedBonus = extraSpeedMultiplier + extraRingSpeedMultiplier;
-
-        // Розрахунок: Базова швидкість * (1 + сума всіх бонусів)
         float finalSpeed = moveSpeed * (1f + totalSpeedBonus);
-
-        // Debug лог для перевірки (можна прибрати після тестів)
-        if (totalSpeedBonus != 0)
-        {
-            // Debug.Log($"Швидкість змінена! Сумарний бонус: {totalSpeedBonus * 100}% | Фінальна швидкість: {finalSpeed}");
-        }
 
         // Використовуємо finalSpeed для руху фізичного тіла
         rb.linearVelocity = new Vector2(input.x * finalSpeed, input.y * finalSpeed);

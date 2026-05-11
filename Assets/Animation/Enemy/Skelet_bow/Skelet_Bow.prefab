@@ -545,33 +545,33 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   possibleLoot:
   - name: "\u0421oin"
-    prefab: {fileID: 8353532240678061948, guid: 792a66853621a754ea8c2065be61394d, type: 3}
+    prefab: {fileID: 7565567695131184125, guid: cf2393411c1a440429e970d17ae75d66, type: 3}
     dropChance: 100
     minAmount: 1
     maxAmount: 3
   - name: Amulet_Speed
     prefab: {fileID: 6640661003260574739, guid: 81b5365ecdcb0ce4c9bf5b9d3f64f182, type: 3}
-    dropChance: 100
+    dropChance: 20
     minAmount: 1
     maxAmount: 1
   - name: Amulet_Health
     prefab: {fileID: 6640661003260574739, guid: adb173cbae633034dadb1e442321bb16, type: 3}
-    dropChance: 100
+    dropChance: 20
     minAmount: 1
     maxAmount: 1
   - name: AmuletRegeneration
     prefab: {fileID: 6640661003260574739, guid: f870edc5d280b5f48ad945a99f0e8c55, type: 3}
-    dropChance: 100
+    dropChance: 20
     minAmount: 1
     maxAmount: 1
   - name: AmuletDamage
     prefab: {fileID: 6640661003260574739, guid: eb9ebf81d56db1b4d84c4a88d5906b1d, type: 3}
-    dropChance: 100
+    dropChance: 20
     minAmount: 1
     maxAmount: 1
   - name: AmuletSpeedAttack
     prefab: {fileID: 6640661003260574739, guid: 21b58a862c7dc374eb7dad8434a84a6c, type: 3}
-    dropChance: 100
+    dropChance: 20
     minAmount: 1
     maxAmount: 1
   destroyItemsAfterTime: 1
@@ -590,11 +590,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 50
   currentHealth: 0
+  animator: {fileID: 6421702475570859171}
+  spriteRenderer: {fileID: 7103558029820387117}
+  flashColor: {r: 1, g: 0, b: 0, a: 1}
+  flashDuration: 0.15
+  deathAnimationDuration: 1
   hpSlider: {fileID: 1845545287564082834}
   hpText: {fileID: 2614601797933856107}
   mySpawner: {fileID: 0}
   towerSpawner: {fileID: 0}
   damagePopupPrefab: {fileID: 754589129107080054, guid: 7724944ccc0288d4e86f01937b868403, type: 3}
+  allowedQuestItemIDs: []
 --- !u!95 &6421702475570859171
 Animator:
   serializedVersion: 7

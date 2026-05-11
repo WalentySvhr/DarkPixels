@@ -192,6 +192,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &8420144974434320400
 SpriteRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -210,6 +211,8 @@ SpriteRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -231,9 +234,11 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: -11737113
   m_SortingLayer: 5
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_Sprite: {fileID: 2224508841329540512, guid: fed30af7d3e03c94e99068af5be8900a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -243,7 +248,6 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!50 &9137450015119417772
 Rigidbody2D:
@@ -347,35 +351,32 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   possibleLoot:
   - name: "\u0421oin"
-    prefab: {fileID: 8353532240678061948, guid: 792a66853621a754ea8c2065be61394d, type: 3}
+    prefab: {fileID: 7565567695131184125, guid: cf2393411c1a440429e970d17ae75d66, type: 3}
     dropChance: 100
     minAmount: 1
     maxAmount: 3
   - name: Amulet_Speed
     prefab: {fileID: 6640661003260574739, guid: 81b5365ecdcb0ce4c9bf5b9d3f64f182, type: 3}
-    dropChance: 100
+    dropChance: 10
     minAmount: 1
     maxAmount: 1
-  - name: Amulet_Health
-    prefab: {fileID: 6640661003260574739, guid: adb173cbae633034dadb1e442321bb16, type: 3}
-    dropChance: 100
+  - name: Weak Healing Potion
+    prefab: {fileID: 6640661003260574739, guid: b82516164b7a22b4e9c866c6d8bf6246, type: 3}
+    dropChance: 20
     minAmount: 1
     maxAmount: 1
-  - name: AmuletRegeneration
-    prefab: {fileID: 6640661003260574739, guid: f870edc5d280b5f48ad945a99f0e8c55, type: 3}
-    dropChance: 100
+  - name: Normal Healing Potion
+    prefab: {fileID: 6640661003260574739, guid: c70fb2cb79db6c2409ef1a2a7837f097, type: 3}
+    dropChance: 25
     minAmount: 1
     maxAmount: 1
-  - name: AmuletDamage
-    prefab: {fileID: 6640661003260574739, guid: eb9ebf81d56db1b4d84c4a88d5906b1d, type: 3}
-    dropChance: 100
+  - name: Strong Healing Potion
+    prefab: {fileID: 6640661003260574739, guid: 83fdffda36a38d84e87caa166a32c85e, type: 3}
+    dropChance: 8
     minAmount: 1
     maxAmount: 1
-  - name: AmuletSpeedAttack
-    prefab: {fileID: 6640661003260574739, guid: 21b58a862c7dc374eb7dad8434a84a6c, type: 3}
-    dropChance: 100
-    minAmount: 1
-    maxAmount: 1
+  destroyItemsAfterTime: 1
+  itemLifetime: 30
 --- !u!114 &1563556243142754718
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -389,10 +390,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentState: 0
-  speed: 2
+  speed: 3
+  fleeSpeed: 3.5
   checkRadius: 3
   attackRange: 1.5
   stopDistance: 0.8
+  canFlee: 0
+  fleeDuration: 2
+  fleeChancePercent: 15
   loseAggroDistance: 8
   loseAggroTime: 2
   damage: 10
@@ -434,11 +439,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f230a22976044c46b9b9d40c699513a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 50
+  maxHealth: 90
+  currentHealth: 0
   hpSlider: {fileID: 2572792118073348502}
   hpText: {fileID: 5780343252614651434}
-  damagePopupPrefab: {fileID: 754589129107080054, guid: 7724944ccc0288d4e86f01937b868403, type: 3}
   mySpawner: {fileID: 0}
+  towerSpawner: {fileID: 0}
+  damagePopupPrefab: {fileID: 754589129107080054, guid: 7724944ccc0288d4e86f01937b868403, type: 3}
+  allowedQuestItemIDs: []
 --- !u!1 &5769061953914383739
 GameObject:
   m_ObjectHideFlags: 0
@@ -477,6 +485,7 @@ RectTransform:
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!212 &2945522469216045830
 SpriteRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -495,6 +504,8 @@ SpriteRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -516,9 +527,11 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 100
+  m_MaskInteraction: 0
   m_Sprite: {fileID: 2224508841329540512, guid: fed30af7d3e03c94e99068af5be8900a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -528,7 +541,6 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &5817444423673234948
 GameObject:
@@ -633,6 +645,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -927,3 +940,5 @@ MonoBehaviour:
     dropChance: 100
     minAmount: 1
     maxAmount: 2
+  destroyItemsAfterTime: 1
+  itemLifetime: 30

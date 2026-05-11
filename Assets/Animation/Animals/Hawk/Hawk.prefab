@@ -212,6 +212,7 @@ MonoBehaviour:
   checkRadius: 6
   attackRange: 2
   stopDistance: 1
+  hitStunDuration: 0.3
   canFlee: 0
   fleeDuration: 2
   fleeChancePercent: 50
@@ -236,6 +237,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 40
   currentHealth: 0
+  animator: {fileID: 4583860452567426913}
+  spriteRenderer: {fileID: 613323774741010951}
+  flashColor: {r: 1, g: 0, b: 0, a: 1}
+  flashDuration: 0.15
+  deathAnimationDuration: 1
   hpSlider: {fileID: 425212727717264862}
   hpText: {fileID: 2036819613011082817}
   mySpawner: {fileID: 0}
@@ -637,7 +643,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &6037735955668685842
 RectTransform:
   m_ObjectHideFlags: 0

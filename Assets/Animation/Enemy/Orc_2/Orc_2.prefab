@@ -609,6 +609,7 @@ MonoBehaviour:
   checkRadius: 4
   attackRange: 1.5
   stopDistance: 0.8
+  hitStunDuration: 0.3
   canFlee: 0
   fleeDuration: 2
   fleeChancePercent: 15
@@ -633,11 +634,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 75
   currentHealth: 0
+  animator: {fileID: 6404996618831419099}
+  spriteRenderer: {fileID: 826383501192193259}
+  flashColor: {r: 1, g: 0, b: 0, a: 1}
+  flashDuration: 0.15
+  deathAnimationDuration: 1
   hpSlider: {fileID: 2786844577337404491}
   hpText: {fileID: 6001533028670349804}
   mySpawner: {fileID: 0}
   towerSpawner: {fileID: 0}
   damagePopupPrefab: {fileID: 754589129107080054, guid: 7724944ccc0288d4e86f01937b868403, type: 3}
+  allowedQuestItemIDs: []
 --- !u!114 &-6956368815280421204
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -654,36 +661,16 @@ MonoBehaviour:
   - name: "\u0421oin"
     prefab: {fileID: 7565567695131184125, guid: cf2393411c1a440429e970d17ae75d66, type: 3}
     dropChance: 100
-    minAmount: 1
-    maxAmount: 3
-  - name: Amulet_Speed
-    prefab: {fileID: 6640661003260574739, guid: 81b5365ecdcb0ce4c9bf5b9d3f64f182, type: 3}
-    dropChance: 100
-    minAmount: 1
-    maxAmount: 1
-  - name: Amulet_Health
-    prefab: {fileID: 6640661003260574739, guid: adb173cbae633034dadb1e442321bb16, type: 3}
-    dropChance: 100
+    minAmount: 2
+    maxAmount: 5
+  - name: Weak Healing Potion
+    prefab: {fileID: 6640661003260574739, guid: b82516164b7a22b4e9c866c6d8bf6246, type: 3}
+    dropChance: 30
     minAmount: 1
     maxAmount: 1
-  - name: AmuletRegeneration
-    prefab: {fileID: 6640661003260574739, guid: f870edc5d280b5f48ad945a99f0e8c55, type: 3}
-    dropChance: 100
-    minAmount: 1
-    maxAmount: 1
-  - name: AmuletDamage
-    prefab: {fileID: 6640661003260574739, guid: eb9ebf81d56db1b4d84c4a88d5906b1d, type: 3}
-    dropChance: 100
-    minAmount: 1
-    maxAmount: 1
-  - name: AmuletSpeedAttack
-    prefab: {fileID: 6640661003260574739, guid: 21b58a862c7dc374eb7dad8434a84a6c, type: 3}
-    dropChance: 100
-    minAmount: 1
-    maxAmount: 1
-  - name: SwordGreen
-    prefab: {fileID: 4541268859444003019, guid: 6ee6736bb6343684a9d4d87a6deb9820, type: 3}
-    dropChance: 100
+  - name: Normal Healing Potion
+    prefab: {fileID: 6640661003260574739, guid: c70fb2cb79db6c2409ef1a2a7837f097, type: 3}
+    dropChance: 15
     minAmount: 1
     maxAmount: 1
   destroyItemsAfterTime: 1

@@ -302,12 +302,12 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: -6987192341026454786, guid: 422b70529e256444d959ceb1672815df, type: 3}
+  m_Sprite: {fileID: 804015059, guid: 00a72ee6086d679478f1b37dc5c58226, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 2.75, y: 1.875}
+  m_Size: {x: 1.3125, y: 0.875}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -376,9 +376,9 @@ BoxCollider2D:
   m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1.375, y: 0.9375}
-    newSize: {x: 2.75, y: 1.875}
+    pivot: {x: 0.5, y: 0}
+    oldSize: {x: 1.3125, y: 0.875}
+    newSize: {x: 1.3125, y: 0.875}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
@@ -403,6 +403,7 @@ MonoBehaviour:
   checkRadius: 2
   attackRange: 2
   stopDistance: 1
+  hitStunDuration: 0.3
   canFlee: 0
   fleeDuration: 2
   fleeChancePercent: 50
@@ -427,6 +428,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 65
   currentHealth: 0
+  animator: {fileID: 3443090533532151188}
+  spriteRenderer: {fileID: 6644951997262213504}
+  flashColor: {r: 1, g: 0, b: 0, a: 1}
+  flashDuration: 0.15
+  deathAnimationDuration: 1
   hpSlider: {fileID: 6367388146061446298}
   hpText: {fileID: 1787357983079446651}
   mySpawner: {fileID: 0}
@@ -564,12 +570,12 @@ SpriteRenderer:
   m_SortingLayer: 5
   m_SortingOrder: 100
   m_MaskInteraction: 0
-  m_Sprite: {fileID: -6871897649970485553, guid: 00a72ee6086d679478f1b37dc5c58226, type: 3}
+  m_Sprite: {fileID: 804015059, guid: 00a72ee6086d679478f1b37dc5c58226, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1.2307693, y: 1.0384616}
+  m_Size: {x: 1.3125, y: 0.875}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1

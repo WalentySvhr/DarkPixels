@@ -2,20 +2,33 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections;
-using System.Collections.Generic; // Обов'язково для List<>
+using System.Collections.Generic;
 
 public class EnemyHealth : MonoBehaviour
 {
     [Header("Health Settings")]
     public float maxHealth = 100f;
-    public float currentHealth;    // обов'язково public float
+    public float currentHealth;
     private bool isDead = false;
+
+    [Header("Animation & Visuals")]
+    public Animator animator;
+    public SpriteRenderer spriteRenderer;
+    [Tooltip("Колір, в який фарбується моб при отриманні шкоди")]
+    public Color flashColor = Color.red;
+    [Tooltip("Тривалість блимання кольором")]
+    public float flashDuration = 0.15f;
+    [Tooltip("Скільки секунд чекати перед видаленням об'єкта, щоб програлася анімація смерті")]
+    public float deathAnimationDuration = 1f;
+
+    private Color originalColor;
+    private Coroutine flashCoroutine;
 
     [Header("UI References")]
     public Slider hpSlider;
     public TextMeshProUGUI hpText;
-    public PolygonAreaSpawner mySpawner; // Для опена
-    public TowerSpawner towerSpawner;    // Для башти
+    public PolygonAreaSpawner mySpawner;
+    public TowerSpawner towerSpawner;
 
     [Header("Effects")]
     public GameObject damagePopupPrefab;
@@ -23,18 +36,23 @@ public class EnemyHealth : MonoBehaviour
     [Header("Spawn Context")]
     private LootDropper lootDropper;
 
-    // --- НОВЕ: Налаштування для унікального луту ---
     [Header("Quest Drop Settings")]
     [Tooltip("Список Target ID квестів, які можуть випасти саме з цього моба")]
     public List<string> allowedQuestItemIDs = new List<string>();
 
     void Start()
     {
+        if (animator == null) animator = GetComponent<Animator>();
+        if (spriteRenderer == null) spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+
+        if (spriteRenderer != null)
+        {
+            originalColor = spriteRenderer.color;
+        }
+
         if (TowerManager.Instance != null)
         {
             float multiplier = TowerManager.Instance.GetDifficultyMultiplier();
-
-            // Збільшуємо максимальне здоров'я згідно з поверхом башти
             maxHealth = Mathf.RoundToInt(maxHealth * multiplier);
         }
 
@@ -61,10 +79,18 @@ public class EnemyHealth : MonoBehaviour
 
         UpdateHealthUI();
 
+        if (animator != null) animator.SetTrigger("TakeDamage");
+
+        if (spriteRenderer != null)
+        {
+            if (flashCoroutine != null) StopCoroutine(flashCoroutine);
+            flashCoroutine = StartCoroutine(FlashRoutine());
+        }
+
         EnemyAI ai = GetComponent<EnemyAI>();
         if (ai != null)
         {
-            ai.isAggroedByDamage = true;
+            // Метод ШІ тепер сам розбереться із зупинкою руху (Hit Stun)
             ai.OnTakeDamage();
         }
 
@@ -74,6 +100,13 @@ public class EnemyHealth : MonoBehaviour
         {
             Die();
         }
+    }
+
+    private IEnumerator FlashRoutine()
+    {
+        spriteRenderer.color = flashColor;
+        yield return new WaitForSeconds(flashDuration);
+        spriteRenderer.color = originalColor;
     }
 
     void SpawnDamagePopup(int damageAmount, bool isCrit)
@@ -100,52 +133,61 @@ public class EnemyHealth : MonoBehaviour
 
         StopAllCoroutines();
 
-        if (mySpawner != null)
+        if (spriteRenderer != null) spriteRenderer.color = originalColor;
+        if (animator != null) animator.SetTrigger("Die");
+
+        Collider2D mobCollider = GetComponent<Collider2D>();
+        if (mobCollider != null) mobCollider.enabled = false;
+
+        EnemyAI ai = GetComponent<EnemyAI>();
+        if (ai != null)
         {
-            mySpawner.EnemyDied();
+            ai.StopAllCoroutines(); // Зупиняємо корутину HitStunRoutine, якщо вона ще йде
+            ai.enabled = false;
         }
 
-        if (towerSpawner != null)
-        {
-            towerSpawner.EnemyDied(gameObject);
-        }
+        // --- НОВЕ: Зупиняємо фізику трупа ---
+        Rigidbody2D rb = GetComponent<Rigidbody2D>();
+        // if (rb != null)
+        // {
+        //     rb.velocity = Vector2.zero; // Гасимо інерцію
+        //     rb.isKinematic = true;      // Відключаємо вплив на інші об'єкти
+        // }
 
+        // --- НОВЕ: Ховаємо UI над трупом ---
+        if (hpSlider != null) hpSlider.gameObject.SetActive(false);
+        if (hpText != null) hpText.gameObject.SetActive(false);
+
+        if (mySpawner != null) mySpawner.EnemyDied();
+        if (towerSpawner != null) towerSpawner.EnemyDied(gameObject);
         if (LevelManager.Instance != null) LevelManager.Instance.UnregisterEnemy();
 
-        // --- ЛОГІКА УНІКАЛЬНОГО КВЕСТОВОГО ЛУТУ ---
         CheckForUniqueQuestDrop();
 
-        if (lootDropper != null) lootDropper.DropLoot(); // Звичайний лут
+        if (lootDropper != null) lootDropper.DropLoot();
 
         if (QuestManager.Instance != null)
         {
             QuestManager.Instance.OnQuestAction(QuestType.KillInTower, "");
         }
 
-        Destroy(gameObject);
+        Destroy(gameObject, deathAnimationDuration);
     }
 
     void CheckForUniqueQuestDrop()
     {
-        // Переконуємось, що менеджер і квест існують
         if (QuestManager.Instance == null || QuestManager.Instance.currentQuest == null) return;
 
-        // Беремо ID цілі поточного квесту
         string questTargetID = QuestManager.Instance.currentQuest.targetID;
 
-        // --- ПЕРЕВІРКА НА ДОЗВІЛ ---
-        // Якщо список цього моба не містить потрібного ID, перериваємо метод (предмет не випаде)
         if (!allowedQuestItemIDs.Contains(questTargetID)) return;
 
-        // Перевіряємо, чи є взагалі targetID, і чи дозволяє QuestManager йому випасти
         if (!string.IsNullOrEmpty(questTargetID) && QuestManager.Instance.TryDropQuestItem(questTargetID))
         {
-            // Отримуємо предмет із поточного квесту
             Item itemToDrop = QuestManager.Instance.currentQuest.itemToCollect;
 
             if (itemToDrop != null)
             {
-                // Використовуємо твій існуючий метод для фізичного дропу на землю
                 QuestManager.Instance.DropItemOnGround(itemToDrop);
                 Debug.Log($"<color=magenta>Унікальний квестовий предмет ({itemToDrop.itemName}) випав!</color>");
             }

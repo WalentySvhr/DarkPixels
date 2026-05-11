@@ -3,7 +3,7 @@ using System.Collections;
 
 public class EnemyAI : MonoBehaviour
 {
-    public enum EnemyState { Idle, Chasing, Returning, Fleeing }
+    public enum EnemyState { Idle, Chasing, Returning, Fleeing, Hit }
     public EnemyState currentState = EnemyState.Idle;
 
     [Header("Movement Settings")]
@@ -12,6 +12,9 @@ public class EnemyAI : MonoBehaviour
     public float checkRadius = 5f;
     public float attackRange = 1.2f;
     public float stopDistance = 0.8f;
+
+    [Header("Hit Settings")]
+    public float hitStunDuration = 0.3f; // Скільки секунд моб стоїть на місці при ударі
 
     [Header("Flee Settings")]
     public bool canFlee = false;
@@ -53,15 +56,33 @@ public class EnemyAI : MonoBehaviour
         if (playerObj != null) target = playerObj.transform;
     }
 
-    // Метод викликається при отриманні шкоди
+    // Метод викликається при отриманні шкоди (наприклад, зі скрипта EnemyHealth)
     public void OnTakeDamage()
     {
         isAggroedByDamage = true;
 
-        // ПЕРЕВІРКА: чи може тікати, чи він вже не тікає, і чи він ще НЕ пробував тікати в цій сутичці
-        if (canFlee && currentState != EnemyState.Fleeing && !hasAttemptedToFlee)
+        // Перериваємо поточну дію і переходимо в стан Hit (запускаємо корутину оглушення)
+        if (currentState != EnemyState.Hit)
         {
-            hasAttemptedToFlee = true; // Помічаємо, що спроба використана (шанс випав лише раз)
+            StartCoroutine(HitStunRoutine());
+        }
+    }
+
+    // --- НОВЕ: Корутина для паузи під час удару ---
+    private IEnumerator HitStunRoutine()
+    {
+        // Перемикаємось у стан Hit і зупиняємось
+        currentState = EnemyState.Hit;
+        moveDirection = Vector2.zero;
+        if (anim != null) anim.SetFloat("Speed", 0f); // Зупиняємо анімацію бігу
+
+        // Чекаємо, поки програється анімація отримання шкоди
+        yield return new WaitForSeconds(hitStunDuration);
+
+        // --- ПЕРЕВІРКА НА ВТЕЧУ (відбувається ПІСЛЯ того, як моб оговтався) ---
+        if (canFlee && !hasAttemptedToFlee)
+        {
+            hasAttemptedToFlee = true; // Помічаємо, що спроба використана
 
             float randomRoll = Random.Range(0f, 100f);
             if (randomRoll <= fleeChancePercent)
@@ -69,12 +90,16 @@ public class EnemyAI : MonoBehaviour
                 currentState = EnemyState.Fleeing;
                 currentFleeTimer = fleeDuration;
                 Debug.Log($"Ворог злякався ({randomRoll:F1}%) і тікає!");
+                yield break; // Виходимо з корутини, бо він тепер тікає
             }
             else
             {
                 Debug.Log("Ворог вирішив битися до кінця (шанс втечі не спрацював).");
             }
         }
+
+        // Якщо моб не втік, він продовжує переслідувати гравця
+        currentState = EnemyState.Chasing;
     }
 
     void Update()
@@ -85,6 +110,12 @@ public class EnemyAI : MonoBehaviour
 
         switch (currentState)
         {
+            // --- НОВЕ: Обробка стану Hit в Update ---
+            case EnemyState.Hit:
+                // Моб оглушений, нічого не робимо (стоїмо на місці)
+                moveDirection = Vector2.zero;
+                break;
+
             case EnemyState.Idle:
                 moveDirection = Vector2.zero;
                 if (distanceToPlayer <= checkRadius || isAggroedByDamage)
@@ -164,11 +195,13 @@ public class EnemyAI : MonoBehaviour
                 break;
         }
 
-        if (anim != null)
+        // Оновлюємо параметр Speed в Animator (але не робимо це в стані Hit, бо ми його вже обнулили)
+        if (anim != null && currentState != EnemyState.Hit)
+        {
             anim.SetFloat("Speed", moveDirection.magnitude);
+        }
     }
 
-    // Допоміжний метод для очищення параметрів бою
     void ResetCombat()
     {
         isAggroedByDamage = false;
@@ -190,15 +223,17 @@ public class EnemyAI : MonoBehaviour
             float distance = Vector2.Distance(transform.position, target.position);
             if (distance <= attackRange)
             {
+                // Припускаємо, що у гравця є скрипт PlayerHealth
                 PlayerHealth playerHealth = target.GetComponent<PlayerHealth>();
                 if (playerHealth != null) playerHealth.TakeDamage(damage);
+                Debug.Log("Гравець отримав шкоду: " + damage);
             }
         }
     }
 
     void FixedUpdate()
     {
-        if (moveDirection != Vector2.zero)
+        if (moveDirection != Vector2.zero && currentState != EnemyState.Hit)
         {
             float currentSpeed = (currentState == EnemyState.Fleeing) ? fleeSpeed : speed;
             rb.MovePosition(rb.position + moveDirection * currentSpeed * Time.fixedDeltaTime);
