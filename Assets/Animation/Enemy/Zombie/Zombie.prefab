@@ -357,22 +357,22 @@ MonoBehaviour:
     maxAmount: 3
   - name: Amulet_Speed
     prefab: {fileID: 6640661003260574739, guid: 81b5365ecdcb0ce4c9bf5b9d3f64f182, type: 3}
-    dropChance: 10
+    dropChance: 4
     minAmount: 1
     maxAmount: 1
   - name: Weak Healing Potion
     prefab: {fileID: 6640661003260574739, guid: b82516164b7a22b4e9c866c6d8bf6246, type: 3}
-    dropChance: 20
+    dropChance: 5
     minAmount: 1
     maxAmount: 1
   - name: Normal Healing Potion
     prefab: {fileID: 6640661003260574739, guid: c70fb2cb79db6c2409ef1a2a7837f097, type: 3}
-    dropChance: 25
+    dropChance: 5
     minAmount: 1
     maxAmount: 1
   - name: Strong Healing Potion
     prefab: {fileID: 6640661003260574739, guid: 83fdffda36a38d84e87caa166a32c85e, type: 3}
-    dropChance: 8
+    dropChance: 5
     minAmount: 1
     maxAmount: 1
   destroyItemsAfterTime: 1
@@ -395,6 +395,7 @@ MonoBehaviour:
   checkRadius: 3
   attackRange: 1.5
   stopDistance: 0.8
+  hitStunDuration: 0.3
   canFlee: 0
   fleeDuration: 2
   fleeChancePercent: 15
@@ -441,6 +442,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 90
   currentHealth: 0
+  animator: {fileID: 0}
+  spriteRenderer: {fileID: 0}
+  flashColor: {r: 1, g: 0, b: 0, a: 1}
+  flashDuration: 0.15
+  deathAnimationDuration: 1
   hpSlider: {fileID: 2572792118073348502}
   hpText: {fileID: 5780343252614651434}
   mySpawner: {fileID: 0}

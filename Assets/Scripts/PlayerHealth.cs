@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
-using System.Collections; // НОВЕ: Необхідно для IEnumerator
+using System.Collections;
 
 public class PlayerHealth : MonoBehaviour
 {
@@ -74,7 +74,7 @@ public class PlayerHealth : MonoBehaviour
         currentHealth -= finalDamage;
         SpawnDamageText(finalDamage);
 
-        // --- НОВЕ: АНІМАЦІЯ ТА ОГЛУШЕННЯ ---
+        // --- АНІМАЦІЯ ТА ОГЛУШЕННЯ ---
         if (animator != null) animator.SetTrigger("TakeDamage");
 
         if (spriteRenderer != null)
@@ -85,7 +85,7 @@ public class PlayerHealth : MonoBehaviour
 
         // Зупиняємо гравця через скрипт пересування (якщо час оглушення більше нуля)
         PlayerMovement movementScript = GetComponent<PlayerMovement>();
-        if (movementScript != null && hitStunDuration > 0f) // <-- Додали перевірку
+        if (movementScript != null && hitStunDuration > 0f)
         {
             StartCoroutine(HitStunRoutine(movementScript));
         }
@@ -104,7 +104,6 @@ public class PlayerHealth : MonoBehaviour
         }
     }
 
-    // НОВЕ: Корутина для ефекту блимання
     private IEnumerator FlashRoutine()
     {
         spriteRenderer.color = flashColor;
@@ -112,22 +111,15 @@ public class PlayerHealth : MonoBehaviour
         spriteRenderer.color = originalColor;
     }
 
-    // НОВЕ: Корутина для короткої зупинки руху гравця
     private IEnumerator HitStunRoutine(PlayerMovement movementScript)
     {
-        movementScript.enabled = false; // Вимикаємо керування
-
-        Rigidbody2D rb = GetComponent<Rigidbody2D>();
-        if (rb != null)
-        {
-            rb.linearVelocity = Vector2.zero; // Зупиняємо фізичний рух
-        }
+        movementScript.isStunned = true; // Блокуємо керування м'яко
 
         yield return new WaitForSeconds(hitStunDuration);
 
-        if (!isDead) // Перевіряємо, чи не помер гравець під час оглушення
+        if (!isDead)
         {
-            movementScript.enabled = true; // Вмикаємо керування назад
+            movementScript.isStunned = false; // Вмикаємо керування назад
         }
     }
 
@@ -235,7 +227,7 @@ public class PlayerHealth : MonoBehaviour
 
     public void ApplyHeal(int amount)
     {
-        Heal(amount); // Використовуємо вже існуючий метод Heal, щоб не дублювати код
+        Heal(amount);
     }
 
     void UpdateUI()
@@ -254,37 +246,39 @@ public class PlayerHealth : MonoBehaviour
 
     void Die()
     {
-        if (isDead) return; // Захист від повторного виклику
+        if (isDead) return;
         isDead = true;
 
+        // Зверни увагу: при смерті бонуси обнуляються. Після Revive() вони не повернуться автоматично.
         amuletRegen = 0;
         ringRegen = 0;
         amuletArmorPercent = 0f;
         ringArmorPercent = 0f;
 
-        StopAllCoroutines(); // Зупиняємо реген, блимання та стан оглушення
+        StopAllCoroutines();
 
         if (spriteRenderer != null) spriteRenderer.color = originalColor;
-
         if (animator != null) animator.SetTrigger("Die");
 
-        if (GetComponent<PlayerMovement>() != null) GetComponent<PlayerMovement>().enabled = false;
+        PlayerMovement movementScript = GetComponent<PlayerMovement>();
+        if (movementScript != null)
+        {
+            movementScript.isStunned = true; // Блокуємо джойстик
+            movementScript.enabled = false;
+        }
 
         Rigidbody2D rb = GetComponent<Rigidbody2D>();
         if (rb != null)
         {
-            rb.linearVelocity = Vector2.zero; // Гасимо інерцію
+            rb.linearVelocity = Vector2.zero;
             rb.isKinematic = true;
         }
 
-        // Замість миттєвої зупинки часу, краще викликати Game Over із затримкою, 
-        // щоб гравець встиг побачити свою анімацію смерті.
         StartCoroutine(GameOverRoutine());
     }
 
     private IEnumerator GameOverRoutine()
     {
-        // Чекаємо 1.5 секунди, поки програється анімація смерті
         yield return new WaitForSeconds(1.5f);
 
         Time.timeScale = 0f;
@@ -295,5 +289,49 @@ public class PlayerHealth : MonoBehaviour
     {
         Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    // --- НОВИЙ МЕТОД: ВІДРОДЖЕННЯ ---
+    public void Revive()
+    {
+        Time.timeScale = 1f; // Відновлюємо час
+
+        if (gameOverPanel != null) gameOverPanel.SetActive(false); // Ховаємо панель смерті
+
+        isDead = false;
+        currentHealth = maxHealth; // Повертаємо повне здоров'я
+        UpdateUI();
+
+        Rigidbody2D rb = GetComponent<Rigidbody2D>();
+        if (rb != null)
+        {
+            rb.isKinematic = false; // Вмикаємо фізику назад
+        }
+
+        PlayerMovement movementScript = GetComponent<PlayerMovement>();
+        if (movementScript != null)
+        {
+            movementScript.enabled = true;
+            movementScript.isStunned = false; // Розблоковуємо керування
+        }
+
+        if (animator != null)
+        {
+            animator.SetTrigger("Revive"); // Скидаємо анімацію смерті через тригер
+        }
+
+        Debug.Log("<color=green>Гравець відродився за рекламу!</color>");
+    }
+    // Метод, який ми прив'яжемо до кнопки "Відродитися за рекламу" в UI
+    public void OnClickReviveWithAd()
+    {
+        if (AdsChecker.Instance != null)
+        {
+            AdsChecker.Instance.RequestAd(AdsChecker.RewardType.RevivePlayer);
+        }
+        else
+        {
+            Debug.LogError("AdsChecker не знайдено!");
+        }
     }
 }
