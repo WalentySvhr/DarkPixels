@@ -36,13 +36,16 @@ public class InventoryUI : MonoBehaviour
         List<InventoryManager.ItemStack> itemsToDisplay = new List<InventoryManager.ItemStack>();
 
         // 1. Створюємо список всіх ОДЯГНЕНИХ предметів
-        // Якщо одягнено два однакових кільця, ця назва буде в списку двічі
         List<string> equippedNames = new List<string>();
 
-        if (!string.IsNullOrEmpty(inventory.currentWeaponName)) equippedNames.Add(inventory.currentWeaponName);
-        if (!string.IsNullOrEmpty(inventory.currentAmuletName)) equippedNames.Add(inventory.currentAmuletName);
-        if (!string.IsNullOrEmpty(inventory.currentRing1Name)) equippedNames.Add(inventory.currentRing1Name);
-        if (!string.IsNullOrEmpty(inventory.currentRing2Name)) equippedNames.Add(inventory.currentRing2Name);
+        // === ОНОВЛЕНО: Беремо назви одягнених предметів з універсального словника ===
+        if (inventory.equippedItems != null)
+        {
+            foreach (string equippedItemName in inventory.equippedItems.Values)
+            {
+                equippedNames.Add(equippedItemName);
+            }
+        }
 
         // 2. Фільтруємо сумку
         foreach (var stack in inventory.items)

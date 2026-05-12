@@ -1,7 +1,7 @@
 using UnityEngine;
 
-// Категорії предметів
-public enum ItemType { Food, Potion, Resource, Junk, Weapon, Amulet, Ring }
+// Категорії предметів (ДОДАНО Belt)
+public enum ItemType { Food, Potion, Resource, Junk, Weapon, Amulet, Ring, Belt }
 
 // Структура для розділеного опису предмета
 public struct ItemDescription
@@ -49,7 +49,8 @@ public class Item : ScriptableObject
             main += "Material for crafting";
         else if (type == ItemType.Junk)
             main += "Has no practical value";
-        else if (type == ItemType.Ring)
+        // Об'єднав логіку для всіх магічних аксесуарів, включаючи Belt
+        else if (type == ItemType.Ring || type == ItemType.Amulet || type == ItemType.Belt)
             main += "Magical accessory";
 
         // Додаємо позначку квестового предмета в основний опис
@@ -90,6 +91,7 @@ public class Item : ScriptableObject
             case ItemType.Weapon: return "Weapon";
             case ItemType.Amulet: return "Amulet";
             case ItemType.Ring: return "Ring";
+            case ItemType.Belt: return "Belt"; // --- ДОДАНО ---
             default: return "Item";
         }
     }

@@ -10,13 +10,14 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     public bool isWeaponEquipmentSlot = false;
     public bool isAmuletEquipmentSlot = false;
     public bool isRingEquipmentSlot = false;
+    public bool isBeltEquipmentSlot = false; // --- ДОДАНО: Слот для пояса ---
     [Tooltip("Для кілець: вкажи 1 або 2. Для інших слотів залиш 0.")]
     public int ringSlotIndex = 0;
     public bool isHotbarSlot = false;
 
     [Header("Візуал (Плейсхолдер)")]
     [Tooltip("Сюди перетягни сіру фонову іконку (ImageWeapon, ImageAmulet тощо)")]
-    public GameObject placeholderImage; // НОВЕ ПОЛЕ ДЛЯ СІРОЇ ІКОНКИ
+    public GameObject placeholderImage;
 
     [Header("Елементи UI")]
     public Image icon;
@@ -94,7 +95,8 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     {
         if (ItemInfoManager.Instance != null) ItemInfoManager.Instance.HideInfo();
 
-        if (isWeaponEquipmentSlot || isAmuletEquipmentSlot || isRingEquipmentSlot) return;
+        // Блокуємо використання кліком, якщо предмет вже одягнений в будь-який слот екіпіровки
+        if (isWeaponEquipmentSlot || isAmuletEquipmentSlot || isRingEquipmentSlot || isBeltEquipmentSlot) return;
 
         if (currentItem is AmuletData amulet)
         {
@@ -109,7 +111,12 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         else if (currentItem is RingData ring)
         {
             PlayerEquipment eq = FindFirstObjectByType<PlayerEquipment>();
-            if (eq != null) eq.EquipRing(ring, 1); // Одягаємо в 1-й слот по дефолту при кліку
+            if (eq != null) eq.EquipRing(ring, 1);
+        }
+        else if (currentItem is BeltData belt)
+        {
+            PlayerEquipment eq = FindFirstObjectByType<PlayerEquipment>();
+            if (eq != null) eq.EquipBelt(belt);
         }
         else
         {
@@ -150,7 +157,6 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         icon.enabled = true;
         icon.color = Color.white;
 
-        // --- ХОВАЄМО ПЛЕЙСХОЛДЕР ---
         if (placeholderImage != null) placeholderImage.SetActive(false);
 
         if (stackText != null)
@@ -166,6 +172,7 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
             }
         }
 
+        // --- ЕКІПІРОВКА ПРЕДМЕТІВ ---
         if (isWeaponEquipmentSlot && newItem is WeaponData weaponData)
         {
             PlayerCombat combat = FindFirstObjectByType<PlayerCombat>();
@@ -183,6 +190,12 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
             PlayerEquipment equipment = FindFirstObjectByType<PlayerEquipment>();
             if (equipment != null) equipment.EquipRing(ring, ringSlotIndex);
             InventoryManager.Instance.EquipItem(newItem, "Ring", ringSlotIndex);
+        }
+        else if (isBeltEquipmentSlot && newItem is BeltData belt)
+        {
+            PlayerEquipment equipment = FindFirstObjectByType<PlayerEquipment>();
+            if (equipment != null) equipment.EquipBelt(belt);
+            InventoryManager.Instance.EquipItem(newItem, "Belt");
         }
     }
 
@@ -206,31 +219,48 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
             if (equipment != null) equipment.UnequipRing(ringSlotIndex);
             InventoryManager.Instance.UnequipItem("Ring", ringSlotIndex);
         }
+        else if (isBeltEquipmentSlot)
+        {
+            PlayerEquipment equipment = FindFirstObjectByType<PlayerEquipment>();
+            if (equipment != null) equipment.UnequipBelt();
+            InventoryManager.Instance.UnequipItem("Belt");
+        }
 
         currentItem = null;
         currentAmount = 0;
         icon.sprite = null;
         icon.enabled = false;
 
-        // --- ПОКАЗУЄМО ПЛЕЙСХОЛДЕР ЗНОВУ ---
         if (placeholderImage != null) placeholderImage.SetActive(true);
 
         if (stackText != null) stackText.gameObject.SetActive(false);
     }
 
+    // --- МАГІЯ ВИДАЛЕННЯ ДУБЛІКАТА ТУТ ---
     public void OnDrop(PointerEventData eventData)
     {
         InventorySlot sourceSlot = eventData.pointerDrag.GetComponent<InventorySlot>();
         if (sourceSlot != null && sourceSlot != this)
         {
+            // Перевірка, щоб у слоти падав ТІЛЬКИ правильний тип
             if (this.isWeaponEquipmentSlot && sourceSlot.currentItem != null && !(sourceSlot.currentItem is WeaponData)) return;
             if (this.isAmuletEquipmentSlot && sourceSlot.currentItem != null && !(sourceSlot.currentItem is AmuletData)) return;
             if (this.isRingEquipmentSlot && sourceSlot.currentItem != null && !(sourceSlot.currentItem is RingData)) return;
+            if (this.isBeltEquipmentSlot && sourceSlot.currentItem != null && !(sourceSlot.currentItem is BeltData)) return;
 
             Item itemToMove = sourceSlot.currentItem;
             int amountToMove = sourceSlot.currentAmount;
             Item itemToReplace = this.currentItem;
             int amountToReplace = this.currentAmount;
+
+            // Визначаємо, чи цей слот є слотом екіпіровки, і чи слот-джерело є слотом екіпіровки
+            bool isThisEquipSlot = this.isWeaponEquipmentSlot || this.isAmuletEquipmentSlot || this.isRingEquipmentSlot || this.isBeltEquipmentSlot;
+            bool isSourceEquipSlot = sourceSlot.isWeaponEquipmentSlot || sourceSlot.isAmuletEquipmentSlot || sourceSlot.isRingEquipmentSlot || sourceSlot.isBeltEquipmentSlot;
+
+            // Якщо тягнемо зі звичайного інвентарю в екіпіровку
+            bool equipping = isThisEquipSlot && !isSourceEquipSlot;
+            // Якщо тягнемо з екіпіровки назад у звичайний інвентар
+            bool unequipping = !isThisEquipSlot && isSourceEquipSlot;
 
             this.AddItem(itemToMove, amountToMove);
 
@@ -238,6 +268,21 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
                 sourceSlot.AddItem(itemToReplace, amountToReplace);
             else
                 sourceSlot.ClearSlot();
+
+            // Видаляємо або додаємо в основний масив інвентарю
+            if (InventoryManager.Instance != null)
+            {
+                if (equipping)
+                {
+                    InventoryManager.Instance.Remove(itemToMove); // ВИПРАВЛЕНО НА Remove
+                    if (itemToReplace != null) InventoryManager.Instance.Add(itemToReplace); // ВИПРАВЛЕНО НА Add
+                }
+                else if (unequipping)
+                {
+                    InventoryManager.Instance.Add(itemToMove); // ВИПРАВЛЕНО НА Add
+                    if (itemToReplace != null) InventoryManager.Instance.Remove(itemToReplace); // ВИПРАВЛЕНО НА Remove
+                }
+            }
 
             InventoryManager.Instance.UpdateUI();
         }

@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine.SceneManagement;
+using System.Linq;
 
 [System.Serializable]
 public class GameData
@@ -11,16 +12,20 @@ public class GameData
     public float currentHealth;
     public List<ItemSaveEntry> backpack = new List<ItemSaveEntry>();
 
-    public string equippedWeaponName;
-    public string equippedAmuletName;
-    // --- ДОДАНО: Змінні для кілець ---
-    public string equippedRing1Name;
-    public string equippedRing2Name;
+    // --- УНІВЕРСАЛЬНЕ ЗБЕРЕЖЕННЯ ЕКІПІРОВКИ ---
+    public List<EquippedItemSaveEntry> equippedItems = new List<EquippedItemSaveEntry>();
 
     public string currentQuestID;
     public int questProgress;
     public List<FishingSpotSaveEntry> activeCooldowns = new List<FishingSpotSaveEntry>();
     public List<string> completedQuestIDs = new List<string>();
+}
+
+[System.Serializable]
+public class EquippedItemSaveEntry
+{
+    public string slotKey; // Наприклад: "Weapon", "Belt", "Ring_1"
+    public string itemName;
 }
 
 [System.Serializable]
@@ -89,16 +94,16 @@ public class SaveManager : MonoBehaviour
             data.posZ = player.transform.position.z;
         }
 
-        // --- ЗБЕРЕЖЕННЯ ІНВЕНТАРЯ ТА ГРОШЕЙ ---
         if (InventoryManager.Instance != null)
         {
             data.coins = InventoryManager.Instance.coins;
-            data.equippedWeaponName = InventoryManager.Instance.currentWeaponName;
-            data.equippedAmuletName = InventoryManager.Instance.currentAmuletName;
 
-            // --- ДОДАНО: Збереження назв екіпірованих кілець ---
-            data.equippedRing1Name = InventoryManager.Instance.currentRing1Name;
-            data.equippedRing2Name = InventoryManager.Instance.currentRing2Name;
+            // --- УНІВЕРСАЛЬНЕ ЗБЕРЕЖЕННЯ СЛОВНИКА ---
+            data.equippedItems.Clear();
+            foreach (var pair in InventoryManager.Instance.equippedItems)
+            {
+                data.equippedItems.Add(new EquippedItemSaveEntry { slotKey = pair.Key, itemName = pair.Value });
+            }
 
             data.backpack.Clear();
             foreach (var stack in InventoryManager.Instance.items)
@@ -108,7 +113,6 @@ public class SaveManager : MonoBehaviour
             }
         }
 
-        // ЗБЕРЕЖЕННЯ КВЕСТІВ
         if (QuestManager.Instance != null)
         {
             data = QuestManager.Instance.CaptureQuestState(data);
@@ -117,7 +121,6 @@ public class SaveManager : MonoBehaviour
         PlayerHealth health = Object.FindFirstObjectByType<PlayerHealth>();
         if (health != null) data.currentHealth = health.currentHealth;
 
-        // Записуємо все в JSON
         File.WriteAllText(savePath, JsonUtility.ToJson(data, true));
         Debug.Log("<color=green>[SaveSystem]</color> Дані успішно зафіксовані.");
     }
@@ -129,7 +132,6 @@ public class SaveManager : MonoBehaviour
         GameData data = JsonUtility.FromJson<GameData>(File.ReadAllText(savePath));
         GameObject player = GameObject.FindGameObjectWithTag("Player");
 
-        // ВІДНОВЛЕННЯ ПОЗИЦІЇ
         if (player != null)
         {
             Rigidbody2D rb = player.GetComponent<Rigidbody2D>();
@@ -141,16 +143,12 @@ public class SaveManager : MonoBehaviour
             player.transform.position = new Vector3(data.posX, data.posY, data.posZ);
         }
 
-        // ВІДНОВЛЕННЯ ІНВЕНТАРЯ
         if (InventoryManager.Instance != null)
         {
             InventoryManager.Instance.coins = data.coins;
-            InventoryManager.Instance.currentWeaponName = "";
-            InventoryManager.Instance.currentAmuletName = "";
 
-            // --- ДОДАНО: Очищаємо слоти кілець перед завантаженням ---
-            InventoryManager.Instance.currentRing1Name = "";
-            InventoryManager.Instance.currentRing2Name = "";
+            // Очищуємо словник перед завантаженням
+            InventoryManager.Instance.equippedItems.Clear();
 
             InventoryManager.Instance.UpdateCoinUI();
 
@@ -164,7 +162,6 @@ public class SaveManager : MonoBehaviour
             InventoryManager.Instance.UpdateUI();
         }
 
-        // ВІДНОВЛЕННЯ КВЕСТІВ
         if (QuestManager.Instance != null)
         {
             QuestManager.Instance.LoadQuestState(data);
@@ -185,47 +182,24 @@ public class SaveManager : MonoBehaviour
 
         foreach (var slot in allSlots)
         {
-            if (slot.isWeaponEquipmentSlot && !string.IsNullOrEmpty(data.equippedWeaponName))
-            {
-                Item wep = Resources.Load<Item>("Items/" + data.equippedWeaponName);
-                if (wep != null)
-                {
-                    slot.AddItem(wep, 1);
-                    Debug.Log($"<color=yellow>[SaveSystem]</color> Відновлено зброю: {wep.name}");
-                }
-            }
+            // Визначаємо ключ для цього конкретного слота
+            string key = "";
+            if (slot.isWeaponEquipmentSlot) key = "Weapon";
+            else if (slot.isAmuletEquipmentSlot) key = "Amulet";
+            else if (slot.isBeltEquipmentSlot) key = "Belt";
+            else if (slot.isRingEquipmentSlot) key = $"Ring_{slot.ringSlotIndex}";
 
-            if (slot.isAmuletEquipmentSlot && !string.IsNullOrEmpty(data.equippedAmuletName))
-            {
-                Item amu = Resources.Load<Item>("Items/" + data.equippedAmuletName);
-                if (amu != null)
-                {
-                    slot.AddItem(amu, 1);
-                    Debug.Log($"<color=yellow>[SaveSystem]</color> Відновлено амулет: {amu.name}");
-                }
-            }
+            if (string.IsNullOrEmpty(key)) continue;
 
-            // --- ДОДАНО: Відновлення кілець ---
-            // Зверни увагу: переконайся, що в твоєму скрипті InventorySlot є змінні isRingEquipmentSlot та ringSlotIndex
-            if (slot.isRingEquipmentSlot)
+            // Шукаємо, чи є в завантажених даних предмет для цього ключа
+            var entry = data.equippedItems.Find(x => x.slotKey == key);
+            if (entry != null && !string.IsNullOrEmpty(entry.itemName))
             {
-                if (slot.ringSlotIndex == 1 && !string.IsNullOrEmpty(data.equippedRing1Name))
+                Item item = Resources.Load<Item>("Items/" + entry.itemName);
+                if (item != null)
                 {
-                    Item ring1 = Resources.Load<Item>("Items/" + data.equippedRing1Name);
-                    if (ring1 != null)
-                    {
-                        slot.AddItem(ring1, 1);
-                        Debug.Log($"<color=yellow>[SaveSystem]</color> Відновлено кільце 1: {ring1.name}");
-                    }
-                }
-                else if (slot.ringSlotIndex == 2 && !string.IsNullOrEmpty(data.equippedRing2Name))
-                {
-                    Item ring2 = Resources.Load<Item>("Items/" + data.equippedRing2Name);
-                    if (ring2 != null)
-                    {
-                        slot.AddItem(ring2, 1);
-                        Debug.Log($"<color=yellow>[SaveSystem]</color> Відновлено кільце 2: {ring2.name}");
-                    }
+                    slot.AddItem(item, 1);
+                    Debug.Log($"<color=yellow>[SaveSystem]</color> Відновлено {key}: {item.name}");
                 }
             }
         }

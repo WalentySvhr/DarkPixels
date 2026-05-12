@@ -8,13 +8,15 @@ public class ItemInfoManager : MonoBehaviour
 
     [Header("UI Елементи")]
     public GameObject infoPanel;
+    public RectTransform infoPanelRect; // Потрібно перетягнути RectTransform панелі
+    public Canvas mainCanvas;           // Потрібно перетягнути головний Canvas
     public TextMeshProUGUI nameText;
 
     [Space]
-    public TextMeshProUGUI shortDescText;  // НОВЕ: Текст для короткого художнього опису
-    public TextMeshProUGUI mainStatsText;  // Текст для основних характеристик
-    public TextMeshProUGUI extraStatsText; // Текст для стаку/ефектів
-    public TextMeshProUGUI priceText;      // Текст для ціни
+    public TextMeshProUGUI shortDescText;
+    public TextMeshProUGUI mainStatsText;
+    public TextMeshProUGUI extraStatsText;
+    public TextMeshProUGUI priceText;
 
     private Item lastOpenedItem;
 
@@ -24,6 +26,10 @@ public class ItemInfoManager : MonoBehaviour
         else Destroy(gameObject);
 
         if (infoPanel != null) infoPanel.SetActive(false);
+
+        // Якщо забув призначити RectTransform в інспекторі
+        if (infoPanelRect == null && infoPanel != null)
+            infoPanelRect = infoPanel.GetComponent<RectTransform>();
     }
 
     public void ToggleInfo(Item item)
@@ -47,25 +53,20 @@ public class ItemInfoManager : MonoBehaviour
         infoPanel.SetActive(true);
         lastOpenedItem = item;
 
-        // Встановлюємо назву предмета
         nameText.text = item.itemName;
 
-        // Отримуємо структуру з усіма блоками тексту (включаючи shortDesc)
         ItemDescription description = item.GetDetailedInfo();
 
-        // Заповнюємо тексти
-        // Тепер shortDesc відображається у відповідному полі
         SetTextAndActive(shortDescText, description.shortDesc);
         SetTextAndActive(mainStatsText, description.mainStats);
         SetTextAndActive(extraStatsText, description.extraStats);
         SetTextAndActive(priceText, description.priceText);
 
+        // Спершу оновлюємо позицію, щоб RectTransform перерахував розміри під новий текст
+        Canvas.ForceUpdateCanvases();
         UpdatePosition();
     }
 
-    /// <summary>
-    /// Допоміжний метод: встановлює текст і вимикає об'єкт, якщо тексту немає
-    /// </summary>
     private void SetTextAndActive(TextMeshProUGUI textElement, string content)
     {
         if (textElement == null) return;
@@ -83,10 +84,37 @@ public class ItemInfoManager : MonoBehaviour
 
     private void UpdatePosition()
     {
-        // Покращена логіка: використовуємо RectTransform для точнішого позиціонування
-        Vector3 position = Input.mousePosition;
-        position.y += 150f;
-        infoPanel.transform.position = position;
+        if (infoPanelRect == null || mainCanvas == null) return;
+
+        // Отримуємо позицію курсора/пальця
+        Vector2 mousePos = Input.mousePosition;
+
+        float scale = mainCanvas.scaleFactor;
+        float panelWidth = infoPanelRect.rect.width * scale;
+        float panelHeight = infoPanelRect.rect.height * scale;
+
+        Vector2 newPos;
+
+        // --- ГОРИЗОНТАЛЬНЕ ПОЗИЦІОНУВАННЯ ---
+        // Якщо палець у правій половині екрану — показуємо вікно зліва від пальця
+        if (mousePos.x > Screen.width / 2)
+        {
+            newPos.x = mousePos.x - panelWidth - 40f;
+        }
+        else // Якщо у лівій половині — показуємо справа
+        {
+            newPos.x = mousePos.x + 40f;
+        }
+
+        // --- ВЕРТИКАЛЬНЕ ПОЗИЦІОНУВАННЯ ---
+        // Центруємо вікно по висоті відносно пальця
+        newPos.y = mousePos.y - (panelHeight / 2);
+
+        // Захист від виходу за межі екрану (Screen Clamping)
+        newPos.x = Mathf.Clamp(newPos.x, 10f, Screen.width - panelWidth - 10f);
+        newPos.y = Mathf.Clamp(newPos.y, 10f, Screen.height - panelHeight - 10f);
+
+        infoPanel.transform.position = newPos;
     }
 
     public void HideInfo()

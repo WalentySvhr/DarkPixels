@@ -10,16 +10,15 @@ public class InventoryManager : MonoBehaviour
     public List<ItemStack> items = new List<ItemStack>();
     public int space = 20;
 
-    [Header("UI посилання (Окремі)")]
+    [Header("UI посилання")]
     public InventoryUI inventoryUI;
     public HotbarUI hotbarScript;
 
-    [Header("Поточна екіпіровка (Тільки назви)")]
-    public string currentWeaponName;
-    public string currentAmuletName;
-    // НОВЕ: Окремі назви для двох кілець
-    public string currentRing1Name;
-    public string currentRing2Name;
+    [Header("Поточна екіпіровка (Універсальна система)")]
+    // --- НОВЕ: Словник замість десятка окремих змінних ---
+    // Ключ: "Weapon", "Amulet", "Ring_1", "Belt" і т.д.
+    // Значення: Назва предмета
+    public Dictionary<string, string> equippedItems = new Dictionary<string, string>();
 
     [Header("Гроші")]
     public int coins = 0;
@@ -63,10 +62,7 @@ public class InventoryManager : MonoBehaviour
             {
                 stack.amount++;
                 UpdateUI();
-
-                // === ДОДАНО: Оновлюємо квест на збір одразу при піднятті ===
                 if (QuestManager.Instance != null) QuestManager.Instance.UpdateCollectItemProgress();
-
                 return true;
             }
         }
@@ -76,13 +72,10 @@ public class InventoryManager : MonoBehaviour
         items.Add(new ItemStack(item, 1));
         UpdateUI();
 
-        // === ДОДАНО: Оновлюємо квест на збір одразу при піднятті ===
         if (QuestManager.Instance != null) QuestManager.Instance.UpdateCollectItemProgress();
-
         return true;
     }
 
-    // Метод видалення працює правильно: він зменшує кількість і видаляє тільки одну пачку (stack)
     public void Remove(Item item)
     {
         ItemStack stack = items.Find(s => s.item == item);
@@ -94,76 +87,67 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
-    // === НОВИЙ МЕТОД: Підрахунок загальної кількості конкретного предмета у всіх стаках ===
     public int GetItemCount(Item itemToFind)
     {
         int count = 0;
         foreach (ItemStack stack in items)
         {
-            if (stack.item == itemToFind)
-            {
-                count += stack.amount;
-            }
+            if (stack.item == itemToFind) count += stack.amount;
         }
         return count;
     }
 
-    // === НОВИЙ МЕТОД: Видалення вказаної кількості предметів (для здачі квестів) ===
     public void RemoveItems(Item itemToRemove, int amountToRemove)
     {
         int remainingToRemove = amountToRemove;
 
-        // Йдемо по списку з кінця на початок, бо ми можемо видаляти елементи (стаки) зі списку
         for (int i = items.Count - 1; i >= 0; i--)
         {
             ItemStack stack = items[i];
-
             if (stack.item == itemToRemove)
             {
                 if (stack.amount >= remainingToRemove)
                 {
-                    // В цьому стаку достатньо предметів
                     stack.amount -= remainingToRemove;
                     remainingToRemove = 0;
-
-                    // Якщо стак спорожнів - видаляємо його
                     if (stack.amount <= 0) items.RemoveAt(i);
-                    break; // Ми видалили необхідну кількість
+                    break;
                 }
                 else
                 {
-                    // В цьому стаку менше предметів, ніж треба. Забираємо всі і йдемо до наступного
                     remainingToRemove -= stack.amount;
-                    items.RemoveAt(i); // Стак повністю пустий
+                    items.RemoveAt(i);
                 }
             }
         }
         UpdateUI();
     }
 
-    // ОНОВЛЕНО: Тепер приймає номер слота для кілець
-    public void EquipItem(Item item, string slotType, int ringSlotIndex = 0)
+    // === МАГІЯ УНІВЕРСАЛЬНОСТІ ТУТ ===
+    // Цей метод тепер проковтне БУДЬ-ЯКИЙ слот (Belt, Helmet, Boots, Ring 1, Ring 2...)
+    public void EquipItem(Item item, string slotType, int slotIndex = 0)
     {
-        if (slotType == "Weapon") currentWeaponName = item.name;
-        else if (slotType == "Amulet") currentAmuletName = item.name;
-        else if (slotType == "Ring")
-        {
-            if (ringSlotIndex == 1) currentRing1Name = item.name;
-            else if (ringSlotIndex == 2) currentRing2Name = item.name;
-        }
+        // Якщо це кільце 1, ключ буде "Ring_1". Якщо звичайна зброя - ключ "Weapon"
+        string slotKey = slotIndex > 0 ? $"{slotType}_{slotIndex}" : slotType;
+
+        // Просто записуємо в словник
+        equippedItems[slotKey] = item.name;
+
+        Debug.Log($"[InventoryManager] В слот {slotKey} записано {item.name}");
     }
 
-    // ОНОВЛЕНО: Для зняття предмета
-    public void UnequipItem(string slotType, int ringSlotIndex = 0)
+    public void UnequipItem(string slotType, int slotIndex = 0)
     {
-        if (slotType == "Weapon") currentWeaponName = "";
-        else if (slotType == "Amulet") currentAmuletName = "";
-        else if (slotType == "Ring")
+        string slotKey = slotIndex > 0 ? $"{slotType}_{slotIndex}" : slotType;
+
+        // Видаляємо запис зі словника, якщо він там був
+        if (equippedItems.ContainsKey(slotKey))
         {
-            if (ringSlotIndex == 1) currentRing1Name = "";
-            else if (ringSlotIndex == 2) currentRing2Name = "";
+            equippedItems.Remove(slotKey);
+            Debug.Log($"[InventoryManager] Зі слота {slotKey} знято предмет");
         }
     }
+    // ===================================
 
     public void ChangeCoins(int amount)
     {
@@ -206,10 +190,9 @@ public class InventoryManager : MonoBehaviour
 
         if (ShopManager.Instance != null && ShopManager.Instance.gameObject.activeInHierarchy)
         {
-            try { ShopManager.Instance.RefreshShop(); }
-            catch (System.Exception) { }
+            try { ShopManager.Instance.RefreshShop(); } catch (System.Exception) { }
         }
-        // === ПРАВИЛЬНЕ МІСЦЕ: Оновлюємо вікно статів при зміні інвентарю ===
+
         if (StatsUI.Instance != null && StatsUI.Instance.gameObject.activeInHierarchy)
         {
             StatsUI.Instance.UpdateStatsUI();
@@ -243,9 +226,6 @@ public class InventoryManager : MonoBehaviour
 
         coinMultiplier = 1f;
         if (buffUIContainer != null) buffUIContainer.SetActive(false);
-
-
-
     }
 
     public void AddMobCoins(int baseAmount)

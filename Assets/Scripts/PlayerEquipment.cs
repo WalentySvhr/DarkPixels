@@ -11,10 +11,12 @@ public class PlayerEquipment : MonoBehaviour
     public AmuletData currentAmulet;
     public RingData currentRing1; // Слот для першого кільця
     public RingData currentRing2; // Слот для другого кільця
+    public BeltData currentBelt;  // --- ДОДАНО: Слот для пояса ---
 
-    [Header("Тестування (T/U - Амулет, Y/I - Кільце 1, H/J - Кільце 2)")]
+    [Header("Тестування")]
     public AmuletData testAmulet;
     public RingData testRing;
+    public BeltData testBelt; // --- ДОДАНО: Для тестування пояса ---
 
     // --- ЛОГІКА АМУЛЕТА ---
     public void EquipAmulet(AmuletData newAmulet)
@@ -41,6 +43,33 @@ public class PlayerEquipment : MonoBehaviour
         currentAmulet = null;
         UpdateAllStats();
         Debug.Log($"<color=red>Знято амулет.</color>");
+    }
+
+    // --- ЛОГІКА ПОЯСА (НОВЕ) ---
+    public void EquipBelt(BeltData newBelt)
+    {
+        if (newBelt == null || currentBelt == newBelt) return;
+        if (currentBelt != null) UnequipBelt();
+
+        currentBelt = newBelt;
+
+        if (playerHealth != null)
+            playerHealth.AddBonusHealth(currentBelt.bonusMaxHealth);
+
+        UpdateAllStats();
+        Debug.Log($"<color=green>Одягнено пояс:</color> {currentBelt.name}");
+    }
+
+    public void UnequipBelt()
+    {
+        if (currentBelt == null) return;
+
+        if (playerHealth != null)
+            playerHealth.RemoveBonusHealth(currentBelt.bonusMaxHealth);
+
+        currentBelt = null;
+        UpdateAllStats();
+        Debug.Log($"<color=red>Знято пояс.</color>");
     }
 
     // --- ЛОГІКА ДЛЯ 2-Х КІЛЕЦЬ ---
@@ -81,7 +110,7 @@ public class PlayerEquipment : MonoBehaviour
     }
 
     // --- МАГІЯ СУМУВАННЯ СТАТІВ ---
-    // Цей метод збирає всі показники з Амулета та двох Кілець і передає їх гравцю
+    // Цей метод збирає всі показники з Амулета, Пояса та двох Кілець і передає їх гравцю
     private void UpdateAllStats()
     {
         // 1. Збираємо стати Амулета
@@ -93,7 +122,16 @@ public class PlayerEquipment : MonoBehaviour
         int amRegen = currentAmulet != null ? currentAmulet.healthRegenPerSecond : 0;
         float amArmor = currentAmulet != null ? currentAmulet.bonusArmorPercent : 0f;
 
-        // 2. Збираємо і СУМУЄМО стати обох Кілець
+        // 2. Збираємо стати Пояса (НОВЕ)
+        int bDmg = currentBelt != null ? currentBelt.bonusDamage : 0;
+        float bAtkSpd = currentBelt != null ? currentBelt.bonusAttackSpeed : 0f;
+        float bMovSpd = currentBelt != null ? currentBelt.bonusMoveSpeed : 0f;
+        float bCrit = currentBelt != null ? currentBelt.bonusCritChance : 0f;
+        float bCritM = (currentBelt != null && currentBelt.bonusCritMultiplier > 2f) ? currentBelt.bonusCritMultiplier - 2f : 0f;
+        int bRegen = currentBelt != null ? currentBelt.healthRegenPerSecond : 0;
+        float bArmor = currentBelt != null ? currentBelt.bonusArmorPercent : 0f;
+
+        // 3. Збираємо і СУМУЄМО стати обох Кілець
         int rDmg = 0; float rAtkSpd = 0f; float rMovSpd = 0f;
         float rCrit = 0f; float rCritM = 0f; int rRegen = 0; float rArmor = 0f;
 
@@ -118,30 +156,36 @@ public class PlayerEquipment : MonoBehaviour
             if (currentRing2.bonusCritMultiplier > 2f) rCritM += currentRing2.bonusCritMultiplier - 2f;
         }
 
-        // 3. Передаємо суми в системи гравця
+        // 4. Передаємо суми в системи гравця
         if (playerCombat != null)
         {
-            playerCombat.extraAmuletDamage = amDmg;
-            playerCombat.extraRingDamage = rDmg; // Урон обох кілець разом
+            // Урон: Амулет + Кільця + Пояс
+            playerCombat.extraAmuletDamage = amDmg + bDmg; // Для простоти додаємо урон пояса до змінної амулета
+            playerCombat.extraRingDamage = rDmg;
 
-            playerCombat.extraAttackSpeed = amAtkSpd;
+            // Швидкість атаки: Амулет + Кільця + Пояс
+            playerCombat.extraAttackSpeed = amAtkSpd + bAtkSpd;
             playerCombat.extraRingAttackSpeed = rAtkSpd;
 
-            // Кріти сумуємо повністю (амулет + обидва кільця)
-            playerCombat.critChance = amCrit + rCrit;
-            playerCombat.critMultiplier = 2f + amCritM + rCritM; // 2f - базова шкода х2
+            // Кріти сумуємо повністю (Амулет + Пояс + обидва кільця)
+            playerCombat.critChance = amCrit + bCrit + rCrit;
+            playerCombat.critMultiplier = 2f + amCritM + bCritM + rCritM;
         }
 
         if (playerMovement != null)
         {
-            playerMovement.extraSpeedMultiplier = amMovSpd;
-            playerMovement.extraRingSpeedMultiplier = rMovSpd; // Швидкість обох кілець разом
+            // Швидкість бігу: Амулет + Пояс + Кільця
+            playerMovement.extraSpeedMultiplier = amMovSpd + bMovSpd;
+            playerMovement.extraRingSpeedMultiplier = rMovSpd;
         }
 
         if (playerHealth != null)
         {
-            playerHealth.StartBuffs(amRegen, amArmor, true);  // Передаємо бафи амулета
-            playerHealth.StartBuffs(rRegen, rArmor, false);   // Передаємо сумарні бафи кілець
+            // Оскільки в PlayerHealth є тільки слоти для "Amulet" та "Ring" бафів, 
+            // ми хитро сумуємо реген і броню пояса з амулетом (isAmulet = true).
+            // Це заощадить нам час на переписування PlayerHealth!
+            playerHealth.StartBuffs(amRegen + bRegen, amArmor + bArmor, true);
+            playerHealth.StartBuffs(rRegen, rArmor, false);
         }
     }
 
@@ -156,5 +200,9 @@ public class PlayerEquipment : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.H)) if (testRing != null) EquipRing(testRing, 2);
         if (Input.GetKeyDown(KeyCode.J)) UnequipRing(2);
+
+        // --- ДОДАНО: Тестування пояса ---
+        if (Input.GetKeyDown(KeyCode.B)) if (testBelt != null) EquipBelt(testBelt);
+        if (Input.GetKeyDown(KeyCode.N)) UnequipBelt();
     }
 }
