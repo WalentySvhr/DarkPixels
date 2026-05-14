@@ -102,7 +102,11 @@ public class SaveManager : MonoBehaviour
             data.equippedItems.Clear();
             foreach (var pair in InventoryManager.Instance.equippedItems)
             {
-                data.equippedItems.Add(new EquippedItemSaveEntry { slotKey = pair.Key, itemName = pair.Value });
+                // ВИПРАВЛЕНО: Тепер беремо .name з об'єкта Item (pair.Value.name)
+                if (pair.Value != null)
+                {
+                    data.equippedItems.Add(new EquippedItemSaveEntry { slotKey = pair.Key, itemName = pair.Value.name });
+                }
             }
 
             data.backpack.Clear();

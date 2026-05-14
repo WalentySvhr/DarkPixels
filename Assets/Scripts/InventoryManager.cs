@@ -15,10 +15,8 @@ public class InventoryManager : MonoBehaviour
     public HotbarUI hotbarScript;
 
     [Header("Поточна екіпіровка (Універсальна система)")]
-    // --- НОВЕ: Словник замість десятка окремих змінних ---
-    // Ключ: "Weapon", "Amulet", "Ring_1", "Belt" і т.д.
-    // Значення: Назва предмета
-    public Dictionary<string, string> equippedItems = new Dictionary<string, string>();
+    // --- ЗМІНЕНО: Тепер зберігаємо Item замість string, щоб повертати його в інвентар ---
+    public Dictionary<string, Item> equippedItems = new Dictionary<string, Item>();
 
     [Header("Гроші")]
     public int coins = 0;
@@ -81,8 +79,17 @@ public class InventoryManager : MonoBehaviour
         ItemStack stack = items.Find(s => s.item == item);
         if (stack != null)
         {
-            stack.amount--;
-            if (stack.amount <= 0) items.Remove(stack);
+            // МАГІЯ АНТИ-ДЮПУ: Якщо це екіпіровка (не стакається), 
+            // ми знищуємо весь запис миттєво, щоб вбити "привидів" зі старих збережень!
+            if (!item.isStackable)
+            {
+                items.Remove(stack);
+            }
+            else
+            {
+                stack.amount--;
+                if (stack.amount <= 0) items.Remove(stack);
+            }
             UpdateUI();
         }
     }
@@ -123,28 +130,35 @@ public class InventoryManager : MonoBehaviour
         UpdateUI();
     }
 
-    // === МАГІЯ УНІВЕРСАЛЬНОСТІ ТУТ ===
-    // Цей метод тепер проковтне БУДЬ-ЯКИЙ слот (Belt, Helmet, Boots, Ring 1, Ring 2...)
-    public void EquipItem(Item item, string slotType, int slotIndex = 0)
+    // === ОЧИЩЕНА МАГІЯ ЕКІПІРУВАННЯ ===
+    // Тепер приймає просто Item, оскільки Слот сам керує видаленням/додаванням у рюкзак
+    public void EquipItem(Item itemToEquip, string slotType, int slotIndex = 0)
     {
-        // Якщо це кільце 1, ключ буде "Ring_1". Якщо звичайна зброя - ключ "Weapon"
         string slotKey = slotIndex > 0 ? $"{slotType}_{slotIndex}" : slotType;
 
-        // Просто записуємо в словник
-        equippedItems[slotKey] = item.name;
+        // ВАЖЛИВО: Якщо в цьому слоті вже є предмет, спочатку знімаємо його, щоб не втратити!
+        if (equippedItems.ContainsKey(slotKey))
+        {
+            UnequipItem(slotType, slotIndex);
+        }
 
-        Debug.Log($"[InventoryManager] В слот {slotKey} записано {item.name}");
+        // Просто записуємо об'єкт предмета в словник
+        equippedItems[slotKey] = itemToEquip;
+        Debug.Log($"[InventoryManager] В слот {slotKey} записано {itemToEquip.name}");
     }
 
     public void UnequipItem(string slotType, int slotIndex = 0)
     {
         string slotKey = slotIndex > 0 ? $"{slotType}_{slotIndex}" : slotType;
 
-        // Видаляємо запис зі словника, якщо він там був
         if (equippedItems.ContainsKey(slotKey))
         {
+            Item itemToReturn = equippedItems[slotKey];
             equippedItems.Remove(slotKey);
-            Debug.Log($"[InventoryManager] Зі слота {slotKey} знято предмет");
+            Debug.Log($"[InventoryManager] Зі слота {slotKey} знято предмет: {itemToReturn.name}");
+
+            // ЗВЕРНИ УВАГУ: Ми більше НЕ викликаємо Add(itemToReturn) тут! 
+            // Це тепер робить сам InventorySlot при перетягуванні.
         }
     }
     // ===================================

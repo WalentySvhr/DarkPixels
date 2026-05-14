@@ -33,54 +33,20 @@ public class InventoryUI : MonoBehaviour
         if (inventory == null) return;
         if (slots == null || slots.Length == 0) RefreshSlots();
 
-        List<InventoryManager.ItemStack> itemsToDisplay = new List<InventoryManager.ItemStack>();
+        // Оскільки новий InventoryManager ФІЗИЧНО забирає екіпіровані предмети 
+        // зі списку inventory.items, нам більше не потрібна складна фільтрація!
 
-        // 1. Створюємо список всіх ОДЯГНЕНИХ предметів
-        List<string> equippedNames = new List<string>();
-
-        // === ОНОВЛЕНО: Беремо назви одягнених предметів з універсального словника ===
-        if (inventory.equippedItems != null)
-        {
-            foreach (string equippedItemName in inventory.equippedItems.Values)
-            {
-                equippedNames.Add(equippedItemName);
-            }
-        }
-
-        // 2. Фільтруємо сумку
-        foreach (var stack in inventory.items)
-        {
-            if (stack != null && stack.item != null && stack.amount > 0)
-            {
-                bool hideThisItem = false;
-
-                // Якщо назва цього предмета є в списку "одягнених"
-                if (equippedNames.Contains(stack.item.name))
-                {
-                    hideThisItem = true;
-                    // ВИКРЕСЛЮЄМО одну копію зі списку. 
-                    // Наступне кільце з такою ж назвою вже не сховається!
-                    equippedNames.Remove(stack.item.name);
-                }
-
-                // Додаємо в сумку ТІЛЬКИ якщо ми не вирішили його сховати
-                if (!hideThisItem)
-                {
-                    itemsToDisplay.Add(stack);
-                }
-            }
-        }
-
-        // 3. Малюємо відфільтровані предмети у слоти сумки
+        // Просто беремо те, що є в сумці, і малюємо в слотах:
         for (int i = 0; i < slots.Length; i++)
         {
-            if (i < itemsToDisplay.Count)
+            if (i < inventory.items.Count)
             {
-                slots[i].AddItem(itemsToDisplay[i].item, itemsToDisplay[i].amount);
+                // Якщо для цього слота є предмет у списку інвентарю - показуємо його
+                slots[i].AddItem(inventory.items[i].item, inventory.items[i].amount);
             }
             else
             {
-                // Очищуємо порожні слоти сумки
+                // Всі інші слоти очищуємо
                 slots[i].ClearSlot();
             }
         }

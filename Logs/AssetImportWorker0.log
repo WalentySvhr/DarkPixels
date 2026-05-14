@@ -1,11 +1,11 @@
 [Licensing::Module] Trying to connect to existing licensing client channel...
 Built from '6000.3/staging' branch; Version is '6000.3.13f1 (8c4f11e4fb20) revision 9195281'; Using compiler version '194234433'; Build Type 'Release'
 OS: 'Windows 10  (10.0.19045) 64bit Professional' Language: 'uk' Physical Memory: 16334 MB
-[Licensing::IpcConnector] Successfully connected to: "LicenseClient-limon" at "2026-05-12T19:50:31.5827749Z"
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-limon" at "2026-05-14T13:15:38.3871741Z"
 BatchMode: 1, IsHumanControllingUs: 0, StartBugReporterOnCrash: 0, Is64bit: 1
 System  architecture: x64
 Process architecture: x64
-Date: 2026-05-12T19:50:31Z
+Date: 2026-05-14T13:15:38Z
 
 COMMAND LINE ARGUMENTS:
 D:\Unity\6000.3.13f1\Editor\Unity.exe
@@ -19,7 +19,7 @@ D:/GameDev/DarkPixels-main
 -logFile
 Logs/AssetImportWorker0.log
 -srvPort
-49378
+56529
 -licensingIpc
 LicenseClient-limon
 -job-worker-count
@@ -67,12 +67,12 @@ D:/GameDev/DarkPixels-main
     "memorysetup-job-temp-allocator-block-size-background=1048576"
     "memorysetup-job-temp-allocator-reduction-small-platforms=262144"
     "memorysetup-temp-allocator-size-cloud-worker=32768"
-Player connection [17972]  Target information:
+Player connection [8412]  Target information:
 
-Player connection [17972]  * "[IP] 192.168.0.28 [Port] 0 [Flags] 2 [Guid] 3790961632 [EditorId] 3790961632 [Version] 1048832 [Id] WindowsEditor(7,DESKTOP-4DD92S9) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" 
+Player connection [8412]  * "[IP] 192.168.0.28 [Port] 0 [Flags] 2 [Guid] 2742797283 [EditorId] 2742797283 [Version] 1048832 [Id] WindowsEditor(7,DESKTOP-4DD92S9) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" 
 
-Player connection [17972] Host joined multi-casting on [225.0.0.222:54997]...
-Player connection [17972] Host joined alternative multi-casting on [225.0.0.222:34997]...
+Player connection [8412] Host joined multi-casting on [225.0.0.222:54997]...
+Player connection [8412] Host joined alternative multi-casting on [225.0.0.222:34997]...
 JobSystem: Creating JobQueue using job-worker-count value 5
 Input System module state changed to: Initialized.
 [Physics::Module] Initialized fallback backend.
@@ -90,24 +90,24 @@ Library Redirect Path: Library/
 	ResponseStatus: Unsupported protocol version '1.18.1'.
 [Licensing::Module] Error: Failed to handshake to channel: "LicenseClient-limon"
 [Licensing::IpcConnector] LicenseClient-limon channel disconnected successfully.
-[Licensing::IpcConnector] Successfully connected to: "LicenseClient-limon-6000.3.13" at "2026-05-12T19:50:32.9322964Z"
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-limon-6000.3.13" at "2026-05-14T13:15:39.6210866Z"
 [Licensing::Client] Handshaking with LicensingClient:
   Version:                 1.18.1+9fbee8e
-  Session Id:              22229beaf0e04780b6c008df4e3c457b
-  Correlation Id:          5c0ccbd6fc5976f889eae73dc9923fc2
-  External correlation Id: 2154965875059318066
+  Session Id:              0e1df238e76947f2925b8ca7ad8a69c6
+  Correlation Id:          2980fcf273d49c0468942a9fc84217a6
+  External correlation Id: 7087753821288657750
   Machine Id:              4D8GW8ETA38K6LsA7GOMWmqZxN4=
-[Licensing::Module] Successfully connected to LicensingClient on channel: "LicenseClient-limon-6000.3.13" (connect: 0.01s, validation: 0.00s, handshake: 1.63s)
-[Licensing::IpcConnector] Successfully connected to: "LicenseClient-limon-6000.3.13-notifications" at "2026-05-12T19:50:34.5665782Z"
-[Licensing::Module] Licensing Background thread has ended after 2.98s
-[Licensing::Module] Licensing is initialized (took 2.73s).
+[Licensing::Module] Successfully connected to LicensingClient on channel: "LicenseClient-limon-6000.3.13" (connect: 0.00s, validation: 0.00s, handshake: 1.12s)
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-limon-6000.3.13-notifications" at "2026-05-14T13:15:40.7409607Z"
+[Licensing::Module] Licensing Background thread has ended after 2.35s
+[Licensing::Module] Licensing is initialized (took 2.09s).
 [Licensing::Client] Successfully resolved entitlement details
 [Licensing::Module] License group:
   Id: 7971680487528-UnityPersXXXX
   Product: Unity Personal
   Type: Assigned
   Expiration: Unlimited
-Refreshing native plugins compatible for Editor in 44.89 ms, found 5 plugins.
+Refreshing native plugins compatible for Editor in 19.04 ms, found 5 plugins.
 Preloading 0 native plugins for Editor in 0.00 ms.
 Initialize engine version: 6000.3.13f1 (8c4f11e4fb20)
 [Subsystems] Discovering subsystems at path D:/Unity/6000.3.13f1/Editor/Data/Resources/UnitySubsystems
@@ -123,13 +123,13 @@ Initialize mono
 Mono path[0] = 'D:/Unity/6000.3.13f1/Editor/Data/Managed'
 Mono path[1] = 'D:/Unity/6000.3.13f1/Editor/Data/MonoBleedingEdge/lib/mono/unityjit-win32'
 Mono config path = 'D:/Unity/6000.3.13f1/Editor/Data/MonoBleedingEdge/etc'
-Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56900
+Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56348
 Begin MonoManager ReloadAssembly
 Registering precompiled unity dll's ...
 Register platform support module: D:/Unity/6000.3.13f1/Editor/Data/PlaybackEngines/WindowsStandaloneSupport/UnityEditor.WindowsStandalone.Extensions.dll
 Register platform support module: D:/Unity/6000.3.13f1/Editor/Data/PlaybackEngines/AndroidPlayer/UnityEditor.Android.Extensions.dll
-Registered in 0.002879 seconds.
-- Loaded All Assemblies, in  0.622 seconds
+Registered in 0.003052 seconds.
+- Loaded All Assemblies, in  0.642 seconds
 Native extension for Android target not found
 Native extension for WindowsStandalone target not found
 Package Manager log level set to [2]
@@ -138,35 +138,35 @@ Package Manager log level set to [2]
 [Package Manager] Cannot connect to Unity Package Manager local server
 ScheduleIndexationOnStartup MainProcess:False IndexOnStartup:True
 Mono: successfully reloaded assembly
-- Finished resetting the current domain, in  0.669 seconds
-Domain Reload Profiling: 1290ms
-	BeginReloadAssembly (203ms)
+- Finished resetting the current domain, in  0.625 seconds
+Domain Reload Profiling: 1267ms
+	BeginReloadAssembly (198ms)
 		ExecutionOrderSort (0ms)
 		DisableScriptedObjects (0ms)
 		BackupInstance (0ms)
 		ReleaseScriptingObjects (0ms)
 		CreateAndSetChildDomain (1ms)
-	RebuildCommonClasses (61ms)
-	RebuildNativeTypeToScriptingClass (22ms)
-	initialDomainReloadingComplete (65ms)
-	LoadAllAssembliesAndSetupDomain (270ms)
-		LoadAssemblies (204ms)
+	RebuildCommonClasses (60ms)
+	RebuildNativeTypeToScriptingClass (23ms)
+	initialDomainReloadingComplete (70ms)
+	LoadAllAssembliesAndSetupDomain (290ms)
+		LoadAssemblies (198ms)
 		RebuildTransferFunctionScriptingTraits (0ms)
-		AnalyzeDomain (264ms)
-			TypeCache.Refresh (262ms)
-				TypeCache.ScanAssembly (244ms)
+		AnalyzeDomain (284ms)
+			TypeCache.Refresh (282ms)
+				TypeCache.ScanAssembly (263ms)
 			BuildScriptInfoCaches (0ms)
 			ResolveRequiredComponents (1ms)
-	FinalizeReload (669ms)
+	FinalizeReload (626ms)
 		ReleaseScriptCaches (0ms)
 		RebuildScriptCaches (0ms)
-		SetupLoadedEditorAssemblies (588ms)
+		SetupLoadedEditorAssemblies (545ms)
 			LogAssemblyErrors (0ms)
-			InitializePlatformSupportModulesInManaged (86ms)
-			SetLoadedEditorAssemblies (5ms)
-			BeforeProcessingInitializeOnLoad (126ms)
-			ProcessInitializeOnLoadAttributes (242ms)
-			ProcessInitializeOnLoadMethodAttributes (129ms)
+			InitializePlatformSupportModulesInManaged (95ms)
+			SetLoadedEditorAssemblies (6ms)
+			BeforeProcessingInitializeOnLoad (132ms)
+			ProcessInitializeOnLoadAttributes (202ms)
+			ProcessInitializeOnLoadMethodAttributes (110ms)
 			AfterProcessingInitializeOnLoad (0ms)
 			EditorAssembliesLoaded (0ms)
 		ExecutionOrderSort2 (0ms)
@@ -177,8 +177,8 @@ Import Worker Mode flag is 0x00
 Begin MonoManager ReloadAssembly
 [Licensing::Client] Successfully resolved entitlement details
 Duplicate assembly 'log4net.dll' with different versions detected, using 'Packages/com.unity.package-validation-suite/Lib/Editor/log4net.dll, AssemblyName=log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a' and ignoring 'Packages/com.unity.collab-proxy/Lib/Editor/log4netPlastic.dll, AssemblyName=log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a'.Symbol file LoadedFromMemory is not a mono symbol file
-- Loaded All Assemblies, in  2.381 seconds
-Refreshing native plugins compatible for Editor in 23.62 ms, found 5 plugins.
+- Loaded All Assemblies, in  1.641 seconds
+Refreshing native plugins compatible for Editor in 14.26 ms, found 5 plugins.
 Native extension for Android target not found
 Native extension for WindowsStandalone target not found
 [Package Manager] Failed to launch server process. Reason: Unity was launched with the -noUpm command-line argument
@@ -187,69 +187,335 @@ Native extension for WindowsStandalone target not found
 [Package Manager] Failed to launch server process. Reason: Unity was launched with the -noUpm command-line argument
 [Package Manager] Unable to send message (not connected to server process).
 [Package Manager] Cannot connect to Unity Package Manager local server
-Refreshing native plugins compatible for Editor in 20.12 ms, found 5 plugins.
+Refreshing native plugins compatible for Editor in 17.04 ms, found 5 plugins.
 [Package Manager] Failed to launch server process. Reason: Unity was launched with the -noUpm command-line argument
 [Package Manager] Unable to send message (not connected to server process).
 [Package Manager] Cannot connect to Unity Package Manager local server
 ScheduleIndexationOnStartup MainProcess:False IndexOnStartup:True
 Mono: successfully reloaded assembly
-- Finished resetting the current domain, in  4.800 seconds
-Domain Reload Profiling: 7178ms
-	BeginReloadAssembly (253ms)
+- Finished resetting the current domain, in  1.870 seconds
+Domain Reload Profiling: 3508ms
+	BeginReloadAssembly (281ms)
 		ExecutionOrderSort (0ms)
 		DisableScriptedObjects (8ms)
 		BackupInstance (0ms)
 		ReleaseScriptingObjects (0ms)
-		CreateAndSetChildDomain (34ms)
-	RebuildCommonClasses (61ms)
-	RebuildNativeTypeToScriptingClass (20ms)
-	initialDomainReloadingComplete (55ms)
-	LoadAllAssembliesAndSetupDomain (1989ms)
-		LoadAssemblies (916ms)
+		CreateAndSetChildDomain (38ms)
+	RebuildCommonClasses (59ms)
+	RebuildNativeTypeToScriptingClass (28ms)
+	initialDomainReloadingComplete (65ms)
+	LoadAllAssembliesAndSetupDomain (1203ms)
+		LoadAssemblies (800ms)
 		RebuildTransferFunctionScriptingTraits (0ms)
-		AnalyzeDomain (1226ms)
-			TypeCache.Refresh (870ms)
-				TypeCache.ScanAssembly (775ms)
-			BuildScriptInfoCaches (321ms)
-			ResolveRequiredComponents (27ms)
-	FinalizeReload (4800ms)
+		AnalyzeDomain (569ms)
+			TypeCache.Refresh (406ms)
+				TypeCache.ScanAssembly (369ms)
+			BuildScriptInfoCaches (138ms)
+			ResolveRequiredComponents (20ms)
+	FinalizeReload (1871ms)
 		ReleaseScriptCaches (0ms)
 		RebuildScriptCaches (0ms)
-		SetupLoadedEditorAssemblies (4190ms)
+		SetupLoadedEditorAssemblies (1595ms)
 			LogAssemblyErrors (0ms)
-			InitializePlatformSupportModulesInManaged (13ms)
-			SetLoadedEditorAssemblies (6ms)
-			BeforeProcessingInitializeOnLoad (349ms)
-			ProcessInitializeOnLoadAttributes (867ms)
-			ProcessInitializeOnLoadMethodAttributes (2950ms)
+			InitializePlatformSupportModulesInManaged (12ms)
+			SetLoadedEditorAssemblies (7ms)
+			BeforeProcessingInitializeOnLoad (265ms)
+			ProcessInitializeOnLoadAttributes (734ms)
+			ProcessInitializeOnLoadMethodAttributes (573ms)
 			AfterProcessingInitializeOnLoad (4ms)
 			EditorAssembliesLoaded (1ms)
 		ExecutionOrderSort2 (0ms)
-		AwakeInstancesAfterBackupRestoration (8ms)
-Launched and connected shader compiler UnityShaderCompiler.exe after 0.12 seconds
-Refreshing native plugins compatible for Editor in 15.73 ms, found 5 plugins.
+		AwakeInstancesAfterBackupRestoration (10ms)
+Launched and connected shader compiler UnityShaderCompiler.exe after 0.02 seconds
+Refreshing native plugins compatible for Editor in 20.88 ms, found 5 plugins.
 Preloading 0 native plugins for Editor in 0.00 ms.
 Unloading 17 Unused Serialized files (Serialized files now loaded: 0)
-Unloading 9448 unused Assets / (4.5 MB). Loaded Objects now: 10270.
-Memory consumption went from 192.3 MB to 187.8 MB.
-Total: 19.297600 ms (FindLiveObjects: 1.675200 ms CreateObjectMapping: 2.000000 ms MarkObjects: 11.864300 ms  DeleteObjects: 3.755800 ms)
+Unloading 9450 unused Assets / (5.0 MB). Loaded Objects now: 10272.
+Memory consumption went from 192.4 MB to 187.4 MB.
+Total: 22.575800 ms (FindLiveObjects: 1.661100 ms CreateObjectMapping: 1.696200 ms MarkObjects: 13.830800 ms  DeleteObjects: 5.385000 ms)
+
+========================================================================
+Received Import Request.
+  Time since last request: 6122.573456 seconds.
+  path: Assets/Resources/Colodaz.png
+  artifactKey: Guid(1465737cb42171c49a2ae0e72d8b0434) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Colodaz.png using Guid(1465737cb42171c49a2ae0e72d8b0434) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '90110fa4943a54e532cab17516cd97d5') in 0.7777337 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5041
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000122 seconds.
+  path: Assets/Resources/Tower_2.png
+  artifactKey: Guid(709d97e9a63232047b834bcb0a4d783b) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Tower_2.png using Guid(709d97e9a63232047b834bcb0a4d783b) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '1af1537c7adec106064d5d07326fcf0e') in 0.5910898 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5041
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000038 seconds.
+  path: Assets/Resources/Hp_Line.png
+  artifactKey: Guid(47902c081f8418c469bf5c7416e3f222) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Hp_Line.png using Guid(47902c081f8418c469bf5c7416e3f222) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '88f900e1e11949aba602d8b465e972cc') in 0.0215924 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000031 seconds.
+  path: Assets/Resources/QuestArrow.png
+  artifactKey: Guid(07bcd1c0cda822b4886cf9173119b2de) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/QuestArrow.png using Guid(07bcd1c0cda822b4886cf9173119b2de) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '8d083b85bbe4fa759e96a16e9cb5fff4') in 0.5137103 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5041
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000050 seconds.
+  path: Assets/Resources/Coinpng.png
+  artifactKey: Guid(73aa4717b8b73fc46a00c603150019ea) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Coinpng.png using Guid(73aa4717b8b73fc46a00c603150019ea) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '00bfb24080b6cb4f9eaff6485ae32eb6') in 0.5291048 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5041
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000048 seconds.
+  path: Assets/Resources/Buttons.png
+  artifactKey: Guid(e8d77c8bfd88fef4dbae0c0abff7a0c5) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Buttons.png using Guid(e8d77c8bfd88fef4dbae0c0abff7a0c5) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '05aaa6a61a3e218747b50d74a4a7cb97') in 0.5219632 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5041
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000041 seconds.
+  path: Assets/Resources/Street_Lamp.png
+  artifactKey: Guid(50e95044d05781144a59a010df3a6b3b) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Street_Lamp.png using Guid(50e95044d05781144a59a010df3a6b3b) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'd627313353dda7cd4699870953f3d5c0') in 0.4982649 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5041
+
+========================================================================
+Received Import Request.
+  Time since last request: 16.735887 seconds.
+  path: Assets/Resources/AmuletIcon/HP_amulet.png
+  artifactKey: Guid(76b20006d2bf4dc49bbce17b765e9fee) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/AmuletIcon/HP_amulet.png using Guid(76b20006d2bf4dc49bbce17b765e9fee) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '73596562ed29ee1973a9ea7e713e76ad') in 0.4953353 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5041
+
+========================================================================
+Received Import Request.
+  Time since last request: 5.159198 seconds.
+  path: Assets/Resources/Items_Level/Wals_Floor_Dungeon_1.png
+  artifactKey: Guid(770e84b1cc609944ba11e9df7825d097) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Items_Level/Wals_Floor_Dungeon_1.png using Guid(770e84b1cc609944ba11e9df7825d097) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '72d5924eaffaee23468c7f351e8b7312') in 0.5535511 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5041
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000033 seconds.
+  path: Assets/Pixel Monster Pack/64x64 monsters/worm-green.png
+  artifactKey: Guid(ed7b05551bd03704096e7feaba6b6d8f) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Pixel Monster Pack/64x64 monsters/worm-green.png using Guid(ed7b05551bd03704096e7feaba6b6d8f) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'dfb1b24b77e9e8a5459c6098c5a48894') in 0.5429339 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5041
+
+========================================================================
+Received Import Request.
+  Time since last request: 29.319066 seconds.
+  path: Assets/Resources/Attack_Button.png
+  artifactKey: Guid(922948878c2b2f34babb501f14917630) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Attack_Button.png using Guid(922948878c2b2f34babb501f14917630) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '14217cb994959d49eb0299e24d29bd5b') in 0.5019628 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5041
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000038 seconds.
+  path: Assets/Resources/Colodaz.png
+  artifactKey: Guid(1465737cb42171c49a2ae0e72d8b0434) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Colodaz.png using Guid(1465737cb42171c49a2ae0e72d8b0434) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '6306b2e55a77321117d2227adadb1732') in 0.5019539 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5041
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000035 seconds.
+  path: Assets/Resources/Tower_2.png
+  artifactKey: Guid(709d97e9a63232047b834bcb0a4d783b) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Tower_2.png using Guid(709d97e9a63232047b834bcb0a4d783b) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '08e40c652307d4f07aeed580b1e45d8d') in 0.505646 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5041
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000043 seconds.
+  path: Assets/Resources/potions_black_outline.png
+  artifactKey: Guid(a9fe4898b61b4394886d460606cba7e9) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/potions_black_outline.png using Guid(a9fe4898b61b4394886d460606cba7e9) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '8fd83b66e1ef85b327c3b93b5f5d2d3e') in 1.2425271 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5041
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000041 seconds.
+  path: Assets/Resources/TrashBasket.png
+  artifactKey: Guid(1e46078eaa88b354d8b1633c31c5ea49) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/TrashBasket.png using Guid(1e46078eaa88b354d8b1633c31c5ea49) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'f38fe1867f7627d12df7dfa8e7d0a12e') in 0.5217937 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5041
+
+========================================================================
+Received Import Request.
+  Time since last request: 11.100404 seconds.
+  path: Assets/Resources/Attack_Button.png
+  artifactKey: Guid(922948878c2b2f34babb501f14917630) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Attack_Button.png using Guid(922948878c2b2f34babb501f14917630) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'f145efca8aec8432afd0619dfd7c5bef') in 0.5357173 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5041
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000032 seconds.
+  path: Assets/Resources/Colodaz.png
+  artifactKey: Guid(1465737cb42171c49a2ae0e72d8b0434) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Colodaz.png using Guid(1465737cb42171c49a2ae0e72d8b0434) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'bc24c10fc7a1342744036ca20bf2ba72') in 0.5121894 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5041
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000038 seconds.
+  path: Assets/Resources/WeaponSwap.png
+  artifactKey: Guid(0f67ba4f57f6f854e971a54ef8e3e511) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/WeaponSwap.png using Guid(0f67ba4f57f6f854e971a54ef8e3e511) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '2bcda865c2ca5c2052fe90001990a830') in 0.4892865 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5041
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000042 seconds.
+  path: Assets/Resources/QuestArrow.png
+  artifactKey: Guid(07bcd1c0cda822b4886cf9173119b2de) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/QuestArrow.png using Guid(07bcd1c0cda822b4886cf9173119b2de) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'cf410e0b5e0d6fce11b431e36b0b08a3') in 0.4913295 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5041
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000041 seconds.
+  path: Assets/Resources/Tower_1.png
+  artifactKey: Guid(026a913376f47a54282d034435aaed48) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Tower_1.png using Guid(026a913376f47a54282d034435aaed48) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '84efebca299435a85cba9b6c837cc7f4') in 0.4985245 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5041
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000037 seconds.
+  path: Assets/Resources/CompleteIconQuest.png
+  artifactKey: Guid(be558b34cf9632b4fa9eff43f5871780) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/CompleteIconQuest.png using Guid(be558b34cf9632b4fa9eff43f5871780) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'cb1ecac607bea6fb86ac7546d92c4971') in 0.4976807 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5041
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000047 seconds.
+  path: Assets/Resources/BackgroundTable.png
+  artifactKey: Guid(f0674c5ffefbd9d4c95bbe5d38d9c253) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/BackgroundTable.png using Guid(f0674c5ffefbd9d4c95bbe5d38d9c253) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'cf5a958f17cf259899be70d4ecb83e91') in 0.4548725 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5041
+
+========================================================================
+Received Import Request.
+  Time since last request: 69.049709 seconds.
+  path: Assets/Resources/Hp_Line.png
+  artifactKey: Guid(47902c081f8418c469bf5c7416e3f222) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Hp_Line.png using Guid(47902c081f8418c469bf5c7416e3f222) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '14ad3a5117ab1d425d16eff09c96d618') in 0.0102386 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000027 seconds.
+  path: Assets/Resources/Arrows.png
+  artifactKey: Guid(8df20e92862a99c47baa35f2c11787a0) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Arrows.png using Guid(8df20e92862a99c47baa35f2c11787a0) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'cbfc5b9a9b7bc2ca64e979d5c3413276') in 0.5393927 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5041
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000036 seconds.
+  path: Assets/Resources/Colodaz.png
+  artifactKey: Guid(1465737cb42171c49a2ae0e72d8b0434) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Colodaz.png using Guid(1465737cb42171c49a2ae0e72d8b0434) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '70f57a5a98e4dbfb5453226831ec5397') in 0.4719594 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5041
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000049 seconds.
+  path: Assets/Resources/Tower_2.png
+  artifactKey: Guid(709d97e9a63232047b834bcb0a4d783b) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Tower_2.png using Guid(709d97e9a63232047b834bcb0a4d783b) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'bed39e74b2f6a274f366d428cc0224fc') in 0.4897134 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5041
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000041 seconds.
+  path: Assets/Resources/IconQuest_Get.png
+  artifactKey: Guid(ea42c470c0d09ab4a9eaa18ee690a1a5) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/IconQuest_Get.png using Guid(ea42c470c0d09ab4a9eaa18ee690a1a5) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '25b0f47fb868d59e2410d8cab34f46a6') in 0.4767692 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5041
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000044 seconds.
+  path: Assets/Resources/BackGround_HP_Bar.png
+  artifactKey: Guid(2e134a6fe063a5243b2a998d9c0d952a) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/BackGround_HP_Bar.png using Guid(2e134a6fe063a5243b2a998d9c0d952a) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'd7adacf43aa805d0bb3bb0715994a6a5') in 0.5190572 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5041
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000039 seconds.
+  path: Assets/Resources/Coinpng.png
+  artifactKey: Guid(73aa4717b8b73fc46a00c603150019ea) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Coinpng.png using Guid(73aa4717b8b73fc46a00c603150019ea) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '54ed47d19d2d5d8b15a167058ae71f21') in 0.4794248 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5041
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000037 seconds.
+  path: Assets/Resources/Tower_1.png
+  artifactKey: Guid(026a913376f47a54282d034435aaed48) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Tower_1.png using Guid(026a913376f47a54282d034435aaed48) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '22e2a1f2ed05266e7ddba4465ac5d288') in 0.5061468 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5041
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000034 seconds.
+  path: Assets/Resources/Buttons.png
+  artifactKey: Guid(e8d77c8bfd88fef4dbae0c0abff7a0c5) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Buttons.png using Guid(e8d77c8bfd88fef4dbae0c0abff7a0c5) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '71c0ffcadafccdf4166b24dbc9eace70') in 0.5115037 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5041
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000045 seconds.
+  path: Assets/Resources/Street_Lamp.png
+  artifactKey: Guid(50e95044d05781144a59a010df3a6b3b) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Street_Lamp.png using Guid(50e95044d05781144a59a010df3a6b3b) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '775f81d16ed4829a4680806a13682663') in 0.5116099 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5041
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000040 seconds.
+  path: Assets/Resources/BackgroundTable.png
+  artifactKey: Guid(f0674c5ffefbd9d4c95bbe5d38d9c253) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/BackgroundTable.png using Guid(f0674c5ffefbd9d4c95bbe5d38d9c253) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '2b482593f5cd1ddf7c1bf357345561b6') in 0.4794294 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5041
 
 ========================================================================
 Received Prepare
-Refreshing native plugins compatible for Editor in 15.29 ms, found 5 plugins.
+Refreshing native plugins compatible for Editor in 14.27 ms, found 5 plugins.
 Preloading 0 native plugins for Editor in 0.00 ms.
 Unloading 17 Unused Serialized files (Serialized files now loaded: 0)
-Unloading 9383 unused Assets / (4.8 MB). Loaded Objects now: 10271.
-Memory consumption went from 190.7 MB to 185.9 MB.
-Total: 15.842800 ms (FindLiveObjects: 1.488900 ms CreateObjectMapping: 1.419800 ms MarkObjects: 8.922400 ms  DeleteObjects: 4.009000 ms)
+Unloading 17 unused Assets / (1.7 MB). Loaded Objects now: 10359.
+Memory consumption went from 187.7 MB to 185.9 MB.
+Total: 11.727100 ms (FindLiveObjects: 0.728600 ms CreateObjectMapping: 0.293900 ms MarkObjects: 10.247700 ms  DeleteObjects: 0.455600 ms)
 
 Prepare: number of updated asset objects reloaded= 0
 ========================================================================
 Received Prepare
+[Licensing::Client] Successfully resolved entitlement details
 Begin MonoManager ReloadAssembly
+[Licensing::Client] Successfully resolved entitlement details
 Duplicate assembly 'log4net.dll' with different versions detected, using 'Packages/com.unity.package-validation-suite/Lib/Editor/log4net.dll, AssemblyName=log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a' and ignoring 'Packages/com.unity.collab-proxy/Lib/Editor/log4netPlastic.dll, AssemblyName=log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a'.Symbol file LoadedFromMemory is not a mono symbol file
-- Loaded All Assemblies, in  1.473 seconds
-Refreshing native plugins compatible for Editor in 16.26 ms, found 5 plugins.
+- Loaded All Assemblies, in  1.388 seconds
+Refreshing native plugins compatible for Editor in 14.64 ms, found 5 plugins.
 Native extension for Android target not found
 Native extension for WindowsStandalone target not found
 [Package Manager] Failed to launch server process. Reason: Unity was launched with the -noUpm command-line argument
@@ -263,86 +529,54 @@ Native extension for WindowsStandalone target not found
 [Package Manager] Cannot connect to Unity Package Manager local server
 ScheduleIndexationOnStartup MainProcess:False IndexOnStartup:True
 Mono: successfully reloaded assembly
-- Finished resetting the current domain, in  1.397 seconds
-Domain Reload Profiling: 2873ms
-	BeginReloadAssembly (373ms)
+- Finished resetting the current domain, in  1.404 seconds
+Domain Reload Profiling: 2795ms
+	BeginReloadAssembly (356ms)
 		ExecutionOrderSort (0ms)
 		DisableScriptedObjects (19ms)
 		BackupInstance (0ms)
 		ReleaseScriptingObjects (0ms)
-		CreateAndSetChildDomain (92ms)
-	RebuildCommonClasses (60ms)
-	RebuildNativeTypeToScriptingClass (27ms)
-	initialDomainReloadingComplete (42ms)
-	LoadAllAssembliesAndSetupDomain (974ms)
-		LoadAssemblies (731ms)
+		CreateAndSetChildDomain (88ms)
+	RebuildCommonClasses (52ms)
+	RebuildNativeTypeToScriptingClass (22ms)
+	initialDomainReloadingComplete (40ms)
+	LoadAllAssembliesAndSetupDomain (920ms)
+		LoadAssemblies (657ms)
 		RebuildTransferFunctionScriptingTraits (0ms)
-		AnalyzeDomain (413ms)
-			TypeCache.Refresh (23ms)
-				TypeCache.ScanAssembly (4ms)
-			BuildScriptInfoCaches (364ms)
+		AnalyzeDomain (416ms)
+			TypeCache.Refresh (15ms)
+				TypeCache.ScanAssembly (0ms)
+			BuildScriptInfoCaches (376ms)
 			ResolveRequiredComponents (20ms)
-	FinalizeReload (1397ms)
+	FinalizeReload (1405ms)
 		ReleaseScriptCaches (0ms)
 		RebuildScriptCaches (0ms)
-		SetupLoadedEditorAssemblies (1108ms)
+		SetupLoadedEditorAssemblies (1136ms)
 			LogAssemblyErrors (0ms)
-			InitializePlatformSupportModulesInManaged (13ms)
-			SetLoadedEditorAssemblies (7ms)
-			BeforeProcessingInitializeOnLoad (270ms)
-			ProcessInitializeOnLoadAttributes (567ms)
-			ProcessInitializeOnLoadMethodAttributes (247ms)
-			AfterProcessingInitializeOnLoad (4ms)
+			InitializePlatformSupportModulesInManaged (14ms)
+			SetLoadedEditorAssemblies (8ms)
+			BeforeProcessingInitializeOnLoad (272ms)
+			ProcessInitializeOnLoadAttributes (579ms)
+			ProcessInitializeOnLoadMethodAttributes (257ms)
+			AfterProcessingInitializeOnLoad (5ms)
 			EditorAssembliesLoaded (1ms)
 		ExecutionOrderSort2 (0ms)
-		AwakeInstancesAfterBackupRestoration (19ms)
-Refreshing native plugins compatible for Editor in 15.27 ms, found 5 plugins.
+		AwakeInstancesAfterBackupRestoration (24ms)
+Refreshing native plugins compatible for Editor in 13.76 ms, found 5 plugins.
 Preloading 0 native plugins for Editor in 0.00 ms.
 Unloading 17 Unused Serialized files (Serialized files now loaded: 0)
-Unloading 9447 unused Assets / (5.2 MB). Loaded Objects now: 10278.
-Memory consumption went from 194.9 MB to 189.7 MB.
-Total: 14.922700 ms (FindLiveObjects: 1.391400 ms CreateObjectMapping: 1.203000 ms MarkObjects: 8.384100 ms  DeleteObjects: 3.942800 ms)
+Unloading 9448 unused Assets / (5.5 MB). Loaded Objects now: 10365.
+Memory consumption went from 197.2 MB to 191.7 MB.
+Total: 15.953600 ms (FindLiveObjects: 1.457800 ms CreateObjectMapping: 1.504800 ms MarkObjects: 8.388600 ms  DeleteObjects: 4.600500 ms)
 
 Prepare: number of updated asset objects reloaded= 0
 ========================================================================
-Received Import Request.
-  Time since last request: 31034.257185 seconds.
-  path: Assets/Scripts/NewMonoBehaviourScript.cs
-  artifactKey: Guid(0cac3413f5194cc4689cf3cfc355cd03) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Scripts/NewMonoBehaviourScript.cs using Guid(0cac3413f5194cc4689cf3cfc355cd03) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '2d357674aba3467b3a6a71e0f33ccbfb') in 0.0066891 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 0
-
-========================================================================
-Received Import Request.
-  Time since last request: 1.613912 seconds.
-  path: Assets/Scripts/MiniMapFollow.cs
-  artifactKey: Guid(7bfac06b03e4cca47a70dd41fee8d81c) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
-Start importing Assets/Scripts/MiniMapFollow.cs using Guid(7bfac06b03e4cca47a70dd41fee8d81c) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (artifact id: '40941228b0ad0587a1873cfec68eab7c') in 0.1366927 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 0
-
-========================================================================
 Received Prepare
-Refreshing native plugins compatible for Editor in 15.84 ms, found 5 plugins.
-Preloading 0 native plugins for Editor in 0.00 ms.
-Unloading 17 Unused Serialized files (Serialized files now loaded: 0)
-Unloading 9383 unused Assets / (6.2 MB). Loaded Objects now: 10280.
-Memory consumption went from 195.6 MB to 189.4 MB.
-Total: 18.269300 ms (FindLiveObjects: 1.485800 ms CreateObjectMapping: 1.297500 ms MarkObjects: 8.818400 ms  DeleteObjects: 6.665600 ms)
-
-Prepare: number of updated asset objects reloaded= 0
-========================================================================
-Received Import Request.
-  Time since last request: 7.129735 seconds.
-  path: Assets/Scripts/BeltData.cs
-  artifactKey: Guid(0cac3413f5194cc4689cf3cfc355cd03) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Scripts/BeltData.cs using Guid(0cac3413f5194cc4689cf3cfc355cd03) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '0af9a13570c8ac4e39f94bc9bdd3f975') in 0.0009585 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 0
-
-========================================================================
-Received Prepare
+[Licensing::Client] Successfully resolved entitlement details
 Begin MonoManager ReloadAssembly
+[Licensing::Client] Successfully resolved entitlement details
 Duplicate assembly 'log4net.dll' with different versions detected, using 'Packages/com.unity.package-validation-suite/Lib/Editor/log4net.dll, AssemblyName=log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a' and ignoring 'Packages/com.unity.collab-proxy/Lib/Editor/log4netPlastic.dll, AssemblyName=log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a'.Symbol file LoadedFromMemory is not a mono symbol file
-- Loaded All Assemblies, in  1.703 seconds
+- Loaded All Assemblies, in  1.305 seconds
 Refreshing native plugins compatible for Editor in 14.25 ms, found 5 plugins.
 Native extension for Android target not found
 Native extension for WindowsStandalone target not found
@@ -357,55 +591,53 @@ Native extension for WindowsStandalone target not found
 [Package Manager] Cannot connect to Unity Package Manager local server
 ScheduleIndexationOnStartup MainProcess:False IndexOnStartup:True
 Mono: successfully reloaded assembly
-- Finished resetting the current domain, in  1.793 seconds
-Domain Reload Profiling: 3498ms
-	BeginReloadAssembly (351ms)
+- Finished resetting the current domain, in  1.319 seconds
+Domain Reload Profiling: 2627ms
+	BeginReloadAssembly (321ms)
 		ExecutionOrderSort (0ms)
-		DisableScriptedObjects (24ms)
+		DisableScriptedObjects (20ms)
 		BackupInstance (0ms)
 		ReleaseScriptingObjects (0ms)
-		CreateAndSetChildDomain (76ms)
-	RebuildCommonClasses (65ms)
-	RebuildNativeTypeToScriptingClass (28ms)
-	initialDomainReloadingComplete (41ms)
-	LoadAllAssembliesAndSetupDomain (1218ms)
-		LoadAssemblies (867ms)
+		CreateAndSetChildDomain (73ms)
+	RebuildCommonClasses (53ms)
+	RebuildNativeTypeToScriptingClass (22ms)
+	initialDomainReloadingComplete (43ms)
+	LoadAllAssembliesAndSetupDomain (870ms)
+		LoadAssemblies (637ms)
 		RebuildTransferFunctionScriptingTraits (0ms)
-		AnalyzeDomain (511ms)
-			TypeCache.Refresh (21ms)
-				TypeCache.ScanAssembly (3ms)
-			BuildScriptInfoCaches (462ms)
-			ResolveRequiredComponents (22ms)
-	FinalizeReload (1794ms)
+		AnalyzeDomain (377ms)
+			TypeCache.Refresh (10ms)
+				TypeCache.ScanAssembly (0ms)
+			BuildScriptInfoCaches (342ms)
+			ResolveRequiredComponents (19ms)
+	FinalizeReload (1319ms)
 		ReleaseScriptCaches (0ms)
 		RebuildScriptCaches (0ms)
-		SetupLoadedEditorAssemblies (1383ms)
+		SetupLoadedEditorAssemblies (1061ms)
 			LogAssemblyErrors (0ms)
-			InitializePlatformSupportModulesInManaged (27ms)
+			InitializePlatformSupportModulesInManaged (11ms)
 			SetLoadedEditorAssemblies (9ms)
-			BeforeProcessingInitializeOnLoad (349ms)
-			ProcessInitializeOnLoadAttributes (703ms)
-			ProcessInitializeOnLoadMethodAttributes (291ms)
-			AfterProcessingInitializeOnLoad (4ms)
+			BeforeProcessingInitializeOnLoad (256ms)
+			ProcessInitializeOnLoadAttributes (540ms)
+			ProcessInitializeOnLoadMethodAttributes (242ms)
+			AfterProcessingInitializeOnLoad (3ms)
 			EditorAssembliesLoaded (1ms)
 		ExecutionOrderSort2 (0ms)
-		AwakeInstancesAfterBackupRestoration (26ms)
-Refreshing native plugins compatible for Editor in 16.86 ms, found 5 plugins.
+		AwakeInstancesAfterBackupRestoration (19ms)
+Refreshing native plugins compatible for Editor in 14.53 ms, found 5 plugins.
 Preloading 0 native plugins for Editor in 0.00 ms.
 Unloading 17 Unused Serialized files (Serialized files now loaded: 0)
-Unloading 9447 unused Assets / (5.5 MB). Loaded Objects now: 10286.
-Memory consumption went from 195.7 MB to 190.3 MB.
-Total: 19.855100 ms (FindLiveObjects: 1.497900 ms CreateObjectMapping: 1.279700 ms MarkObjects: 10.520100 ms  DeleteObjects: 6.554900 ms)
+Unloading 9448 unused Assets / (5.3 MB). Loaded Objects now: 10371.
+Memory consumption went from 197.3 MB to 192.0 MB.
+Total: 14.151200 ms (FindLiveObjects: 1.319000 ms CreateObjectMapping: 0.939400 ms MarkObjects: 7.580800 ms  DeleteObjects: 4.311000 ms)
 
 Prepare: number of updated asset objects reloaded= 0
 ========================================================================
 Received Prepare
-[Licensing::Client] Successfully resolved entitlement details
 Begin MonoManager ReloadAssembly
-[Licensing::Client] Successfully resolved entitlement details
 Duplicate assembly 'log4net.dll' with different versions detected, using 'Packages/com.unity.package-validation-suite/Lib/Editor/log4net.dll, AssemblyName=log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a' and ignoring 'Packages/com.unity.collab-proxy/Lib/Editor/log4netPlastic.dll, AssemblyName=log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a'.Symbol file LoadedFromMemory is not a mono symbol file
-- Loaded All Assemblies, in  1.492 seconds
-Refreshing native plugins compatible for Editor in 16.23 ms, found 5 plugins.
+- Loaded All Assemblies, in  1.317 seconds
+Refreshing native plugins compatible for Editor in 14.25 ms, found 5 plugins.
 Native extension for Android target not found
 Native extension for WindowsStandalone target not found
 [Package Manager] Failed to launch server process. Reason: Unity was launched with the -noUpm command-line argument
@@ -419,64 +651,392 @@ Native extension for WindowsStandalone target not found
 [Package Manager] Cannot connect to Unity Package Manager local server
 ScheduleIndexationOnStartup MainProcess:False IndexOnStartup:True
 Mono: successfully reloaded assembly
-- Finished resetting the current domain, in  1.567 seconds
-Domain Reload Profiling: 3062ms
-	BeginReloadAssembly (353ms)
+- Finished resetting the current domain, in  1.290 seconds
+Domain Reload Profiling: 2610ms
+	BeginReloadAssembly (312ms)
 		ExecutionOrderSort (0ms)
-		DisableScriptedObjects (25ms)
+		DisableScriptedObjects (19ms)
 		BackupInstance (0ms)
 		ReleaseScriptingObjects (0ms)
-		CreateAndSetChildDomain (71ms)
-	RebuildCommonClasses (55ms)
-	RebuildNativeTypeToScriptingClass (29ms)
-	initialDomainReloadingComplete (42ms)
-	LoadAllAssembliesAndSetupDomain (1017ms)
-		LoadAssemblies (691ms)
+		CreateAndSetChildDomain (70ms)
+	RebuildCommonClasses (52ms)
+	RebuildNativeTypeToScriptingClass (22ms)
+	initialDomainReloadingComplete (39ms)
+	LoadAllAssembliesAndSetupDomain (894ms)
+		LoadAssemblies (644ms)
 		RebuildTransferFunctionScriptingTraits (0ms)
-		AnalyzeDomain (480ms)
-			TypeCache.Refresh (21ms)
-				TypeCache.ScanAssembly (3ms)
-			BuildScriptInfoCaches (434ms)
-			ResolveRequiredComponents (20ms)
-	FinalizeReload (1567ms)
+		AnalyzeDomain (395ms)
+			TypeCache.Refresh (10ms)
+				TypeCache.ScanAssembly (0ms)
+			BuildScriptInfoCaches (357ms)
+			ResolveRequiredComponents (22ms)
+	FinalizeReload (1290ms)
 		ReleaseScriptCaches (0ms)
 		RebuildScriptCaches (0ms)
-		SetupLoadedEditorAssemblies (1271ms)
+		SetupLoadedEditorAssemblies (1037ms)
 			LogAssemblyErrors (0ms)
-			InitializePlatformSupportModulesInManaged (12ms)
+			InitializePlatformSupportModulesInManaged (11ms)
 			SetLoadedEditorAssemblies (8ms)
-			BeforeProcessingInitializeOnLoad (279ms)
-			ProcessInitializeOnLoadAttributes (670ms)
-			ProcessInitializeOnLoadMethodAttributes (296ms)
-			AfterProcessingInitializeOnLoad (5ms)
+			BeforeProcessingInitializeOnLoad (240ms)
+			ProcessInitializeOnLoadAttributes (548ms)
+			ProcessInitializeOnLoadMethodAttributes (225ms)
+			AfterProcessingInitializeOnLoad (3ms)
 			EditorAssembliesLoaded (1ms)
 		ExecutionOrderSort2 (0ms)
-		AwakeInstancesAfterBackupRestoration (25ms)
-Refreshing native plugins compatible for Editor in 22.18 ms, found 5 plugins.
+		AwakeInstancesAfterBackupRestoration (19ms)
+Refreshing native plugins compatible for Editor in 14.43 ms, found 5 plugins.
 Preloading 0 native plugins for Editor in 0.00 ms.
 Unloading 17 Unused Serialized files (Serialized files now loaded: 0)
-Unloading 9447 unused Assets / (5.1 MB). Loaded Objects now: 10292.
-Memory consumption went from 195.8 MB to 190.6 MB.
-Total: 18.082700 ms (FindLiveObjects: 1.610800 ms CreateObjectMapping: 2.019900 ms MarkObjects: 8.789600 ms  DeleteObjects: 5.660700 ms)
+Unloading 9448 unused Assets / (5.0 MB). Loaded Objects now: 10377.
+Memory consumption went from 197.3 MB to 192.3 MB.
+Total: 13.987800 ms (FindLiveObjects: 1.347500 ms CreateObjectMapping: 0.973400 ms MarkObjects: 7.624500 ms  DeleteObjects: 4.041300 ms)
+
+Prepare: number of updated asset objects reloaded= 0
+========================================================================
+Received Prepare
+[Licensing::Client] Successfully resolved entitlement details
+Begin MonoManager ReloadAssembly
+[Licensing::Client] Successfully resolved entitlement details
+Duplicate assembly 'log4net.dll' with different versions detected, using 'Packages/com.unity.package-validation-suite/Lib/Editor/log4net.dll, AssemblyName=log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a' and ignoring 'Packages/com.unity.collab-proxy/Lib/Editor/log4netPlastic.dll, AssemblyName=log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a'.Symbol file LoadedFromMemory is not a mono symbol file
+- Loaded All Assemblies, in  1.292 seconds
+Refreshing native plugins compatible for Editor in 14.51 ms, found 5 plugins.
+Native extension for Android target not found
+Native extension for WindowsStandalone target not found
+[Package Manager] Failed to launch server process. Reason: Unity was launched with the -noUpm command-line argument
+[Package Manager] Unable to send message (not connected to server process).
+[Package Manager] Cannot connect to Unity Package Manager local server
+[Package Manager] Failed to launch server process. Reason: Unity was launched with the -noUpm command-line argument
+[Package Manager] Unable to send message (not connected to server process).
+[Package Manager] Cannot connect to Unity Package Manager local server
+[Package Manager] Failed to launch server process. Reason: Unity was launched with the -noUpm command-line argument
+[Package Manager] Unable to send message (not connected to server process).
+[Package Manager] Cannot connect to Unity Package Manager local server
+ScheduleIndexationOnStartup MainProcess:False IndexOnStartup:True
+Mono: successfully reloaded assembly
+- Finished resetting the current domain, in  1.305 seconds
+Domain Reload Profiling: 2601ms
+	BeginReloadAssembly (313ms)
+		ExecutionOrderSort (0ms)
+		DisableScriptedObjects (20ms)
+		BackupInstance (0ms)
+		ReleaseScriptingObjects (0ms)
+		CreateAndSetChildDomain (69ms)
+	RebuildCommonClasses (51ms)
+	RebuildNativeTypeToScriptingClass (22ms)
+	initialDomainReloadingComplete (39ms)
+	LoadAllAssembliesAndSetupDomain (870ms)
+		LoadAssemblies (636ms)
+		RebuildTransferFunctionScriptingTraits (0ms)
+		AnalyzeDomain (375ms)
+			TypeCache.Refresh (10ms)
+				TypeCache.ScanAssembly (0ms)
+			BuildScriptInfoCaches (340ms)
+			ResolveRequiredComponents (19ms)
+	FinalizeReload (1306ms)
+		ReleaseScriptCaches (0ms)
+		RebuildScriptCaches (0ms)
+		SetupLoadedEditorAssemblies (1056ms)
+			LogAssemblyErrors (0ms)
+			InitializePlatformSupportModulesInManaged (11ms)
+			SetLoadedEditorAssemblies (7ms)
+			BeforeProcessingInitializeOnLoad (245ms)
+			ProcessInitializeOnLoadAttributes (546ms)
+			ProcessInitializeOnLoadMethodAttributes (240ms)
+			AfterProcessingInitializeOnLoad (6ms)
+			EditorAssembliesLoaded (1ms)
+		ExecutionOrderSort2 (0ms)
+		AwakeInstancesAfterBackupRestoration (22ms)
+Refreshing native plugins compatible for Editor in 14.22 ms, found 5 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 17 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 9448 unused Assets / (5.1 MB). Loaded Objects now: 10383.
+Memory consumption went from 197.4 MB to 192.3 MB.
+Total: 15.059300 ms (FindLiveObjects: 1.416400 ms CreateObjectMapping: 1.430200 ms MarkObjects: 8.148400 ms  DeleteObjects: 4.062700 ms)
 
 Prepare: number of updated asset objects reloaded= 0
 ========================================================================
 Received Import Request.
-  Time since last request: 30.711394 seconds.
-  path: Assets/Scripts/BeltData.cs
-  artifactKey: Guid(0cac3413f5194cc4689cf3cfc355cd03) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Scripts/BeltData.cs using Guid(0cac3413f5194cc4689cf3cfc355cd03) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'd75a19c8cdf5422e8a306b1377f6e658') in 0.0030101 seconds
+  Time since last request: 533.232297 seconds.
+  path: Assets/Resources/Villagers/MiniNobleMan.png
+  artifactKey: Guid(a8a3e02ff0c3ae8409d22d9b6eca43a8) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Villagers/MiniNobleMan.png using Guid(a8a3e02ff0c3ae8409d22d9b6eca43a8) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '9a6a49473a19065d94a33937fcefd90a') in 0.6109821 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5041
+
+========================================================================
+Received Import Request.
+  Time since last request: 1.952137 seconds.
+  path: Assets/Bridge_0.asset
+  artifactKey: Guid(e5ef9d74fe8615e4b9be01afbb182e0e) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Bridge_0.asset using Guid(e5ef9d74fe8615e4b9be01afbb182e0e) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '231d8fca3705efa4cbb5d7d7e7d16b96') in 0.4679473 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5041
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000026 seconds.
+  path: Assets/New Sprite Atlas.spriteatlasv2
+  artifactKey: Guid(f31d293d6555e6842a1c4d03a09a9555) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/New Sprite Atlas.spriteatlasv2 using Guid(f31d293d6555e6842a1c4d03a09a9555) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '2c1624c842d108b69ca796685a10d625') in 0.0115572 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 2
+
+========================================================================
+Received Import Request.
+  Time since last request: 64.971616 seconds.
+  path: Assets/Medieval Tools & Weapons Package Free
+  artifactKey: Guid(613f10f72e20c6b4bb3232b0ad010e6e) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Medieval Tools & Weapons Package Free using Guid(613f10f72e20c6b4bb3232b0ad010e6e) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '4cec86159a48e223d2c8e63b77006313') in 0.0015167 seconds
 Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 0
 
 ========================================================================
 Received Import Request.
-  Time since last request: 1.664396 seconds.
-  path: Assets/Prefabs/GoldPopup_Prefab.prefab
-  artifactKey: Guid(3e87bbc5133b9d5459204c72532fd674) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Prefabs/GoldPopup_Prefab.prefab using Guid(3e87bbc5133b9d5459204c72532fd674) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '38b571ffe338feb31c47e90acce0cb18') in 9.550764 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5061
+  Time since last request: 1.179583 seconds.
+  path: Assets/Medieval Tools & Weapons Package Free/Sprites
+  artifactKey: Guid(afd1e9855b1754647bda01dc724907bd) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Medieval Tools & Weapons Package Free/Sprites using Guid(afd1e9855b1754647bda01dc724907bd) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'c26348fc1986505b7c66bc3d4aee9012') in 0.0019244 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 0
 
-Editor requested this worker to shutdown with reason: Scaling down because of idle timeout
-AssetImportWorker is now disconnected from the server
-Process exiting
-Exiting without the bug reporter. Application will terminate with return code 0
+========================================================================
+Received Import Request.
+  Time since last request: 0.000021 seconds.
+  path: Assets/Medieval Tools & Weapons Package Free/Sprites/Tools & Weapons - Iron.png
+  artifactKey: Guid(b852b9315af08ac40bfb961c9b3c28c9) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Medieval Tools & Weapons Package Free/Sprites/Tools & Weapons - Iron.png using Guid(b852b9315af08ac40bfb961c9b3c28c9) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'd44607951d87e294cf7427db84c77798') in 0.6501452 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5041
+
+========================================================================
+Received Import Request.
+  Time since last request: 421.727218 seconds.
+  path: Assets/Resources/Hp_Line.png
+  artifactKey: Guid(47902c081f8418c469bf5c7416e3f222) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/Resources/Hp_Line.png using Guid(47902c081f8418c469bf5c7416e3f222) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (artifact id: 'f2a3441dcfe2e759bbbfce211bb914f0') in 0.1659157 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5
+
+========================================================================
+Received Import Request.
+  Time since last request: 2.039254 seconds.
+  path: Assets/Animation/Weapons/Glefa
+  artifactKey: Guid(348fd9470eead1749b08c5411649f548) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Animation/Weapons/Glefa using Guid(348fd9470eead1749b08c5411649f548) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '574e239656f985ae2a5f39757b25dd77') in 0.0006426 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 0
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.806417 seconds.
+  path: Assets/Animation/Weapons/Glefa
+  artifactKey: Guid(348fd9470eead1749b08c5411649f548) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/Animation/Weapons/Glefa using Guid(348fd9470eead1749b08c5411649f548) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (artifact id: 'd3c59709ca39b686b9bb8f9c731d5d81') in 0.011658 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
+
+========================================================================
+Received Import Request.
+  Time since last request: 4.130164 seconds.
+  path: Assets/Animation/Weapons/Glefa/glefa.png
+  artifactKey: Guid(9c85f747e15a6f545b557508e2a0542d) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Animation/Weapons/Glefa/glefa.png using Guid(9c85f747e15a6f545b557508e2a0542d) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '5f288f09682390ef904af6978db663ee') in 0.0285555 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 7
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.269862 seconds.
+  path: Assets/Animation/Weapons/Glefa/glefa.png
+  artifactKey: Guid(9c85f747e15a6f545b557508e2a0542d) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/Animation/Weapons/Glefa/glefa.png using Guid(9c85f747e15a6f545b557508e2a0542d) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (artifact id: '0e3d826c4884b24a5d05b4571cd0be85') in 0.0744865 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 7
+
+========================================================================
+Received Import Request.
+  Time since last request: 7.924729 seconds.
+  path: Assets/Animation/Weapons/Bow
+  artifactKey: Guid(3e308970f3ffa024eb6ebc5b1026edab) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Animation/Weapons/Bow using Guid(3e308970f3ffa024eb6ebc5b1026edab) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '952217074f4bfef6ca239600ff026803') in 0.0009427 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 0
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.849603 seconds.
+  path: Assets/Animation/Weapons/Glefa/glefa.png
+  artifactKey: Guid(9c85f747e15a6f545b557508e2a0542d) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/Animation/Weapons/Glefa/glefa.png using Guid(9c85f747e15a6f545b557508e2a0542d) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (artifact id: '4c27be42980022d95e8816965de99c46') in 0.0196768 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 7
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.589350 seconds.
+  path: Assets/Animation/Weapons/Bow/Arrow.prefab
+  artifactKey: Guid(1b121cdfa7edb494a929a046749d284a) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Animation/Weapons/Bow/Arrow.prefab using Guid(1b121cdfa7edb494a929a046749d284a) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '072073a9972420a48e3c3e46a1c61803') in 0.9684071 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5048
+
+========================================================================
+Received Import Request.
+  Time since last request: 6.795733 seconds.
+  path: Assets/Animation/Weapons/Glefa/glefa.png
+  artifactKey: Guid(9c85f747e15a6f545b557508e2a0542d) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Animation/Weapons/Glefa/glefa.png using Guid(9c85f747e15a6f545b557508e2a0542d) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '10301ad5d5e90eb4175f8fef6dc04c56') in 0.0149291 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 7
+
+========================================================================
+Received Import Request.
+  Time since last request: 4.890688 seconds.
+  path: Assets/Animation/Weapons/Glefa/glefa.png
+  artifactKey: Guid(9c85f747e15a6f545b557508e2a0542d) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Animation/Weapons/Glefa/glefa.png using Guid(9c85f747e15a6f545b557508e2a0542d) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '51ffade502c2e5f73a1522934940d12e') in 0.0379312 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 7
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.842725 seconds.
+  path: Assets/Animation/Weapons/Glefa/glefa.png
+  artifactKey: Guid(9c85f747e15a6f545b557508e2a0542d) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/Animation/Weapons/Glefa/glefa.png using Guid(9c85f747e15a6f545b557508e2a0542d) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (artifact id: 'e9b23a68de5f3364a8ff579ffbb63d78') in 0.018922 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 7
+
+========================================================================
+Received Import Request.
+  Time since last request: 17.650622 seconds.
+  path: Assets/Animation/Weapons/Glefa/Glefa_Idle.anim
+  artifactKey: Guid(8ce3a997a9c8785489dec4bee9fabe33) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/Animation/Weapons/Glefa/Glefa_Idle.anim using Guid(8ce3a997a9c8785489dec4bee9fabe33) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (artifact id: '11e7a28b05281fea6e7ee1249d22d2aa') in 0.0207183 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
+
+========================================================================
+Received Import Request.
+  Time since last request: 14.923551 seconds.
+  path: Assets/Animation/Weapons/Glefa/Glefa_Attack.anim
+  artifactKey: Guid(a231a2d4dbe27f44eaadf5c4ca559ded) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/Animation/Weapons/Glefa/Glefa_Attack.anim using Guid(a231a2d4dbe27f44eaadf5c4ca559ded) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (artifact id: '95f8cc839559d796d442420932091b94') in 0.0118646 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
+
+========================================================================
+Received Import Request.
+  Time since last request: 2.474391 seconds.
+  path: Assets/Animation/Weapons/Axe/Axe.prefab
+  artifactKey: Guid(99724bea5f7384c43bdc4d24a9a54702) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Animation/Weapons/Axe/Axe.prefab using Guid(99724bea5f7384c43bdc4d24a9a54702) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'c64bcd48a6579ab4341057d2142e0dc7') in 0.020585 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 26
+
+========================================================================
+Received Import Request.
+  Time since last request: 88.003649 seconds.
+  path: Assets/Animation/Weapons/Glefa/Glefa.controller
+  artifactKey: Guid(ac0d0c5d0e0432b42b78cc10efbff8a0) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/Animation/Weapons/Glefa/Glefa.controller using Guid(ac0d0c5d0e0432b42b78cc10efbff8a0) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (artifact id: '8647f8fc391dc69c3899d7022988c3fb') in 0.0130817 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 8
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000028 seconds.
+  path: Assets/Scenes/Game.unity
+  artifactKey: Guid(8c9cfa26abfee488c85f1582747f6a02) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/Scenes/Game.unity using Guid(8c9cfa26abfee488c85f1582747f6a02) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (artifact id: '5f0c307c02d221f91450bba6e62859c9') in 0.4274072 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
+
+========================================================================
+Received Import Request.
+  Time since last request: 25.078998 seconds.
+  path: Assets/Animation/Weapons/Glefa/Glefa.controller
+  artifactKey: Guid(ac0d0c5d0e0432b42b78cc10efbff8a0) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Animation/Weapons/Glefa/Glefa.controller using Guid(ac0d0c5d0e0432b42b78cc10efbff8a0) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '5ff745eff243f739dc73d426c5d7050f') in 0.0020357 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 8
+
+========================================================================
+Received Import Request.
+  Time since last request: 5.476350 seconds.
+  path: Assets/Animation/Weapons/Glefa/Glefa.controller
+  artifactKey: Guid(ac0d0c5d0e0432b42b78cc10efbff8a0) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/Animation/Weapons/Glefa/Glefa.controller using Guid(ac0d0c5d0e0432b42b78cc10efbff8a0) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (artifact id: '9d6c50f1cc885f86d507db2eb2c6b5d5') in 0.0132201 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 8
+
+========================================================================
+Received Import Request.
+  Time since last request: 62.422108 seconds.
+  path: Assets/Resources/Tower/Dungeon_Tileset (2).png
+  artifactKey: Guid(fcea670019b698449887342c5c558606) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Tower/Dungeon_Tileset (2).png using Guid(fcea670019b698449887342c5c558606) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'cb3316137e1e67fb40b3731d68922d68') in 1.0550479 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5041
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.056147 seconds.
+  path: Assets/Resources/Tower/Dungeon3.png
+  artifactKey: Guid(92a5cf1947a23b44aad93710557eebec) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Tower/Dungeon3.png using Guid(92a5cf1947a23b44aad93710557eebec) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '849598c6c75b6c21f46ff1dda3e52fb1') in 1.3310772 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5041
+
+========================================================================
+Received Import Request.
+  Time since last request: 10.713111 seconds.
+  path: Assets/Resources/Items/DataAxe 1.asset
+  artifactKey: Guid(ec867e94f6b72e14185d87d006259cea) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Items/DataAxe 1.asset using Guid(ec867e94f6b72e14185d87d006259cea) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '23d34b6294430143d26dd3ba3b4ee234') in 0.0027535 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 14
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.845657 seconds.
+  path: Assets/Resources/Items/DataAxe 1.asset
+  artifactKey: Guid(ec867e94f6b72e14185d87d006259cea) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/Resources/Items/DataAxe 1.asset using Guid(ec867e94f6b72e14185d87d006259cea) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (artifact id: '6e08bede08bc113c9c2de1be9362dda7') in 0.0398162 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 14
+
+========================================================================
+Received Import Request.
+  Time since last request: 7.662132 seconds.
+  path: Assets/Resources/Items/GlefaData.asset
+  artifactKey: Guid(ec867e94f6b72e14185d87d006259cea) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Items/GlefaData.asset using Guid(ec867e94f6b72e14185d87d006259cea) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '1efd23fb28e4439a21efe8f0a6bf6266') in 0.002964 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 14
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.852928 seconds.
+  path: Assets/Resources/Items/GlefaData.asset
+  artifactKey: Guid(ec867e94f6b72e14185d87d006259cea) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/Resources/Items/GlefaData.asset using Guid(ec867e94f6b72e14185d87d006259cea) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (artifact id: '38ebf7ba8aca4e932b53b96e561d277d') in 0.0130569 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 14
+
+========================================================================
+Received Import Request.
+  Time since last request: 8.971481 seconds.
+  path: Assets/Resources/Tower/Dungeon_Tileset (2).png
+  artifactKey: Guid(fcea670019b698449887342c5c558606) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Tower/Dungeon_Tileset (2).png using Guid(fcea670019b698449887342c5c558606) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '5321ab31269e2c52b894471bb45fc4be') in 1.2396066 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5041
+
+========================================================================
+Received Import Request.
+  Time since last request: 31.287071 seconds.
+  path: Assets/Resources/Items/GlefaData.asset
+  artifactKey: Guid(ec867e94f6b72e14185d87d006259cea) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Items/GlefaData.asset using Guid(ec867e94f6b72e14185d87d006259cea) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '243d3d6ee75d9ac4fb8e7c35b04afb9d') in 0.035855 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 15
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000029 seconds.
+  path: Assets/Resources/Items/GlefaData.asset
+  artifactKey: Guid(ec867e94f6b72e14185d87d006259cea) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/Resources/Items/GlefaData.asset using Guid(ec867e94f6b72e14185d87d006259cea) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (artifact id: 'a877c9a44a7eaaac5b838ab70e522021') in 0.0141406 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 15
+
+========================================================================
+Received Import Request.
+  Time since last request: 9.395936 seconds.
+  path: Assets/Animation/Weapons/Glefa/Glefa.prefab
+  artifactKey: Guid(9cf273d6488c1eb4db5289133b8e74ed) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Animation/Weapons/Glefa/Glefa.prefab using Guid(9cf273d6488c1eb4db5289133b8e74ed) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'd189e398ad54b0360afc7b5bdb9928e8') in 0.0558613 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 44
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.838467 seconds.
+  path: Assets/Animation/Weapons/Glefa/Glefa.prefab
+  artifactKey: Guid(9cf273d6488c1eb4db5289133b8e74ed) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/Animation/Weapons/Glefa/Glefa.prefab using Guid(9cf273d6488c1eb4db5289133b8e74ed) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (artifact id: '0ce65b664194ac0988123021cdcc08f8') in 0.0643446 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 32
+
+========================================================================
+Received Import Request.
+  Time since last request: 13.297192 seconds.
+  path: Assets/Animation/Fish/FishingPrefab.prefab
+  artifactKey: Guid(d3f05c13e11ca194a8ce21f8b532ca60) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Animation/Fish/FishingPrefab.prefab using Guid(d3f05c13e11ca194a8ce21f8b532ca60) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter)
