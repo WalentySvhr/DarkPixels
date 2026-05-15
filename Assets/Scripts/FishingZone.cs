@@ -112,6 +112,20 @@ public class FishingZone : MonoBehaviour
                 {
                     Debug.LogWarning("LootPopupManager не знайдено на сцені!");
                 }
+
+                // --- НОВЕ: ЗВІТУЄМО ПРО ВИЛОВЛЕНУ РИБУ В ДЕЙЛІКИ ---
+                if (DailyQuestManager.Instance != null)
+                {
+                    // Зараховуємо будь-яку спійману рибу в квест "Тихе полювання"
+                    DailyQuestManager.Instance.AddProgress(DailyQuestType.CatchFish, 1);
+
+                    // Якщо у тебе в класі Item є перевірка на рідкість, можеш додати це:
+                    // if (caughtItem.rarity == ItemRarity.Rare) // або як у тебе це називається
+                    // {
+                    //     DailyQuestManager.Instance.AddProgress(DailyQuestType.CatchRareFish, 1);
+                    // }
+                }
+                // ----------------------------------------------------
             }
             else
             {

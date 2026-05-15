@@ -62,6 +62,7 @@ public class DailyQuestManager : MonoBehaviour
     }
 
     // Забрати нагороду (викликається кнопкою в UI)
+
     public void ClaimReward(int questIndex)
     {
         if (questIndex < 0 || questIndex >= activeDailies.Count) return;
@@ -72,9 +73,18 @@ public class DailyQuestManager : MonoBehaviour
         {
             quest.isRewardClaimed = true;
 
-            // ТУТ ДОДАЙ СВІЙ КОД ВИДАЧІ ЗОЛОТА ГРАВЦЮ
-            // Наприклад: PlayerInventory.Instance.AddGold(quest.questData.goldReward);
-            Debug.Log($"Отримано нагороду: {quest.questData.goldReward} монет за {quest.questData.questName}");
+            // --- ДОДАЄМО МОНЕТИ ГРАВЦЮ ---
+            if (InventoryManager.Instance != null)
+            {
+                // Викликаємо твій метод ChangeCoins і передаємо суму нагороди з SO
+                InventoryManager.Instance.ChangeCoins(quest.questData.goldReward);
+                Debug.Log($"Отримано нагороду: {quest.questData.goldReward} монет за {quest.questData.questName}");
+            }
+            else
+            {
+                Debug.LogError("InventoryManager.Instance не знайдено! Нагороду не видано.");
+            }
+            // ------------------------------
 
             SaveDailiesProgress();
         }

@@ -97,6 +97,14 @@ public class ShopManager : MonoBehaviour
             if (playerInv.Add(item))
             {
                 playerInv.ChangeCoins(-item.price);
+
+                // --- НОВЕ: Звіт для дейліків (витрата золота) ---
+                if (DailyQuestManager.Instance != null)
+                {
+                    DailyQuestManager.Instance.AddProgress(DailyQuestType.SpendGold, item.price);
+                }
+                // ------------------------------------------------
+
                 RefreshShop();
             }
             else
@@ -120,6 +128,14 @@ public class ShopManager : MonoBehaviour
 
         playerInv.Remove(item);
         playerInv.ChangeCoins(sellPrice);
+
+        // --- НОВЕ: Звіт для дейліків (продаж ресурсів) ---
+        if (DailyQuestManager.Instance != null)
+        {
+            DailyQuestManager.Instance.AddProgress(DailyQuestType.SellResources, sellPrice);
+        }
+        // -------------------------------------------------
+
         RefreshShop();
     }
 }

@@ -206,7 +206,15 @@ public class TowerManager : MonoBehaviour
     {
         if (TowerUIManager.Instance != null)
             TowerUIManager.Instance.ShowNotification(floorClearedMessage);
+
         if (bossTrigger != null) bossTrigger.ActivateExitDoor();
+
+        // --- НОВЕ: ЗВІТ ДЛЯ ДЕЙЛІКІВ (Квест Альпініст) ---
+        if (DailyQuestManager.Instance != null)
+        {
+            DailyQuestManager.Instance.AddProgress(DailyQuestType.ClearTowerFloors, 1);
+        }
+        // ------------------------------------------------
     }
 
     public void ResetTowerProgress()
