@@ -40,6 +40,10 @@ public class EnemyHealth : MonoBehaviour
     [Tooltip("Список Target ID квестів, які можуть випасти саме з цього моба")]
     public List<string> allowedQuestItemIDs = new List<string>();
 
+    [Header("Daily Quest Settings")]
+    [Tooltip("Поставте галочку, якщо цей моб - елітний/міні-бос")]
+    public bool isElite = false; // НОВЕ: Для квесту "Мисливець за головами"
+
     void Start()
     {
         if (animator == null) animator = GetComponent<Animator>();
@@ -90,7 +94,6 @@ public class EnemyHealth : MonoBehaviour
         EnemyAI ai = GetComponent<EnemyAI>();
         if (ai != null)
         {
-            // Метод ШІ тепер сам розбереться із зупинкою руху (Hit Stun)
             ai.OnTakeDamage();
         }
 
@@ -142,19 +145,17 @@ public class EnemyHealth : MonoBehaviour
         EnemyAI ai = GetComponent<EnemyAI>();
         if (ai != null)
         {
-            ai.StopAllCoroutines(); // Зупиняємо корутину HitStunRoutine, якщо вона ще йде
+            ai.StopAllCoroutines();
             ai.enabled = false;
         }
 
-        // --- НОВЕ: Зупиняємо фізику трупа ---
         Rigidbody2D rb = GetComponent<Rigidbody2D>();
         // if (rb != null)
         // {
-        //     rb.velocity = Vector2.zero; // Гасимо інерцію
-        //     rb.isKinematic = true;      // Відключаємо вплив на інші об'єкти
+        //     rb.velocity = Vector2.zero; 
+        //     rb.isKinematic = true;      
         // }
 
-        // --- НОВЕ: Ховаємо UI над трупом ---
         if (hpSlider != null) hpSlider.gameObject.SetActive(false);
         if (hpText != null) hpText.gameObject.SetActive(false);
 
@@ -166,9 +167,23 @@ public class EnemyHealth : MonoBehaviour
 
         if (lootDropper != null) lootDropper.DropLoot();
 
+        // --- Звичайні квести ---
         if (QuestManager.Instance != null)
         {
             QuestManager.Instance.OnQuestAction(QuestType.KillInTower, "");
+        }
+
+        // --- НОВЕ: Щоденні квести ---
+        if (DailyQuestManager.Instance != null)
+        {
+            // Зараховуємо вбивство звичайного моба
+            DailyQuestManager.Instance.AddProgress(DailyQuestType.KillEnemies, 1);
+
+            // Якщо це елітний ворог, зараховуємо ще й квест на елітку
+            if (isElite)
+            {
+                DailyQuestManager.Instance.AddProgress(DailyQuestType.KillElite, 1);
+            }
         }
 
         Destroy(gameObject, deathAnimationDuration);
