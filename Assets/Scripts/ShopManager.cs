@@ -129,10 +129,14 @@ public class ShopManager : MonoBehaviour
         playerInv.Remove(item);
         playerInv.ChangeCoins(sellPrice);
 
-        // --- НОВЕ: Звіт для дейліків (продаж ресурсів) ---
-        if (DailyQuestManager.Instance != null)
+        // --- ВИПРАВЛЕНО: Фільтруємо предмети перед звітом у дейліки ---
+        // Зараховуємо прогрес ТІЛЬКИ якщо тип предмета - Resource
+        if (item.type == ItemType.Resource)
         {
-            DailyQuestManager.Instance.AddProgress(DailyQuestType.SellResources, sellPrice);
+            if (DailyQuestManager.Instance != null)
+            {
+                DailyQuestManager.Instance.AddProgress(DailyQuestType.SellResources, sellPrice);
+            }
         }
         // -------------------------------------------------
 

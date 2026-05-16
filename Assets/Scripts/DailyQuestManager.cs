@@ -57,12 +57,17 @@ public class DailyQuestManager : MonoBehaviour
         if (progressChanged)
         {
             SaveDailiesProgress();
-            // Тут можна викликати оновлення UI: DailyUI.UpdateUI();
+
+            // --- НОВЕ: Оновлюємо стан кнопки-календаря ---
+            if (DailyQuestButtonUI.Instance != null)
+            {
+                DailyQuestButtonUI.Instance.RefreshButtonState();
+            }
+            // ---------------------------------------------
         }
     }
 
     // Забрати нагороду (викликається кнопкою в UI)
-
     public void ClaimReward(int questIndex)
     {
         if (questIndex < 0 || questIndex >= activeDailies.Count) return;
@@ -87,6 +92,13 @@ public class DailyQuestManager : MonoBehaviour
             // ------------------------------
 
             SaveDailiesProgress();
+
+            // --- НОВЕ: Оновлюємо стан кнопки після отримання нагороди ---
+            if (DailyQuestButtonUI.Instance != null)
+            {
+                DailyQuestButtonUI.Instance.RefreshButtonState();
+            }
+            // -----------------------------------------------------------
         }
     }
 
@@ -178,5 +190,26 @@ public class DailyQuestManager : MonoBehaviour
                 });
             }
         }
+
+        // --- НОВЕ: Перевіряємо статус кнопки відразу після завантаження ---
+        // (на випадок, якщо гравець вийшов з гри, не забравши нагороду)
+        if (DailyQuestButtonUI.Instance != null)
+        {
+            DailyQuestButtonUI.Instance.RefreshButtonState();
+        }
+        // -----------------------------------------------------------------
+    }
+
+    // Перевірка: чи є виконані, але не забрані квести?
+    public bool HasUnclaimedRewards()
+    {
+        foreach (var quest in activeDailies)
+        {
+            if (quest.isCompleted && !quest.isRewardClaimed)
+            {
+                return true; // Знайшли хоча б один такий квест!
+            }
+        }
+        return false; // Всі нагороди або забрані, або квести ще в процесі
     }
 }
