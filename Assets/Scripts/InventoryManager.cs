@@ -15,12 +15,15 @@ public class InventoryManager : MonoBehaviour
     public HotbarUI hotbarScript;
 
     [Header("Поточна екіпіровка (Універсальна система)")]
-    // --- ЗМІНЕНО: Тепер зберігаємо Item замість string, щоб повертати його в інвентар ---
     public Dictionary<string, Item> equippedItems = new Dictionary<string, Item>();
 
-    [Header("Гроші")]
+    [Header("Гроші та Валюта")]
     public int coins = 0;
     public TextMeshProUGUI[] coinTexts;
+
+    // --- НОВЕ: Змінні для преміум-валюти (Діамантів) ---
+    public int diamonds = 0;
+    public TextMeshProUGUI[] diamondTexts;
 
     [Header("Система Бафів")]
     public float coinMultiplier = 1f;
@@ -47,6 +50,7 @@ public class InventoryManager : MonoBehaviour
     void Start()
     {
         UpdateCoinUI();
+        UpdateDiamondUI(); // --- НОВЕ: Оновлюємо UI діамантів при старті ---
         UpdateUI();
         if (buffUIContainer != null) buffUIContainer.SetActive(false);
     }
@@ -79,8 +83,6 @@ public class InventoryManager : MonoBehaviour
         ItemStack stack = items.Find(s => s.item == item);
         if (stack != null)
         {
-            // МАГІЯ АНТИ-ДЮПУ: Якщо це екіпіровка (не стакається), 
-            // ми знищуємо весь запис миттєво, щоб вбити "привидів" зі старих збережень!
             if (!item.isStackable)
             {
                 items.Remove(stack);
@@ -130,19 +132,15 @@ public class InventoryManager : MonoBehaviour
         UpdateUI();
     }
 
-    // === ОЧИЩЕНА МАГІЯ ЕКІПІРУВАННЯ ===
-    // Тепер приймає просто Item, оскільки Слот сам керує видаленням/додаванням у рюкзак
     public void EquipItem(Item itemToEquip, string slotType, int slotIndex = 0)
     {
         string slotKey = slotIndex > 0 ? $"{slotType}_{slotIndex}" : slotType;
 
-        // ВАЖЛИВО: Якщо в цьому слоті вже є предмет, спочатку знімаємо його, щоб не втратити!
         if (equippedItems.ContainsKey(slotKey))
         {
             UnequipItem(slotType, slotIndex);
         }
 
-        // Просто записуємо об'єкт предмета в словник
         equippedItems[slotKey] = itemToEquip;
         Debug.Log($"[InventoryManager] В слот {slotKey} записано {itemToEquip.name}");
     }
@@ -156,12 +154,8 @@ public class InventoryManager : MonoBehaviour
             Item itemToReturn = equippedItems[slotKey];
             equippedItems.Remove(slotKey);
             Debug.Log($"[InventoryManager] Зі слота {slotKey} знято предмет: {itemToReturn.name}");
-
-            // ЗВЕРНИ УВАГУ: Ми більше НЕ викликаємо Add(itemToReturn) тут! 
-            // Це тепер робить сам InventorySlot при перетягуванні.
         }
     }
-    // ===================================
 
     public void ChangeCoins(int amount)
     {
@@ -178,6 +172,24 @@ public class InventoryManager : MonoBehaviour
             if (textElement != null) textElement.text = " " + coins;
         }
     }
+
+    // --- НОВІ МЕТОДИ: Керування балансом та відображенням діамантів ---
+    public void ChangeDiamonds(int amount)
+    {
+        diamonds += amount;
+        if (diamonds < 0) diamonds = 0;
+        UpdateDiamondUI();
+    }
+
+    public void UpdateDiamondUI()
+    {
+        if (diamondTexts == null) return;
+        foreach (TextMeshProUGUI textElement in diamondTexts)
+        {
+            if (textElement != null) textElement.text = " " + diamonds;
+        }
+    }
+    // -----------------------------------------------------------------
 
     public void UseItem(Item item)
     {

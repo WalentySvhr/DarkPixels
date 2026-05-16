@@ -9,6 +9,7 @@ public class GameData
 {
     public float posX, posY, posZ;
     public int coins;
+    public int diamonds;
     public float currentHealth;
     public List<ItemSaveEntry> backpack = new List<ItemSaveEntry>();
 
@@ -19,6 +20,11 @@ public class GameData
     public int questProgress;
     public List<FishingSpotSaveEntry> activeCooldowns = new List<FishingSpotSaveEntry>();
     public List<string> completedQuestIDs = new List<string>();
+
+    // --- НОВЕ: Збереження лімітів та таймерів реклами на діаманти ---
+    public int diamondAdsWatched;
+    public float diamondAdsCooldown;
+    public bool isDiamondAdOnCooldown;
 }
 
 [System.Serializable]
@@ -97,12 +103,12 @@ public class SaveManager : MonoBehaviour
         if (InventoryManager.Instance != null)
         {
             data.coins = InventoryManager.Instance.coins;
+            data.diamonds = InventoryManager.Instance.diamonds;
 
             // --- УНІВЕРСАЛЬНЕ ЗБЕРЕЖЕННЯ СЛОВНИКА ---
             data.equippedItems.Clear();
             foreach (var pair in InventoryManager.Instance.equippedItems)
             {
-                // ВИПРАВЛЕНО: Тепер беремо .name з об'єкта Item (pair.Value.name)
                 if (pair.Value != null)
                 {
                     data.equippedItems.Add(new EquippedItemSaveEntry { slotKey = pair.Key, itemName = pair.Value.name });
@@ -120,6 +126,12 @@ public class SaveManager : MonoBehaviour
         if (QuestManager.Instance != null)
         {
             data = QuestManager.Instance.CaptureQuestState(data);
+        }
+
+        // --- НОВЕ: Передаємо стан реклами в GameData перед записом у файл ---
+        if (AdsChecker.Instance != null)
+        {
+            data = AdsChecker.Instance.CaptureAdsState(data);
         }
 
         PlayerHealth health = Object.FindFirstObjectByType<PlayerHealth>();
@@ -150,11 +162,13 @@ public class SaveManager : MonoBehaviour
         if (InventoryManager.Instance != null)
         {
             InventoryManager.Instance.coins = data.coins;
+            InventoryManager.Instance.diamonds = data.diamonds;
 
             // Очищуємо словник перед завантаженням
             InventoryManager.Instance.equippedItems.Clear();
 
             InventoryManager.Instance.UpdateCoinUI();
+            InventoryManager.Instance.UpdateDiamondUI();
 
             InventoryManager.Instance.items.Clear();
             foreach (var entry in data.backpack)
@@ -169,6 +183,12 @@ public class SaveManager : MonoBehaviour
         if (QuestManager.Instance != null)
         {
             QuestManager.Instance.LoadQuestState(data);
+        }
+
+        // --- НОВЕ: Повертаємо стан лімітів реклами після завантаження файлу ---
+        if (AdsChecker.Instance != null)
+        {
+            AdsChecker.Instance.LoadAdsState(data);
         }
 
         PlayerHealth health = Object.FindFirstObjectByType<PlayerHealth>();
@@ -186,7 +206,6 @@ public class SaveManager : MonoBehaviour
 
         foreach (var slot in allSlots)
         {
-            // Визначаємо ключ для цього конкретного слота
             string key = "";
             if (slot.isWeaponEquipmentSlot) key = "Weapon";
             else if (slot.isAmuletEquipmentSlot) key = "Amulet";
@@ -195,7 +214,6 @@ public class SaveManager : MonoBehaviour
 
             if (string.IsNullOrEmpty(key)) continue;
 
-            // Шукаємо, чи є в завантажених даних предмет для цього ключа
             var entry = data.equippedItems.Find(x => x.slotKey == key);
             if (entry != null && !string.IsNullOrEmpty(entry.itemName))
             {
