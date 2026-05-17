@@ -16,19 +16,19 @@ public class CurrencyExchangeUI : MonoBehaviour
     public GameObject windowPanel;
     public TextMeshProUGUI statusText;
 
-    [Header("Тексти сповіщень (Інспектор)")]
+    [Header("Тексти сповіщень (Можна використовувати XML/HTML теги)")]
     [Tooltip("Текст при успішному обміні")]
-    public string successMessage = "Обмін успішний!";
+    public string successMessage = "<color=green>Обмін успішний!</color>";
     [Tooltip("Текст, коли не вистачає грошей")]
-    public string notEnoughGoldMessage = "Недостатньо золота!";
+    public string notEnoughGoldMessage = "<color=red>Недостатньо золота!</color>";
 
     [Space]
     [Tooltip("Текст при успішній покупці пета")]
-    public string petSuccessMessage = "Помічника успішно придбано!";
+    public string petSuccessMessage = "<color=green>Помічника успішно придбано!</color>";
     [Tooltip("Текст, коли не вистачає діамантів на пета")]
-    public string notEnoughDiamondsMessage = "Недостатньо діамантів!";
+    public string notEnoughDiamondsMessage = "<color=red>Недостатньо діамантів!</color>";
     [Tooltip("Текст, якщо такий пет вже є в рюкзаку")]
-    public string alreadyOwnedMessage = "У вас вже є цей помічник!";
+    public string alreadyOwnedMessage = "<color=yellow>У вас вже є цей помічник!</color>";
 
     private void Awake()
     {
@@ -39,14 +39,11 @@ public class CurrencyExchangeUI : MonoBehaviour
     public void Open()
     {
         if (statusText != null) statusText.text = "";
-
-        // Просто вмикаємо всю панель вікна
         if (windowPanel != null) windowPanel.SetActive(true);
     }
 
     public void Close()
     {
-        // Просто вимикаємо всю панель вікна
         if (windowPanel != null) windowPanel.SetActive(false);
     }
 
@@ -60,11 +57,11 @@ public class CurrencyExchangeUI : MonoBehaviour
             InventoryManager.Instance.ChangeCoins(-exchangeRate);
             InventoryManager.Instance.ChangeDiamonds(1);
 
-            ShowStatus(successMessage, Color.green);
+            ShowStatus(successMessage);
         }
         else
         {
-            ShowStatus(notEnoughGoldMessage, Color.red);
+            ShowStatus(notEnoughGoldMessage);
         }
     }
 
@@ -75,34 +72,29 @@ public class CurrencyExchangeUI : MonoBehaviour
     {
         if (InventoryManager.Instance == null || petItem == null) return;
 
-        int price = petItem.diamondPrice; // Беремо ціну з файлу PetData
+        int price = petItem.diamondPrice;
 
-        // Перевіряємо баланс діамантів
         if (InventoryManager.Instance.diamonds >= price)
         {
-            // Перевіряємо, чи вже є такий пет в інвентарі петів
             if (HasItemInInventory(petItem))
             {
-                ShowStatus(alreadyOwnedMessage, Color.yellow);
+                ShowStatus(alreadyOwnedMessage);
                 return;
             }
 
-            // Забираємо діаманти та викликаємо правильний метод Add()
             InventoryManager.Instance.ChangeDiamonds(-price);
             InventoryManager.Instance.Add(petItem);
 
-            ShowStatus(petSuccessMessage, Color.green);
+            ShowStatus(petSuccessMessage);
         }
         else
         {
-            ShowStatus(notEnoughDiamondsMessage, Color.red);
+            ShowStatus(notEnoughDiamondsMessage);
         }
     }
 
-    // Допоміжний метод: перевіряє колекцію петів, щоб не купити двічі
     private bool HasItemInInventory(Item itemToCheck)
     {
-        // --- ОНОВЛЕНО: Тепер скануємо саме petItems замість звичайних items ---
         foreach (var stack in InventoryManager.Instance.petItems)
         {
             if (stack.item == itemToCheck) return true;
@@ -110,12 +102,12 @@ public class CurrencyExchangeUI : MonoBehaviour
         return false;
     }
 
-    private void ShowStatus(string message, Color color)
+    // --- ОНОВЛЕНО: Тепер метод просто передає текст з твоїми тегами ---
+    private void ShowStatus(string message)
     {
         if (statusText != null)
         {
             statusText.text = message;
-            statusText.color = color;
         }
     }
 }

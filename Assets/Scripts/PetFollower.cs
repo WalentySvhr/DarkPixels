@@ -6,85 +6,132 @@ public class PetFollower : MonoBehaviour
     public Transform playerTarget;
     public float followSpeed = 4f;
     public float stopDistance = 1.5f;
+    public float teleportDistance = 15f;
 
-    [Tooltip("Якщо гравець далі ніж ця відстань, пет миттєво телепортується до нього")]
-    public float teleportDistance = 15f; // --- ДОДАНО ---
-
-    [Header("Візуал")]
+    [Header("Візуал та Анімації")]
     public float hoverAmplitude = 0.2f;
     public float hoverSpeed = 3f;
-
-    [Header("Здібності: Магніт луту")]
-    public bool canMagnetLoot = true;
-    public float magnetRadius = 5f;
-    public float magnetSpeed = 8f;
-    public string lootTag = "Loot"; // Тег предметів, які треба тягнути
-
     private SpriteRenderer spriteRenderer;
+    private Animator animator;
+
+    [Header("Налаштування Луту")]
+    public string lootTag = "Loot"; // Залишаємо тег тут, бо він загальний для гри
+
+    // --- ДАНІ ПЕТА ---
+    private PetData currentData;
+
+    [HideInInspector] public Vector3 movementTarget;
+    [HideInInspector] public float currentStopDistance;
+
+    // Зберігаємо стан, щоб уникати мікро-зупинок
+    private bool isCurrentlyMoving = false;
 
     void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
+        animator = GetComponent<Animator>();
 
         if (playerTarget == null)
         {
             GameObject player = GameObject.FindGameObjectWithTag("Player");
             if (player != null) playerTarget = player.transform;
         }
+
+        if (playerTarget != null) movementTarget = playerTarget.position;
+        currentStopDistance = stopDistance;
     }
 
-    void Update()
+    // --- ПРИЙМАЄМО ДАНІ ВІД СПАВНЕРА ---
+    public void InitializeData(PetData data)
+    {
+        currentData = data;
+    }
+
+    void LateUpdate()
     {
         if (playerTarget == null) return;
 
-        float distance = Vector2.Distance(transform.position, playerTarget.position);
-
-        // --- НОВЕ: Ривок повідця (Телепортація пета) ---
-        if (distance > teleportDistance)
+        // 1. Ривок повідця
+        float distanceToPlayer = Vector2.Distance(transform.position, playerTarget.position);
+        if (distanceToPlayer > teleportDistance)
         {
-            // Миттєво переміщуємо пета трохи збоку від гравця
             transform.position = playerTarget.position + new Vector3(-1f, 1f, 0f);
-            return; // Зупиняємо виконання іншої логіки в цьому кадрі, щоб уникнути ривків
+            movementTarget = playerTarget.position;
+            return;
         }
-        // ----------------------------------------------
 
-        // 1. Рух за гравцем
-        if (distance > stopDistance)
+        // 2. Логіка руху до цілі з БУФЕРНОЮ ЗОНОЮ
+        float distanceToTarget = Vector2.Distance(transform.position, movementTarget);
+
+        // Починаємо бігти тільки якщо гравець відійшов ДАЛІ за буфер (stopDistance + 0.2)
+        if (distanceToTarget > currentStopDistance + 0.2f)
         {
-            transform.position = Vector2.MoveTowards(transform.position, playerTarget.position, followSpeed * Time.deltaTime);
+            isCurrentlyMoving = true;
+        }
+        // Зупиняємось, коли підійшли впритул до stopDistance
+        else if (distanceToTarget <= currentStopDistance)
+        {
+            isCurrentlyMoving = false;
         }
 
-        // 2. Розворот
-        if (playerTarget.position.x > transform.position.x) spriteRenderer.flipX = false;
-        else if (playerTarget.position.x < transform.position.x) spriteRenderer.flipX = true;
+        // Рух
+        if (isCurrentlyMoving)
+        {
+            transform.position = Vector2.MoveTowards(transform.position, movementTarget, followSpeed * Time.deltaTime);
+        }
 
-        // 3. Левітація (постав hoverAmplitude = 0 для наземних)
+        // Передаємо параметр Speed в Animator
+        if (animator != null)
+        {
+            float currentSpeedRatio = isCurrentlyMoving ? 1f : 0f;
+            animator.SetFloat("Speed", currentSpeedRatio);
+        }
+
+        // 3. Розворот спрайту
+        if (movementTarget.x > transform.position.x) spriteRenderer.flipX = false;
+        else if (movementTarget.x < transform.position.x) spriteRenderer.flipX = true;
+
+        // 4. Левітація
         float hoverY = Mathf.Sin(Time.time * hoverSpeed) * hoverAmplitude * Time.deltaTime;
         transform.position += new Vector3(0, hoverY, 0);
 
-        // 4. Збір луту
-        if (canMagnetLoot) PullLoot();
+        // 5. Виконання здібності
+        ExecuteAbility();
+    }
+
+    private void ExecuteAbility()
+    {
+        if (currentData == null) return;
+
+        switch (currentData.abilityType)
+        {
+            case PetAbilityType.MagnetLoot:
+                PullLoot();
+                break;
+
+                // Заготовка на майбутні здібності:
+                // case PetAbilityType.HealthRegen:
+                //     break;
+        }
     }
 
     private void PullLoot()
     {
-        // Шукаємо всі колайдери в радіусі
-        Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, magnetRadius);
-
+        // Беремо радіус та швидкість із файла PetData!
+        Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, currentData.abilityRadius);
         foreach (Collider2D col in colliders)
         {
-            // Якщо у предмета є наш тег, тягнемо його до ГРАВЦЯ
             if (col.CompareTag(lootTag))
             {
-                col.transform.position = Vector2.MoveTowards(col.transform.position, playerTarget.position, magnetSpeed * Time.deltaTime);
+                col.transform.position = Vector2.MoveTowards(col.transform.position, playerTarget.position, currentData.abilityPower * Time.deltaTime);
             }
         }
     }
 
     private void OnDrawGizmosSelected()
     {
-        // Малює жовте коло в редакторі для зручного налаштування радіусу
         Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, magnetRadius);
+        float radius = (currentData != null) ? currentData.abilityRadius : 5f; // Відображаємо радіус з даних
+        Gizmos.DrawWireSphere(transform.position, radius);
     }
 }
