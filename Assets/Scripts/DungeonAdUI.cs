@@ -28,6 +28,14 @@ public class DungeonAdUI : MonoBehaviour
     // Викликається з TowerManager на початку поверху
     public void ShowBoostButton()
     {
+        // --- НОВЕ: Захист від спаму кнопкою ---
+        // Якщо буст вже активний (множник більше 1), кнопку не показуємо
+        if (InventoryManager.Instance != null && InventoryManager.Instance.coinMultiplier > 1f)
+        {
+            Debug.Log("Данж: Буст вже активний. Кнопка х3 не з'явиться на цьому поверсі.");
+            return;
+        }
+
         if (boostButtonObject == null) return;
 
         // 1. Якщо старий таймер ще йшов - скидаємо його

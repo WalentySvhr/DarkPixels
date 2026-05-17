@@ -1,6 +1,7 @@
 using UnityEngine;
 using Unity.Services.LevelPlay;
 using System;
+using System.Collections; // Потрібно для корутин
 
 public class AdsChecker : MonoBehaviour
 {
@@ -9,11 +10,10 @@ public class AdsChecker : MonoBehaviour
     public float boostMultiplier = 3f;
     public float boostDuration = 120f;
 
-    // --- НОВЕ: Налаштування діамантів та лімітів ---
     [Header("Налаштування Діамантів за рекламу")]
-    public int freeDiamondsAmount = 3; // Скільки діамантів даємо за 1 перегляд
-    public int maxDiamondAds = 3;      // Максимум переглядів до відкату
-    public float diamondAdCooldownDuration = 1800f; // Час відкату в секундах (наприклад, 1800с = 30 хвилин)
+    public int freeDiamondsAmount = 3;
+    public int maxDiamondAds = 3;
+    public float diamondAdCooldownDuration = 1800f;
 
     public static AdsChecker Instance;
 
@@ -25,12 +25,11 @@ public class AdsChecker : MonoBehaviour
         DoubleLoot,
         CoinBoostX3,
         RevivePlayer,
-        FreeDiamonds // <--- НОВА НАГОРОДА
+        FreeDiamonds
     }
 
     private RewardType currentRewardType;
 
-    // --- НОВЕ: Змінні для відслідковування лімітів ---
     private int diamondAdsWatchedCount = 0;
     private float cooldownTimer = 0f;
     private bool isDiamondAdOnCooldown = false;
@@ -44,10 +43,9 @@ public class AdsChecker : MonoBehaviour
     void Start()
     {
         LevelPlay.Init(appKey);
-        Debug.Log("AdsManager ініціалізовано.");
+        Debug.Log("AdsManager ініціалізовано. Режим: ІМІТАЦІЯ.");
     }
 
-    // --- НОВЕ: Обробка таймера відкату в Update ---
     void Update()
     {
         if (isDiamondAdOnCooldown)
@@ -56,7 +54,6 @@ public class AdsChecker : MonoBehaviour
 
             if (cooldownTimer <= 0)
             {
-                // Відкат завершено, скидаємо ліміти
                 isDiamondAdOnCooldown = false;
                 cooldownTimer = 0f;
                 diamondAdsWatchedCount = 0;
@@ -67,7 +64,6 @@ public class AdsChecker : MonoBehaviour
 
     public void RequestAd(RewardType type)
     {
-        // --- НОВЕ: Перевірка ліміту перед показом реклами на діаманти ---
         if (type == RewardType.FreeDiamonds && isDiamondAdOnCooldown)
         {
             int minutesRemaining = Mathf.CeilToInt(cooldownTimer / 60f);
@@ -83,10 +79,34 @@ public class AdsChecker : MonoBehaviour
         currentRewardType = type;
         Debug.Log($"Запит на рекламу для події: {type}...");
 
-        // Імітація успішного перегляду
+        // Запускаємо нашу симуляцію перегляду
+        StartCoroutine(SimulateAdRoutine());
+    }
+
+    // ==========================================
+    // СИМУЛЯЦІЯ ПАУЗИ ТА ВІДНОВЛЕННЯ ГРИ
+    // ==========================================
+    private IEnumerator SimulateAdRoutine()
+    {
+        Debug.Log("<color=orange>[AdsSystem] Реклама на екрані. СТАВИМО ГРУ НА ПАУЗУ.</color>");
+        Time.timeScale = 0f;        // Зупиняємо всі ігрові таймери та рух
+        AudioListener.pause = true; // Глушимо звуки
+
+        // Оскільки Time.timeScale = 0, звичайний WaitForSeconds НЕ ПРАЦЮЄ. 
+        // Використовуємо WaitForSecondsRealtime, щоб почекати 2 реальні секунди.
+        yield return new WaitForSecondsRealtime(2f);
+
+        Debug.Log("<color=green>[AdsSystem] Реклама закрита. ВІДНОВЛЮЄМО ГРУ.</color>");
+        Time.timeScale = 1f;         // Повертаємо ігровий час
+        AudioListener.pause = false; // Вмикаємо звуки назад
+
+        // Видаємо нагороду після того, як відео "закінчилося"
         RewardPlayer();
     }
 
+    // ==========================================
+    // ВИДАЧА НАГОРОД
+    // ==========================================
     private void RewardPlayer()
     {
         switch (currentRewardType)
@@ -98,6 +118,9 @@ public class AdsChecker : MonoBehaviour
 
             case RewardType.CoinBoostX3:
                 InventoryManager.Instance.ActivateCoinBoost(boostMultiplier, boostDuration);
+
+                if (DungeonAdUI.Instance != null) DungeonAdUI.Instance.HideBoostButton();
+
                 Debug.Log($"<color=yellow>Нагорода видана: Буст монет х{boostMultiplier} на {boostDuration} сек!</color>");
                 break;
 
@@ -113,7 +136,6 @@ public class AdsChecker : MonoBehaviour
                 }
                 break;
 
-            // --- НОВЕ: Видача діамантів та контроль ліміту ---
             case RewardType.FreeDiamonds:
                 if (InventoryManager.Instance != null)
                 {
@@ -122,7 +144,6 @@ public class AdsChecker : MonoBehaviour
 
                     Debug.Log($"<color=cyan>Нагорода видана: {freeDiamondsAmount} діамантів! Переглянуто: {diamondAdsWatchedCount}/{maxDiamondAds}</color>");
 
-                    // Перевіряємо, чи досягнуто ліміту в 3 перегляди
                     if (diamondAdsWatchedCount >= maxDiamondAds)
                     {
                         isDiamondAdOnCooldown = true;
@@ -133,7 +154,10 @@ public class AdsChecker : MonoBehaviour
                 break;
         }
     }
-    // --- НОВЕ: Запис даних реклами у структуру збереження ---
+
+    // ==========================================
+    // ЗБЕРЕЖЕННЯ / ЗАВАНТАЖЕННЯ ЛІМІТІВ
+    // ==========================================
     public GameData CaptureAdsState(GameData data)
     {
         data.diamondAdsWatched = diamondAdsWatchedCount;
@@ -142,7 +166,6 @@ public class AdsChecker : MonoBehaviour
         return data;
     }
 
-    // --- НОВЕ: Завантаження даних реклами ---
     public void LoadAdsState(GameData data)
     {
         diamondAdsWatchedCount = data.diamondAdsWatched;
@@ -152,8 +175,6 @@ public class AdsChecker : MonoBehaviour
         Debug.Log($"[AdsSystem] Дані завантажено. Переглядів: {diamondAdsWatchedCount}/3, Відкат: {cooldownTimer}с (Активний: {isDiamondAdOnCooldown})");
     }
 
-    // --- НОВЕ: Допоміжний метод для твого UI (Кнопки реклами) ---
-    // Дозволяє дізнатися, чи активна кнопка, і скільки часу залишилося до кінця відкату
     public bool CanWatchDiamondAd(out float timeLeft)
     {
         timeLeft = cooldownTimer;

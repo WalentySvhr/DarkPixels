@@ -114,7 +114,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 0}
   m_FillRect: {fileID: 6342785008032671614}
   m_HandleRect: {fileID: 0}
@@ -193,8 +193,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: qweeeee
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 9045ef6b61d131b41962c8449884fbd9, type: 2}
+  m_sharedMaterial: {fileID: 4665180142305411165, guid: 9045ef6b61d131b41962c8449884fbd9, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -774,6 +774,7 @@ MonoBehaviour:
   attackRange: 10
   attackDamage: 20
   attackCooldown: 0.5
+  hitStunDuration: 0.3
   projectilePrefab: {fileID: 6321648019771656384, guid: dddb5fea9728b454ea247fb335bcc822, type: 3}
   firePoint: {fileID: 6708381904990337925}
   projectileSpeed: 10
@@ -794,8 +795,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 500
+  animator: {fileID: 0}
+  spriteRenderer: {fileID: 0}
+  flashColor: {r: 1, g: 0, b: 0, a: 1}
+  flashDuration: 0.15
+  deathAnimationDuration: 2
   hpSlider: {fileID: 3827731389759941094}
   hpText: {fileID: 4601915923711178979}
+  damagePopupPrefab: {fileID: 0}
   exitDoor: {fileID: 0}
 --- !u!114 &5363533720252084937
 MonoBehaviour:
