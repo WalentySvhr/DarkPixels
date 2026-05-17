@@ -25,6 +25,12 @@ public class PauseMenu : MonoBehaviour
         pauseMenuUI.SetActive(true);
         Time.timeScale = 0f;
         isPaused = true;
+
+        // --- НОВЕ: Оновлюємо статистику при відкритті паузи ---
+        if (StatsUIManager.Instance != null)
+        {
+            StatsUIManager.Instance.UpdateStatsUI();
+        }
     }
 
     public void Restart()

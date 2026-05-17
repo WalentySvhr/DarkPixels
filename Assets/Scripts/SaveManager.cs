@@ -13,6 +13,9 @@ public class GameData
     public float currentHealth;
     public List<ItemSaveEntry> backpack = new List<ItemSaveEntry>();
 
+    // --- НОВЕ: Список для збереження куплених петів ---
+    public List<ItemSaveEntry> petBackpack = new List<ItemSaveEntry>();
+
     // --- УНІВЕРСАЛЬНЕ ЗБЕРЕЖЕННЯ ЕКІПІРОВКИ ---
     public List<EquippedItemSaveEntry> equippedItems = new List<EquippedItemSaveEntry>();
 
@@ -21,16 +24,19 @@ public class GameData
     public List<FishingSpotSaveEntry> activeCooldowns = new List<FishingSpotSaveEntry>();
     public List<string> completedQuestIDs = new List<string>();
 
-    // --- НОВЕ: Збереження лімітів та таймерів реклами на діаманти ---
+    // --- Збереження лімітів та таймерів реклами на діаманти ---
     public int diamondAdsWatched;
     public float diamondAdsCooldown;
     public bool isDiamondAdOnCooldown;
+
+    // --- Збереження рекорду Башні ---
+    public int maxTowerFloor;
 }
 
 [System.Serializable]
 public class EquippedItemSaveEntry
 {
-    public string slotKey; // Наприклад: "Weapon", "Belt", "Ring_1"
+    public string slotKey; // Наприклад: "Weapon", "Belt", "Ring_1", "Pet"
     public string itemName;
 }
 
@@ -105,7 +111,7 @@ public class SaveManager : MonoBehaviour
             data.coins = InventoryManager.Instance.coins;
             data.diamonds = InventoryManager.Instance.diamonds;
 
-            // --- УНІВЕРСАЛЬНЕ ЗБЕРЕЖЕННЯ СЛОВНИКА ---
+            // --- УНІВЕРСАЛЬНЕ ЗБЕРЕЖЕННЯ СЛОВНИКА ЕКІПІРОВКИ ---
             data.equippedItems.Clear();
             foreach (var pair in InventoryManager.Instance.equippedItems)
             {
@@ -115,11 +121,20 @@ public class SaveManager : MonoBehaviour
                 }
             }
 
+            // Збереження звичайного інвентарю
             data.backpack.Clear();
             foreach (var stack in InventoryManager.Instance.items)
             {
                 if (stack?.item != null)
                     data.backpack.Add(new ItemSaveEntry { itemName = stack.item.name, amount = stack.amount });
+            }
+
+            // --- НОВЕ: Збереження інвентарю Петів ---
+            data.petBackpack.Clear();
+            foreach (var stack in InventoryManager.Instance.petItems)
+            {
+                if (stack?.item != null)
+                    data.petBackpack.Add(new ItemSaveEntry { itemName = stack.item.name, amount = stack.amount });
             }
         }
 
@@ -128,10 +143,14 @@ public class SaveManager : MonoBehaviour
             data = QuestManager.Instance.CaptureQuestState(data);
         }
 
-        // --- НОВЕ: Передаємо стан реклами в GameData перед записом у файл ---
         if (AdsChecker.Instance != null)
         {
             data = AdsChecker.Instance.CaptureAdsState(data);
+        }
+
+        if (TowerManager.Instance != null)
+        {
+            data = TowerManager.Instance.CaptureTowerState(data);
         }
 
         PlayerHealth health = Object.FindFirstObjectByType<PlayerHealth>();
@@ -164,12 +183,12 @@ public class SaveManager : MonoBehaviour
             InventoryManager.Instance.coins = data.coins;
             InventoryManager.Instance.diamonds = data.diamonds;
 
-            // Очищуємо словник перед завантаженням
             InventoryManager.Instance.equippedItems.Clear();
 
             InventoryManager.Instance.UpdateCoinUI();
             InventoryManager.Instance.UpdateDiamondUI();
 
+            // Завантаження звичайного інвентарю
             InventoryManager.Instance.items.Clear();
             foreach (var entry in data.backpack)
             {
@@ -178,6 +197,16 @@ public class SaveManager : MonoBehaviour
                     InventoryManager.Instance.items.Add(new InventoryManager.ItemStack(loadedItem, entry.amount));
             }
             InventoryManager.Instance.UpdateUI();
+
+            // --- НОВЕ: Завантаження інвентарю Петів ---
+            InventoryManager.Instance.petItems.Clear();
+            foreach (var entry in data.petBackpack)
+            {
+                Item loadedPet = Resources.Load<Item>("Items/" + entry.itemName);
+                if (loadedPet != null)
+                    InventoryManager.Instance.petItems.Add(new InventoryManager.ItemStack(loadedPet, entry.amount));
+            }
+            InventoryManager.Instance.UpdatePetUI();
         }
 
         if (QuestManager.Instance != null)
@@ -185,10 +214,14 @@ public class SaveManager : MonoBehaviour
             QuestManager.Instance.LoadQuestState(data);
         }
 
-        // --- НОВЕ: Повертаємо стан лімітів реклами після завантаження файлу ---
         if (AdsChecker.Instance != null)
         {
             AdsChecker.Instance.LoadAdsState(data);
+        }
+
+        if (TowerManager.Instance != null)
+        {
+            TowerManager.Instance.LoadTowerState(data);
         }
 
         PlayerHealth health = Object.FindFirstObjectByType<PlayerHealth>();
@@ -211,6 +244,7 @@ public class SaveManager : MonoBehaviour
             else if (slot.isAmuletEquipmentSlot) key = "Amulet";
             else if (slot.isBeltEquipmentSlot) key = "Belt";
             else if (slot.isRingEquipmentSlot) key = $"Ring_{slot.ringSlotIndex}";
+            else if (slot.isPetEquipmentSlot) key = "Pet"; // --- НОВЕ: Ключ для пета ---
 
             if (string.IsNullOrEmpty(key)) continue;
 

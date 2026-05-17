@@ -10,6 +10,12 @@ public class InventoryManager : MonoBehaviour
     public List<ItemStack> items = new List<ItemStack>();
     public int space = 20;
 
+    // --- НОВЕ: Окремий список та налаштування для петів ---
+    [Header("Інвентар Петів")]
+    public List<ItemStack> petItems = new List<ItemStack>();
+    public int petSpace = 6; // Максимальна кількість петів у колекції
+    public PetInventoryUI petInventoryUI; // Скрипт інтерфейсу петів (створимо згодом)
+
     [Header("UI посилання")]
     public InventoryUI inventoryUI;
     public HotbarUI hotbarScript;
@@ -50,13 +56,33 @@ public class InventoryManager : MonoBehaviour
     void Start()
     {
         UpdateCoinUI();
-        UpdateDiamondUI(); // --- НОВЕ: Оновлюємо UI діамантів при старті ---
+        UpdateDiamondUI(); // --- Оновлюємо UI діамантів при старті ---
         UpdateUI();
+        UpdatePetUI();     // --- Початкове оновлення UI петів ---
         if (buffUIContainer != null) buffUIContainer.SetActive(false);
     }
 
     public bool Add(Item item)
     {
+        if (item == null) return false;
+
+        // --- НОВЕ: Перевірка, чи це петомець ---
+        if (item.type == ItemType.Pet)
+        {
+            // Перевіряємо, чи такий пет вже є в колекції (вони унікальні, копії не потрібні)
+            ItemStack existingPet = petItems.Find(s => s.item == item);
+            if (existingPet != null) return false;
+
+            // Перевіряємо, чи є вільне місце в сумці для петів
+            if (petItems.Count >= petSpace) return false;
+
+            // Додаємо в окремий список петів
+            petItems.Add(new ItemStack(item, 1));
+            UpdatePetUI();
+            return true;
+        }
+
+        // --- СТАРИЙ КОД ДЛЯ ЗВИЧАЙНИХ ПРЕДМЕТІВ ---
         if (item.isStackable)
         {
             ItemStack stack = items.Find(s => s.item == item && s.amount < item.maxStackSize);
@@ -80,6 +106,21 @@ public class InventoryManager : MonoBehaviour
 
     public void Remove(Item item)
     {
+        if (item == null) return;
+
+        // --- НОВЕ: Видалення з інвентарю петів, якщо це пет ---
+        if (item.type == ItemType.Pet)
+        {
+            ItemStack petStack = petItems.Find(s => s.item == item);
+            if (petStack != null)
+            {
+                petItems.Remove(petStack);
+                UpdatePetUI();
+            }
+            return;
+        }
+
+        // --- СТАРИЙ КОД ВИДАЛЕННЯ ---
         ItemStack stack = items.Find(s => s.item == item);
         if (stack != null)
         {
@@ -98,6 +139,15 @@ public class InventoryManager : MonoBehaviour
 
     public int GetItemCount(Item itemToFind)
     {
+        if (itemToFind == null) return 0;
+
+        // --- НОВЕ: Перевірка кількості для петів ---
+        if (itemToFind.type == ItemType.Pet)
+        {
+            ItemStack petStack = petItems.Find(s => s.item == itemToFind);
+            return petStack != null ? petStack.amount : 0;
+        }
+
         int count = 0;
         foreach (ItemStack stack in items)
         {
@@ -108,6 +158,15 @@ public class InventoryManager : MonoBehaviour
 
     public void RemoveItems(Item itemToRemove, int amountToRemove)
     {
+        if (itemToRemove == null) return;
+
+        // --- НОВЕ: Видалення петів через RemoveItems (про всяк випадок для квестів) ---
+        if (itemToRemove.type == ItemType.Pet)
+        {
+            Remove(itemToRemove);
+            return;
+        }
+
         int remainingToRemove = amountToRemove;
 
         for (int i = items.Count - 1; i >= 0; i--)
@@ -173,7 +232,7 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
-    // --- НОВІ МЕТОДИ: Керування балансом та відображенням діамантів ---
+    // --- МЕТОДИ: Керування балансом та відображенням діамантів ---
     public void ChangeDiamonds(int amount)
     {
         diamonds += amount;
@@ -189,7 +248,6 @@ public class InventoryManager : MonoBehaviour
             if (textElement != null) textElement.text = " " + diamonds;
         }
     }
-    // -----------------------------------------------------------------
 
     public void UseItem(Item item)
     {
@@ -222,6 +280,15 @@ public class InventoryManager : MonoBehaviour
         if (StatsUI.Instance != null && StatsUI.Instance.gameObject.activeInHierarchy)
         {
             StatsUI.Instance.UpdateStatsUI();
+        }
+    }
+
+    // --- НОВЕ: Метод оновлення інтерфейсу для вкладки петів ---
+    public void UpdatePetUI()
+    {
+        if (petInventoryUI != null)
+        {
+            petInventoryUI.UpdatePetUI();
         }
     }
 

@@ -1,7 +1,7 @@
 using UnityEngine;
 
 // Категорії предметів (ДОДАНО Belt)
-public enum ItemType { Food, Potion, Resource, Junk, Weapon, Amulet, Ring, Belt }
+public enum ItemType { Food, Potion, Resource, Junk, Weapon, Amulet, Ring, Belt, Pet }
 
 // Структура для розділеного опису предмета
 public struct ItemDescription
@@ -92,6 +92,7 @@ public class Item : ScriptableObject
             case ItemType.Amulet: return "Amulet";
             case ItemType.Ring: return "Ring";
             case ItemType.Belt: return "Belt"; // --- ДОДАНО ---
+            case ItemType.Pet: return "Pet"; // --- ДОДАНО ---
             default: return "Item";
         }
     }

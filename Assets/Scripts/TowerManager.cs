@@ -34,6 +34,10 @@ public class TowerManager : MonoBehaviour
     public int currentFloor = 1;
     public int bossEveryXFloors = 5;
 
+    // --- НОВЕ: Змінна для зберігання рекорду ---
+    [Header("Record")]
+    public int maxFloorRecord = 0;
+
     [Header("Difficulty Scaling")]
     public float enemyMultiplierPerFloor = 0.1f;
     public float bossMultiplierPerFloor = 0.2f;
@@ -57,7 +61,7 @@ public class TowerManager : MonoBehaviour
     [TextArea(1, 3)] public string bossFloorStartMessage = "УВАГА! ЛІГВО БОСА";
 
     [Header("References (Dynamic)")]
-    public BossTrigger bossTrigger; // Це посилання тепер оновлюється автоматично
+    public BossTrigger bossTrigger;
     public GameObject player;
     public Camera mainCamera;
 
@@ -79,10 +83,8 @@ public class TowerManager : MonoBehaviour
         {
             if (currentFloor >= tier.minFloor && currentFloor <= tier.maxFloor)
             {
-                // 1. Оновлюємо візуал
                 if (mainCamera != null) mainCamera.backgroundColor = tier.skyColor;
 
-                // 2. ОНОВЛЮЄМО ПОСИЛАННЯ НА СПАВНЕР ТА БОСА
                 if (tier.floorData != null)
                 {
                     bossTrigger = tier.floorData.floorBossTrigger;
@@ -92,9 +94,7 @@ public class TowerManager : MonoBehaviour
                     Debug.LogError($"TowerManager: Об'єкт FloorData не призначений для {tier.themeName}!");
                 }
 
-                // 3. Телепортуємо
                 TeleportPlayerToPoint(tier.floorEntryPoint);
-
                 Debug.Log($"<color=cyan>TowerManager:</color> Данж оновлено: {tier.themeName}");
                 return;
             }
@@ -127,13 +127,18 @@ public class TowerManager : MonoBehaviour
     public void StartTowerRun()
     {
         currentFloor = 1;
+
+        // Перевіряємо рекорд навіть на 1 поверсі (раптом це перший забіг)
+        CheckForNewRecord();
+
         PrepareLevel();
         ShowTowerUI();
+
         if (TowerUIManager.Instance != null)
             TowerUIManager.Instance.ShowNotification(startRunMessage);
+
         StartSpawners();
 
-        // --- НОВЕ: Показуємо кнопку бусту при вході в башту ---
         if (DungeonAdUI.Instance != null)
         {
             DungeonAdUI.Instance.ShowBoostButton();
@@ -143,6 +148,10 @@ public class TowerManager : MonoBehaviour
     public void GoToNextFloor()
     {
         currentFloor++;
+
+        // --- НОВЕ: Перевіряємо, чи побили ми рекорд, при кожному переході ---
+        CheckForNewRecord();
+
         PrepareLevel();
         UpdateFloorText();
         StartSpawners();
@@ -153,18 +162,31 @@ public class TowerManager : MonoBehaviour
             TowerUIManager.Instance.ShowNotification(msg);
         }
 
-        // --- НОВЕ: Показуємо кнопку бусту при переході на новий поверх ---
         if (DungeonAdUI.Instance != null)
         {
             DungeonAdUI.Instance.ShowBoostButton();
         }
     }
 
+    // --- НОВЕ: Логіка фіксації рекорду ---
+    private void CheckForNewRecord()
+    {
+        if (currentFloor > maxFloorRecord)
+        {
+            maxFloorRecord = currentFloor;
+            Debug.Log($"<color=gold>[TowerRecord] НОВИЙ РЕКОРД! Максимальний поверх: {maxFloorRecord}</color>");
+
+            // Одразу зберігаємо прогрес у файл, щоб рекорд не втратився при вильоті гри
+            if (SaveManager.Instance != null)
+            {
+                SaveManager.Instance.SaveGame();
+            }
+        }
+    }
+
     private void PrepareLevel()
     {
-        // ВАЖЛИВО: Спочатку оновлюємо посилання (bossTrigger), а потім чистимо
         ApplyFloorEnvironment();
-
         StopSpawners();
         ClearEnemies();
         ClearLoot();
@@ -177,7 +199,6 @@ public class TowerManager : MonoBehaviour
     {
         if (bossTrigger == null) return;
 
-        // Отримуємо спавнер через BossTrigger (або напряму з FloorData)
         TowerSpawner ts = null;
         if (bossTrigger.linkedSpawner != null)
             ts = bossTrigger.linkedSpawner.GetComponent<TowerSpawner>();
@@ -200,8 +221,6 @@ public class TowerManager : MonoBehaviour
         }
     }
 
-    // --- Методи очищення та UI ---
-
     public void OnFloorCleared()
     {
         if (TowerUIManager.Instance != null)
@@ -209,12 +228,10 @@ public class TowerManager : MonoBehaviour
 
         if (bossTrigger != null) bossTrigger.ActivateExitDoor();
 
-        // --- НОВЕ: ЗВІТ ДЛЯ ДЕЙЛІКІВ (Квест Альпініст) ---
         if (DailyQuestManager.Instance != null)
         {
             DailyQuestManager.Instance.AddProgress(DailyQuestType.ClearTowerFloors, 1);
         }
-        // ------------------------------------------------
     }
 
     public void ResetTowerProgress()
@@ -224,9 +241,9 @@ public class TowerManager : MonoBehaviour
         HideTowerUI();
         StopSpawners();
         ClearLoot();
+
         if (chestSpawner != null) chestSpawner.ClearChests();
 
-        // --- НОВЕ: Ховаємо кнопку, якщо вийшли або померли ---
         if (DungeonAdUI.Instance != null)
         {
             DungeonAdUI.Instance.HideBoostButton();
@@ -276,4 +293,18 @@ public class TowerManager : MonoBehaviour
     public float GetDifficultyMultiplier() => 1f + ((currentFloor - 1) * enemyMultiplierPerFloor);
     public float GetBossDifficultyMultiplier() => 1f + ((currentFloor - 1) * bossMultiplierPerFloor);
     public bool IsBossFloor() => currentFloor % bossEveryXFloors == 0;
+
+    // ==========================================
+    // ЗБЕРЕЖЕННЯ / ЗАВАНТАЖЕННЯ РЕКОРДУ
+    // ==========================================
+    public GameData CaptureTowerState(GameData data)
+    {
+        data.maxTowerFloor = maxFloorRecord;
+        return data;
+    }
+
+    public void LoadTowerState(GameData data)
+    {
+        maxFloorRecord = data.maxTowerFloor;
+    }
 }

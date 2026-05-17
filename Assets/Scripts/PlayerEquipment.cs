@@ -11,12 +11,14 @@ public class PlayerEquipment : MonoBehaviour
     public AmuletData currentAmulet;
     public RingData currentRing1; // Слот для першого кільця
     public RingData currentRing2; // Слот для другого кільця
-    public BeltData currentBelt;  // --- ДОДАНО: Слот для пояса ---
+    public BeltData currentBelt;  // Слот для пояса
+    public PetData currentPet;    // --- ДОДАНО: Слот для пета ---
 
     [Header("Тестування")]
     public AmuletData testAmulet;
     public RingData testRing;
-    public BeltData testBelt; // --- ДОДАНО: Для тестування пояса ---
+    public BeltData testBelt;
+    public PetData testPet; // --- ДОДАНО: Для тестування пета ---
 
     // --- ЛОГІКА АМУЛЕТА ---
     public void EquipAmulet(AmuletData newAmulet)
@@ -45,7 +47,7 @@ public class PlayerEquipment : MonoBehaviour
         Debug.Log($"<color=red>Знято амулет.</color>");
     }
 
-    // --- ЛОГІКА ПОЯСА (НОВЕ) ---
+    // --- ЛОГІКА ПОЯСА ---
     public void EquipBelt(BeltData newBelt)
     {
         if (newBelt == null || currentBelt == newBelt) return;
@@ -109,8 +111,48 @@ public class PlayerEquipment : MonoBehaviour
         Debug.Log($"<color=red>Знято кільце зі слота {slotIndex}</color>");
     }
 
+    // --- ЛОГІКА ПЕТА (НОВЕ) ---
+    public void EquipPet(PetData newPet)
+    {
+        if (newPet == null || currentPet == newPet) return;
+        if (currentPet != null) UnequipPet();
+
+        currentPet = newPet;
+
+        // Додаємо бонусне здоров'я від пета (якщо воно прописане в файлі PetData)
+        if (playerHealth != null && currentPet.bonusHealth > 0f)
+            playerHealth.AddBonusHealth((int)currentPet.bonusHealth);
+
+        // Фізично створюємо пета на сцені через наш спавнер
+        if (PetSpawner.Instance != null)
+        {
+            PetSpawner.Instance.SpawnPet(currentPet);
+        }
+
+        UpdateAllStats();
+        Debug.Log($"<color=lime>Активовано помічника:</color> {currentPet.itemName}");
+    }
+
+    public void UnequipPet()
+    {
+        if (currentPet == null) return;
+
+        // Забираємо бонусне ХП
+        if (playerHealth != null && currentPet.bonusHealth > 0f)
+            playerHealth.RemoveBonusHealth((int)currentPet.bonusHealth);
+
+        // Прибираємо пета зі сцени
+        if (PetSpawner.Instance != null)
+        {
+            PetSpawner.Instance.DespawnPet();
+        }
+
+        currentPet = null;
+        UpdateAllStats();
+        Debug.Log($"<color=orange>Помічника відправлено відпочивати.</color>");
+    }
+
     // --- МАГІЯ СУМУВАННЯ СТАТІВ ---
-    // Цей метод збирає всі показники з Амулета, Пояса та двох Кілець і передає їх гравцю
     private void UpdateAllStats()
     {
         // 1. Збираємо стати Амулета
@@ -122,7 +164,7 @@ public class PlayerEquipment : MonoBehaviour
         int amRegen = currentAmulet != null ? currentAmulet.healthRegenPerSecond : 0;
         float amArmor = currentAmulet != null ? currentAmulet.bonusArmorPercent : 0f;
 
-        // 2. Збираємо стати Пояса (НОВЕ)
+        // 2. Збираємо стати Пояса
         int bDmg = currentBelt != null ? currentBelt.bonusDamage : 0;
         float bAtkSpd = currentBelt != null ? currentBelt.bonusAttackSpeed : 0f;
         float bMovSpd = currentBelt != null ? currentBelt.bonusMoveSpeed : 0f;
@@ -131,7 +173,10 @@ public class PlayerEquipment : MonoBehaviour
         int bRegen = currentBelt != null ? currentBelt.healthRegenPerSecond : 0;
         float bArmor = currentBelt != null ? currentBelt.bonusArmorPercent : 0f;
 
-        // 3. Збираємо і СУМУЄМО стати обох Кілець
+        // 3. Збираємо стати Пета (НОВЕ)
+        int petDmg = currentPet != null ? currentPet.bonusDamage : 0;
+
+        // 4. Збираємо і СУМУЄМО стати обох Кілець
         int rDmg = 0; float rAtkSpd = 0f; float rMovSpd = 0f;
         float rCrit = 0f; float rCritM = 0f; int rRegen = 0; float rArmor = 0f;
 
@@ -156,18 +201,18 @@ public class PlayerEquipment : MonoBehaviour
             if (currentRing2.bonusCritMultiplier > 2f) rCritM += currentRing2.bonusCritMultiplier - 2f;
         }
 
-        // 4. Передаємо суми в системи гравця
+        // 5. Передаємо суми в системи гравця
         if (playerCombat != null)
         {
-            // Урон: Амулет + Кільця + Пояс
-            playerCombat.extraAmuletDamage = amDmg + bDmg; // Для простоти додаємо урон пояса до змінної амулета
+            // Урон: Амулет + Пояс + Пет + Кільця
+            playerCombat.extraAmuletDamage = amDmg + bDmg + petDmg; // Додаємо урон пета сюди ж
             playerCombat.extraRingDamage = rDmg;
 
             // Швидкість атаки: Амулет + Кільця + Пояс
             playerCombat.extraAttackSpeed = amAtkSpd + bAtkSpd;
             playerCombat.extraRingAttackSpeed = rAtkSpd;
 
-            // Кріти сумуємо повністю (Амулет + Пояс + обидва кільця)
+            // Кріти сумуємо повністю
             playerCombat.critChance = amCrit + bCrit + rCrit;
             playerCombat.critMultiplier = 2f + amCritM + bCritM + rCritM;
         }
@@ -181,9 +226,6 @@ public class PlayerEquipment : MonoBehaviour
 
         if (playerHealth != null)
         {
-            // Оскільки в PlayerHealth є тільки слоти для "Amulet" та "Ring" бафів, 
-            // ми хитро сумуємо реген і броню пояса з амулетом (isAmulet = true).
-            // Це заощадить нам час на переписування PlayerHealth!
             playerHealth.StartBuffs(amRegen + bRegen, amArmor + bArmor, true);
             playerHealth.StartBuffs(rRegen, rArmor, false);
         }
@@ -201,8 +243,11 @@ public class PlayerEquipment : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.H)) if (testRing != null) EquipRing(testRing, 2);
         if (Input.GetKeyDown(KeyCode.J)) UnequipRing(2);
 
-        // --- ДОДАНО: Тестування пояса ---
         if (Input.GetKeyDown(KeyCode.B)) if (testBelt != null) EquipBelt(testBelt);
         if (Input.GetKeyDown(KeyCode.N)) UnequipBelt();
+
+        // --- ДОДАНО: Клавіші для тесту пета ---
+        if (Input.GetKeyDown(KeyCode.P)) if (testPet != null) EquipPet(testPet); // Клавіша P - одягти пета
+        if (Input.GetKeyDown(KeyCode.O)) UnequipPet();                          // Клавіша O - зняти пета
     }
 }
