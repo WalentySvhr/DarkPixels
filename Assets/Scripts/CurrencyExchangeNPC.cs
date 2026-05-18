@@ -36,10 +36,10 @@ public class CurrencyExchangeNPC : MonoBehaviour
         else
         {
             Debug.Log("Підійдіть ближче до Міняйла!");
-            if (TowerUIManager.Instance != null)
-            {
-                TowerUIManager.Instance.ShowNotification("Підійдіть ближче до Міняйла!");
-            }
+            // if (TowerUIManager.Instance != null)
+            // {
+            //     TowerUIManager.Instance.ShowNotification("Підійдіть ближче до Міняйла!");
+            // }
         }
     }
 
