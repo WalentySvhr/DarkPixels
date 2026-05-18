@@ -11,6 +11,9 @@ public class PlayerCombat : MonoBehaviour
     private GameObject spawnedWeapon;
     private float nextAttackTime = 0f;
 
+    // === ДОДАНО: Посилання на аніматор гравця ===
+    private Animator playerAnim;
+
     [Header("Start Weapon")]
     public WeaponData startingWeapon;
 
@@ -20,6 +23,10 @@ public class PlayerCombat : MonoBehaviour
     public float unarmedCooldown = 0.5f;
     public float unarmedDamageDelay = 0.1f;
     public float unarmedKnockback = 5f;
+
+    // === ДОДАНО: Посилання на скрипт звуку ===
+    [Header("Звук бою руками")]
+    public WeaponSound unarmedSoundScript;
 
     [Header("Бонуси від екіпіровки")]
     [HideInInspector] public int extraAmuletDamage = 0;
@@ -33,6 +40,9 @@ public class PlayerCombat : MonoBehaviour
 
     void Start()
     {
+        // === ДОДАНО: Отримуємо аніматор на старті ===
+        playerAnim = GetComponent<Animator>();
+
         if (startingWeapon != null)
         {
             EquipWeapon(startingWeapon);
@@ -91,6 +101,14 @@ public class PlayerCombat : MonoBehaviour
                 anim.SetTrigger("Attack");
             }
         }
+        else // === ДОДАНО: Якщо зброї немає, граємо анімацію на самому гравці ===
+        {
+            if (playerAnim != null)
+            {
+                playerAnim.speed = 1f + totalSpeedBonus;
+                playerAnim.SetTrigger("Attack");
+            }
+        }
 
         float baseDelay = (currentWeaponData != null) ? currentWeaponData.damageDelay : unarmedDamageDelay;
         float finalDelay = baseDelay / (1f + totalSpeedBonus);
@@ -120,6 +138,12 @@ public class PlayerCombat : MonoBehaviour
 
     void UnarmedDamage()
     {
+        // === ДОДАНО: Викликаємо звук удару рукою ===
+        if (unarmedSoundScript != null)
+        {
+            unarmedSoundScript.PlayHit();
+        }
+
         Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, unarmedRange, enemyLayers);
         int finalDamage = CalculateFinalDamage(unarmedDamage, out bool isCrit);
 
@@ -147,7 +171,6 @@ public class PlayerCombat : MonoBehaviour
         {
             Vector2 knockbackDir = (enemy.transform.position - transform.position).normalized;
 
-            // === ОНОВЛЕНО: Передаємо isCrit у EnemyHealth ===
             enemyHealth.TakeDamage(damage, knockbackDir, knockbackForce, isCrit);
 
             if (isCrit) Debug.Log("<color=yellow>CRITICAL HIT!</color> " + damage);
@@ -156,7 +179,6 @@ public class PlayerCombat : MonoBehaviour
         BossHealth bossHealth = enemy.GetComponent<BossHealth>();
         if (bossHealth != null)
         {
-            // Якщо у тебе бос має свій попап урону, туди теж можна буде додати isCrit
             bossHealth.TakeDamage(damage);
         }
     }
@@ -184,12 +206,7 @@ public class PlayerCombat : MonoBehaviour
             Arrow arrowScript = proj.GetComponent<Arrow>();
             if (arrowScript != null)
             {
-                // Для стріл теж рахуємо кріт в момент пострілу
                 arrowScript.damage = CalculateFinalDamage(currentWeaponData.damage, out bool isCrit);
-
-                // ВАЖЛИВО ДЛЯ ДАЛЬНЬОГО БОЮ:
-
-
                 arrowScript.isCrit = isCrit;
 
                 if (isCrit) Debug.Log("<color=yellow>Ranged Crit!</color>");

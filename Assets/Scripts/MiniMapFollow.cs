@@ -3,7 +3,13 @@ using UnityEngine;
 public class MinimapFollow : MonoBehaviour
 {
     public Transform player;
-    public PolygonCollider2D mapBounds; // Сюди перетягнемо твій суцільний MapBounds
+    public PolygonCollider2D mapBounds; // Сюди перетягнемо суцільний MapBounds
+
+    [Header("Налаштування згладжування швів")]
+    [Tooltip("Увімкнути прив'язку камери до пікселів для уникнення блимання швів")]
+    public bool enablePixelSnapping = true;
+    [Tooltip("Має збігатися з налаштуванням Pixels Per Unit ваших спрайтів (зазвичай 100, 32 або 16)")]
+    public float pixelsPerUnit = 100f;
 
     private Camera cam;
     private float camHalfHeight;
@@ -25,7 +31,9 @@ public class MinimapFollow : MonoBehaviour
 
         // Початково беремо позицію гравця
         Vector3 newPosition = player.position;
-        newPosition.z = -10; // Твоє налаштування висоти камери
+        // На вашому попередньому скріншоті камера була на -25, 
+        // але залишаю -10, як у вашому коді. Головне, щоб вона бачила тайли.
+        newPosition.z = -10;
 
         // Якщо ми призначили межі карти в Інспекторі
         if (mapBounds != null)
@@ -41,6 +49,13 @@ public class MinimapFollow : MonoBehaviour
             // Вжимаємо координати по X та Y
             newPosition.x = Mathf.Clamp(newPosition.x, minX, maxX);
             newPosition.y = Mathf.Clamp(newPosition.y, minY, maxY);
+        }
+
+        // --- НОВИЙ КОД: Округлення координат (Pixel Snapping) ---
+        if (enablePixelSnapping)
+        {
+            newPosition.x = Mathf.Round(newPosition.x * pixelsPerUnit) / pixelsPerUnit;
+            newPosition.y = Mathf.Round(newPosition.y * pixelsPerUnit) / pixelsPerUnit;
         }
 
         // Рухаємо камеру

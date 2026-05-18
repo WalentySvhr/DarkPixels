@@ -71,7 +71,7 @@ public class StatsUI : MonoBehaviour
 
                 // Формула: (1 / Базовий кулдаун) * (1 + Бонус %)
                 float aps = (1f / baseCd) * (1f + totalBonus);
-                attackSpeedText.text = $"{attackSpeedLabel}{aps:F1} уд/сек";
+                attackSpeedText.text = $"{attackSpeedLabel}{aps:F1} aps";
             }
 
             // Шанс крита
@@ -103,7 +103,7 @@ public class StatsUI : MonoBehaviour
             if (healthRegenText != null)
             {
                 int totalRegen = playerHealth.amuletRegen + playerHealth.ringRegen;
-                healthRegenText.text = $"{regenLabel}+{totalRegen} HP/сек";
+                healthRegenText.text = $"{regenLabel}+{totalRegen} HP/s";
             }
         }
 
