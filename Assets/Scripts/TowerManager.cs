@@ -30,6 +30,10 @@ public class TowerManager : MonoBehaviour
     [Header("Chest Settings")]
     public ChestSpawner chestSpawner;
 
+    [Header("Loot Container (Динамічний лут)")]
+    [Tooltip("Перетягніть сюди порожній об'єкт DynamicLootContainer з ієрархії")]
+    public Transform lootContainer;
+
     [Header("Tower Stats")]
     public int currentFloor = 1;
     public int bossEveryXFloors = 5;
@@ -155,18 +159,13 @@ public class TowerManager : MonoBehaviour
         // ============================================================================
         // --- ЗБІЛЬШЕННЯ VICTORY COUNT ПІСЛЯ ПЕРЕМОГИ НАД БОСОМ ---
         // ============================================================================
-        // Якщо ми зайшли на поверх 6, 11, 16... це означає, що поверх 5, 10, 15 (Бос) щойно успішно пройдено!
         if ((currentFloor - 1) % bossEveryXFloors == 0)
         {
             if (SaveManager.Instance != null)
             {
-                // 1. Додаємо успішно подоланого Боса до лічильника в JSON
                 SaveManager.Instance.CurrentData.victoryCount++;
-
-                // 2. Зберігаємо оновлений JSON файл
                 SaveManager.Instance.SaveGame();
 
-                // 3. Запускаємо перевірку та спробу виклику вікна оцінки Google Play
                 if (GoogleReviewManager.Instance != null)
                 {
                     GoogleReviewManager.Instance.TryTriggerReview(
@@ -193,7 +192,6 @@ public class TowerManager : MonoBehaviour
         }
     }
 
-    // --- Логіка фіксації рекорду ---
     private void CheckForNewRecord()
     {
         if (currentFloor > maxFloorRecord)
@@ -201,7 +199,6 @@ public class TowerManager : MonoBehaviour
             maxFloorRecord = currentFloor;
             Debug.Log($"<color=gold>[TowerRecord] НОВИЙ РЕКОРД! Максимальний поверх: {maxFloorRecord}</color>");
 
-            // Одразу зберігаємо прогрес у файл, щоб рекорд не втратився при вильоті гри
             if (SaveManager.Instance != null)
             {
                 SaveManager.Instance.SaveGame();
@@ -214,7 +211,7 @@ public class TowerManager : MonoBehaviour
         ApplyFloorEnvironment();
         StopSpawners();
         ClearEnemies();
-        ClearLoot();
+        ClearLoot(); // Виклик очищення контейнера
 
         if (chestSpawner != null) chestSpawner.ClearChests();
         if (bossTrigger != null) bossTrigger.ResetTrigger();
@@ -293,10 +290,23 @@ public class TowerManager : MonoBehaviour
         }
     }
 
+    // --- МОДИФІКОВАНО ДЛЯ ВАРІАНТУ 1 ---
     private void ClearLoot()
     {
-        GameObject[] loot = GameObject.FindGameObjectsWithTag("Loot");
-        foreach (GameObject l in loot) Destroy(l);
+        if (lootContainer != null)
+        {
+            // Видаляємо лише ті об'єкти, які лежать всередині контейнера
+            foreach (Transform child in lootContainer)
+            {
+                Destroy(child.gameObject);
+            }
+            Debug.Log("<color=green>TowerManager: Тимчасовий лут у контейнері зачищено.</color>");
+        }
+        else
+        {
+            // Безпечний вихід на випадок, якщо забули прикріпити контейнер в Інспекторі
+            Debug.LogWarning("TowerManager: lootContainer не призначено в Інспекторі! Лут не очищено.");
+        }
     }
 
     private void UpdateFloorText() { if (floorText != null) floorText.text = "FLOOR: " + currentFloor; }

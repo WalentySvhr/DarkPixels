@@ -38,6 +38,13 @@ public class LootDropper : MonoBehaviour
         // Дізнаємося поточний шар ворога (наприклад, "Enemy_Inside" або "Enemy_Outside")
         string currentLayer = (enemySprite != null) ? enemySprite.sortingLayerName : "Default";
 
+        // Отримуємо посилання на контейнер луту з нашого TowerManager
+        Transform targetContainer = null;
+        if (TowerManager.Instance != null && TowerManager.Instance.lootContainer != null)
+        {
+            targetContainer = TowerManager.Instance.lootContainer;
+        }
+
         foreach (Loot item in possibleLoot)
         {
             if (item.prefab == null) continue;
@@ -49,7 +56,17 @@ public class LootDropper : MonoBehaviour
 
                 for (int i = 0; i < amountToDrop; i++)
                 {
-                    GameObject droppedItem = Instantiate(item.prefab, transform.position, Quaternion.identity);
+                    // --- МОДИФІКОВАНО ---
+                    // Спавнимо лут одразу всередину контейнера, якщо він існує
+                    GameObject droppedItem;
+                    if (targetContainer != null)
+                    {
+                        droppedItem = Instantiate(item.prefab, transform.position, Quaternion.identity, targetContainer);
+                    }
+                    else
+                    {
+                        droppedItem = Instantiate(item.prefab, transform.position, Quaternion.identity);
+                    }
 
                     // Прив'язка до освітлення
                     ApplyLighting(droppedItem, currentLayer);
@@ -57,8 +74,7 @@ public class LootDropper : MonoBehaviour
                     // Застосовуємо фізику (розліт)
                     lootPhysics.ApplyExplosion(droppedItem);
 
-                    // --- НОВЕ: Таймер знищення ---
-                    // Якщо галочка стоїть, кажемо Unity знищити предмет через itemLifetime секунд
+                    // --- Таймер знищення ---
                     if (destroyItemsAfterTime)
                     {
                         Destroy(droppedItem, itemLifetime);
