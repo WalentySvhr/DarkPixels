@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.SceneManagement; // ОБОВ'ЯЗКОВО: для відстеження завантаження сцен
 using System.Collections.Generic;
+using System.Collections; // ОБОВ'ЯЗКОВО: для роботи Корутин (IEnumerator)
 
 public class ContinuousPlaylist : MonoBehaviour
 {
@@ -10,9 +11,12 @@ public class ContinuousPlaylist : MonoBehaviour
     [Header("Налаштування мікшера")]
     public AudioMixerGroup musicOutput; // Канал Music (MainMixer)
 
-    [Header("Плейлист")]
+    [Header("Плейлист за замовчуванням")]
     public List<AudioClip> playlist = new List<AudioClip>(); // Твої треки
     public bool shuffleMode = false; // Чи перемішувати музику?
+
+    [Header("Налаштування плавного переходу")]
+    [Range(0.1f, 3f)] public float fadeDuration = 1.0f; // Час затухання/наростання в секундах
 
     private AudioSource audioSource;
     private int currentTrackIndex = 0;
@@ -20,6 +24,8 @@ public class ContinuousPlaylist : MonoBehaviour
     private float silenceTimer = 0f;
 
     private float sceneTransitionCooldown = 0f; // Таймер блокування перемикання
+    private Coroutine fadeCoroutine; // Посилання на поточну активну корутину переходу
+    private float maxVolume = 1f; // Цільова максимальна гучність AudioSource
 
     void Awake()
     {
@@ -35,6 +41,7 @@ public class ContinuousPlaylist : MonoBehaviour
                 audioSource.outputAudioMixerGroup = musicOutput;
 
             audioSource.loop = false;
+            maxVolume = audioSource.volume; // Запам'ятовуємо дефолтну гучність, яку ти виставив в інспекторі
         }
         else
         {
@@ -54,7 +61,7 @@ public class ContinuousPlaylist : MonoBehaviour
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
-    // Цей метод викликається АВТОМАТИЧНО, як тільки будь-яка сцена завантажилась
+    // Цей метод викликається АВТОМАТИЧНО, як тільки будь-яка场景 завантажилась
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         if (instance != this) return;
@@ -91,7 +98,8 @@ public class ContinuousPlaylist : MonoBehaviour
             return;
         }
 
-        if (playlist.Count > 0)
+        // Автоматично переходимо на наступний трек лише тоді, коли зараз НЕ йде плавна зміна зони
+        if (playlist.Count > 0 && fadeCoroutine == null)
             HandleTrackTransition();
     }
 
@@ -140,6 +148,7 @@ public class ContinuousPlaylist : MonoBehaviour
 
         int trackToPlay = playOrder[currentTrackIndex];
         audioSource.clip = playlist[trackToPlay];
+        audioSource.volume = maxVolume; // Повертаємо гучність на початковий максимум
         audioSource.Play();
 
         Debug.Log($"Зараз грає: {playlist[trackToPlay].name}");
@@ -154,5 +163,68 @@ public class ContinuousPlaylist : MonoBehaviour
             if (shuffleMode) GeneratePlayOrder();
         }
         PlayCurrentTrack();
+    }
+
+    // =======================================================
+    // ОНОВЛЕНИЙ МЕТОД ДЛЯ ПОВНОЇ ЗАМІНИ ПЛЕЙЛИСТА З ЕФЕКТОМ FADE
+    // =======================================================
+    public void ChangeZonePlaylist(List<AudioClip> newTracks, bool shuffle)
+    {
+        if (newTracks == null || newTracks.Count == 0 || audioSource == null) return;
+
+        // ПЕРЕВІРКА: Чи цей список такий самий, як поточний?
+        if (playlist.Count == newTracks.Count && playlist.Count > 0 && playlist[0] == newTracks[0])
+        {
+            if (!audioSource.isPlaying) audioSource.Play();
+            return;
+        }
+
+        // Якщо попередня зміна зони ще активна — зупиняємо її корутину, щоб не було конфліктів
+        if (fadeCoroutine != null)
+            StopCoroutine(fadeCoroutine);
+
+        // Запускаємо новий плавний перехід
+        fadeCoroutine = StartCoroutine(FadeZonePlaylistRoutine(newTracks, shuffle));
+    }
+
+    // Корутина для плавного затухання та наростання звуку локацій
+    private IEnumerator FadeZonePlaylistRoutine(List<AudioClip> newTracks, bool shuffle)
+    {
+        // 1. FADE OUT: Плавно глушимо попередній трек до 0
+        if (audioSource.isPlaying)
+        {
+            float startVolume = audioSource.volume;
+            while (audioSource.volume > 0)
+            {
+                audioSource.volume -= startVolume * (Time.deltaTime / fadeDuration);
+                yield return null; // Чекаємо наступного кадру
+            }
+            audioSource.Stop();
+        }
+
+        // 2. ОНОВЛЕННЯ ДАНИХ ПЛЕЙЛИСТА
+        playlist = new List<AudioClip>(newTracks);
+        shuffleMode = shuffle;
+        currentTrackIndex = 0;
+        GeneratePlayOrder();
+
+        // Підкидаємо новий перший трек із нульовою гучністю
+        int trackToPlay = playOrder[currentTrackIndex];
+        audioSource.clip = playlist[trackToPlay];
+        audioSource.volume = 0f;
+        audioSource.Play();
+
+        Debug.Log($"[PlaylistManager] Плавне завантаження нової зони. Зараз грає: {playlist[trackToPlay].name}");
+
+        // 3. FADE IN: Плавно виводимо гучність нового треку на максимум
+        while (audioSource.volume < maxVolume)
+        {
+            audioSource.volume += maxVolume * (Time.deltaTime / fadeDuration);
+            yield return null;
+        }
+
+        // Жорстко фіксуємо фінальну гучність та очищаємо посилання на корутину
+        audioSource.volume = maxVolume;
+        fadeCoroutine = null;
     }
 }

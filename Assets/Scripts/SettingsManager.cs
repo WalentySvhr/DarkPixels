@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Audio;
+using System.Collections; // ОБОВ'ЯЗКОВО: для роботи корутин (IEnumerator)
 
 public class SettingsManager : MonoBehaviour
 {
@@ -30,12 +31,25 @@ public class SettingsManager : MonoBehaviour
     {
         if (mainMixer == null)
         {
-            Debug.LogError("Менеджер налаштувань: Не забудь перетягнути MainMixer в Інспекторі!");
+            Debug.LogError("Менеджер налаштувань: Не забудь перетягнути MainMixer in Інспекторі!");
             return;
         }
 
-        // Ініціалізуємо кожен слайдер окремо
-        // Передаємо: (Слайдер, Ключ збереження, НАЗВА ЕКСПОНОВАНОГО ПАРАМЕТРА в мікшері)
+        // ЗАПУСКАЄМО КОРУТИНУ ГАРАНТОВАНОЇ ЗАТРИМКИ
+        StartCoroutine(InitSlidersWithDelay());
+
+        // Ховаємо панель при старті гри, якщо забули сховати в редакторі
+        if (settingsPanel != null)
+            settingsPanel.SetActive(false);
+    }
+
+    // Метод-корутина, який чекає 0.2 секунди реального часу, поки прокинеться інтерфейс AudioMixer
+    private IEnumerator InitSlidersWithDelay()
+    {
+        // Чекаємо 0.2 секунди реального часу (ігноруючи паузу гри Time.timeScale = 0)
+        yield return new WaitForSecondsRealtime(0.2f);
+
+        // Тепер спокійно ініціалізуємо кожен слайдер — мікшер точно застосує ці значення
         InitSlider(musicSlider, MusicKey, "MusicVol");
         InitSlider(sfxSlider, SfxKey, "SFXVol");
 
@@ -44,9 +58,7 @@ public class SettingsManager : MonoBehaviour
         InitSlider(combatSlider, CombatKey, "CombatVol");
         InitSlider(lootCoinSlider, LootKey, "LootCoinVol");
 
-        // Ховаємо панель при старті гри, якщо забули сховати в редакторі
-        if (settingsPanel != null)
-            settingsPanel.SetActive(false);
+        Debug.Log("[SettingsManager] Слайдери успішно синхронізовані з мікшером після гарантованої затримки.");
     }
 
     // Універсальний метод ініціалізації слайдерів

@@ -152,6 +152,31 @@ public class TowerManager : MonoBehaviour
         // --- НОВЕ: Перевіряємо, чи побили ми рекорд, при кожному переході ---
         CheckForNewRecord();
 
+        // ============================================================================
+        // --- ЗБІЛЬШЕННЯ VICTORY COUNT ПІСЛЯ ПЕРЕМОГИ НАД БОСОМ ---
+        // ============================================================================
+        // Якщо ми зайшли на поверх 6, 11, 16... це означає, що поверх 5, 10, 15 (Бос) щойно успішно пройдено!
+        if ((currentFloor - 1) % bossEveryXFloors == 0)
+        {
+            if (SaveManager.Instance != null)
+            {
+                // 1. Додаємо успішно подоланого Боса до лічильника в JSON
+                SaveManager.Instance.CurrentData.victoryCount++;
+
+                // 2. Зберігаємо оновлений JSON файл
+                SaveManager.Instance.SaveGame();
+
+                // 3. Запускаємо перевірку та спробу виклику вікна оцінки Google Play
+                if (GoogleReviewManager.Instance != null)
+                {
+                    GoogleReviewManager.Instance.TryTriggerReview(
+                        SaveManager.Instance.CurrentData.alreadyReviewed,
+                        SaveManager.Instance.CurrentData.victoryCount
+                    );
+                }
+            }
+        }
+
         PrepareLevel();
         UpdateFloorText();
         StartSpawners();
@@ -168,7 +193,7 @@ public class TowerManager : MonoBehaviour
         }
     }
 
-    // --- НОВЕ: Логіка фіксації рекорду ---
+    // --- Логіка фіксації рекорду ---
     private void CheckForNewRecord()
     {
         if (currentFloor > maxFloorRecord)

@@ -31,6 +31,12 @@ public class GameData
 
     // --- Збереження рекорду Башні ---
     public int maxTowerFloor;
+
+    // ============================================================================
+    // --- НОВЕ ДЛЯ GOOGLE PLAY IN-APP REVIEW ---
+    // ============================================================================
+    public int victoryCount;      // Кількість перемог на аренах
+    public bool alreadyReviewed;  // Чи було успішно показано вікно відгуку
 }
 
 [System.Serializable]
@@ -60,6 +66,9 @@ public class SaveManager : MonoBehaviour
     private string savePath;
     private bool needsToLoad = false;
 
+    // Кеш для поточних завантажених даних, щоб мати легкий доступ до victoryCount та alreadyReviewed
+    public GameData CurrentData { get; private set; } = new GameData();
+
     void Awake()
     {
         if (Instance == null)
@@ -67,6 +76,12 @@ public class SaveManager : MonoBehaviour
             Instance = this;
             DontDestroyOnLoad(gameObject);
             savePath = Path.Combine(Application.persistentDataPath, "gamesave.json");
+
+            // Завантажуємо початкові дані в кеш відразу при старті програми, якщо файл існує
+            if (File.Exists(savePath))
+            {
+                CurrentData = JsonUtility.FromJson<GameData>(File.ReadAllText(savePath));
+            }
         }
         else
         {
@@ -156,6 +171,13 @@ public class SaveManager : MonoBehaviour
         PlayerHealth health = Object.FindFirstObjectByType<PlayerHealth>();
         if (health != null) data.currentHealth = health.currentHealth;
 
+        // Зберігаємо також значення для відгуків, які зараз лежать у кеші
+        data.victoryCount = CurrentData.victoryCount;
+        data.alreadyReviewed = CurrentData.alreadyReviewed;
+
+        // Оновлюємо наш робочий кеш даних перед записом на диск
+        CurrentData = data;
+
         File.WriteAllText(savePath, JsonUtility.ToJson(data, true));
         Debug.Log("<color=green>[SaveSystem]</color> Дані успішно зафіксовані.");
     }
@@ -165,6 +187,8 @@ public class SaveManager : MonoBehaviour
         if (!File.Exists(savePath)) return;
 
         GameData data = JsonUtility.FromJson<GameData>(File.ReadAllText(savePath));
+        CurrentData = data; // Записуємо завантажені дані в кеш
+
         GameObject player = GameObject.FindGameObjectWithTag("Player");
 
         if (player != null)
@@ -287,5 +311,19 @@ public class SaveManager : MonoBehaviour
 
         int removed = data.activeCooldowns.RemoveAll(x => x.spotID == id);
         if (removed > 0) File.WriteAllText(savePath, JsonUtility.ToJson(data, true));
+    }
+
+    // ============================================================================
+    // --- НОВИЙ МЕТОД: ФІКСАЦІЯ ПОКАЗУ ВІДГУКУ GOOGLE PLAY ---
+    // ============================================================================
+    public void OnReviewSuccessfullyShown()
+    {
+        // Перемикаємо прапорець, щоб більше ніколи не показувати вікно відгуку
+        CurrentData.alreadyReviewed = true;
+
+        // Робимо повне збереження JSON, щоб зберегти цю мітку на диску пристрою
+        SaveGame();
+
+        Debug.Log("<color=green>[SaveSystem]</color> Стан відгуку збережено: більше вікно викликатися не буде.");
     }
 }
