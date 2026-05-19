@@ -37,7 +37,10 @@ public class BossCombat : MonoBehaviour
     private bool facingRight = true;
     private bool isAttacking = false;
     private bool isAggroedByDamage = false;
-    private bool isStunned = false; // НОВЕ: Прапорець оглушення
+    private bool isStunned = false;
+
+    // === НОВЕ: Зберігає напрямок для плавного руху у FixedUpdate ===
+    private Vector2 moveDirection;
 
     // Хеш-коди параметрів для оптимізації
     private readonly int speedHash = Animator.StringToHash("Speed");
@@ -57,15 +60,18 @@ public class BossCombat : MonoBehaviour
 
     void Update()
     {
-        // Якщо немає гравця, бос атакує, АБО БОС ОГЛУШЕНИЙ — нічого не робимо
-        if (player == null || isAttacking || isStunned) return;
+        if (player == null || isAttacking || isStunned)
+        {
+            moveDirection = Vector2.zero; // Якщо бос не може йти, обнуляємо напрямок
+            return;
+        }
 
         float distance = Vector2.Distance(transform.position, player.position);
 
         // 1. Перевірка Агро
         if (distance > detectRange && !isAggroedByDamage)
         {
-            StopMovement();
+            SetMovementState(Vector2.zero);
             return;
         }
 
@@ -74,7 +80,7 @@ public class BossCombat : MonoBehaviour
         // 2. Логіка: Атакувати чи Наздоганяти
         if (distance <= attackRange)
         {
-            StopMovement();
+            SetMovementState(Vector2.zero);
             if (Time.time >= nextAttackTime)
             {
                 Attack();
@@ -82,15 +88,33 @@ public class BossCombat : MonoBehaviour
         }
         else if (distance > stopDistance)
         {
-            MoveTowardsPlayer();
+            CalculateMovementDirection();
         }
         else
         {
-            StopMovement();
+            SetMovementState(Vector2.zero);
         }
     }
 
-    // ОНОВЛЕНО: Тепер викликає корутину оглушення
+    void FixedUpdate()
+    {
+        // === ВИПРАВЛЕННЯ: Рух через швидкість (velocity) ===
+        // Виконуємо рух тільки якщо бос не оглушений і не атакує
+        if (!isStunned && !isAttacking)
+        {
+            if (gameType == GameType.Platformer)
+            {
+                // Для платформера керуємо лише X, зберігаючи гравітацію (швидкість падіння по Y)
+                rb.linearVelocity = new Vector2(moveDirection.x * moveSpeed, rb.linearVelocity.y);
+            }
+            else
+            {
+                // Для TopDown рухаємося по обох осях
+                rb.linearVelocity = moveDirection * moveSpeed;
+            }
+        }
+    }
+
     public void OnDamageReceived()
     {
         if (!isAggroedByDamage)
@@ -99,23 +123,19 @@ public class BossCombat : MonoBehaviour
             isAggroedByDamage = true;
         }
 
-        // Запускаємо оглушення, тільки якщо бос ще не оглушений
         if (!isStunned)
         {
             StartCoroutine(HitStunRoutine());
         }
     }
 
-    // НОВЕ: Корутина оглушення
     private IEnumerator HitStunRoutine()
     {
         isStunned = true;
 
-        // Зупиняємо рух і передаємо нульову швидкість в Animator
-        StopMovement();
+        // Вимикаємо анімацію бігу
+        if (anim != null) anim.SetFloat(speedHash, 0f);
 
-        // Перериваємо поточну атаку (якщо бос якраз замахувався)
-        // У цьому випадку скидаємо прапорець, щоб після оглушення він міг атакувати знову
         if (isAttacking)
         {
             CancelInvoke(nameof(ApplyMeleeDamage));
@@ -124,10 +144,18 @@ public class BossCombat : MonoBehaviour
             isAttacking = false;
         }
 
-        // Чекаємо, поки програється анімація TakeDamage
+        // Чекаємо завершення оглушення (у цей час бос летить від фізичного імпульсу відкидання)
         yield return new WaitForSeconds(hitStunDuration);
 
-        // Повертаємо боса до нормального стану
+        // === ВИПРАВЛЕННЯ: Зупиняємо ковзання після відкидання ===
+        if (rb != null)
+        {
+            if (gameType == GameType.Platformer)
+                rb.linearVelocity = new Vector2(0, rb.linearVelocity.y); // Не чіпаємо гравітацію
+            else
+                rb.linearVelocity = Vector2.zero;
+        }
+
         isStunned = false;
     }
 
@@ -135,8 +163,15 @@ public class BossCombat : MonoBehaviour
     {
         isAttacking = true;
         nextAttackTime = Time.time + attackCooldown;
+        moveDirection = Vector2.zero;
 
-        // ВИКЛИК АНІМАЦІЇ АТАКИ
+        // Повна зупинка боса під час атаки (з урахуванням типу гри)
+        if (rb != null)
+        {
+            if (gameType == GameType.Platformer) rb.linearVelocity = new Vector2(0, rb.linearVelocity.y);
+            else rb.linearVelocity = Vector2.zero;
+        }
+
         if (anim != null) anim.SetTrigger(attackHash);
 
         if (bossType == BossType.Melee)
@@ -175,7 +210,8 @@ public class BossCombat : MonoBehaviour
         }
     }
 
-    void MoveTowardsPlayer()
+    // Допоміжний метод: вираховує напрямок руху
+    void CalculateMovementDirection()
     {
         Vector2 targetPosition;
         if (gameType == GameType.Platformer)
@@ -183,25 +219,16 @@ public class BossCombat : MonoBehaviour
         else
             targetPosition = player.position;
 
-        Vector2 newPos = Vector2.MoveTowards(rb.position, targetPosition, moveSpeed * Time.deltaTime);
-        rb.MovePosition(newPos);
+        moveDirection = (targetPosition - (Vector2)transform.position).normalized;
 
-        // КЕРУВАННЯ АНІМАЦІЄЮ ХОДЬБИ
-        if (anim != null)
-        {
-            anim.SetFloat(speedHash, 1f);
-        }
+        if (anim != null) anim.SetFloat(speedHash, 1f);
     }
 
-    void StopMovement()
+    // Допоміжний метод: встановлює нульовий напрямок
+    void SetMovementState(Vector2 dir)
     {
-        if (rb != null) rb.linearVelocity = Vector2.zero; // Змінено linearVelocity на velocity (стандарт для Rigidbody2D)
-
-        // ЗУПИНКА АНІМАЦІЇ ХОДЬБИ
-        if (anim != null)
-        {
-            anim.SetFloat(speedHash, 0f);
-        }
+        moveDirection = dir;
+        if (anim != null) anim.SetFloat(speedHash, 0f);
     }
 
     void LookAtPlayer()

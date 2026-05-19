@@ -56,33 +56,32 @@ public class EnemyAI : MonoBehaviour
         if (playerObj != null) target = playerObj.transform;
     }
 
-    // Метод викликається при отриманні шкоди (наприклад, зі скрипта EnemyHealth)
     public void OnTakeDamage()
     {
         isAggroedByDamage = true;
 
-        // Перериваємо поточну дію і переходимо в стан Hit (запускаємо корутину оглушення)
         if (currentState != EnemyState.Hit)
         {
             StartCoroutine(HitStunRoutine());
         }
     }
 
-    // --- НОВЕ: Корутина для паузи під час удару ---
     private IEnumerator HitStunRoutine()
     {
-        // Перемикаємось у стан Hit і зупиняємось
         currentState = EnemyState.Hit;
         moveDirection = Vector2.zero;
-        if (anim != null) anim.SetFloat("Speed", 0f); // Зупиняємо анімацію бігу
+        if (anim != null) anim.SetFloat("Speed", 0f);
 
-        // Чекаємо, поки програється анімація отримання шкоди
+        // Чекаємо, поки моб оглушений і летить від відкидання
         yield return new WaitForSeconds(hitStunDuration);
 
-        // --- ПЕРЕВІРКА НА ВТЕЧУ (відбувається ПІСЛЯ того, як моб оговтався) ---
+        // === ВИПРАВЛЕННЯ: Скидаємо залишкову фізичну швидкість від відкидання, 
+        // щоб моб не продовжував ковзати або дьоргатись ===
+        if (rb != null) rb.linearVelocity = Vector2.zero;
+
         if (canFlee && !hasAttemptedToFlee)
         {
-            hasAttemptedToFlee = true; // Помічаємо, що спроба використана
+            hasAttemptedToFlee = true;
 
             float randomRoll = Random.Range(0f, 100f);
             if (randomRoll <= fleeChancePercent)
@@ -90,15 +89,10 @@ public class EnemyAI : MonoBehaviour
                 currentState = EnemyState.Fleeing;
                 currentFleeTimer = fleeDuration;
                 Debug.Log($"Ворог злякався ({randomRoll:F1}%) і тікає!");
-                yield break; // Виходимо з корутини, бо він тепер тікає
-            }
-            else
-            {
-                Debug.Log("Ворог вирішив битися до кінця (шанс втечі не спрацював).");
+                yield break;
             }
         }
 
-        // Якщо моб не втік, він продовжує переслідувати гравця
         currentState = EnemyState.Chasing;
     }
 
@@ -110,9 +104,7 @@ public class EnemyAI : MonoBehaviour
 
         switch (currentState)
         {
-            // --- НОВЕ: Обробка стану Hit в Update ---
             case EnemyState.Hit:
-                // Моб оглушений, нічого не робимо (стоїмо на місці)
                 moveDirection = Vector2.zero;
                 break;
 
@@ -139,13 +131,12 @@ public class EnemyAI : MonoBehaviour
                 break;
 
             case EnemyState.Chasing:
-                // Логіка втрати агро
                 if (distanceToPlayer > loseAggroDistance)
                 {
                     currentLoseAggroTimer += Time.deltaTime;
                     if (currentLoseAggroTimer >= loseAggroTime)
                     {
-                        ResetCombat(); // Скидаємо стан бою
+                        ResetCombat();
                         currentState = EnemyState.Returning;
                         break;
                     }
@@ -155,7 +146,6 @@ public class EnemyAI : MonoBehaviour
                     currentLoseAggroTimer = 0f;
                 }
 
-                // Рух до гравця
                 if (distanceToPlayer > stopDistance)
                 {
                     moveDirection = (target.position - transform.position).normalized;
@@ -166,7 +156,6 @@ public class EnemyAI : MonoBehaviour
                     moveDirection = Vector2.zero;
                 }
 
-                // Атака
                 if (distanceToPlayer <= attackRange && Time.time >= nextAttackTime)
                 {
                     TriggerAttack();
@@ -185,7 +174,7 @@ public class EnemyAI : MonoBehaviour
                 {
                     transform.position = startPosition;
                     currentState = EnemyState.Idle;
-                    hasAttemptedToFlee = false; // Скидаємо можливість втечі, коли ворог повернувся в спокій
+                    hasAttemptedToFlee = false;
                 }
 
                 if (distanceToPlayer <= checkRadius || isAggroedByDamage)
@@ -195,7 +184,6 @@ public class EnemyAI : MonoBehaviour
                 break;
         }
 
-        // Оновлюємо параметр Speed в Animator (але не робимо це в стані Hit, бо ми його вже обнулили)
         if (anim != null && currentState != EnemyState.Hit)
         {
             anim.SetFloat("Speed", moveDirection.magnitude);
@@ -205,8 +193,6 @@ public class EnemyAI : MonoBehaviour
     void ResetCombat()
     {
         isAggroedByDamage = false;
-        // Тут можна додати скидання hasAttemptedToFlee, 
-        // якщо хочете, щоб він міг тікати знову після того як відійшов від гравця
     }
 
     void TriggerAttack()
@@ -223,7 +209,6 @@ public class EnemyAI : MonoBehaviour
             float distance = Vector2.Distance(transform.position, target.position);
             if (distance <= attackRange)
             {
-                // Припускаємо, що у гравця є скрипт PlayerHealth
                 PlayerHealth playerHealth = target.GetComponent<PlayerHealth>();
                 if (playerHealth != null) playerHealth.TakeDamage(damage);
                 Debug.Log("Гравець отримав шкоду: " + damage);
@@ -233,10 +218,13 @@ public class EnemyAI : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (moveDirection != Vector2.zero && currentState != EnemyState.Hit)
+        // === ВИПРАВЛЕННЯ: Змінено логіку руху ===
+        // Використовуємо rb.velocity замість rb.MovePosition. 
+        // Це запобігає "биттю" колайдерів (дьорганню), коли моб підходить впритул до гравця.
+        if (currentState != EnemyState.Hit)
         {
             float currentSpeed = (currentState == EnemyState.Fleeing) ? fleeSpeed : speed;
-            rb.MovePosition(rb.position + moveDirection * currentSpeed * Time.fixedDeltaTime);
+            rb.linearVelocity = moveDirection * currentSpeed;
         }
     }
 

@@ -160,7 +160,8 @@ public class PlayerCombat : MonoBehaviour
 
         foreach (Collider2D enemy in hitEnemies)
         {
-            ApplyDamageToEnemy(enemy, finalDamage, isCrit, 10f);
+            // ТЕПЕР ПРАВИЛЬНО: Беремо силу відкидання з налаштувань самої зброї
+            ApplyDamageToEnemy(enemy, finalDamage, isCrit, currentWeaponData.knockbackForce);
         }
     }
 

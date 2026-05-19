@@ -42,12 +42,18 @@ public class EnemyHealth : MonoBehaviour
 
     [Header("Daily Quest Settings")]
     [Tooltip("Поставте галочку, якщо цей моб - елітний/міні-бос")]
-    public bool isElite = false; // НОВЕ: Для квесту "Мисливець за головами"
+    public bool isElite = false;
+
+    // === НОВЕ: Змінна для фізики ===
+    private Rigidbody2D rb;
 
     void Start()
     {
         if (animator == null) animator = GetComponent<Animator>();
         if (spriteRenderer == null) spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+
+        // === НОВЕ: Отримуємо Rigidbody2D ===
+        rb = GetComponent<Rigidbody2D>();
 
         if (spriteRenderer != null)
         {
@@ -82,6 +88,13 @@ public class EnemyHealth : MonoBehaviour
         if (currentHealth < 0) currentHealth = 0;
 
         UpdateHealthUI();
+
+        // === НОВЕ: ЗАСТОСОВУЄМО ВІДКИДАННЯ ===
+        if (rb != null && force > 0)
+        {
+            rb.linearVelocity = Vector2.zero; // Скидаємо швидкість, щоб відкидання завжди працювало стабільно
+            rb.AddForce(knockbackDirection * force, ForceMode2D.Impulse);
+        }
 
         if (animator != null) animator.SetTrigger("TakeDamage");
 
@@ -149,12 +162,12 @@ public class EnemyHealth : MonoBehaviour
             ai.enabled = false;
         }
 
-        Rigidbody2D rb = GetComponent<Rigidbody2D>();
-        // if (rb != null)
-        // {
-        //     rb.velocity = Vector2.zero; 
-        //     rb.isKinematic = true;      
-        // }
+        // === ОНОВЛЕНО: Тепер використовуємо кешований rb ===
+        if (rb != null)
+        {
+            rb.linearVelocity = Vector2.zero;
+            rb.isKinematic = true;
+        }
 
         if (hpSlider != null) hpSlider.gameObject.SetActive(false);
         if (hpText != null) hpText.gameObject.SetActive(false);
@@ -167,19 +180,14 @@ public class EnemyHealth : MonoBehaviour
 
         if (lootDropper != null) lootDropper.DropLoot();
 
-        // --- Звичайні квести ---
         if (QuestManager.Instance != null)
         {
             QuestManager.Instance.OnQuestAction(QuestType.KillInTower, "");
         }
 
-        // --- НОВЕ: Щоденні квести ---
         if (DailyQuestManager.Instance != null)
         {
-            // Зараховуємо вбивство звичайного моба
             DailyQuestManager.Instance.AddProgress(DailyQuestType.KillEnemies, 1);
-
-            // Якщо це елітний ворог, зараховуємо ще й квест на елітку
             if (isElite)
             {
                 DailyQuestManager.Instance.AddProgress(DailyQuestType.KillElite, 1);
