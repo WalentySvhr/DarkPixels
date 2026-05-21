@@ -51,12 +51,14 @@ public class PlayerCombat : MonoBehaviour
 
     public void EquipWeapon(WeaponData newData)
     {
+        // Видаляємо стару зброю
         if (spawnedWeapon != null)
         {
             Destroy(spawnedWeapon);
             spawnedWeapon = null;
         }
 
+        // Якщо нової зброї немає — виходимо
         if (newData == null)
         {
             currentWeaponData = null;
@@ -65,16 +67,26 @@ public class PlayerCombat : MonoBehaviour
 
         currentWeaponData = newData;
 
-        if (newData.visualPrefab != null)
+        // Перевіряємо, чи є префаб і чи заданий weaponHolder
+        if (newData.visualPrefab != null && weaponHolder != null)
         {
             spawnedWeapon = Instantiate(newData.visualPrefab, weaponHolder);
             spawnedWeapon.transform.localPosition = Vector3.zero;
             spawnedWeapon.transform.localRotation = Quaternion.identity;
 
-            if (spawnedWeapon.GetComponent<Animator>() != null)
-                newData.UpdateAnimationSpeed(spawnedWeapon.GetComponent<Animator>());
+            // Якщо у зброї є аніматор — оновлюємо швидкість
+            Animator weaponAnim = spawnedWeapon.GetComponent<Animator>();
+            if (weaponAnim != null)
+            {
+                newData.UpdateAnimationSpeed(weaponAnim);
+            }
+        }
+        else
+        {
+            Debug.LogWarning("[PlayerCombat] Не знайдено visualPrefab або weaponHolder для зброї: " + newData.name);
         }
     }
+
 
     public void OnAttackButton()
     {

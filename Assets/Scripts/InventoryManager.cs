@@ -19,6 +19,7 @@ public class InventoryManager : MonoBehaviour
     [Header("UI посилання")]
     public InventoryUI inventoryUI;
     public HotbarUI hotbarScript;
+    public PlayerEquipment playerEquipment;
 
     [Header("Поточна екіпіровка (Універсальна система)")]
     public Dictionary<string, Item> equippedItems = new Dictionary<string, Item>();
@@ -195,13 +196,26 @@ public class InventoryManager : MonoBehaviour
     {
         string slotKey = slotIndex > 0 ? $"{slotType}_{slotIndex}" : slotType;
 
+        // Якщо в цьому слоті вже щось є - знімаємо його
         if (equippedItems.ContainsKey(slotKey))
         {
             UnequipItem(slotType, slotIndex);
         }
 
+        // Записуємо в інвентар (дані)
         equippedItems[slotKey] = itemToEquip;
-        Debug.Log($"[InventoryManager] В слот {slotKey} записано {itemToEquip.name}");
+
+        // --- НОВЕ: ФАКТИЧНО ОДЯГАЄМО ПРЕДМЕТ НА ГРАВЦЯ ---
+        if (playerEquipment != null)
+        {
+            if (itemToEquip is WeaponData weapon) playerEquipment.EquipWeapon(weapon);
+            else if (itemToEquip is PetData pet) playerEquipment.EquipPet(pet);
+            else if (itemToEquip is AmuletData amulet) playerEquipment.EquipAmulet(amulet);
+            else if (itemToEquip is BeltData belt) playerEquipment.EquipBelt(belt);
+            else if (itemToEquip is RingData ring) playerEquipment.EquipRing(ring, slotIndex);
+        }
+
+        Debug.Log($"[InventoryManager] В слот {slotKey} записано та одягнено {itemToEquip.name}");
     }
 
     public void UnequipItem(string slotType, int slotIndex = 0)
@@ -212,6 +226,17 @@ public class InventoryManager : MonoBehaviour
         {
             Item itemToReturn = equippedItems[slotKey];
             equippedItems.Remove(slotKey);
+
+            // --- НОВЕ: ФАКТИЧНО ЗНІМАЄМО ПРЕДМЕТ З ГРАВЦЯ ---
+            if (playerEquipment != null)
+            {
+                if (itemToReturn is WeaponData) playerEquipment.UnequipWeapon();
+                else if (itemToReturn is PetData) playerEquipment.UnequipPet();
+                else if (itemToReturn is AmuletData) playerEquipment.UnequipAmulet();
+                else if (itemToReturn is BeltData) playerEquipment.UnequipBelt();
+                else if (itemToReturn is RingData) playerEquipment.UnequipRing(slotIndex);
+            }
+
             Debug.Log($"[InventoryManager] Зі слота {slotKey} знято предмет: {itemToReturn.name}");
         }
     }
@@ -264,7 +289,9 @@ public class InventoryManager : MonoBehaviour
                 if (stack.amount <= 0) items.Remove(stack);
                 UpdateUI();
             }
+
         }
+
     }
 
     public void UpdateUI()
@@ -281,7 +308,9 @@ public class InventoryManager : MonoBehaviour
         {
             StatsUI.Instance.UpdateStatsUI();
         }
+
     }
+
 
     // --- НОВЕ: Метод оновлення інтерфейсу для вкладки петів ---
     public void UpdatePetUI()
@@ -326,4 +355,17 @@ public class InventoryManager : MonoBehaviour
         int finalAmount = Mathf.RoundToInt(baseAmount * coinMultiplier);
         ChangeCoins(finalAmount);
     }
+    // ✅ Новий метод для перевірки дублювання предметів
+    public bool Contains(Item item)
+    {
+        if (item == null) return false;
+
+        if (item.type == ItemType.Pet)
+        {
+            return petItems.Exists(s => s.item == item);
+        }
+
+        return items.Exists(s => s.item == item);
+    }
+
 }

@@ -54,23 +54,26 @@ public class PetInventoryUI : MonoBehaviour
     // Оновлюємо іконки петів
     public void UpdatePetUI()
     {
-        if (InventoryManager.Instance == null || petSlots.Count == 0) return;
+        if (InventoryManager.Instance == null || petSlots == null || petSlots.Count == 0) return;
 
         // Проходимо по всіх створених слотах
         for (int i = 0; i < petSlots.Count; i++)
         {
-            // Якщо в списку куплених петів є елемент для цього слота
+            // --- ВАЖЛИВО: Завжди спочатку очищаємо слот ---
+            // Це гарантує, що старі дані або "фантомні" іконки зникнуть
+            petSlots[i].ClearSlot();
+
+            // Якщо в списку є елемент для цього слота
             if (i < InventoryManager.Instance.petItems.Count)
             {
                 var petStack = InventoryManager.Instance.petItems[i];
-                // Малюємо пета у слоті (використовуємо твій стандартний метод додавання в слот)
+
+                // Додаємо предмет. 
+                // Переконайтеся, що AddItem всередині НЕ викликає 
+                // логіку EquipPet, а тільки малює іконку!
                 petSlots[i].AddItem(petStack.item, petStack.amount);
             }
-            else
-            {
-                // Якщо пета немає — слот порожній
-                petSlots[i].ClearSlot();
-            }
+            // Якщо i >= petItems.Count, слот залишається порожнім після ClearSlot()
         }
     }
 }

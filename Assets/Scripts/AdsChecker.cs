@@ -1,11 +1,10 @@
 using UnityEngine;
 using Unity.Services.LevelPlay;
 using System;
-using System.Collections; // Потрібно для корутин
 
 public class AdsChecker : MonoBehaviour
 {
-    [Header("Налаштування нагород (Можна міняти в Інспекторі)")]
+    [Header("Налаштування нагород")]
     public int freeGoldAmount = 100;
     public float boostMultiplier = 3f;
     public float boostDuration = 120f;
@@ -18,6 +17,13 @@ public class AdsChecker : MonoBehaviour
     public static AdsChecker Instance;
 
     private string appKey = "2638917fd";
+
+    // НОВЕ: У версії 9.4.1 обов'язково потрібен ID рекламного блоку.
+    // Ви зможете створити його в панелі LevelPlay у меню "Setup -> Ad units".
+    private string adUnitId = "alt6gaqjlknpqea6";
+
+    // НОВЕ: Об'єкт, який керує саме відео за винагороду
+    private LevelPlayRewardedAd rewardedAd;
 
     public enum RewardType
     {
@@ -42,8 +48,41 @@ public class AdsChecker : MonoBehaviour
 
     void Start()
     {
+        Debug.Log("AdsManager: Запуск ініціалізації LevelPlay...");
+
+        // 1. Підписуємося на події запуску SDK
+        LevelPlay.OnInitSuccess += SdkInitializationCompletedEvent;
+        LevelPlay.OnInitFailed += SdkInitializationFailedEvent;
+
+        // 2. Ініціалізуємо SDK
         LevelPlay.Init(appKey);
-        Debug.Log("AdsManager ініціалізовано. Режим: ІМІТАЦІЯ.");
+    }
+
+    // ==========================================
+    // СТВОРЕННЯ ТА ЗАВАНТАЖЕННЯ РЕКЛАМИ
+    // ==========================================
+    private void SdkInitializationCompletedEvent(LevelPlayConfiguration config)
+    {
+        Debug.Log("[AdsSystem] LevelPlay ініціалізовано успішно! Створюємо об'єкт реклами...");
+
+        // 3. Створюємо інстанс реклами з вашим Ad Unit ID
+        rewardedAd = new LevelPlayRewardedAd(adUnitId);
+
+        // 4. Підписуємося на події саме цієї реклами (Новий синтаксис 9.4.1)
+        rewardedAd.OnAdLoaded += OnAdLoaded;
+        rewardedAd.OnAdLoadFailed += OnAdLoadFailed;
+        rewardedAd.OnAdDisplayed += OnAdDisplayed;
+        rewardedAd.OnAdDisplayFailed += OnAdDisplayFailed;
+        rewardedAd.OnAdClosed += OnAdClosed;
+        rewardedAd.OnAdRewarded += OnAdRewarded;
+
+        // 5. У новій версії відео НЕ вантажиться автоматично. Робимо це вручну.
+        rewardedAd.LoadAd();
+    }
+
+    private void SdkInitializationFailedEvent(LevelPlayInitError error)
+    {
+        Debug.LogError($"[AdsSystem] Помилка ініціалізації SDK: {error.ToString()}");
     }
 
     void Update()
@@ -62,12 +101,15 @@ public class AdsChecker : MonoBehaviour
         }
     }
 
+    // ==========================================
+    // ВИКЛИК РЕКЛАМИ
+    // ==========================================
     public void RequestAd(RewardType type)
     {
         if (type == RewardType.FreeDiamonds && isDiamondAdOnCooldown)
         {
             int minutesRemaining = Mathf.CeilToInt(cooldownTimer / 60f);
-            Debug.LogWarning($"[AdsSystem] Реклама на діаманти заблокована! Триває відкат. Залишилось: {minutesRemaining} хв.");
+            Debug.LogWarning($"[AdsSystem] Реклама на діаманти заблокована! Залишилось: {minutesRemaining} хв.");
 
             if (TowerUIManager.Instance != null)
             {
@@ -79,33 +121,74 @@ public class AdsChecker : MonoBehaviour
         currentRewardType = type;
         Debug.Log($"Запит на рекламу для події: {type}...");
 
-        // Запускаємо нашу симуляцію перегляду
-        StartCoroutine(SimulateAdRoutine());
+        // Перевіряємо через новий об'єкт, чи відео вже завантажене
+        if (rewardedAd != null && rewardedAd.IsAdReady())
+        {
+            rewardedAd.ShowAd();
+        }
+        else
+        {
+            Debug.LogWarning("[AdsSystem] Реклама ще не завантажилась! Спробуйте пізніше.");
+
+            // Якщо сталася якась затримка, пробуємо форсувати завантаження
+            if (rewardedAd != null) rewardedAd.LoadAd();
+
+            if (TowerUIManager.Instance != null)
+            {
+                TowerUIManager.Instance.ShowNotification("Відео ще не готове. Зачекайте кілька секунд.");
+            }
+        }
     }
 
     // ==========================================
-    // СИМУЛЯЦІЯ ПАУЗИ ТА ВІДНОВЛЕННЯ ГРИ
+    // КОЛБЕКИ ВІД LEVELPLAY REWARDED AD (SDK 9.4.1)
     // ==========================================
-    private IEnumerator SimulateAdRoutine()
+    private void OnAdLoaded(LevelPlayAdInfo adInfo)
+    {
+        Debug.Log("[AdsSystem] Відео успішно завантажено в кеш!");
+    }
+
+    private void OnAdLoadFailed(LevelPlayAdError error)
+    {
+        Debug.LogError($"[AdsSystem] Помилка завантаження відео в кеш: {error.ToString()}");
+    }
+
+    private void OnAdDisplayed(LevelPlayAdInfo adInfo)
     {
         Debug.Log("<color=orange>[AdsSystem] Реклама на екрані. СТАВИМО ГРУ НА ПАУЗУ.</color>");
-        Time.timeScale = 0f;        // Зупиняємо всі ігрові таймери та рух
-        AudioListener.pause = true; // Глушимо звуки
+        Time.timeScale = 0f;
+        AudioListener.pause = true;
+    }
 
-        // Оскільки Time.timeScale = 0, звичайний WaitForSeconds НЕ ПРАЦЮЄ. 
-        // Використовуємо WaitForSecondsRealtime, щоб почекати 2 реальні секунди.
-        yield return new WaitForSecondsRealtime(2f);
+    private void OnAdDisplayFailed(LevelPlayAdInfo adInfo, LevelPlayAdError error)
+    {
+        Debug.LogError($"[AdsSystem] Помилка під час показу реклами: {error.ToString()}");
 
+        Time.timeScale = 1f;
+        AudioListener.pause = false;
+
+        // Пробуємо завантажити нове відео
+        if (rewardedAd != null) rewardedAd.LoadAd();
+    }
+
+    private void OnAdClosed(LevelPlayAdInfo adInfo)
+    {
         Debug.Log("<color=green>[AdsSystem] Реклама закрита. ВІДНОВЛЮЄМО ГРУ.</color>");
-        Time.timeScale = 1f;         // Повертаємо ігровий час
-        AudioListener.pause = false; // Вмикаємо звуки назад
+        Time.timeScale = 1f;
+        AudioListener.pause = false;
 
-        // Видаємо нагороду після того, як відео "закінчилося"
+        // ОБОВ'ЯЗКОВО: У новій версії ми маємо самі попросити завантажити наступне відео після закриття
+        rewardedAd.LoadAd();
+    }
+
+    private void OnAdRewarded(LevelPlayAdInfo adInfo, LevelPlayReward reward)
+    {
+        Debug.Log("<color=green>[AdsSystem] Відео переглянуто повністю! Видаємо нагороду.</color>");
         RewardPlayer();
     }
 
     // ==========================================
-    // ВИДАЧА НАГОРОД
+    // ВИДАЧА НАГОРОД (Залишилося без змін)
     // ==========================================
     private void RewardPlayer()
     {
@@ -118,9 +201,7 @@ public class AdsChecker : MonoBehaviour
 
             case RewardType.CoinBoostX3:
                 InventoryManager.Instance.ActivateCoinBoost(boostMultiplier, boostDuration);
-
                 if (DungeonAdUI.Instance != null) DungeonAdUI.Instance.HideBoostButton();
-
                 Debug.Log($"<color=yellow>Нагорода видана: Буст монет х{boostMultiplier} на {boostDuration} сек!</color>");
                 break;
 
@@ -156,7 +237,7 @@ public class AdsChecker : MonoBehaviour
     }
 
     // ==========================================
-    // ЗБЕРЕЖЕННЯ / ЗАВАНТАЖЕННЯ ЛІМІТІВ
+    // ЗБЕРЕЖЕННЯ / ЗАВАНТАЖЕННЯ ЛІМІТІВ (Залишилося без змін)
     // ==========================================
     public GameData CaptureAdsState(GameData data)
     {
@@ -179,5 +260,23 @@ public class AdsChecker : MonoBehaviour
     {
         timeLeft = cooldownTimer;
         return !isDiamondAdOnCooldown;
+    }
+
+    // Очищення пам'яті
+    void OnDestroy()
+    {
+        LevelPlay.OnInitSuccess -= SdkInitializationCompletedEvent;
+        LevelPlay.OnInitFailed -= SdkInitializationFailedEvent;
+
+        if (rewardedAd != null)
+        {
+            rewardedAd.OnAdLoaded -= OnAdLoaded;
+            rewardedAd.OnAdLoadFailed -= OnAdLoadFailed;
+            rewardedAd.OnAdDisplayed -= OnAdDisplayed;
+            rewardedAd.OnAdDisplayFailed -= OnAdDisplayFailed;
+            rewardedAd.OnAdClosed -= OnAdClosed;
+            rewardedAd.OnAdRewarded -= OnAdRewarded;
+            rewardedAd.Dispose();
+        }
     }
 }

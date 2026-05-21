@@ -34,18 +34,20 @@ public class PetSpawner : MonoBehaviour
         Vector3 spawnPosition = transform.position + new Vector3(-1f, 1f, 0f);
         currentActivePetObject = Instantiate(petData.petPrefab, spawnPosition, Quaternion.identity);
 
-        // --- ДИНАМІЧНЕ ПРИЗНАЧЕННЯ ЦІЛІ ---
-        // Отримуємо скрипт руху, який висить на заспавненому вовку
+        // --- ДИНАМІЧНЕ ПРИЗНАЧЕННЯ ЦІЛІ ТА ДАНИХ ---
         PetFollower follower = currentActivePetObject.GetComponent<PetFollower>();
         if (follower != null)
         {
             follower.playerTarget = this.transform; // Передаємо трансформ гравця
-            Debug.Log($"<color=cyan>[PetSpawner]</color> Скрипт PetFollower знайдено. Ціль (Player) успішно передана помічнику!");
+
+            // ВАЖЛИВО: Передаємо дані здібностей (радіус, тип, потужність)
+            follower.InitializeData(petData);
+
+            Debug.Log($"<color=cyan>[PetSpawner]</color> Скрипт PetFollower знайдено. Ціль та дані успішно передані помічнику!");
         }
         else
         {
-            // Якщо вовк заспавнився, але стоїть на місці — консоль одразу підкаже, що на префабі немає потрібного скрипта
-            Debug.LogWarning($"<color=yellow>[PetSpawner]</color> Попередження: На префабі '{petData.petPrefab.name}' не знайдено компонент PetFollower! Пет не знає за чим бігти.");
+            Debug.LogWarning($"<color=yellow>[PetSpawner]</color> Попередження: На префабі '{petData.petPrefab.name}' не знайдено компонент PetFollower!");
         }
 
         Debug.Log($"<color=lime>[PetSpawner]</color> {petData.itemName} успішно спавнився на арені!");

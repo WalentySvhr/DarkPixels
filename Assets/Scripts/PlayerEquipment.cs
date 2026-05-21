@@ -12,13 +12,49 @@ public class PlayerEquipment : MonoBehaviour
     public RingData currentRing1; // Слот для першого кільця
     public RingData currentRing2; // Слот для другого кільця
     public BeltData currentBelt;  // Слот для пояса
-    public PetData currentPet;    // --- ДОДАНО: Слот для пета ---
+    public PetData currentPet;    // Слот для пета
+    public WeaponData currentWeapon; // --- ДОДАНО: Слот для зброї ---
 
     [Header("Тестування")]
     public AmuletData testAmulet;
     public RingData testRing;
     public BeltData testBelt;
-    public PetData testPet; // --- ДОДАНО: Для тестування пета ---
+    public PetData testPet;
+    public WeaponData testWeapon; // --- ДОДАНО: Для тестування зброї ---
+
+    // --- ЛОГІКА ЗБРОЇ (НОВЕ) ---
+    public void EquipWeapon(WeaponData newWeapon)
+    {
+        if (newWeapon == null || currentWeapon == newWeapon) return;
+        if (currentWeapon != null) UnequipWeapon();
+
+        currentWeapon = newWeapon;
+
+        // Передаємо зброю в PlayerCombat для візуалізації та застосування її статів
+        if (playerCombat != null)
+        {
+            playerCombat.EquipWeapon(currentWeapon);
+        }
+
+        UpdateAllStats();
+        Debug.Log($"<color=yellow>Екіпіровано зброю:</color> {currentWeapon.name}");
+    }
+
+    public void UnequipWeapon()
+    {
+        if (currentWeapon == null) return;
+
+        currentWeapon = null;
+
+        // Наказуємо PlayerCombat прибрати зброю
+        if (playerCombat != null)
+        {
+            playerCombat.EquipWeapon(null);
+        }
+
+        UpdateAllStats();
+        Debug.Log($"<color=red>Зброю знято. Бій руками.</color>");
+    }
 
     // --- ЛОГІКА АМУЛЕТА ---
     public void EquipAmulet(AmuletData newAmulet)
@@ -31,7 +67,7 @@ public class PlayerEquipment : MonoBehaviour
         if (playerHealth != null)
             playerHealth.AddBonusHealth(currentAmulet.bonusMaxHealth);
 
-        UpdateAllStats(); // Оновлюємо всі суми
+        UpdateAllStats();
         Debug.Log($"<color=green>Одягнено амулет:</color> {currentAmulet.name}");
     }
 
@@ -79,18 +115,15 @@ public class PlayerEquipment : MonoBehaviour
     {
         if (newRing == null) return;
 
-        // Спочатку знімаємо старе кільце з цього слота, якщо воно там було
         UnequipRing(slotIndex);
 
-        // Ставимо нове кільце у відповідний слот
         if (slotIndex == 1) currentRing1 = newRing;
         else if (slotIndex == 2) currentRing2 = newRing;
 
-        // Додаємо ХП від нового кільця
         if (playerHealth != null)
             playerHealth.AddBonusHealth(newRing.bonusMaxHealth);
 
-        UpdateAllStats(); // Перераховуємо всі статі
+        UpdateAllStats();
         Debug.Log($"<color=cyan>Одягнено кільце в слот {slotIndex}:</color> {newRing.name}");
     }
 
@@ -99,11 +132,9 @@ public class PlayerEquipment : MonoBehaviour
         RingData ringToRemove = (slotIndex == 1) ? currentRing1 : currentRing2;
         if (ringToRemove == null) return;
 
-        // Віднімаємо ХП знятого кільця
         if (playerHealth != null)
             playerHealth.RemoveBonusHealth(ringToRemove.bonusMaxHealth);
 
-        // Очищуємо слот
         if (slotIndex == 1) currentRing1 = null;
         else if (slotIndex == 2) currentRing2 = null;
 
@@ -111,7 +142,7 @@ public class PlayerEquipment : MonoBehaviour
         Debug.Log($"<color=red>Знято кільце зі слота {slotIndex}</color>");
     }
 
-    // --- ЛОГІКА ПЕТА (НОВЕ) ---
+    // --- ЛОГІКА ПЕТА ---
     public void EquipPet(PetData newPet)
     {
         if (newPet == null || currentPet == newPet) return;
@@ -119,11 +150,9 @@ public class PlayerEquipment : MonoBehaviour
 
         currentPet = newPet;
 
-        // Додаємо бонусне здоров'я від пета (якщо воно прописане в файлі PetData)
         if (playerHealth != null && currentPet.bonusHealth > 0f)
             playerHealth.AddBonusHealth((int)currentPet.bonusHealth);
 
-        // Фізично створюємо пета на сцені через наш спавнер
         if (PetSpawner.Instance != null)
         {
             PetSpawner.Instance.SpawnPet(currentPet);
@@ -137,11 +166,9 @@ public class PlayerEquipment : MonoBehaviour
     {
         if (currentPet == null) return;
 
-        // Забираємо бонусне ХП
         if (playerHealth != null && currentPet.bonusHealth > 0f)
             playerHealth.RemoveBonusHealth((int)currentPet.bonusHealth);
 
-        // Прибираємо пета зі сцени
         if (PetSpawner.Instance != null)
         {
             PetSpawner.Instance.DespawnPet();
@@ -173,7 +200,7 @@ public class PlayerEquipment : MonoBehaviour
         int bRegen = currentBelt != null ? currentBelt.healthRegenPerSecond : 0;
         float bArmor = currentBelt != null ? currentBelt.bonusArmorPercent : 0f;
 
-        // 3. Збираємо стати Пета (НОВЕ)
+        // 3. Збираємо стати Пета
         int petDmg = currentPet != null ? currentPet.bonusDamage : 0;
 
         // 4. Збираємо і СУМУЄМО стати обох Кілець
@@ -204,22 +231,18 @@ public class PlayerEquipment : MonoBehaviour
         // 5. Передаємо суми в системи гравця
         if (playerCombat != null)
         {
-            // Урон: Амулет + Пояс + Пет + Кільця
-            playerCombat.extraAmuletDamage = amDmg + bDmg + petDmg; // Додаємо урон пета сюди ж
+            playerCombat.extraAmuletDamage = amDmg + bDmg + petDmg;
             playerCombat.extraRingDamage = rDmg;
 
-            // Швидкість атаки: Амулет + Кільця + Пояс
             playerCombat.extraAttackSpeed = amAtkSpd + bAtkSpd;
             playerCombat.extraRingAttackSpeed = rAtkSpd;
 
-            // Кріти сумуємо повністю
             playerCombat.critChance = amCrit + bCrit + rCrit;
             playerCombat.critMultiplier = 2f + amCritM + bCritM + rCritM;
         }
 
         if (playerMovement != null)
         {
-            // Швидкість бігу: Амулет + Пояс + Кільця
             playerMovement.extraSpeedMultiplier = amMovSpd + bMovSpd;
             playerMovement.extraRingSpeedMultiplier = rMovSpd;
         }
@@ -246,8 +269,11 @@ public class PlayerEquipment : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.B)) if (testBelt != null) EquipBelt(testBelt);
         if (Input.GetKeyDown(KeyCode.N)) UnequipBelt();
 
-        // --- ДОДАНО: Клавіші для тесту пета ---
-        if (Input.GetKeyDown(KeyCode.P)) if (testPet != null) EquipPet(testPet); // Клавіша P - одягти пета
-        if (Input.GetKeyDown(KeyCode.O)) UnequipPet();                          // Клавіша O - зняти пета
+        if (Input.GetKeyDown(KeyCode.P)) if (testPet != null) EquipPet(testPet);
+        if (Input.GetKeyDown(KeyCode.O)) UnequipPet();
+
+        // --- ДОДАНО: Клавіші для тесту зброї ---
+        if (Input.GetKeyDown(KeyCode.G)) if (testWeapon != null) EquipWeapon(testWeapon);
+        if (Input.GetKeyDown(KeyCode.F)) UnequipWeapon();
     }
 }

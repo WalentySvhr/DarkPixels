@@ -15,15 +15,13 @@ public class PetFollower : MonoBehaviour
     private Animator animator;
 
     [Header("Налаштування Луту")]
-    public string lootTag = "Loot"; // Залишаємо тег тут, бо він загальний для гри
+    public string lootTag = "Loot";
 
-    // --- ДАНІ ПЕТА ---
     private PetData currentData;
 
     [HideInInspector] public Vector3 movementTarget;
     [HideInInspector] public float currentStopDistance;
 
-    // Зберігаємо стан, щоб уникати мікро-зупинок
     private bool isCurrentlyMoving = false;
 
     void Start()
@@ -41,7 +39,6 @@ public class PetFollower : MonoBehaviour
         currentStopDistance = stopDistance;
     }
 
-    // --- ПРИЙМАЄМО ДАНІ ВІД СПАВНЕРА ---
     public void InitializeData(PetData data)
     {
         currentData = data;
@@ -62,30 +59,15 @@ public class PetFollower : MonoBehaviour
 
         // 2. Логіка руху до цілі з БУФЕРНОЮ ЗОНОЮ
         float distanceToTarget = Vector2.Distance(transform.position, movementTarget);
+        if (distanceToTarget > currentStopDistance + 0.2f) isCurrentlyMoving = true;
+        else if (distanceToTarget <= currentStopDistance) isCurrentlyMoving = false;
 
-        // Починаємо бігти тільки якщо гравець відійшов ДАЛІ за буфер (stopDistance + 0.2)
-        if (distanceToTarget > currentStopDistance + 0.2f)
-        {
-            isCurrentlyMoving = true;
-        }
-        // Зупиняємось, коли підійшли впритул до stopDistance
-        else if (distanceToTarget <= currentStopDistance)
-        {
-            isCurrentlyMoving = false;
-        }
-
-        // Рух
         if (isCurrentlyMoving)
         {
             transform.position = Vector2.MoveTowards(transform.position, movementTarget, followSpeed * Time.deltaTime);
         }
 
-        // Передаємо параметр Speed в Animator
-        if (animator != null)
-        {
-            float currentSpeedRatio = isCurrentlyMoving ? 1f : 0f;
-            animator.SetFloat("Speed", currentSpeedRatio);
-        }
+        if (animator != null) animator.SetFloat("Speed", isCurrentlyMoving ? 1f : 0f);
 
         // 3. Розворот спрайту
         if (movementTarget.x > transform.position.x) spriteRenderer.flipX = false;
@@ -102,28 +84,39 @@ public class PetFollower : MonoBehaviour
     private void ExecuteAbility()
     {
         if (currentData == null) return;
-
-        switch (currentData.abilityType)
-        {
-            case PetAbilityType.MagnetLoot:
-                PullLoot();
-                break;
-
-                // Заготовка на майбутні здібності:
-                // case PetAbilityType.HealthRegen:
-                //     break;
-        }
+        if (currentData.abilityType == PetAbilityType.MagnetLoot) PullLoot();
     }
 
     private void PullLoot()
     {
-        // Беремо радіус та швидкість із файла PetData!
+        // Повертаємося до стабільного пошуку через тег, як було спочатку
         Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, currentData.abilityRadius);
         foreach (Collider2D col in colliders)
         {
             if (col.CompareTag(lootTag))
             {
+                // Притягуємо плавно
                 col.transform.position = Vector2.MoveTowards(col.transform.position, playerTarget.position, currentData.abilityPower * Time.deltaTime);
+
+                // Якщо близько до гравця — спроба підібрати
+                if (Vector2.Distance(col.transform.position, playerTarget.position) < 0.8f)
+                {
+                    PickUpLoot(col.gameObject);
+                }
+            }
+        }
+    }
+
+    private void PickUpLoot(GameObject lootObject)
+    {
+        // Шукаємо ваш скрипт на об'єкті
+        ItemPickup pickup = lootObject.GetComponent<ItemPickup>();
+
+        if (pickup != null && InventoryManager.Instance != null)
+        {
+            if (InventoryManager.Instance.Add(pickup.item))
+            {
+                Destroy(lootObject);
             }
         }
     }
@@ -131,7 +124,7 @@ public class PetFollower : MonoBehaviour
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.yellow;
-        float radius = (currentData != null) ? currentData.abilityRadius : 5f; // Відображаємо радіус з даних
+        float radius = (currentData != null) ? currentData.abilityRadius : 5f;
         Gizmos.DrawWireSphere(transform.position, radius);
     }
 }

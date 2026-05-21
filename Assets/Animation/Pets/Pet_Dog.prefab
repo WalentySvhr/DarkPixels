@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 2910284091539596566}
   - component: {fileID: 4412507256340633417}
   - component: {fileID: -1726602153531460687}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Pet_Dog
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -114,9 +114,6 @@ MonoBehaviour:
   teleportDistance: 15
   hoverAmplitude: 0
   hoverSpeed: 0
-  canMagnetLoot: 1
-  magnetRadius: 3.5
-  magnetSpeed: 8
   lootTag: Loot
   movementTarget: {x: 0, y: 0, z: 0}
   currentStopDistance: 0
@@ -216,7 +213,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0

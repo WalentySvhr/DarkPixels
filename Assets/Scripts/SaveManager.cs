@@ -264,11 +264,13 @@ public class SaveManager : MonoBehaviour
         foreach (var slot in allSlots)
         {
             string key = "";
-            if (slot.isWeaponEquipmentSlot) key = "Weapon";
-            else if (slot.isAmuletEquipmentSlot) key = "Amulet";
-            else if (slot.isBeltEquipmentSlot) key = "Belt";
-            else if (slot.isRingEquipmentSlot) key = $"Ring_{slot.ringSlotIndex}";
-            else if (slot.isPetEquipmentSlot) key = "Pet"; // --- НОВЕ: Ключ для пета ---
+            string baseSlotType = ""; // Базовий тип слота для передачі в Інвентар
+
+            if (slot.isWeaponEquipmentSlot) { key = "Weapon"; baseSlotType = "Weapon"; }
+            else if (slot.isAmuletEquipmentSlot) { key = "Amulet"; baseSlotType = "Amulet"; }
+            else if (slot.isBeltEquipmentSlot) { key = "Belt"; baseSlotType = "Belt"; }
+            else if (slot.isRingEquipmentSlot) { key = $"Ring_{slot.ringSlotIndex}"; baseSlotType = "Ring"; }
+            else if (slot.isPetEquipmentSlot) { key = "Pet"; baseSlotType = "Pet"; }
 
             if (string.IsNullOrEmpty(key)) continue;
 
@@ -278,12 +280,24 @@ public class SaveManager : MonoBehaviour
                 Item item = Resources.Load<Item>("Items/" + entry.itemName);
                 if (item != null)
                 {
+                    // 1. Малюємо іконку у слоті UI
                     slot.AddItem(item, 1);
+
+                    // 2. Делегуємо екіпірування Інвентарю.
+                    // Оскільки ми його оновили, він САМ викличе PlayerEquipment.EquipWeapon / EquipPet і т.д.
+                    InventoryManager.Instance.EquipItem(item, baseSlotType, slot.ringSlotIndex);
+
                     Debug.Log($"<color=yellow>[SaveSystem]</color> Відновлено {key}: {item.name}");
+                }
+                else
+                {
+                    Debug.LogWarning($"[SaveSystem] Не вдалося знайти предмет {entry.itemName} у папці Resources/Items!");
                 }
             }
         }
     }
+
+
 
     // --- МЕТОДИ ДЛЯ РИБАЛКИ ---
     public List<FishingSpotSaveEntry> GetActiveCooldowns()
