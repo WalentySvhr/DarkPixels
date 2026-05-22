@@ -199,13 +199,13 @@ public class TowerManager : MonoBehaviour
             maxFloorRecord = currentFloor;
             Debug.Log($"<color=gold>[TowerRecord] НОВИЙ РЕКОРД! Максимальний поверх: {maxFloorRecord}</color>");
 
-            if (SaveManager.Instance != null)
-            {
-                SaveManager.Instance.SaveGame();
-            }
+            //     if (SaveManager.Instance != null)
+            //     {
+            //         SaveManager.Instance.SaveGame();
+            //     }
+            // }
         }
     }
-
     private void PrepareLevel()
     {
         ApplyFloorEnvironment();

@@ -12,11 +12,7 @@ public class GameData
     public int diamonds;
     public float currentHealth;
     public List<ItemSaveEntry> backpack = new List<ItemSaveEntry>();
-
-    // --- НОВЕ: Список для збереження куплених петів ---
     public List<ItemSaveEntry> petBackpack = new List<ItemSaveEntry>();
-
-    // --- УНІВЕРСАЛЬНЕ ЗБЕРЕЖЕННЯ ЕКІПІРОВКИ ---
     public List<EquippedItemSaveEntry> equippedItems = new List<EquippedItemSaveEntry>();
 
     public string currentQuestID;
@@ -24,25 +20,19 @@ public class GameData
     public List<FishingSpotSaveEntry> activeCooldowns = new List<FishingSpotSaveEntry>();
     public List<string> completedQuestIDs = new List<string>();
 
-    // --- Збереження лімітів та таймерів реклами на діаманти ---
     public int diamondAdsWatched;
     public float diamondAdsCooldown;
     public bool isDiamondAdOnCooldown;
 
-    // --- Збереження рекорду Башні ---
     public int maxTowerFloor;
-
-    // ============================================================================
-    // --- НОВЕ ДЛЯ GOOGLE PLAY IN-APP REVIEW ---
-    // ============================================================================
-    public int victoryCount;      // Кількість перемог на аренах
-    public bool alreadyReviewed;  // Чи було успішно показано вікно відгуку
+    public int victoryCount;
+    public bool alreadyReviewed;
 }
 
 [System.Serializable]
 public class EquippedItemSaveEntry
 {
-    public string slotKey; // Наприклад: "Weapon", "Belt", "Ring_1", "Pet"
+    public string slotKey;
     public string itemName;
 }
 
@@ -66,7 +56,6 @@ public class SaveManager : MonoBehaviour
     private string savePath;
     private bool needsToLoad = false;
 
-    // Кеш для поточних завантажених даних, щоб мати легкий доступ до victoryCount та alreadyReviewed
     public GameData CurrentData { get; private set; } = new GameData();
 
     void Awake()
@@ -77,7 +66,6 @@ public class SaveManager : MonoBehaviour
             DontDestroyOnLoad(gameObject);
             savePath = Path.Combine(Application.persistentDataPath, "gamesave.json");
 
-            // Завантажуємо початкові дані в кеш відразу при старті програми, якщо файл існує
             if (File.Exists(savePath))
             {
                 CurrentData = JsonUtility.FromJson<GameData>(File.ReadAllText(savePath));
@@ -105,10 +93,26 @@ public class SaveManager : MonoBehaviour
 
     public void SaveGame()
     {
+        // --- ШПИГУНСЬКИЙ ТРЮК: Виводить у консоль весь ланцюжок того, хто викликав метод ---
+        Debug.Log("<color=orange>ЗБЕРЕЖЕННЯ ВИКЛИКАНО ЗІ СКРИПТА:</color>\n" + StackTraceUtility.ExtractStackTrace());
+
+        // 1. Стара перевірка на заборонену зону
         if (!SaveForbiddenZone.CanSave)
         {
             Debug.LogWarning("Збереження неможливе всередині башти!");
             return;
+        }
+
+        // ==========================================
+        // 2. ЗАЛІЗОБЕТОННА ПЕРЕВІРКА БАШТИ
+        // ==========================================
+        if (TowerManager.Instance != null && TowerManager.Instance.floorUIContainer != null)
+        {
+            if (TowerManager.Instance.floorUIContainer.activeSelf)
+            {
+                Debug.LogWarning("<color=red>[SaveSystem]</color> Блокування: спроба зберегтись під час забігу в башні!");
+                return;
+            }
         }
 
         GameData data = new GameData();
@@ -126,7 +130,6 @@ public class SaveManager : MonoBehaviour
             data.coins = InventoryManager.Instance.coins;
             data.diamonds = InventoryManager.Instance.diamonds;
 
-            // --- УНІВЕРСАЛЬНЕ ЗБЕРЕЖЕННЯ СЛОВНИКА ЕКІПІРОВКИ ---
             data.equippedItems.Clear();
             foreach (var pair in InventoryManager.Instance.equippedItems)
             {
@@ -136,7 +139,6 @@ public class SaveManager : MonoBehaviour
                 }
             }
 
-            // Збереження звичайного інвентарю
             data.backpack.Clear();
             foreach (var stack in InventoryManager.Instance.items)
             {
@@ -144,7 +146,6 @@ public class SaveManager : MonoBehaviour
                     data.backpack.Add(new ItemSaveEntry { itemName = stack.item.name, amount = stack.amount });
             }
 
-            // --- НОВЕ: Збереження інвентарю Петів ---
             data.petBackpack.Clear();
             foreach (var stack in InventoryManager.Instance.petItems)
             {
@@ -153,29 +154,16 @@ public class SaveManager : MonoBehaviour
             }
         }
 
-        if (QuestManager.Instance != null)
-        {
-            data = QuestManager.Instance.CaptureQuestState(data);
-        }
-
-        if (AdsChecker.Instance != null)
-        {
-            data = AdsChecker.Instance.CaptureAdsState(data);
-        }
-
-        if (TowerManager.Instance != null)
-        {
-            data = TowerManager.Instance.CaptureTowerState(data);
-        }
+        if (QuestManager.Instance != null) data = QuestManager.Instance.CaptureQuestState(data);
+        if (AdsChecker.Instance != null) data = AdsChecker.Instance.CaptureAdsState(data);
+        if (TowerManager.Instance != null) data = TowerManager.Instance.CaptureTowerState(data);
 
         PlayerHealth health = Object.FindFirstObjectByType<PlayerHealth>();
         if (health != null) data.currentHealth = health.currentHealth;
 
-        // Зберігаємо також значення для відгуків, які зараз лежать у кеші
         data.victoryCount = CurrentData.victoryCount;
         data.alreadyReviewed = CurrentData.alreadyReviewed;
 
-        // Оновлюємо наш робочий кеш даних перед записом на диск
         CurrentData = data;
 
         File.WriteAllText(savePath, JsonUtility.ToJson(data, true));
@@ -187,7 +175,7 @@ public class SaveManager : MonoBehaviour
         if (!File.Exists(savePath)) return;
 
         GameData data = JsonUtility.FromJson<GameData>(File.ReadAllText(savePath));
-        CurrentData = data; // Записуємо завантажені дані в кеш
+        CurrentData = data;
 
         if (InventoryManager.Instance != null)
         {
@@ -195,11 +183,9 @@ public class SaveManager : MonoBehaviour
             InventoryManager.Instance.diamonds = data.diamonds;
 
             InventoryManager.Instance.equippedItems.Clear();
-
             InventoryManager.Instance.UpdateCoinUI();
             InventoryManager.Instance.UpdateDiamondUI();
 
-            // Завантаження звичайного інвентарю
             InventoryManager.Instance.items.Clear();
             foreach (var entry in data.backpack)
             {
@@ -209,7 +195,6 @@ public class SaveManager : MonoBehaviour
             }
             InventoryManager.Instance.UpdateUI();
 
-            // --- НОВЕ: Завантаження інвентарю Петів ---
             InventoryManager.Instance.petItems.Clear();
             foreach (var entry in data.petBackpack)
             {
@@ -220,39 +205,22 @@ public class SaveManager : MonoBehaviour
             InventoryManager.Instance.UpdatePetUI();
         }
 
-        if (QuestManager.Instance != null)
-        {
-            QuestManager.Instance.LoadQuestState(data);
-        }
-
-        if (AdsChecker.Instance != null)
-        {
-            AdsChecker.Instance.LoadAdsState(data);
-        }
-
-        if (TowerManager.Instance != null)
-        {
-            TowerManager.Instance.LoadTowerState(data);
-        }
+        if (QuestManager.Instance != null) QuestManager.Instance.LoadQuestState(data);
+        if (AdsChecker.Instance != null) AdsChecker.Instance.LoadAdsState(data);
+        if (TowerManager.Instance != null) TowerManager.Instance.LoadTowerState(data);
 
         PlayerHealth health = Object.FindFirstObjectByType<PlayerHealth>();
         if (health != null) health.currentHealth = (int)data.currentHealth;
 
         StopAllCoroutines();
-
-        // Запускаємо корутини після зупинки всіх попередніх
         StartCoroutine(ApplyEquipmentAfterLoad(data));
         StartCoroutine(ApplyPlayerPositionAfterLoad(data));
     }
 
     private System.Collections.IEnumerator ApplyEquipmentAfterLoad(GameData data)
     {
-        // Замість фіксованої та ненадійної затримки в 0.5 секунд чекаємо до кінця кадру.
-        // Це гарантує, що всі слоти, UI та інвентар вже викликали свій Start() і готові до роботи,
-        // але візуально для гравця екіпіровка відновиться миттєво.
         yield return new WaitForEndOfFrame();
 
-        // Запобіжник: якщо інвентар з якоїсь причини ще не створився, перериваємось, щоб не спамити помилками
         if (InventoryManager.Instance == null)
         {
             Debug.LogError("[SaveSystem] InventoryManager не знайдено! Неможливо відновити екіпіровку.");
@@ -264,7 +232,7 @@ public class SaveManager : MonoBehaviour
         foreach (var slot in allSlots)
         {
             string key = "";
-            string baseSlotType = ""; // Базовий тип слота для передачі в Інвентар
+            string baseSlotType = "";
 
             if (slot.isWeaponEquipmentSlot) { key = "Weapon"; baseSlotType = "Weapon"; }
             else if (slot.isAmuletEquipmentSlot) { key = "Amulet"; baseSlotType = "Amulet"; }
@@ -280,27 +248,15 @@ public class SaveManager : MonoBehaviour
                 Item item = Resources.Load<Item>("Items/" + entry.itemName);
                 if (item != null)
                 {
-                    // 1. Малюємо іконку у слоті UI
                     slot.AddItem(item, 1);
-
-                    // 2. Делегуємо екіпірування Інвентарю.
                     InventoryManager.Instance.EquipItem(item, baseSlotType, slot.ringSlotIndex);
-
-                    Debug.Log($"<color=yellow>[SaveSystem]</color> Відновлено {key}: {item.name}");
-                }
-                else
-                {
-                    Debug.LogWarning($"[SaveSystem] Не вдалося знайти предмет {entry.itemName} у папці Resources/Items!");
                 }
             }
         }
-
     }
 
-    // --- ДОДАНИЙ МЕТОД ДЛЯ ВІДНОВЛЕННЯ ПОЗИЦІЇ ---
     private System.Collections.IEnumerator ApplyPlayerPositionAfterLoad(GameData data)
     {
-        // Чекаємо кінець кадру, щоб інші скрипти завершили свій Start()
         yield return new WaitForEndOfFrame();
 
         GameObject player = GameObject.FindGameObjectWithTag("Player");
@@ -313,7 +269,7 @@ public class SaveManager : MonoBehaviour
             if (rb != null)
             {
                 originalBodyType = rb.bodyType;
-                rb.bodyType = RigidbodyType2D.Kinematic; // Тимчасово вимикаємо фізику
+                rb.bodyType = RigidbodyType2D.Kinematic;
                 rb.linearVelocity = Vector2.zero;
                 rb.position = new Vector2(data.posX, data.posY);
             }
@@ -322,25 +278,19 @@ public class SaveManager : MonoBehaviour
 
             if (rb != null)
             {
-                rb.bodyType = originalBodyType; // Повертаємо попередній стан
+                rb.bodyType = originalBodyType;
             }
 
-            // =======================================================
-            // --- НОВИЙ ФІКС СПЕЦІАЛЬНО ДЛЯ CINEMACHINE ---
-            // =======================================================
-            // Знаходимо віртуальну камеру Cinemachine на сцені
             var vcam = Object.FindFirstObjectByType<Cinemachine.CinemachineVirtualCamera>();
             if (vcam != null)
             {
-                // Ця магічна команда каже Cinemachine: 
-                // "Забудь, де ти була в минулому кадрі, миттєво стрибни до цілі без згладжування!"
                 vcam.PreviousStateIsValid = false;
             }
 
             Debug.Log($"<color=cyan>[SaveSystem]</color> Позиція гравця відновлена. Камера Cinemachine відцентрована.");
         }
     }
-    // --- МЕТОДИ ДЛЯ РИБАЛКИ ---
+
     public List<FishingSpotSaveEntry> GetActiveCooldowns()
     {
         if (!File.Exists(savePath)) return new List<FishingSpotSaveEntry>();
@@ -352,10 +302,8 @@ public class SaveManager : MonoBehaviour
     {
         GameData data = new GameData();
         if (File.Exists(savePath)) data = JsonUtility.FromJson<GameData>(File.ReadAllText(savePath));
-
         data.activeCooldowns.RemoveAll(x => x.spotID == id);
         data.activeCooldowns.Add(new FishingSpotSaveEntry { spotID = id, unlockTime = time });
-
         File.WriteAllText(savePath, JsonUtility.ToJson(data, true));
     }
 
@@ -363,22 +311,13 @@ public class SaveManager : MonoBehaviour
     {
         if (!File.Exists(savePath)) return;
         GameData data = JsonUtility.FromJson<GameData>(File.ReadAllText(savePath));
-
         int removed = data.activeCooldowns.RemoveAll(x => x.spotID == id);
         if (removed > 0) File.WriteAllText(savePath, JsonUtility.ToJson(data, true));
     }
 
-    // ============================================================================
-    // --- НОВИЙ МЕТОД: ФІКСАЦІЯ ПОКАЗУ ВІДГУКУ GOOGLE PLAY ---
-    // ============================================================================
     public void OnReviewSuccessfullyShown()
     {
-        // Перемикаємо прапорець, щоб більше ніколи не показувати вікно відгуку
         CurrentData.alreadyReviewed = true;
-
-        // Робимо повне збереження JSON, щоб зберегти цю мітку на диску пристрою
         SaveGame();
-
-        Debug.Log("<color=green>[SaveSystem]</color> Стан відгуку збережено: більше вікно викликатися не буде.");
     }
 }
