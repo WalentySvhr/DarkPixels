@@ -126,10 +126,20 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         // Забираємо новий предмет з інвентаря
         InventoryManager.Instance.Remove(itemToEquip);
 
-        // Повертаємо старий предмет тільки якщо його ще немає в інвентарі
-        if (replaceItem != null && !InventoryManager.Instance.Contains(replaceItem))
+        // --- ВИПРАВЛЕНО: Правильне повернення старого предмета ---
+        if (replaceItem != null)
         {
-            InventoryManager.Instance.Add(replaceItem);
+            // Якщо це пет - повертаємо тільки якщо такого ще немає (захист від дублів)
+            if (replaceItem is PetData)
+            {
+                if (!InventoryManager.Instance.Contains(replaceItem))
+                    InventoryManager.Instance.Add(replaceItem);
+            }
+            else
+            {
+                // Зброю, кільця, амулети повертаємо ЗАВЖДИ!
+                InventoryManager.Instance.Add(replaceItem);
+            }
         }
 
         // Візуально одягаємо предмет у відповідний слот
@@ -287,10 +297,18 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         {
             InventoryManager.Instance.Remove(dragItem);
 
-            // 🧩 Виправлення дублювання пета
-            if (replaceItem != null && !(replaceItem is PetData) && !InventoryManager.Instance.Contains(replaceItem))
+            // --- ВИПРАВЛЕНО: Правильне повернення старого предмета ---
+            if (replaceItem != null)
             {
-                InventoryManager.Instance.Add(replaceItem);
+                if (replaceItem is PetData)
+                {
+                    if (!InventoryManager.Instance.Contains(replaceItem))
+                        InventoryManager.Instance.Add(replaceItem);
+                }
+                else
+                {
+                    InventoryManager.Instance.Add(replaceItem);
+                }
             }
 
             this.AddItem(dragItem, 1);

@@ -189,19 +189,6 @@ public class SaveManager : MonoBehaviour
         GameData data = JsonUtility.FromJson<GameData>(File.ReadAllText(savePath));
         CurrentData = data; // Записуємо завантажені дані в кеш
 
-        GameObject player = GameObject.FindGameObjectWithTag("Player");
-
-        if (player != null)
-        {
-            Rigidbody2D rb = player.GetComponent<Rigidbody2D>();
-            if (rb != null)
-            {
-                rb.linearVelocity = Vector2.zero;
-                rb.position = new Vector2(data.posX, data.posY);
-            }
-            player.transform.position = new Vector3(data.posX, data.posY, data.posZ);
-        }
-
         if (InventoryManager.Instance != null)
         {
             InventoryManager.Instance.coins = data.coins;
@@ -252,12 +239,25 @@ public class SaveManager : MonoBehaviour
         if (health != null) health.currentHealth = (int)data.currentHealth;
 
         StopAllCoroutines();
+
+        // Запускаємо корутини після зупинки всіх попередніх
         StartCoroutine(ApplyEquipmentAfterLoad(data));
+        StartCoroutine(ApplyPlayerPositionAfterLoad(data));
     }
 
     private System.Collections.IEnumerator ApplyEquipmentAfterLoad(GameData data)
     {
-        yield return new WaitForSeconds(0.5f);
+        // Замість фіксованої та ненадійної затримки в 0.5 секунд чекаємо до кінця кадру.
+        // Це гарантує, що всі слоти, UI та інвентар вже викликали свій Start() і готові до роботи,
+        // але візуально для гравця екіпіровка відновиться миттєво.
+        yield return new WaitForEndOfFrame();
+
+        // Запобіжник: якщо інвентар з якоїсь причини ще не створився, перериваємось, щоб не спамити помилками
+        if (InventoryManager.Instance == null)
+        {
+            Debug.LogError("[SaveSystem] InventoryManager не знайдено! Неможливо відновити екіпіровку.");
+            yield break;
+        }
 
         InventorySlot[] allSlots = Object.FindObjectsByType<InventorySlot>(FindObjectsInactive.Include, FindObjectsSortMode.None);
 
@@ -284,7 +284,6 @@ public class SaveManager : MonoBehaviour
                     slot.AddItem(item, 1);
 
                     // 2. Делегуємо екіпірування Інвентарю.
-                    // Оскільки ми його оновили, він САМ викличе PlayerEquipment.EquipWeapon / EquipPet і т.д.
                     InventoryManager.Instance.EquipItem(item, baseSlotType, slot.ringSlotIndex);
 
                     Debug.Log($"<color=yellow>[SaveSystem]</color> Відновлено {key}: {item.name}");
@@ -295,10 +294,52 @@ public class SaveManager : MonoBehaviour
                 }
             }
         }
+
     }
 
+    // --- ДОДАНИЙ МЕТОД ДЛЯ ВІДНОВЛЕННЯ ПОЗИЦІЇ ---
+    private System.Collections.IEnumerator ApplyPlayerPositionAfterLoad(GameData data)
+    {
+        // Чекаємо кінець кадру, щоб інші скрипти завершили свій Start()
+        yield return new WaitForEndOfFrame();
 
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
 
+        if (player != null)
+        {
+            Rigidbody2D rb = player.GetComponent<Rigidbody2D>();
+            RigidbodyType2D originalBodyType = RigidbodyType2D.Dynamic;
+
+            if (rb != null)
+            {
+                originalBodyType = rb.bodyType;
+                rb.bodyType = RigidbodyType2D.Kinematic; // Тимчасово вимикаємо фізику
+                rb.linearVelocity = Vector2.zero;
+                rb.position = new Vector2(data.posX, data.posY);
+            }
+
+            player.transform.position = new Vector3(data.posX, data.posY, data.posZ);
+
+            if (rb != null)
+            {
+                rb.bodyType = originalBodyType; // Повертаємо попередній стан
+            }
+
+            // =======================================================
+            // --- НОВИЙ ФІКС СПЕЦІАЛЬНО ДЛЯ CINEMACHINE ---
+            // =======================================================
+            // Знаходимо віртуальну камеру Cinemachine на сцені
+            var vcam = Object.FindFirstObjectByType<Cinemachine.CinemachineVirtualCamera>();
+            if (vcam != null)
+            {
+                // Ця магічна команда каже Cinemachine: 
+                // "Забудь, де ти була в минулому кадрі, миттєво стрибни до цілі без згладжування!"
+                vcam.PreviousStateIsValid = false;
+            }
+
+            Debug.Log($"<color=cyan>[SaveSystem]</color> Позиція гравця відновлена. Камера Cinemachine відцентрована.");
+        }
+    }
     // --- МЕТОДИ ДЛЯ РИБАЛКИ ---
     public List<FishingSpotSaveEntry> GetActiveCooldowns()
     {
