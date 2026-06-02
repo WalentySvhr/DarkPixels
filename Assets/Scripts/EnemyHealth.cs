@@ -36,7 +36,9 @@ public class EnemyHealth : MonoBehaviour
     [Header("Spawn Context")]
     private LootDropper lootDropper;
 
-    [Header("Quest Drop Settings")]
+    [Header("Quest & Enemy Settings")]
+    [Tooltip("Унікальний ID моба для квестів (наприклад: Skeleton, Goblin). Має збігатися з targetID у квесті.")]
+    public string enemyID;
     [Tooltip("Список Target ID квестів, які можуть випасти саме з цього моба")]
     public List<string> allowedQuestItemIDs = new List<string>();
 
@@ -44,7 +46,7 @@ public class EnemyHealth : MonoBehaviour
     [Tooltip("Поставте галочку, якщо цей моб - елітний/міні-бос")]
     public bool isElite = false;
 
-    // === НОВЕ: Змінна для фізики ===
+    // === Фізика ===
     private Rigidbody2D rb;
 
     void Start()
@@ -52,7 +54,7 @@ public class EnemyHealth : MonoBehaviour
         if (animator == null) animator = GetComponent<Animator>();
         if (spriteRenderer == null) spriteRenderer = GetComponentInChildren<SpriteRenderer>();
 
-        // === НОВЕ: Отримуємо Rigidbody2D ===
+        // Отримуємо Rigidbody2D
         rb = GetComponent<Rigidbody2D>();
 
         if (spriteRenderer != null)
@@ -89,7 +91,7 @@ public class EnemyHealth : MonoBehaviour
 
         UpdateHealthUI();
 
-        // === НОВЕ: ЗАСТОСОВУЄМО ВІДКИДАННЯ ===
+        // ЗАСТОСОВУЄМО ВІДКИДАННЯ
         if (rb != null && force > 0)
         {
             rb.linearVelocity = Vector2.zero; // Скидаємо швидкість, щоб відкидання завжди працювало стабільно
@@ -162,7 +164,6 @@ public class EnemyHealth : MonoBehaviour
             ai.enabled = false;
         }
 
-        // === ОНОВЛЕНО: Тепер використовуємо кешований rb ===
         if (rb != null)
         {
             rb.linearVelocity = Vector2.zero;
@@ -180,9 +181,12 @@ public class EnemyHealth : MonoBehaviour
 
         if (lootDropper != null) lootDropper.DropLoot();
 
+        // === ОНОВЛЕНА ЛОГІКА КВЕСТІВ ===
         if (QuestManager.Instance != null)
         {
-            QuestManager.Instance.OnQuestAction(QuestType.KillInTower, "");
+            // Викликаємо обидва типи дій, передаючи реальний enemyID моба
+            QuestManager.Instance.OnQuestAction(QuestType.KillInTower, enemyID);
+            QuestManager.Instance.OnQuestAction(QuestType.KillSpecific, enemyID);
         }
 
         if (DailyQuestManager.Instance != null)

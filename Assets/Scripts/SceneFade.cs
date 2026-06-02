@@ -30,13 +30,14 @@ public class SceneFader : MonoBehaviour
             fadeImage.color = new Color(0, 0, 0, t);
             yield return null;
         }
-        fadeImage.enabled = false; // Вимикаємо тільки картинку, а не об'єкт!
+        fadeImage.enabled = false; // Вимикаємо тільки картинку, а не об'єкт
     }
 
     IEnumerator FadeOut(string sceneName)
     {
         fadeImage.enabled = true;
         float t = 0f;
+
         while (t < 1f) // Чекаємо, поки екран почорніє
         {
             t += Time.deltaTime * fadeSpeed;
@@ -44,19 +45,8 @@ public class SceneFader : MonoBehaviour
             yield return null;
         }
 
-        // ТЕПЕР ЕКРАН ЧОРНИЙ. Можна тихо змінити орієнтацію
-        if (sceneName == "MainMenu")
-        {
-            Screen.orientation = ScreenOrientation.Portrait;
-        }
-        else
-        {
-            Screen.orientation = ScreenOrientation.LandscapeLeft;
-        }
-
-        // Даємо системі один кадр, щоб "переварити" поворот
-        yield return new WaitForEndOfFrame();
-
+        // Більше ніяких маніпуляцій з орієнтацією тут! 
+        // Цим займається GameSceneManager. Просто вантажимо сцену.
         SceneManager.LoadScene(sceneName);
     }
 }

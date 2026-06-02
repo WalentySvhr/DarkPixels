@@ -1,44 +1,51 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameSceneManager : MonoBehaviour
 {
+    private static GameSceneManager _instance;
+
     private void Awake()
     {
-        ApplyGameOrientation();
+        // Робимо об'єкт глобальним
+        if (_instance != null)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        _instance = this;
+        DontDestroyOnLoad(gameObject);
+
+        // Підписуємося на подію: щоразу, коли завантажується нова сцена, 
+        // буде викликатися метод OnSceneLoaded
+        SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
-    private void Start()
+    private void OnDestroy()
     {
-        // Повторюємо в Start, бо редактор Unity часто скидає налаштування 
-        // відразу після Awake при зміні розширення
+        // Обов'язково відписуємося при знищенні об'єкта, щоб уникнути помилок
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    // Цей метод автоматично спрацьовує після КОЖНОГО завантаження сцени
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
         ApplyGameOrientation();
     }
 
     private void ApplyGameOrientation()
     {
-        // 1. Дозволяємо автоповорот
-        Screen.orientation = ScreenOrientation.AutoRotation;
+        // 1. Спочатку жорстко форсуємо ландшафт, щоб "збити" портретний режим, 
+        // який міг проскочити під час завантаження
+        Screen.orientation = ScreenOrientation.LandscapeLeft;
 
-        // 2. Забороняємо портретні режими
+        // 2. Налаштовуємо дозволені кути
         Screen.autorotateToPortrait = false;
         Screen.autorotateToPortraitUpsideDown = false;
-
-        // 3. Дозволяємо обидва ландшафтні режими
         Screen.autorotateToLandscapeLeft = true;
         Screen.autorotateToLandscapeRight = true;
 
-        // 4. ПРИМУСОВО виставляємо ландшафт зараз
-        // Це «лікує» баг редактора, коли він перемикається на Portrait
-        Screen.orientation = ScreenOrientation.LandscapeLeft;
-    }
-
-    // Додатковий захист для редактора: 
-    // якщо ти міняєш девайс під час гри, цей метод спрацює при зміні розміру вікна
-    private void OnRectTransformDimensionsChange()
-    {
-        if (Screen.orientation == ScreenOrientation.Portrait)
-        {
-            Screen.orientation = ScreenOrientation.LandscapeLeft;
-        }
+        // 3. Вмикаємо автоповорот
+        Screen.orientation = ScreenOrientation.AutoRotation;
     }
 }

@@ -25,7 +25,7 @@ public class QuestManager : MonoBehaviour
 
     public List<string> completedQuests = new List<string>();
     private List<QuestPoint> allPoints = new List<QuestPoint>();
-    // Додай ці змінні на початку класу QuestManager
+
     [Header("Unique Drops Logic")]
     public List<string> droppedUniqueItems = new List<string>(); // Список ID предметів, що вже випали
 
@@ -333,6 +333,8 @@ public class QuestManager : MonoBehaviour
         }
         return false;
     }
+
+    // === ОНОВЛЕНИЙ МЕТОД UPDATEUI ===
     void UpdateUI()
     {
         if (currentQuest != null && goalText != null)
@@ -343,11 +345,28 @@ public class QuestManager : MonoBehaviour
                 return;
             }
 
+            // 1. Беремо оригінальний опис з квесту
+            string formattedDescription = currentQuest.description;
+
+            // 2. Замінюємо кастомні теги на реальні значення з QuestData
+            if (!string.IsNullOrEmpty(formattedDescription))
+            {
+                formattedDescription = formattedDescription.Replace("{level}", currentQuest.requiredTowerLevel.ToString());
+                formattedDescription = formattedDescription.Replace("{amount}", currentQuest.requiredAmount.ToString());
+
+                if (!string.IsNullOrEmpty(currentQuest.targetID))
+                {
+                    formattedDescription = formattedDescription.Replace("{target}", currentQuest.targetID);
+                }
+            }
+
+            // 3. Формуємо прогрес
             string progressInfo = currentQuest.requiredAmount > 1
                 ? $" ({currentProgress}/{currentQuest.requiredAmount})"
                 : "";
 
-            goalText.text = $"{currentQuest.description}{progressInfo}";
+            // 4. Виводимо фінальний текст
+            goalText.text = $"{formattedDescription}{progressInfo}";
         }
     }
 

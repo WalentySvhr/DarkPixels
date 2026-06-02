@@ -43,8 +43,11 @@ public class PauseMenu : MonoBehaviour
     public void LoadMainMenu()
     {
         Time.timeScale = 1f;
+
+        // Жорстко фіксуємо ландшафт ПЕРЕД тим, як фейдер почне свою роботу і гра зависне
+        Screen.orientation = ScreenOrientation.LandscapeLeft;
+
         // Використовуємо фейдер для повернення в меню
-        // SceneFader сам переключить орієнтацію на Portrait, поки екран чорний
         fader.FadeTo("MainMenu");
     }
 }
