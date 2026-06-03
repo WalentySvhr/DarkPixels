@@ -9,6 +9,8 @@ public class QuestData : ScriptableObject
     [Header("Загальна інформація")]
     public string questName;
     [TextArea] public string description;
+    // Додай це в свій скрипт QuestData.cs (наприклад, у блок "Загальна інформація")
+    public string npcID; // Сюди ти будеш писати "Alchemist", "Elder" тощо.
 
     [Header("Ціль квесту")]
     public QuestType type;
