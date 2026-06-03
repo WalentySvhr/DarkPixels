@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 1992436474478963928}
   - component: {fileID: 2369094241643494949}
   - component: {fileID: 571799387795600330}
+  - component: {fileID: 8996165289824549438}
   - component: {fileID: 2713146747936325200}
   - component: {fileID: 6545746159034632192}
   m_Layer: 0
@@ -191,6 +192,22 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
+--- !u!114 &8996165289824549438
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5557051498509797174}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: efa1d729a4543bd4081bc5bf2c84a540, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GuardAttack
+  damageAmount: 100
+  attackRange: 2
+  attackCooldown: 1
+  knockbackForce: 1
 --- !u!114 &2713146747936325200
 MonoBehaviour:
   m_ObjectHideFlags: 0

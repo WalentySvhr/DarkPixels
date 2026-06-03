@@ -9,7 +9,6 @@ public class PolygonAreaSpawner : MonoBehaviour
     protected bool isSpawningActive = true;
 
     [Header("Enemy Settings")]
-    // НОВЕ: Замість одного префаба, тепер тут масив.
     [Tooltip("Додай сюди префаби ворогів. Порожні слоти будуть проігноровані.")]
     public GameObject[] enemyPrefabs;
     public int maxEnemies = 15;
@@ -26,6 +25,13 @@ public class PolygonAreaSpawner : MonoBehaviour
     [Header("Boss Settings (Optional)")]
     [Tooltip("Залиш порожнім для відкритого світу")]
     public BossTrigger bossTrigger;
+
+    // === НОВЕ: НАЛАШТУВАННЯ ПЕРЕВІРКИ ПЕРЕШКОД ===
+    [Header("Obstacle Avoidance Settings")]
+    [Tooltip("Вибери тут шар, на якому знаходяться твої дерева/каміння (наприклад, Obstacles)")]
+    public LayerMask obstacleLayer;
+    [Tooltip("Радіус фізичного кола для перевірки вільного місця навколо точки")]
+    public float spawnCheckRadius = 0.4f;
 
     [Header("Optimization")]
     public float activationDistance = 30f;
@@ -114,7 +120,6 @@ public class PolygonAreaSpawner : MonoBehaviour
     {
         if (spawnArea == null) return;
 
-        // --- НОВЕ: Логіка вибору випадкового ворога ---
         // Спочатку збираємо всі НЕПОРОЖНІ префаби з масиву
         List<GameObject> validPrefabs = new List<GameObject>();
         if (enemyPrefabs != null && enemyPrefabs.Length > 0)
@@ -137,23 +142,31 @@ public class PolygonAreaSpawner : MonoBehaviour
 
         // Вибираємо випадковий префаб з валідних
         GameObject prefabToSpawn = validPrefabs[Random.Range(0, validPrefabs.Count)];
-        // ----------------------------------------------
 
         Bounds bounds = spawnArea.bounds;
         Vector2 spawnPos = Vector2.zero;
         bool validPositionFound = false;
 
+        // Цикл пошуку точки (30 спроб)
         for (int i = 0; i < 30; i++)
         {
             float randomXPos = Random.Range(bounds.min.x, bounds.max.x);
             float randomYPos = Random.Range(bounds.min.y, bounds.max.y);
             Vector2 randomPoint = new Vector2(randomXPos, randomYPos);
 
+            // 1. Перевірка: чи точка взагалі всередині зеленого полігону спавнера
             if (spawnArea.OverlapPoint(randomPoint))
             {
-                spawnPos = randomPoint;
-                validPositionFound = true;
-                break;
+                // 2. === ОНОВЛЕНО: Додаткова перевірка на колайдери перешкод (дерев/стін) ===
+                Collider2D hitObstacle = Physics2D.OverlapCircle(randomPoint, spawnCheckRadius, obstacleLayer);
+
+                // Якщо колайдера перешкоди в цій точці НЕ знайшли — місце чисте і безпечне!
+                if (hitObstacle == null)
+                {
+                    spawnPos = randomPoint;
+                    validPositionFound = true;
+                    break; // Перериваємо пошук, точка знайдена
+                }
             }
         }
 
@@ -233,22 +246,16 @@ public class PolygonAreaSpawner : MonoBehaviour
 
     public void RestartSpawner()
     {
-        // 1. Вмикаємо можливість спавну (якщо вона була вимкнена босом)
         isSpawningActive = true;
         isOnLongBreak = false;
 
-        // 2. Скидаємо лічильники
         currentEnemyCount = 0;
         totalDeathsInSession = 0;
         isSpawning = false;
 
-        // 3. Зупиняємо всі поточні затримки, щоб вони не накладалися
         StopAllCoroutines();
-
-        // 4. Заповнюємо рівень мобами знову
         InitialFill();
 
         Debug.Log($"<color=orange>Спавнер {gameObject.name} успішно перезавантажено для поверху {TowerManager.Instance.currentFloor}!</color>");
     }
-
 }

@@ -34,6 +34,10 @@ public class QuestManager : MonoBehaviour
     public GameObject questPanel;
     public Animator uiAnimator;
 
+    // === КЕРУВАННЯ СТРІЛКОЮ ===
+    [Header("Quest Arrow Reference")]
+    public GameObject questArrow;
+
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -53,6 +57,9 @@ public class QuestManager : MonoBehaviour
         else
         {
             if (questPanel != null) questPanel.SetActive(false);
+
+            // === КЕРУВАННЯ СТРІЛКОЮ: Вимикаємо на старті, якщо квесту немає ===
+            if (questArrow != null) questArrow.SetActive(false);
         }
     }
 
@@ -115,18 +122,19 @@ public class QuestManager : MonoBehaviour
         if (questPanel != null) questPanel.SetActive(true);
         if (uiAnimator != null) uiAnimator.SetTrigger("Appear");
 
+        // === ФІКС ЗЕЛЕНОГО ТЕКСТУ: Повертаємо тексту базовий білий колір ===
+        if (goalText != null) goalText.color = Color.white;
+
         UpdateUI();
         OnQuestStateChanged?.Invoke(); // Сповіщаємо NPC
     }
 
-    // === ОНОВЛЕНО: Тепер реально підраховує предмети з InventoryManager ===
     public void UpdateCollectItemProgress()
     {
         if (currentQuest == null || currentQuest.type != QuestType.CollectItems || isTransitioning) return;
 
         int itemsInInventory = 0;
 
-        // Звертаємось до менеджера інвентарю для перевірки кількості
         if (InventoryManager.Instance != null && currentQuest.itemToCollect != null)
         {
             itemsInInventory = InventoryManager.Instance.GetItemCount(currentQuest.itemToCollect);
@@ -142,7 +150,6 @@ public class QuestManager : MonoBehaviour
         UpdateUI();
         OnQuestStateChanged?.Invoke();
 
-        // Якщо квест не потребує здачі NPC, завершуємо його автоматично
         if (currentProgress >= currentQuest.requiredAmount && !currentQuest.requiresReturnToNPC)
         {
             Debug.Log("<color=green>Квест на збір виконано автоматично!</color>");
@@ -195,12 +202,10 @@ public class QuestManager : MonoBehaviour
         }
     }
 
-    // --- УНІВЕРСАЛЬНА ЛОГІКА ВИДАЧІ НАГОРОД ---
     private void GiveQuestRewards()
     {
         if (currentQuest == null) return;
 
-        // 1. Валюта
         if (currentQuest.goldReward > 0 && InventoryManager.Instance != null)
         {
             InventoryManager.Instance.ChangeCoins(currentQuest.goldReward);
@@ -208,14 +213,11 @@ public class QuestManager : MonoBehaviour
             Debug.Log($"<color=yellow>Нагорода: Отримано {currentQuest.goldReward} монет!</color>");
         }
 
-        // 2. Досвід
         if (currentQuest.experienceReward > 0)
         {
-            // PlayerStats.Instance.AddExperience(currentQuest.experienceReward);
             Debug.Log($"<color=cyan>Нагорода: Отримано {currentQuest.experienceReward} XP!</color>");
         }
 
-        // 3. Предмети
         if (currentQuest.itemRewards != null && currentQuest.itemRewards.Length > 0)
         {
             foreach (Item rewardItem in currentQuest.itemRewards)
@@ -264,22 +266,12 @@ public class QuestManager : MonoBehaviour
         {
             pickupScript.item = itemData;
         }
-        else
-        {
-            Debug.LogWarning("<color=red>На префабі droppedItemPrefab немає скрипта ItemPickup!</color>");
-        }
 
         SpriteRenderer sr = droppedItem.GetComponentInChildren<SpriteRenderer>();
         if (sr != null && itemData.icon != null)
         {
             sr.sprite = itemData.icon;
         }
-        else
-        {
-            Debug.LogWarning("<color=orange>Не знайдено SpriteRenderer на дочірньому об'єкті префаба!</color>");
-        }
-
-        Debug.Log($"<color=orange>Нагорода: Предмет [{itemData.itemName}] красиво вилетів з гравця!</color>");
     }
 
     private IEnumerator CompleteQuestRoutine()
@@ -313,42 +305,65 @@ public class QuestManager : MonoBehaviour
         {
             currentQuest = null;
             if (questPanel != null) questPanel.SetActive(false);
+
+            // === КЕРУВАННЯ СТРІЛКОЮ: Ховаємо стрілку, якщо ланцюжок квестів закінчився ===
+            if (questArrow != null) questArrow.SetActive(false);
+
             OnQuestStateChanged?.Invoke();
         }
     }
 
-    // Метод для перевірки та реєстрації випадіння
     public bool TryDropQuestItem(string itemID)
     {
         if (currentQuest == null) return false;
 
-        // Перевіряємо, чи цей предмет взагалі потрібен для поточного квесту
-        // (Припускаємо, що в QuestData є поле targetID або ми порівнюємо з itemToCollect.itemName)
         bool isNeeded = (currentQuest.targetID == itemID);
 
-        if (isNeeded && !droppedUniqueItems.Contains(itemID))
+        if (isNeeded)
         {
-            droppedUniqueItems.Add(itemID);
-            return true;
+            if (currentQuest.type == QuestType.CollectItems)
+            {
+                if (currentProgress < currentQuest.requiredAmount)
+                {
+                    return true;
+                }
+            }
+            else
+            {
+                return true;
+            }
         }
+
         return false;
     }
 
-    // === ОНОВЛЕНИЙ МЕТОД UPDATEUI ===
-    void UpdateUI()
+    // === МЕТОД ОНОВЛЕННЯ UI (ЧИСТИЙ ВІД СТАРИХ ПРАПОРЦІВ) ===
+    public void UpdateUI()
     {
         if (currentQuest != null && goalText != null)
         {
+            // === КЕРУВАННЯ СТРІЛКОЮ ===
+            if (questArrow != null)
+            {
+                // Стрілка вимикається автоматично, коли прогрес досягає необхідного (наприклад, 1/1 для Reach Location)
+                if (currentProgress >= currentQuest.requiredAmount)
+                {
+                    questArrow.SetActive(false);
+                }
+                else
+                {
+                    questArrow.SetActive(true);
+                }
+            }
+
             if (currentQuest.requiresReturnToNPC && currentProgress >= currentQuest.requiredAmount)
             {
                 goalText.text = returnToNPCText;
                 return;
             }
 
-            // 1. Беремо оригінальний опис з квесту
             string formattedDescription = currentQuest.description;
 
-            // 2. Замінюємо кастомні теги на реальні значення з QuestData
             if (!string.IsNullOrEmpty(formattedDescription))
             {
                 formattedDescription = formattedDescription.Replace("{level}", currentQuest.requiredTowerLevel.ToString());
@@ -360,22 +375,18 @@ public class QuestManager : MonoBehaviour
                 }
             }
 
-            // 3. Формуємо прогрес
             string progressInfo = currentQuest.requiredAmount > 1
                 ? $" ({currentProgress}/{currentQuest.requiredAmount})"
                 : "";
 
-            // 4. Виводимо фінальний текст
             goalText.text = $"{formattedDescription}{progressInfo}";
         }
     }
 
-    // --- РЕЄСТРАЦІЯ ТОЧОК ---
     public void RegisterPoint(QuestPoint point) { if (!allPoints.Contains(point)) allPoints.Add(point); }
     public Transform GetTargetTransform(string id) { return allPoints.FirstOrDefault(p => p != null && p.pointID == id)?.transform; }
     private void OnDestroy() { allPoints.Clear(); }
 
-    // --- ЗБЕРЕЖЕННЯ ---
     public GameData CaptureQuestState(GameData data)
     {
         data.currentQuestID = currentQuest != null ? CleanName(currentQuest.name) : "";
@@ -396,7 +407,6 @@ public class QuestManager : MonoBehaviour
                 currentProgress = data.questProgress;
                 isTransitioning = false;
 
-                // Якщо завантажили квест на збір, оновлюємо кількість з інвентарю
                 if (currentQuest.type == QuestType.CollectItems)
                 {
                     UpdateCollectItemProgress();
