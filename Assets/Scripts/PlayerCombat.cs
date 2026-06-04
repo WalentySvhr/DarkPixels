@@ -200,12 +200,26 @@ public class PlayerCombat : MonoBehaviour
     {
         if (currentWeaponData.projectilePrefab != null)
         {
+            // Визначаємо точку спавну стріли
+            Vector3 spawnPosition = attackPoint.position; // Значення за замовчуванням
+
+            // Намагаємося знайти FirePoint всередині префаба поточної зброї
+            if (spawnedWeapon != null)
+            {
+                Transform customFirePoint = spawnedWeapon.transform.Find("FirePoint");
+                if (customFirePoint != null)
+                {
+                    spawnPosition = customFirePoint.position; // Використовуємо точку з префаба лука
+                }
+            }
+
             Transform target = FindNearestEnemy();
             Vector2 shootDirection;
 
             if (target != null)
             {
-                shootDirection = (target.position - attackPoint.position).normalized;
+                // Рахуємо напрямок від точки спавну до ворога
+                shootDirection = ((Vector2)target.position - (Vector2)spawnPosition).normalized;
                 FlipTowards(target.position.x);
             }
             else
@@ -214,7 +228,9 @@ public class PlayerCombat : MonoBehaviour
             }
 
             float angle = Mathf.Atan2(shootDirection.y, shootDirection.x) * Mathf.Rad2Deg;
-            GameObject proj = Instantiate(currentWeaponData.projectilePrefab, attackPoint.position, Quaternion.AngleAxis(angle, Vector3.forward));
+
+            // Створюємо стрілу в правильній точці spawnPosition
+            GameObject proj = Instantiate(currentWeaponData.projectilePrefab, spawnPosition, Quaternion.AngleAxis(angle, Vector3.forward));
 
             Arrow arrowScript = proj.GetComponent<Arrow>();
             if (arrowScript != null)
