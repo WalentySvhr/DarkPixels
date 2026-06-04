@@ -202,6 +202,28 @@ public class QuestManager : MonoBehaviour
         }
     }
 
+    // === НОВИЙ МЕТОД: СКАСУВАННЯ ПОТОЧНОГО КВЕСТУ ===
+    public void CancelCurrentQuest()
+    {
+        // Не дозволяємо скасовувати, якщо квесту немає або він зараз у процесі завершення
+        if (currentQuest == null || isTransitioning) return;
+
+        Debug.Log($"<color=orange>[QuestManager]</color> Квест <b>{currentQuest.name}</b> скасовано гравцем.");
+
+        // Очищаємо дані квесту
+        currentQuest = null;
+        currentProgress = 0;
+
+        // Ховаємо інтерфейс квесту
+        if (questPanel != null) questPanel.SetActive(false);
+
+        // Вимикаємо стрілку навігації
+        if (questArrow != null) questArrow.SetActive(false);
+
+        // Сповіщаємо NPC, щоб вони оновили свої іконки (квест знову стане доступним для взяття)
+        OnQuestStateChanged?.Invoke();
+    }
+
     private void GiveQuestRewards()
     {
         if (currentQuest == null) return;

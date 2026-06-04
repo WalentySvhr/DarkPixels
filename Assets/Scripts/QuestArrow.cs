@@ -109,4 +109,10 @@ public class QuestArrow : MonoBehaviour
 
         Debug.Log($"<color=cyan>[Навігація]</color> Стрілка ПРИМУСОВО активована на пошук ID: {npcTargetID}");
     }
+    // Додай цей метод в кінець скрипта QuestArrow.cs
+    public void ClearOverrideTarget()
+    {
+        overrideTargetID = null;
+        Debug.Log("<color=cyan>[Навігація]</color> Ручне відстеження СКАСОВАНО гравцем.");
+    }
 }

@@ -9,6 +9,9 @@ public class StoryQuestWrapper
 
     [Tooltip("ID твого NPC на карті (наприклад: AlchemistNPC), до якого має вести стрілочка")]
     public string npcTargetID;
+
+    [Tooltip("ОПЦІОНАЛЬНО: Квест, ПІСЛЯ виконання якого цей квест з'явиться у списку. Для самого першого квесту в ланцюжку залиш це поле ПУСТИМ (null).")]
+    public QuestData prerequisiteQuest;
 }
 
 public class QuestListUI : MonoBehaviour
@@ -18,7 +21,7 @@ public class QuestListUI : MonoBehaviour
     public Transform contentParent;
 
     [Header("СПИСОК СЮЖЕТНИХ КВЕСТІВ")]
-    [Tooltip("Натискай '+', додавай елементи і зв'язуй квест із потрібним NPC!")]
+    [Tooltip("Натискай '+', додавай елементи і вибудовуй сюжетні ланцюжки!")]
     public List<StoryQuestWrapper> storyQuests = new List<StoryQuestWrapper>();
 
     void Awake()
@@ -34,25 +37,27 @@ public class QuestListUI : MonoBehaviour
             Destroy(child.gameObject);
         }
 
-        // Створюємо нові кнопки
+        // Створюємо нові кнопки з урахуванням ланцюжків
         foreach (StoryQuestWrapper item in storyQuests)
         {
             if (item.questData == null) continue;
 
-            // === ФІКС №1: ПЕРЕВІРКА НА ЗАВЕРШЕНІ КВЕСТИ ===
-            // Якщо QuestManager каже, що цей квест уже виконано — пропускаємо його
-            if (QuestManager.Instance != null && QuestManager.Instance.IsQuestCompleted(item.questData.name))
+            if (QuestManager.Instance != null)
             {
-                continue; // Ідемо до наступного квесту в списку, цей не малюємо
+                // 1. ПЕРЕВІРКА: Якщо цей квест ВЖЕ ВИКОНАНИЙ — ховаємо його
+                if (QuestManager.Instance.IsQuestCompleted(item.questData.name))
+                {
+                    continue;
+                }
+
+                // 2. ПЕРЕВІРКА ЛАНЦЮЖКА: Якщо вказано попередній квест, але він ЩЕ НЕ ВИКОНАНИЙ — ховаємо цей квест
+                if (item.prerequisiteQuest != null && !QuestManager.Instance.IsQuestCompleted(item.prerequisiteQuest.name))
+                {
+                    continue; // Пропускаємо, бо час для цього квесту ще не настав
+                }
             }
 
-            // === ФІКС №2 (ОПЦІОНАЛЬНО): ХОВАЄМО КВЕСТ, ЯКЩО ВІН ЗАРАЗ АКТИВНИЙ ===
-            // Якщо ти вже підійшов до NPC і взяв цей квест, і він став "поточним",
-            // можна сховати його з цього списку доступних завдань. 
-            // Якщо хочеш увімкнути цю логіку — просто розкоментуй два рядки нижче:
-            // if (QuestManager.Instance != null && QuestManager.Instance.currentQuest == item.questData)
-            //     continue;
-
+            // Якщо квест пройшов усі перевірки — створюємо для нього кнопку
             GameObject newSlot = Instantiate(questSlotPrefab, contentParent);
             QuestSlotUI slotScript = newSlot.GetComponent<QuestSlotUI>();
 

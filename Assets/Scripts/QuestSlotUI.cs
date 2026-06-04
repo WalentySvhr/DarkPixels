@@ -75,7 +75,13 @@ public class QuestSlotUI : MonoBehaviour
                 {
                     if (data.itemRewards[i] != null)
                     {
-                        rewardBuilder.Append(data.itemRewards[i].name);
+                        // === ФІКС ТУТ: беремо itemName, якщо він є, інакше назву файлу ===
+                        string itemDisplayName = !string.IsNullOrEmpty(data.itemRewards[i].itemName)
+                            ? data.itemRewards[i].itemName
+                            : data.itemRewards[i].name;
+
+                        rewardBuilder.Append(itemDisplayName);
+
                         if (i < data.itemRewards.Length - 1) rewardBuilder.Append(", ");
                         hasAnyReward = true;
                     }
@@ -95,21 +101,33 @@ public class QuestSlotUI : MonoBehaviour
     {
         if (string.IsNullOrEmpty(npcTargetID)) return;
 
-        // Вмикаємо стрілочку компаса
         if (QuestArrow.Instance != null)
         {
-            QuestArrow.Instance.TrackNPC(npcTargetID);
-        }
+            // Перевіряємо, чи цей конкретний квест ВЖЕ відстежується прямо зараз
+            bool isAlreadyTrackingThis = (QuestArrow.Instance.CurrentOverrideTargetID == npcTargetID);
 
-        // === ОНОВЛЕНО: Скидаємо візуал УСІХ інших кнопок у списку і вмикаємо тільки цю ===
-        QuestSlotUI[] allSlots = transform.parent.GetComponentsInChildren<QuestSlotUI>();
-        foreach (QuestSlotUI slot in allSlots)
-        {
-            slot.SetTrackingState(false);
-        }
+            if (isAlreadyTrackingThis)
+            {
+                // === СЦЕНАРІЙ А: Квест уже відстежувався ➡️ НАЖАЛИ ПОВТОРНО ➡️ ВИМИКАЄМО ===
+                QuestArrow.Instance.ClearOverrideTarget();
+                SetTrackingState(false); // Повертаємо кнопці звичайний колір і текст "Стежити"
+            }
+            else
+            {
+                // === СЦЕНАРІЙ Б: Квест не відстежувався ➡️ ВМИКАЄМО СТЕЖЕННЯ ===
+                QuestArrow.Instance.TrackNPC(npcTargetID);
 
-        // Цю конкретну кнопку робимо активною
-        SetTrackingState(true);
+                // Скидаємо візуал УСІХ інших кнопок у списку в нормальний стан
+                QuestSlotUI[] allSlots = transform.parent.GetComponentsInChildren<QuestSlotUI>();
+                foreach (QuestSlotUI slot in allSlots)
+                {
+                    slot.SetTrackingState(false);
+                }
+
+                // А цю конкретну кнопку робимо активною ("Стежимо" + сірий колір)
+                SetTrackingState(true);
+            }
+        }
     }
 
     // Допоміжний метод, який змінює колір та текст кнопці
