@@ -47,16 +47,39 @@ public class QuestSlotUI : MonoBehaviour
 
         npcTargetID = npcID;
 
-        // 1. Заповнюємо Назву, Опис та Цілі
+        // 1. Заповнюємо Назву
         if (titleText != null) titleText.text = data.questName;
-        if (descriptionText != null) descriptionText.text = data.description;
 
+        // === ОНОВЛЕНО: Динамічна заміна шаблонів {amount} та {level} в описі ===
+        if (descriptionText != null)
+        {
+            string finalDescription = data.description;
+
+            if (!string.IsNullOrEmpty(finalDescription))
+            {
+                // Замінюємо {amount} на реальну кількість із QuestData
+                if (finalDescription.Contains("{amount}"))
+                {
+                    finalDescription = finalDescription.Replace("{amount}", data.requiredAmount.ToString());
+                }
+
+                // Замінюємо {level} на потрібний рівень вежі із QuestData
+                if (finalDescription.Contains("{level}"))
+                {
+                    finalDescription = finalDescription.Replace("{level}", data.requiredTowerLevel.ToString());
+                }
+            }
+
+            descriptionText.text = finalDescription;
+        }
+
+        // 2. Заповнюємо Цілі квесту
         if (targetText != null)
         {
             targetText.text = !string.IsNullOrEmpty(data.targetID) ? targetPrefix + data.targetID : talkToNpcText;
         }
 
-        // 2. Заповнюємо Нагороди
+        // 3. Заповнюємо Нагороди (з урахуванням гарного імені предмета)
         if (rewardText != null)
         {
             StringBuilder rewardBuilder = new StringBuilder(rewardPrefix);
@@ -75,7 +98,7 @@ public class QuestSlotUI : MonoBehaviour
                 {
                     if (data.itemRewards[i] != null)
                     {
-                        // === ФІКС ТУТ: беремо itemName, якщо він є, інакше назву файлу ===
+                        // Беремо красиве ім'я предмета, якщо воно є, інакше назву файлу
                         string itemDisplayName = !string.IsNullOrEmpty(data.itemRewards[i].itemName)
                             ? data.itemRewards[i].itemName
                             : data.itemRewards[i].name;
@@ -92,7 +115,7 @@ public class QuestSlotUI : MonoBehaviour
             rewardText.text = rewardBuilder.ToString();
         }
 
-        // === ОНОВЛЕНО: Перевіряємо при створенні, чи саме цей квест зараз відстежується ===
+        // === Перевіряємо при створенні, чи саме цей квест зараз відстежується ===
         bool isCurrentlyTracking = (QuestArrow.Instance != null && QuestArrow.Instance.CurrentOverrideTargetID == npcTargetID);
         SetTrackingState(isCurrentlyTracking);
     }
@@ -103,37 +126,30 @@ public class QuestSlotUI : MonoBehaviour
 
         if (QuestArrow.Instance != null)
         {
-            // Перевіряємо, чи цей конкретний квест ВЖЕ відстежується прямо зараз
             bool isAlreadyTrackingThis = (QuestArrow.Instance.CurrentOverrideTargetID == npcTargetID);
 
             if (isAlreadyTrackingThis)
             {
-                // === СЦЕНАРІЙ А: Квест уже відстежувався ➡️ НАЖАЛИ ПОВТОРНО ➡️ ВИМИКАЄМО ===
                 QuestArrow.Instance.ClearOverrideTarget();
-                SetTrackingState(false); // Повертаємо кнопці звичайний колір і текст "Стежити"
+                SetTrackingState(false);
             }
             else
             {
-                // === СЦЕНАРІЙ Б: Квест не відстежувався ➡️ ВМИКАЄМО СТЕЖЕННЯ ===
                 QuestArrow.Instance.TrackNPC(npcTargetID);
 
-                // Скидаємо візуал УСІХ інших кнопок у списку в нормальний стан
                 QuestSlotUI[] allSlots = transform.parent.GetComponentsInChildren<QuestSlotUI>();
                 foreach (QuestSlotUI slot in allSlots)
                 {
                     slot.SetTrackingState(false);
                 }
 
-                // А цю конкретну кнопку робимо активною ("Стежимо" + сірий колір)
                 SetTrackingState(true);
             }
         }
     }
 
-    // Допоміжний метод, який змінює колір та текст кнопці
     public void SetTrackingState(bool isTracking)
     {
-        // Міняємо колір самої плашки кнопки (Image)
         if (trackButton != null)
         {
             Image buttonImage = trackButton.GetComponent<Image>();
@@ -143,7 +159,6 @@ public class QuestSlotUI : MonoBehaviour
             }
         }
 
-        // Міняємо текст всередині кнопки
         if (trackButtonText != null)
         {
             trackButtonText.text = isTracking ? trackingButtonText : normalButtonText;

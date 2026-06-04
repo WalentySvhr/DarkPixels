@@ -17,6 +17,11 @@ public class PolygonAreaSpawner : MonoBehaviour
     public float minSpawnDelay = 10f;
     public float maxSpawnDelay = 30f;
 
+    // === НОВЕ: НАЛАШТУВАННЯ ЗБЕРЕЖЕННЯ ТАЙМЕРА ===
+    [Header("Long Respawn Save Settings")]
+    [Tooltip("Увімкни це для елітних мобів/босів із довгим респавном (наприклад, 5 годин), щоб час кулдауну не скидався при перезапуску гри.")]
+    public bool persistSpawnTimer = false;
+
     [Header("Long Break Settings")]
     public int deathsBeforeLongBreak = 100;
     public float minLongBreakMinutes = 2f;
@@ -26,7 +31,7 @@ public class PolygonAreaSpawner : MonoBehaviour
     [Tooltip("Залиш порожнім для відкритого світу")]
     public BossTrigger bossTrigger;
 
-    // === НОВЕ: НАЛАШТУВАННЯ ПЕРЕВІРКИ ПЕРЕШКОД ===
+    // === НАЛАШТУВАННЯ ПЕРЕВІРКИ ПЕРЕШКОД ===
     [Header("Obstacle Avoidance Settings")]
     [Tooltip("Вибери тут шар, на якому знаходяться твої дерева/каміння (наприклад, Obstacles)")]
     public LayerMask obstacleLayer;
@@ -47,6 +52,9 @@ public class PolygonAreaSpawner : MonoBehaviour
 
     public AreaQuestManager questManager;
 
+    // Ключ для збереження часу в PlayerPrefs (унікальний для кожного спавнера завдяки імені об'єкта)
+    private string SaveKey => "Spawner_" + gameObject.name + "_RespawnTime";
+
     void Awake()
     {
         spawnArea = GetComponent<PolygonCollider2D>();
@@ -63,7 +71,15 @@ public class PolygonAreaSpawner : MonoBehaviour
             deathsBeforeLongBreak = questManager.killsRequired;
         }
 
-        InitialFill();
+        // === ОНОВЛЕНО: Перевірка збереженого таймера при старті гри ===
+        if (persistSpawnTimer)
+        {
+            StartCoroutine(CheckSavedSpawnAndFill());
+        }
+        else
+        {
+            InitialFill();
+        }
     }
 
     void Update()
@@ -78,6 +94,27 @@ public class PolygonAreaSpawner : MonoBehaviour
         {
             StartCoroutine(SpawnWithDelay());
         }
+    }
+
+    // Корутина перевірки збереженого часу кулдауну
+    IEnumerator CheckSavedSpawnAndFill()
+    {
+        while (TimeManager.Instance == null || !TimeManager.Instance.IsReady()) yield return null;
+
+        if (PlayerPrefs.HasKey(SaveKey))
+        {
+            long savedUnlockTime = long.Parse(PlayerPrefs.GetString(SaveKey));
+            long currentTime = TimeManager.Instance.GetCurrentUnixTime();
+
+            if (currentTime < savedUnlockTime)
+            {
+                // Час респавну ще не настав, моб залишається мертвим.
+                // Update() сам запустить кулдаун на залишок часу.
+                yield break;
+            }
+        }
+
+        InitialFill();
     }
 
     protected void InitialFill()
@@ -99,6 +136,24 @@ public class PolygonAreaSpawner : MonoBehaviour
 
         long spawnTime = TimeManager.Instance.GetCurrentUnixTime() + (long)randomDelay;
 
+        // === ОНОВЛЕНО: Логіка збереження/зчитування майбутнього часу спавну ===
+        if (persistSpawnTimer)
+        {
+            if (PlayerPrefs.HasKey(SaveKey))
+            {
+                long savedUnlockTime = long.Parse(PlayerPrefs.GetString(SaveKey));
+                if (savedUnlockTime > TimeManager.Instance.GetCurrentUnixTime())
+                {
+                    spawnTime = savedUnlockTime;
+                }
+            }
+            else
+            {
+                PlayerPrefs.SetString(SaveKey, spawnTime.ToString());
+                PlayerPrefs.Save();
+            }
+        }
+
         while (TimeManager.Instance.GetCurrentUnixTime() < spawnTime)
         {
             if (!isSpawningActive)
@@ -112,6 +167,13 @@ public class PolygonAreaSpawner : MonoBehaviour
         if (currentEnemyCount < maxEnemies && !isOnLongBreak && isSpawningActive)
         {
             SpawnInPolygon();
+
+            // Моб успішно з'явився, видаляємо запис кулдауну
+            if (persistSpawnTimer)
+            {
+                PlayerPrefs.DeleteKey(SaveKey);
+                PlayerPrefs.Save();
+            }
         }
         isSpawning = false;
     }
@@ -120,7 +182,6 @@ public class PolygonAreaSpawner : MonoBehaviour
     {
         if (spawnArea == null) return;
 
-        // Спочатку збираємо всі НЕПОРОЖНІ префаби з масиву
         List<GameObject> validPrefabs = new List<GameObject>();
         if (enemyPrefabs != null && enemyPrefabs.Length > 0)
         {
@@ -133,46 +194,39 @@ public class PolygonAreaSpawner : MonoBehaviour
             }
         }
 
-        // Якщо масив порожній або всі слоти пусті - відміняємо спавн
         if (validPrefabs.Count == 0)
         {
             Debug.LogWarning("Spawner " + gameObject.name + " не має префабів ворогів!");
             return;
         }
 
-        // Вибираємо випадковий префаб з валідних
         GameObject prefabToSpawn = validPrefabs[Random.Range(0, validPrefabs.Count)];
 
         Bounds bounds = spawnArea.bounds;
         Vector2 spawnPos = Vector2.zero;
         bool validPositionFound = false;
 
-        // Цикл пошуку точки (30 спроб)
         for (int i = 0; i < 30; i++)
         {
             float randomXPos = Random.Range(bounds.min.x, bounds.max.x);
             float randomYPos = Random.Range(bounds.min.y, bounds.max.y);
             Vector2 randomPoint = new Vector2(randomXPos, randomYPos);
 
-            // 1. Перевірка: чи точка взагалі всередині зеленого полігону спавнера
             if (spawnArea.OverlapPoint(randomPoint))
             {
-                // 2. === ОНОВЛЕНО: Додаткова перевірка на колайдери перешкод (дерев/стін) ===
                 Collider2D hitObstacle = Physics2D.OverlapCircle(randomPoint, spawnCheckRadius, obstacleLayer);
 
-                // Якщо колайдера перешкоди в цій точці НЕ знайшли — місце чисте і безпечне!
                 if (hitObstacle == null)
                 {
                     spawnPos = randomPoint;
                     validPositionFound = true;
-                    break; // Перериваємо пошук, точка знайдена
+                    break;
                 }
             }
         }
 
         if (!validPositionFound) return;
 
-        // Інстанціюємо обраний префаб замість старого enemyPrefab
         GameObject enemy = Instantiate(prefabToSpawn, spawnPos, Quaternion.identity);
         currentEnemyCount++;
 
@@ -252,6 +306,13 @@ public class PolygonAreaSpawner : MonoBehaviour
         currentEnemyCount = 0;
         totalDeathsInSession = 0;
         isSpawning = false;
+
+        // === ОНОВЛЕНО: Очищення сейву таймера при примусовому рестарті спавнера ===
+        if (persistSpawnTimer)
+        {
+            PlayerPrefs.DeleteKey(SaveKey);
+            PlayerPrefs.Save();
+        }
 
         StopAllCoroutines();
         InitialFill();

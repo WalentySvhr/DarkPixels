@@ -2,8 +2,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // Всі типи дій, які ми обговорювали
-public enum DailyQuestType 
-{ 
+public enum DailyQuestType
+{
     ClearTowerFloors,   // Для "Альпініста"
     KillEnemies,        // Для "М'ясорубки"
     KillElite,          // Для "Мисливця за головами"
@@ -17,6 +17,7 @@ public enum DailyQuestType
 [CreateAssetMenu(fileName = "NewDailyQuest", menuName = "Quests/Daily Quest")]
 public class DailyQuestSO : ScriptableObject
 {
+    [Header("Base Quest Info")]
     public string questID; // Наприклад: "q_tower_01" (має бути унікальним!)
     public string questName;
     [TextArea] public string description;
@@ -31,6 +32,13 @@ public class DailyQuestSO : ScriptableObject
 public class ActiveDailyQuest
 {
     public DailyQuestSO questData;
+
+    // === ДАНІ ТРЕКІНГУ ДЛЯ ПОТОЧНОЇ ІГРОВОЇ СЕСІЇ ===
+    // Цих полів немає в SO, але менеджер заповнює їх автоматично при старті дня
+    public bool canBeTracked;
+    public string targetID;
+
+    [Header("Progress")]
     public int currentProgress;
     public bool isCompleted;
     public bool isRewardClaimed;

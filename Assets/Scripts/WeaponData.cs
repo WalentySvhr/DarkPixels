@@ -47,7 +47,7 @@ public class WeaponData : Item
         }
         else
         {
-            if (shootForce > 0) extra += $"ShootForce: {shootForce}";
+            if (shootForce > 0) extra += $"ShootForce: {shootForce} m/s";
         }
 
         desc.extraStats = extra.TrimEnd();
