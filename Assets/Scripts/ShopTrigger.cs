@@ -1,62 +1,68 @@
 using UnityEngine;
 
+// Видалили using UnityEngine.EventSystems; оскільки він більше не потрібен
+
+[RequireComponent(typeof(Collider2D))]
 public class ShopTrigger : MonoBehaviour
 {
     [Header("Файл Магазину")]
-    [Tooltip("Перетягни сюди файл ShopData (наприклад, асортимент Коваля)")]
     public ShopData myShopData;
 
-    [Header("Налаштування взаємодії")]
-    public float interactRange = 2.5f; // Дистанція для тапу
+    [Header("Налаштування")]
+    public float interactionRadius = 2.0f;
 
-    private Transform playerTransform;
+    private bool playerInRange = false;
 
-    void Start()
+    private void Update()
     {
-        // Шукаємо гравця за тегом (як і в діалогах)
-        GameObject player = GameObject.FindGameObjectWithTag("Player");
-        if (player != null)
-        {
-            playerTransform = player.transform;
-        }
+        playerInRange = IsPlayerNearby();
     }
 
-    // Відловлюємо тап по NPC на мобілці
+    private bool IsPlayerNearby()
+    {
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        if (player == null) return false;
+
+        return Vector2.Distance(transform.position, player.transform.position) <= interactionRadius;
+    }
+
     private void OnMouseDown()
     {
-        if (playerTransform == null) return;
+        // Перевірку EventSystem видалено
 
-        // Перевіряємо відстань
-        float distance = Vector2.Distance(transform.position, playerTransform.position);
+        Debug.Log("Клік по торговцю: " + gameObject.name);
 
-        if (distance <= interactRange)
+        if (playerInRange)
         {
             OpenMyShop();
         }
         else
         {
-            Debug.Log("Підійдіть ближче до торговця!");
+            Debug.Log("Гравець занадто далеко!");
         }
     }
 
     public void OpenMyShop()
     {
-        // Захист від помилок і випадкового подвійного тапу
-        if (ShopManager.Instance == null) return;
-        if (ShopManager.Instance.shopPanel != null && ShopManager.Instance.shopPanel.activeInHierarchy) return;
-
-        if (myShopData != null)
+        if (ShopManager.Instance == null)
         {
-            // Передаємо нашому Менеджеру конкретні товари цього NPC
-            ShopManager.Instance.OpenShop(myShopData);
+            Debug.LogError("ShopManager не знайдено на сцені!");
+            return;
+        }
 
-            // Якщо треба зупинити рух торговця (якщо він ходить)
-            NPCPatrol patrol = GetComponent<NPCPatrol>();
-            if (patrol != null) patrol.StartInteraction();
-        }
-        else
+        if (myShopData == null)
         {
-            Debug.LogWarning($"На NPC {gameObject.name} не призначено файл ShopData!");
+            Debug.LogError($"myShopData не призначено на {gameObject.name}!");
+            return;
         }
+
+        Debug.Log($"Відкриваємо магазин: {myShopData.shopName}");
+        ShopManager.Instance.OpenShop(myShopData, this);
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, interactionRadius);
     }
 }

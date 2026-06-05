@@ -14,7 +14,6 @@ public class WeaponShopUI : MonoBehaviour
     [Header("Список товарів")]
     public List<WeaponData> allWeapons;
 
-    // Список для зберігання посилань на створені слоти
     private List<ShopWeaponSlot> spawnedSlots = new List<ShopWeaponSlot>();
 
     void Start()
@@ -22,10 +21,8 @@ public class WeaponShopUI : MonoBehaviour
         GenerateShopSlots();
     }
 
-    // Метод для створення слотів (викликається один раз при старті або відкритті)
     public void GenerateShopSlots()
     {
-        // Очищаємо контейнер і список
         foreach (Transform child in container) Destroy(child.gameObject);
         spawnedSlots.Clear();
 
@@ -39,14 +36,11 @@ public class WeaponShopUI : MonoBehaviour
                 slotScript.weaponToSell = data;
                 slotScript.price = data.price;
                 slotScript.UpdateUI();
-
-                // Додаємо слот у список для майбутніх оновлень
                 spawnedSlots.Add(slotScript);
             }
         }
     }
 
-    // НОВИЙ МЕТОД: Оновлює візуал усіх слотів (викликай його після покупки)
     public void RefreshShopUI()
     {
         foreach (ShopWeaponSlot slot in spawnedSlots)
@@ -57,8 +51,15 @@ public class WeaponShopUI : MonoBehaviour
             }
         }
     }
+    public void OpenShopPanel()
+    {
+        if (shopPanel != null)
+        {
+            shopPanel.SetActive(true);
+            Debug.Log("Магазин зброї відкрито.");
+        }
+    }
 
-    // МЕТОД ДЛЯ ЗАКРИТТЯ ПАНЕЛІ
     public void CloseShopPanel()
     {
         if (shopPanel != null)
@@ -66,10 +67,12 @@ public class WeaponShopUI : MonoBehaviour
             shopPanel.SetActive(false);
         }
 
+        // ВИПРАВЛЕНО: Замість прямого посилання на NPCPatrol використовуємо SendMessage.
+        // Це автоматично викличе StopInteraction() у будь-якого компонента на traderNPC, 
+        // який має такий метод.
         if (traderNPC != null)
         {
-            NPCPatrol patrol = traderNPC.GetComponent<NPCPatrol>();
-            if (patrol != null) patrol.StopInteraction();
+            traderNPC.SendMessage("StopInteraction", SendMessageOptions.DontRequireReceiver);
         }
 
         Debug.Log("Магазин зброї закрито.");

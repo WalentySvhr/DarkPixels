@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.EventSystems;
 
 public class ShopManager : MonoBehaviour
 {
@@ -9,49 +10,65 @@ public class ShopManager : MonoBehaviour
     public GameObject slotPrefab;
     public Transform traderNPCContent;
     public Transform traderPlayerContent;
-    public GameObject shopPanel; // Сама панелька магазину, щоб її вмикати/вимикати
+    public GameObject shopPanel;
 
     public InventoryManager playerInv;
 
-    // ВИПРАВЛЕНО: Тепер public, щоб FisherShopSlot міг дізнатися множник цін!
     public ShopData currentShop;
+
+    // Змінено з NPCPatrol на MonoBehaviour, щоб уникнути помилок після видалення класу
+    private MonoBehaviour currentNPC;
 
     void Awake() => Instance = this;
 
-    // ВИКЛИКАЄТЬСЯ З ТРИГЕРА NPC (наприклад, коли клікнув на торговця)
-    public void OpenShop(ShopData shop)
+    // Метод тепер приймає MonoBehaviour (будь-який скрипт на об'єкті)
+    public void OpenShop(ShopData shop, MonoBehaviour npc = null)
     {
         Debug.Log($"[Магазин] Відкриваємо магазин! Передано файл: {(shop != null ? shop.shopName : "ПУСТИЙ ФАЙЛ")}");
         currentShop = shop;
+        currentNPC = npc;
+
         shopPanel.SetActive(true);
         RefreshShop();
     }
 
     public void CloseShop()
     {
+        // 1. Очищаємо дані
         currentShop = null;
+
+        // 2. Вимикаємо панель
         shopPanel.SetActive(false);
+
+        // 3. РОЗБЛОКУВАННЯ: Скидаємо виділення UI
+        if (EventSystem.current != null)
+        {
+            EventSystem.current.SetSelectedGameObject(null);
+        }
+
+        // 4. Якщо гра була на паузі (Time.timeScale = 0), розблоковуємо її
+        // Якщо ви цього не робите, залиште як є
+        Time.timeScale = 1f;
+
+        // 5. Логіка NPC
+        if (currentNPC != null)
+        {
+            // currentNPC.SendMessage("StopInteraction", SendMessageOptions.DontRequireReceiver);
+            currentNPC = null;
+        }
+
+        Debug.Log("Магазин закрито, управління розблоковано.");
     }
 
     public void RefreshShop()
     {
-        if (currentShop == null)
-        {
+        if (currentShop == null) return;
 
-            return;
-        }
-
-        Debug.Log($"[Магазин] Оновлюємо вітрину NPC. Знайдено товарів у файлі: {currentShop.itemsForSale.Count}");
         UpdateGridNPC(traderNPCContent, currentShop.itemsForSale);
 
         if (playerInv != null)
         {
-            Debug.Log($"[Магазин] Оновлюємо вітрину Гравця. Знайдено речей в інвентарі: {playerInv.items.Count}");
             UpdateGridPlayer(traderPlayerContent, playerInv.items);
-        }
-        else
-        {
-            Debug.LogWarning("[Магазин] Увага: Не підключено інвентар гравця (Player Inv) в Інспекторі!");
         }
     }
 
@@ -83,10 +100,7 @@ public class ShopManager : MonoBehaviour
 
             FisherShopSlot slotScript = obj.GetComponent<FisherShopSlot>();
             if (slotScript != null)
-            {
-                // Передаємо amount
                 slotScript.Setup(stack.item, true, stack.amount);
-            }
         }
     }
 
@@ -97,40 +111,23 @@ public class ShopManager : MonoBehaviour
             if (playerInv.Add(item))
             {
                 playerInv.ChangeCoins(-item.price);
-
-                // --- НОВЕ: Звіт для дейліків (витрата золота) ---
                 if (DailyQuestManager.Instance != null)
                 {
                     DailyQuestManager.Instance.AddProgress(DailyQuestType.SpendGold, item.price);
                 }
-                // ------------------------------------------------
-
                 RefreshShop();
             }
-            else
-            {
-                Debug.Log("Немає місця в інвентарі!");
-            }
-        }
-        else
-        {
-            Debug.Log("Недостатньо монет!");
         }
     }
 
     public void SellItem(Item item)
     {
-        // Формула уцінки: 100 монет * 0.5 (multiplier) = 50 монет
         int sellPrice = Mathf.RoundToInt(item.price * currentShop.sellMultiplier);
-
-        // Щоб речі не коштували 0 монет, ставимо мінімум 1
         if (sellPrice < 1) sellPrice = 1;
 
         playerInv.Remove(item);
         playerInv.ChangeCoins(sellPrice);
 
-        // --- ВИПРАВЛЕНО: Фільтруємо предмети перед звітом у дейліки ---
-        // Зараховуємо прогрес ТІЛЬКИ якщо тип предмета - Resource
         if (item.type == ItemType.Resource)
         {
             if (DailyQuestManager.Instance != null)
@@ -138,8 +135,6 @@ public class ShopManager : MonoBehaviour
                 DailyQuestManager.Instance.AddProgress(DailyQuestType.SellResources, sellPrice);
             }
         }
-        // -------------------------------------------------
-
         RefreshShop();
     }
 }

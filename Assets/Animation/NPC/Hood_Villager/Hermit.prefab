@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7539292129425789321}
   - component: {fileID: 2657643695731850390}
   - component: {fileID: 2916379100237208840}
-  m_Layer: 5
+  m_Layer: 9
   m_Name: 'Canvas '
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -117,7 +117,7 @@ GameObject:
   - component: {fileID: 5337489873575819095}
   - component: {fileID: 3369684728819899134}
   - component: {fileID: 865912641164331437}
-  m_Layer: 11
+  m_Layer: 9
   m_Name: CompleteQuestIconMiniMapHood
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -221,7 +221,7 @@ GameObject:
   - component: {fileID: 4057874454786590222}
   - component: {fileID: 8857654217550904334}
   - component: {fileID: 508271426294290290}
-  m_Layer: 5
+  m_Layer: 9
   m_Name: "questIcon\u0456Hood"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -325,13 +325,12 @@ GameObject:
   - component: {fileID: 7209127824919741934}
   - component: {fileID: 8601776192509681901}
   - component: {fileID: 5548318277145439447}
-  - component: {fileID: 2338658020892523839}
-  - component: {fileID: 8797207307142006766}
-  - component: {fileID: 2986866744862156846}
-  - component: {fileID: 7171011613298909816}
   - component: {fileID: 6461580300176711876}
   - component: {fileID: 744669303301321363}
-  m_Layer: 0
+  - component: {fileID: 22410832597176303}
+  - component: {fileID: 8310633265584333370}
+  - component: {fileID: 8623186080793566986}
+  m_Layer: 9
   m_Name: Hermit
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -347,7 +346,7 @@ Transform:
   m_GameObject: {fileID: 3125107720715454446}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -435,143 +434,6 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
---- !u!61 &2338658020892523839
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3125107720715454446}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: -0.04848075, y: 0.0040359497}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.84615386, y: 1.0769231}
-    newSize: {x: 1.375, y: 1.75}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Size: {x: 0.733356, y: 0.6525574}
-  m_EdgeRadius: 0
---- !u!61 &8797207307142006766
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3125107720715454446}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0.03962958, y: -0.04399109}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.84615386, y: 1.0769231}
-    newSize: {x: 1.375, y: 1.75}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Size: {x: 2.5120256, y: 2.2442322}
-  m_EdgeRadius: 0
---- !u!50 &2986866744862156846
-Rigidbody2D:
-  serializedVersion: 5
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3125107720715454446}
-  m_BodyType: 1
-  m_Simulated: 1
-  m_UseFullKinematicContacts: 1
-  m_UseAutoMass: 0
-  m_Mass: 9999
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
-  m_GravityScale: 0
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 0
-  m_Constraints: 4
---- !u!114 &7171011613298909816
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3125107720715454446}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e492968ff2d4c1c43ba6b1faf8ce1d69, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  patrolZone: {fileID: 0}
-  moveSpeed: 2
-  minWaitTime: 2
-  maxWaitTime: 5
-  timeToGiveUp: 1.5
-  speedParameterName: Speed
 --- !u!114 &6461580300176711876
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -607,16 +469,97 @@ MonoBehaviour:
   minimapExclamationMarkIcon: {fileID: 1746997899526572150}
   shopIcon: {fileID: 0}
   minimapShopIcon: {fileID: 0}
-  welcomeDialog: "\u041F\u0440\u0438\u0432\u0456\u0442"
-  progressDialog: "\u0414\u043E\u0431\u0435\u0440\u0438\u0441\u044C \u0434\u043E
-    \u043C\u0456\u0441\u0442\u0430"
-  completeDialog: 
-  alreadyDoneDialog: "\u0414\u044F\u043A\u0443\u044E \u0449\u0435 \u0440\u0430\u0437
-    \u0437\u0430 \u0434\u043E\u043F\u043E\u043C\u043E\u0433\u0443!"
-  busyDialog: "\u042F \u0431\u0430\u0447\u0443, \u0442\u0438 \u0432\u0436\u0435 \u043C\u0430\u0454\u0448
-    \u0437\u0430\u0432\u0434\u0430\u043D\u043D\u044F. \u0421\u043F\u043E\u0447\u0430\u0442\u043A\u0443
-    \u0437\u0430\u0432\u0435\u0440\u0448\u0438 \u0439\u043E\u0433\u043E!"
+  welcomeDialog: Find the way to the city
+  progressDialog: Get to the city
+  completeDialog: I see you still made it
+  alreadyDoneDialog: I see you still made it
+  busyDialog: I see you already have a task. Finish it first!
   shopData: {fileID: 0}
+--- !u!114 &22410832597176303
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3125107720715454446}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 357ac0bc2b49d974e9758f469922c342, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NPCInteraction
+--- !u!61 &8310633265584333370
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3125107720715454446}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 0.84615386, y: 1.0769231}
+    newSize: {x: 1.375, y: 1.75}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Size: {x: 2, y: 2}
+  m_EdgeRadius: 0
+--- !u!50 &8623186080793566986
+Rigidbody2D:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3125107720715454446}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 1
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 0
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!1 &4104940681527459314
 GameObject:
   m_ObjectHideFlags: 0
@@ -628,7 +571,7 @@ GameObject:
   - component: {fileID: 8837468793095479922}
   - component: {fileID: 6598395484060664534}
   - component: {fileID: 9222155039933160794}
-  m_Layer: 11
+  m_Layer: 9
   m_Name: questIconMiniMapHood
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -732,7 +675,7 @@ GameObject:
   - component: {fileID: 8785583306638285360}
   - component: {fileID: 2067032327881299165}
   - component: {fileID: 5054958114079478833}
-  m_Layer: 5
+  m_Layer: 9
   m_Name: CompleteQuestIconHood
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -837,7 +780,7 @@ GameObject:
   - component: {fileID: 6649402225272099287}
   - component: {fileID: 5885644034703391128}
   - component: {fileID: 604308309319078254}
-  m_Layer: 5
+  m_Layer: 9
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}

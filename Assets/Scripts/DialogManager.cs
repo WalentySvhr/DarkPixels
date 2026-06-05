@@ -34,7 +34,9 @@ public class DialogManager : MonoBehaviour
     private bool isTyping = false;
     private string currentSentence = "";
     private QuestGiver currentGiver;
-    private NPCPatrol currentNPC; // Якщо використовується патрулювання
+
+    // Змінено з NPCPatrol на MonoBehaviour
+    private MonoBehaviour currentNPC;
 
     void Awake()
     {
@@ -58,8 +60,9 @@ public class DialogManager : MonoBehaviour
 
     // --- ОСНОВНІ МЕТОДИ ЗАПУСКУ ---
 
-    public void StartStaticDialog(string text, DialogData data)
+    public void StartStaticDialog(string text, DialogData data, MonoBehaviour npc = null)
     {
+        currentNPC = npc;
         PrepareDialogUI(data);
         if (questButtonsPanel != null) questButtonsPanel.SetActive(false);
 
@@ -68,8 +71,9 @@ public class DialogManager : MonoBehaviour
         DisplayNextSentence();
     }
 
-    public void StartQuestDialog(string text, QuestGiver giver, DialogData data)
+    public void StartQuestDialog(string text, QuestGiver giver, DialogData data, MonoBehaviour npc = null)
     {
+        currentNPC = npc;
         currentGiver = giver;
         PrepareDialogUI(data);
 
@@ -81,8 +85,9 @@ public class DialogManager : MonoBehaviour
         DisplayNextSentence();
     }
 
-    public void StartCompletionDialog(string text, QuestGiver giver, DialogData data)
+    public void StartCompletionDialog(string text, QuestGiver giver, DialogData data, MonoBehaviour npc = null)
     {
+        currentNPC = npc;
         currentGiver = giver;
         PrepareDialogUI(data);
 
@@ -94,8 +99,9 @@ public class DialogManager : MonoBehaviour
         DisplayNextSentence();
     }
 
-    public void StartDialog(DialogData dialog)
+    public void StartDialog(DialogData dialog, MonoBehaviour npc = null)
     {
+        currentNPC = npc;
         PrepareDialogUI(dialog);
 
         if (questButtonsPanel != null) questButtonsPanel.SetActive(false);
@@ -177,8 +183,6 @@ public class DialogManager : MonoBehaviour
         isTyping = false;
     }
 
-    // --- ОБРОБКА КНОПОК ---
-
     public void OnAcceptQuest()
     {
         if (currentGiver != null)
@@ -189,15 +193,10 @@ public class DialogManager : MonoBehaviour
             if (activeQuest != null)
             {
                 string qName = activeQuest.name;
-
-                // Перевіряємо, чи ми ЗДАЄМО квест
                 if (qm.currentQuest != null && qName == qm.currentQuest.name && qm.currentProgress >= qm.currentQuest.requiredAmount)
                 {
-                    // === ЗМІНЕНО ===
-                    // Викликаємо метод на NPC, щоб він спершу забрав предмети, якщо це квест на збір
                     currentGiver.CompleteQuest();
                 }
-                // Інакше ми ПРИЙМАЄМО квест
                 else
                 {
                     currentGiver.AcceptQuest();
@@ -217,6 +216,12 @@ public class DialogManager : MonoBehaviour
         dialogPanel.SetActive(false);
         if (questButtonsPanel != null) questButtonsPanel.SetActive(false);
         currentGiver = null;
-        if (currentNPC != null) currentNPC.StopInteraction();
+
+        if (currentNPC != null)
+        {
+            // Використовуємо SendMessage, щоб викликати метод, якщо він існує в іншому скрипті
+            currentNPC.SendMessage("StopInteraction", SendMessageOptions.DontRequireReceiver);
+            currentNPC = null;
+        }
     }
 }

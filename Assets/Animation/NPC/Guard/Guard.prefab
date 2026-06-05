@@ -14,9 +14,10 @@ GameObject:
   - component: {fileID: 2369094241643494949}
   - component: {fileID: 571799387795600330}
   - component: {fileID: 8996165289824549438}
-  - component: {fileID: 2713146747936325200}
   - component: {fileID: 6545746159034632192}
-  m_Layer: 0
+  - component: {fileID: -1732900031700316167}
+  - component: {fileID: -5406047001118297847}
+  m_Layer: 9
   m_Name: Guard
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -32,7 +33,7 @@ Transform:
   m_GameObject: {fileID: 5557051498509797174}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -58.41, y: -163.88, z: 0}
+  m_LocalPosition: {x: -58.41, y: -163.88, z: -1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -153,17 +154,17 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0.025405884, y: -0.008468628}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.8125, y: 0.9375}
+    oldSize: {x: 0.9285714, y: 1.0714285}
     newSize: {x: 1, y: 1.1538461}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 0.6951294, y: 0.8475647}
   m_EdgeRadius: 0
 --- !u!50 &571799387795600330
 Rigidbody2D:
@@ -173,7 +174,7 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5557051498509797174}
-  m_BodyType: 0
+  m_BodyType: 1
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
@@ -204,28 +205,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: efa1d729a4543bd4081bc5bf2c84a540, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GuardAttack
+  animator: {fileID: 0}
+  attackTriggerName: Attack
   damageAmount: 100
   attackRange: 2
   attackCooldown: 1
   knockbackForce: 1
---- !u!114 &2713146747936325200
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5557051498509797174}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e492968ff2d4c1c43ba6b1faf8ce1d69, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  patrolZone: {fileID: 0}
-  moveSpeed: 1
-  minWaitTime: 2
-  maxWaitTime: 5
-  timeToGiveUp: 1.5
-  speedParameterName: Speed
 --- !u!114 &6545746159034632192
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -239,5 +224,51 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentDialog: {fileID: 11400000, guid: 5025461e10a79364aaab3918a26f1e56, type: 2}
-  questPoint: {fileID: 0}
-  interactRange: 2.5
+--- !u!58 &-1732900031700316167
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5557051498509797174}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0}
+  m_Radius: 2.5
+--- !u!114 &-5406047001118297847
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5557051498509797174}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 357ac0bc2b49d974e9758f469922c342, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NPCInteraction

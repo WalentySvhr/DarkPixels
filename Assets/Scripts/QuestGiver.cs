@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.EventSystems;
 using System.Linq;
 using System.Collections.Generic;
 
@@ -18,7 +17,7 @@ public class QuestGiver : MonoBehaviour
     public GameObject minimapExclamationMarkIcon;
 
     [Header("Icons: Магазин (після квесту)")]
-    public GameObject shopIcon; // Іконка кошика або монетки
+    public GameObject shopIcon;
     public GameObject minimapShopIcon;
 
     [Header("Dialog Texts")]
@@ -31,7 +30,9 @@ public class QuestGiver : MonoBehaviour
     [Header("Shop Settings (Після завершення квесту)")]
     public ShopData shopData;
 
-    // Змінна для перевірки дистанції до гравця
+    [Header("Налаштування взаємодії")]
+    public float interactionRadius = 2.0f;
+
     private bool playerInRange = false;
 
     void Start()
@@ -39,9 +40,20 @@ public class QuestGiver : MonoBehaviour
         InvokeRepeating(nameof(UpdateIcon), 0.5f, 0.5f);
     }
 
+    void Update()
+    {
+        playerInRange = IsPlayerNearby();
+    }
+
+    private bool IsPlayerNearby()
+    {
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        if (player == null) return false;
+        return Vector2.Distance(transform.position, player.transform.position) <= interactionRadius;
+    }
+
     void LateUpdate()
     {
-        // Додаємо нові іконки в список для виправлення повороту
         FixIconTransform(questionMarkIcon);
         FixIconTransform(exclamationMarkIcon);
         FixIconTransform(shopIcon);
@@ -76,7 +88,6 @@ public class QuestGiver : MonoBehaviour
 
     public void UpdateIcon()
     {
-        // Спочатку вимикаємо ВСІ іконки
         if (questionMarkIcon != null) questionMarkIcon.SetActive(false);
         if (minimapQuestionMarkIcon != null) minimapQuestionMarkIcon.SetActive(false);
         if (exclamationMarkIcon != null) exclamationMarkIcon.SetActive(false);
@@ -87,7 +98,6 @@ public class QuestGiver : MonoBehaviour
         QuestData activeQuestForNPC = GetRelevantQuest();
         QuestManager qm = QuestManager.Instance;
 
-        // ЛОГІКА МАГАЗИНУ: Якщо квестів немає, але є ShopData
         if (activeQuestForNPC == null)
         {
             if (shopData != null)
@@ -98,7 +108,6 @@ public class QuestGiver : MonoBehaviour
             return;
         }
 
-        // ЛОГІКА КВЕСТІВ (залишається як була)
         if (qm.currentQuest != null)
         {
             string heldQuestName = CleanName(qm.currentQuest.name);
@@ -129,15 +138,20 @@ public class QuestGiver : MonoBehaviour
         QuestManager qm = QuestManager.Instance;
         DialogManager dm = DialogManager.Instance;
 
+        if (dm != null && dm.dialogPanel != null && dm.dialogPanel.activeInHierarchy) return;
+        if (ShopManager.Instance != null && ShopManager.Instance.shopPanel != null && ShopManager.Instance.shopPanel.activeInHierarchy) return;
+
+        SendMessage("StartInteraction", SendMessageOptions.DontRequireReceiver);
+
         if (activeQuestForNPC == null)
         {
             if (shopData != null)
             {
-                ShopManager.Instance.OpenShop(shopData);
+                ShopManager.Instance.OpenShop(shopData, this);
             }
             else if (!string.IsNullOrEmpty(alreadyDoneDialog))
             {
-                dm.StartStaticDialog(alreadyDoneDialog, npcDialogData);
+                dm.StartStaticDialog(alreadyDoneDialog, npcDialogData, this);
             }
             return;
         }
@@ -145,19 +159,19 @@ public class QuestGiver : MonoBehaviour
         if (qm.currentQuest != null && CleanName(qm.currentQuest.name) == CleanName(activeQuestForNPC.name))
         {
             if (activeQuestForNPC.requiresReturnToNPC && qm.currentProgress >= activeQuestForNPC.requiredAmount)
-                dm.StartCompletionDialog(completeDialog, this, npcDialogData);
+                dm.StartCompletionDialog(completeDialog, this, npcDialogData, this);
             else
-                dm.StartStaticDialog(progressDialog, npcDialogData);
+                dm.StartStaticDialog(progressDialog, npcDialogData, this);
             return;
         }
 
         if (qm.currentQuest != null)
         {
-            dm.StartStaticDialog(busyDialog, npcDialogData);
+            dm.StartStaticDialog(busyDialog, npcDialogData, this);
             return;
         }
 
-        dm.StartQuestDialog(welcomeDialog, this, npcDialogData);
+        dm.StartQuestDialog(welcomeDialog, this, npcDialogData, this);
     }
 
     public void AcceptQuest()
@@ -181,47 +195,18 @@ public class QuestGiver : MonoBehaviour
         UpdateIcon();
     }
 
-    // --- НОВИЙ БЛОК ДЛЯ ВІДСТЕЖЕННЯ ЗОНИ ---
-
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.CompareTag("Player"))
-        {
-            playerInRange = true;
-        }
-    }
-
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        if (collision.CompareTag("Player"))
-        {
-            playerInRange = false;
-        }
-    }
-
-    // Оновлений метод кліку
     private void OnMouseDown()
     {
-        // Захист від кліку крізь інтерфейс
-        if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject()) return;
+        // Перевірка EventSystem повністю видалена для стабільної роботи кліку
+        Debug.Log("Клік по квест-гіверу: " + gameObject.name);
 
-        // Перевіряємо дистанцію
         if (playerInRange)
         {
             Interact();
         }
         else
         {
-            Debug.Log($"Гравець занадто далеко від {gameObject.name} для взаємодії!");
+            Debug.Log("Гравець занадто далеко від квест-гівера!");
         }
-    }
-
-    // ---------------------------------------
-
-    private string GetGameObjectPath(GameObject obj)
-    {
-        string path = "/" + obj.name;
-        while (obj.transform.parent != null) { obj = obj.transform.parent.gameObject; path = "/" + obj.name + path; }
-        return path;
     }
 }

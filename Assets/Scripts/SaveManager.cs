@@ -1,8 +1,10 @@
 using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine.SceneManagement;
 using System.Linq;
+using TMPro; // Додано для роботи з TextMeshPro
 
 [System.Serializable]
 public class GameData
@@ -56,6 +58,32 @@ public class SaveManager : MonoBehaviour
     private string savePath;
     private bool needsToLoad = false;
 
+    [Header("Auto Save Settings")]
+    public bool enableAutoSave = true;
+    [Tooltip("Інтервал автозбереження в секундах")]
+    public float autoSaveInterval = 60f;
+    private Coroutine autoSaveCoroutine;
+
+    [Header("UI Settings")]
+    [Tooltip("Перетягни сюди головний об'єкт індикатора з Canvas")]
+    public GameObject autoSaveIndicatorUI;
+
+    [Tooltip("Перетягни сюди компонент TextMeshPro, який знаходиться всередині індикатора")]
+    public TextMeshProUGUI saveNotificationText;
+
+    [Tooltip("Текст, який буде виводитися при АВТОМАТИЧНОМУ збереженні")]
+    public string autoSaveMessage = "Автозбереження...";
+
+    [Tooltip("Чи показувати цей індикатор при РУЧНОМУ збереженні?")]
+    public bool showUiOnManualSave = true;
+
+    [Tooltip("Текст, який буде виводитися при РУЧНОМУ збереженні")]
+    public string manualSaveMessage = "Гру збережено!";
+
+    [Tooltip("Скільки секунд індикатор буде висіти на екрані")]
+    public float uiDisplayDuration = 2.5f;
+    private Coroutine uiAnimationCoroutine;
+
     public GameData CurrentData { get; private set; } = new GameData();
 
     void Awake()
@@ -77,6 +105,47 @@ public class SaveManager : MonoBehaviour
         }
     }
 
+    void Start()
+    {
+        if (autoSaveIndicatorUI != null) autoSaveIndicatorUI.SetActive(false);
+
+        if (enableAutoSave)
+        {
+            StartAutoSave();
+        }
+    }
+
+    public void StartAutoSave()
+    {
+        if (autoSaveCoroutine != null) StopCoroutine(autoSaveCoroutine);
+        autoSaveCoroutine = StartCoroutine(AutoSaveLoop());
+    }
+
+    private IEnumerator AutoSaveLoop()
+    {
+        while (enableAutoSave)
+        {
+            yield return new WaitForSeconds(autoSaveInterval);
+            SaveGame(false); // Логіка показу UI тепер автоматично керується всередині SaveGame
+        }
+    }
+
+    private IEnumerator ShowSaveIndicator(string message)
+    {
+        if (autoSaveIndicatorUI != null)
+        {
+            // Встановлюємо текст з інспектора перед показом плашки
+            if (saveNotificationText != null)
+            {
+                saveNotificationText.text = message;
+            }
+
+            autoSaveIndicatorUI.SetActive(true);
+            yield return new WaitForSeconds(uiDisplayDuration);
+            autoSaveIndicatorUI.SetActive(false);
+        }
+    }
+
     private void OnEnable() => SceneManager.sceneLoaded += OnSceneLoaded;
     private void OnDisable() => SceneManager.sceneLoaded -= OnSceneLoaded;
 
@@ -91,27 +160,27 @@ public class SaveManager : MonoBehaviour
 
     public void PrepareLoad() => needsToLoad = true;
 
-    public void SaveGame()
+    public bool SaveGame(bool isManual = true)
     {
-        // --- ШПИГУНСЬКИЙ ТРЮК: Виводить у консоль весь ланцюжок того, хто викликав метод ---
-        Debug.Log("<color=orange>ЗБЕРЕЖЕННЯ ВИКЛИКАНО ЗІ СКРИПТА:</color>\n" + StackTraceUtility.ExtractStackTrace());
-
-        // 1. Стара перевірка на заборонену зону
-        if (!SaveForbiddenZone.CanSave)
+        if (isManual)
         {
-            Debug.LogWarning("Збереження неможливе всередині башти!");
-            return;
+            Debug.Log("<color=orange>ЗБЕРЕЖЕННЯ ВИКЛИКАНО ЗІ СКРИПТА:</color>\n" + StackTraceUtility.ExtractStackTrace());
         }
 
-        // ==========================================
-        // 2. ЗАЛІЗОБЕТОННА ПЕРЕВІРКА БАШТИ
-        // ==========================================
+        // 1. Перевірка на заборонену зону
+        if (!SaveForbiddenZone.CanSave)
+        {
+            if (isManual) Debug.LogWarning("Збереження неможливе всередині башти!");
+            return false;
+        }
+
+        // 2. Перевірка башти
         if (TowerManager.Instance != null && TowerManager.Instance.floorUIContainer != null)
         {
             if (TowerManager.Instance.floorUIContainer.activeSelf)
             {
-                Debug.LogWarning("<color=red>[SaveSystem]</color> Блокування: спроба зберегтись під час забігу в башні!");
-                return;
+                if (isManual) Debug.LogWarning("<color=red>[SaveSystem]</color> Блокування: спроба зберегтись під час забігу в башні!");
+                return false;
             }
         }
 
@@ -167,7 +236,25 @@ public class SaveManager : MonoBehaviour
         CurrentData = data;
 
         File.WriteAllText(savePath, JsonUtility.ToJson(data, true));
-        Debug.Log("<color=green>[SaveSystem]</color> Дані успішно зафіксовані.");
+
+        if (isManual)
+            Debug.Log("<color=green>[SaveSystem]</color> Дані успішно зафіксовані (Ручне збереження).");
+        else
+            Debug.Log("<color=green>[SaveSystem]</color> Дані успішно зафіксовані (Автозбереження).");
+
+        // --- КЕРУВАННЯ UI ПОВІДОМЛЕННЯМ ---
+        if (isManual && showUiOnManualSave)
+        {
+            if (uiAnimationCoroutine != null) StopCoroutine(uiAnimationCoroutine);
+            uiAnimationCoroutine = StartCoroutine(ShowSaveIndicator(manualSaveMessage));
+        }
+        else if (!isManual) // Якщо це автозбереження
+        {
+            if (uiAnimationCoroutine != null) StopCoroutine(uiAnimationCoroutine);
+            uiAnimationCoroutine = StartCoroutine(ShowSaveIndicator(autoSaveMessage));
+        }
+
+        return true;
     }
 
     public void LoadGame()
@@ -213,6 +300,10 @@ public class SaveManager : MonoBehaviour
         if (health != null) health.currentHealth = (int)data.currentHealth;
 
         StopAllCoroutines();
+        if (autoSaveIndicatorUI != null) autoSaveIndicatorUI.SetActive(false);
+
+        if (enableAutoSave) StartAutoSave();
+
         StartCoroutine(ApplyEquipmentAfterLoad(data));
         StartCoroutine(ApplyPlayerPositionAfterLoad(data));
     }

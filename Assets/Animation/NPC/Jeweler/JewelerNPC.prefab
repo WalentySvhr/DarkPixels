@@ -11,7 +11,8 @@ GameObject:
   - component: {fileID: 7532424983558866499}
   - component: {fileID: 588953695167395406}
   - component: {fileID: 4709537075563076274}
-  m_Layer: 0
+  - component: {fileID: 9129518094067786587}
+  m_Layer: 9
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -137,6 +138,18 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &9129518094067786587
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 690873392733781775}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 51cf2594d964e4c4d99d8b1d0eac2936, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FixedTextOnly
 --- !u!1 &2318643879702457778
 GameObject:
   m_ObjectHideFlags: 0
@@ -147,6 +160,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8091796248567882463}
   - component: {fileID: 1553228058535064142}
+  - component: {fileID: 4095887671950505477}
   m_Layer: 11
   m_Name: MiniMapIcon
   m_TagString: Untagged
@@ -228,6 +242,18 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!114 &4095887671950505477
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2318643879702457778}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 51cf2594d964e4c4d99d8b1d0eac2936, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FixedRotation
 --- !u!1 &3669678674297106711
 GameObject:
   m_ObjectHideFlags: 0
@@ -330,6 +356,7 @@ GameObject:
   - component: {fileID: 1651098359010407375}
   - component: {fileID: 3555646841811127287}
   - component: {fileID: 1287461698327783336}
+  - component: {fileID: 5172842996860779960}
   m_Layer: 9
   m_Name: ImageRisherRog
   m_TagString: Untagged
@@ -347,7 +374,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0.05, y: 1.2, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
+  m_LocalScale: {x: 0.7, y: 0, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3092141143061215993}
@@ -425,6 +452,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 3
   height: 0.05
+--- !u!114 &5172842996860779960
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3780182167570198915}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 51cf2594d964e4c4d99d8b1d0eac2936, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FixedRotation
 --- !u!1 &4625474986152479485
 GameObject:
   m_ObjectHideFlags: 0
@@ -437,7 +476,7 @@ GameObject:
   - component: {fileID: 8512545830543739471}
   - component: {fileID: 620515817413946020}
   - component: {fileID: 5270078789931906917}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -538,13 +577,11 @@ GameObject:
   - component: {fileID: 3092141143061215993}
   - component: {fileID: 7191369801649197719}
   - component: {fileID: 5341863506719488065}
-  - component: {fileID: 1220153714014724854}
-  - component: {fileID: 5594626269158855222}
-  - component: {fileID: 2745512430936734757}
-  - component: {fileID: 1871742455232260915}
-  - component: {fileID: 7919262461288333517}
-  - component: {fileID: 8619221269539890848}
-  m_Layer: 0
+  - component: {fileID: 50561389817052891}
+  - component: {fileID: 29030006704511229}
+  - component: {fileID: 8870630442962208662}
+  - component: {fileID: 5774405168466459694}
+  m_Layer: 9
   m_Name: JewelerNPC
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -560,7 +597,7 @@ Transform:
   m_GameObject: {fileID: 5338530577924161402}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -651,53 +688,7 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
---- !u!61 &1220153714014724854
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5338530577924161402}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: -0.04848075, y: 0.0040359497}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.64705884, y: 0.88235295}
-    newSize: {x: 1.375, y: 1.875}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Size: {x: 0.733356, y: 0.6525574}
-  m_EdgeRadius: 0
---- !u!61 &5594626269158855222
+--- !u!61 &50561389817052891
 BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -731,19 +722,19 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0.03962958, y: -0.04399109}
+  m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.64705884, y: 0.88235295}
+    oldSize: {x: 0.6875, y: 0.9375}
     newSize: {x: 1.375, y: 1.875}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 2.5120256, y: 2.2442322}
+  m_Size: {x: 2, y: 2}
   m_EdgeRadius: 0
---- !u!50 &2745512430936734757
+--- !u!50 &29030006704511229
 Rigidbody2D:
   serializedVersion: 5
   m_ObjectHideFlags: 0
@@ -753,12 +744,12 @@ Rigidbody2D:
   m_GameObject: {fileID: 5338530577924161402}
   m_BodyType: 1
   m_Simulated: 1
-  m_UseFullKinematicContacts: 1
+  m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 9999
+  m_Mass: 1
   m_LinearDamping: 0
   m_AngularDamping: 0.05
-  m_GravityScale: 0
+  m_GravityScale: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -767,42 +758,10 @@ Rigidbody2D:
     serializedVersion: 2
     m_Bits: 0
   m_Interpolate: 0
-  m_SleepingMode: 1
+  m_SleepingMode: 0
   m_CollisionDetection: 0
-  m_Constraints: 4
---- !u!114 &1871742455232260915
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5338530577924161402}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e492968ff2d4c1c43ba6b1faf8ce1d69, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  patrolZone: {fileID: 0}
-  moveSpeed: 2
-  minWaitTime: 2
-  maxWaitTime: 5
-  timeToGiveUp: 1.5
-  speedParameterName: Speed
---- !u!114 &7919262461288333517
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5338530577924161402}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b1ef2f5b79f56f74c939231ac668b7f6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  myShopData: {fileID: 11400000, guid: 7248c597d60f6b24eb4f57ba35ba0552, type: 2}
-  interactRange: 2.5
---- !u!114 &8619221269539890848
+  m_Constraints: 0
+--- !u!114 &8870630442962208662
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -813,4 +772,18 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ecc178484b9bc964f926d78fa8228655, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier: Assembly-CSharp::WeaponTraderNPC
+--- !u!114 &5774405168466459694
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5338530577924161402}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b1ef2f5b79f56f74c939231ac668b7f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ShopTrigger
+  myShopData: {fileID: 11400000, guid: 7248c597d60f6b24eb4f57ba35ba0552, type: 2}
+  interactionRadius: 3
