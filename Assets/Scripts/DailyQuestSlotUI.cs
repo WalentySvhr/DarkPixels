@@ -22,6 +22,9 @@ public class DailyQuestSlotUI : MonoBehaviour
     public TextMeshProUGUI trackButtonText;
     public string textTrack = "Стежити";
     public string textTracking = "Стежиться";
+    [Header("Tracking Colors")]
+    public Color normalButtonColor = Color.white;
+    public Color trackingButtonColor = Color.gray;
 
     [Header("Button Text Settings")]
     public string textInProgress = "В процесі";
@@ -45,36 +48,27 @@ public class DailyQuestSlotUI : MonoBehaviour
         myQuest = quest;
         myQuestIndex = index;
 
-        // Встановлюємо заголовок
         titleText.text = quest.questData.questName;
 
-        // Форматуємо опис
         string rawDescription = quest.questData.description ?? "";
         string parsedDescription = rawDescription
             .Replace("{target}", quest.questData.targetAmount.ToString())
             .Replace("{reward}", quest.questData.goldReward.ToString());
 
         descriptionText.text = parsedDescription;
-
-        // Встановлюємо текст прогресу
         progressText.text = $"{quest.currentProgress} / {quest.questData.targetAmount}";
-
-        // Налаштовуємо слайдер
         progressSlider.maxValue = quest.questData.targetAmount;
         progressSlider.value = quest.currentProgress;
 
-        // Завжди ховаємо опис при першому відкритті
         isDescriptionOpen = false;
         descriptionText.gameObject.SetActive(false);
 
-        // Налаштовуємо кнопку заголовка (для відкриття/закриття опису)
         if (titleButton != null)
         {
             titleButton.onClick.RemoveAllListeners();
             titleButton.onClick.AddListener(ToggleDescription);
         }
 
-        // Логіка кнопки "Забрати"
         claimButton.onClick.RemoveAllListeners();
         claimButton.onClick.AddListener(OnClaimClicked);
 
@@ -94,10 +88,8 @@ public class DailyQuestSlotUI : MonoBehaviour
             claimButtonText.text = textInProgress;
         }
 
-        // === ВИПРАВЛЕНО: РОЗУМНА ЛОГІКА КНОПКИ СТЕЖЕННЯ ===
         if (trackButton != null)
         {
-            // Тепер беремо canBeTracked напряму з ActiveDailyQuest сесії, а не з Scriptable Object
             bool isTrackable = quest.canBeTracked && !quest.isCompleted;
 
             if (isTrackable)
@@ -106,21 +98,26 @@ public class DailyQuestSlotUI : MonoBehaviour
                 trackButton.onClick.RemoveAllListeners();
                 trackButton.onClick.AddListener(OnTrackClicked);
 
-                // Перевіряємо через менеджер, чи саме цей квест зараз відстежується
-                if (DailyQuestManager.Instance.trackedDailyIndex == myQuestIndex)
-                {
-                    trackButtonText.text = textTracking;
-                }
-                else
-                {
-                    trackButtonText.text = textTrack;
-                }
+                bool isCurrentlyTracked = (DailyQuestManager.Instance.trackedDailyIndex == myQuestIndex);
+                SetTrackingState(isCurrentlyTracked);
             }
             else
             {
-                // Якщо квест не передбачає трекінгу або вже виконаний — ховаємо кнопку
                 trackButton.gameObject.SetActive(false);
             }
+        }
+    }
+
+    public void SetTrackingState(bool isTracking)
+    {
+        if (trackButton != null)
+        {
+            Image buttonImage = trackButton.GetComponent<Image>();
+            if (buttonImage != null)
+            {
+                buttonImage.color = isTracking ? trackingButtonColor : normalButtonColor;
+            }
+            trackButtonText.text = isTracking ? textTracking : textTrack;
         }
     }
 
@@ -132,16 +129,8 @@ public class DailyQuestSlotUI : MonoBehaviour
         descriptionText.gameObject.SetActive(isDescriptionOpen);
 
         Canvas.ForceUpdateCanvases();
-
-        if (rectTransform != null)
-        {
-            LayoutRebuilder.ForceRebuildLayoutImmediate(rectTransform);
-        }
-
-        if (transform.parent != null && transform.parent is RectTransform parentRect)
-        {
-            LayoutRebuilder.ForceRebuildLayoutImmediate(parentRect);
-        }
+        if (rectTransform != null) LayoutRebuilder.ForceRebuildLayoutImmediate(rectTransform);
+        if (transform.parent != null && transform.parent is RectTransform parentRect) LayoutRebuilder.ForceRebuildLayoutImmediate(parentRect);
     }
 
     private void OnClaimClicked()
@@ -149,8 +138,6 @@ public class DailyQuestSlotUI : MonoBehaviour
         DailyQuestManager.Instance.ClaimReward(myQuestIndex);
         claimButton.interactable = false;
         claimButtonText.text = textClaimed;
-
-        // Якщо квест здано, ховаємо кнопку стеження
         if (trackButton != null) trackButton.gameObject.SetActive(false);
     }
 
@@ -158,7 +145,27 @@ public class DailyQuestSlotUI : MonoBehaviour
     {
         if (DailyQuestManager.Instance == null) return;
 
-        // Передаємо команду менеджеру встановити цей квест як активний для трекінгу
-        DailyQuestManager.Instance.SetTrackedDaily(myQuestIndex);
+        // Перевіряємо, чи цей квест вже відстежується
+        bool isAlreadyTracked = (DailyQuestManager.Instance.trackedDailyIndex == myQuestIndex);
+
+        if (isAlreadyTracked)
+        {
+            // Якщо вже відстежується — відміняємо (передаємо -1 або інший індикатор відміни)
+            DailyQuestManager.Instance.SetTrackedDaily(-1);
+            SetTrackingState(false);
+        }
+        else
+        {
+            // Якщо ні — встановлюємо цей
+            DailyQuestManager.Instance.SetTrackedDaily(myQuestIndex);
+
+            // Оновлюємо всі слоти (вимикаємо інші, включаємо цей)
+            DailyQuestSlotUI[] allSlots = transform.parent.GetComponentsInChildren<DailyQuestSlotUI>();
+            foreach (DailyQuestSlotUI slot in allSlots)
+            {
+                slot.SetTrackingState(false);
+            }
+            SetTrackingState(true);
+        }
     }
 }

@@ -129,30 +129,45 @@ public class DailyQuestManager : MonoBehaviour
     }
 
     // КЕРУВАННЯ СТЕЖЕННЯМ ЗА ДЕЙЛІКАМИ ЗА ID ЦІЛІ
+    // КЕРУВАННЯ СТЕЖЕННЯМ ЗА ДЕЙЛІКАМИ
     public void SetTrackedDaily(int index)
     {
-        if (trackedDailyIndex == index)
+        // 1. Логіка вимикання: якщо клікнули на той самий квест або передали -1
+        if (index == -1 || trackedDailyIndex == index)
         {
             trackedDailyIndex = -1;
+
+            // Вимикаємо стрілку, бо нічого не відстежується
+            if (QuestArrow.Instance != null)
+            {
+                QuestArrow.Instance.ClearOverrideTarget();
+                // Можна додати QuestArrow.Instance.gameObject.SetActive(false); якщо треба повністю ховати
+            }
+
             Debug.Log("[DailyQuest] Стеження вимкнено");
         }
-        else
+        // 2. Логіка вмикання: перевіряємо, чи індекс коректний
+        else if (index >= 0 && index < activeDailies.Count)
         {
             trackedDailyIndex = index;
             var targetQuest = activeDailies[index];
-            string questTargetID = targetQuest.targetID;
-            Debug.Log($"[DailyQuest] Тепер стежимо за: {targetQuest.questData.questName}. Шукаємо об'єкт з ID: {questTargetID}");
 
-            // === ОЦЕЙ ЗВ'ЯЗОК ОЖИВИТЬ СТРІЛКУ МИТТЄВО ===
+            Debug.Log($"[DailyQuest] Тепер стежимо за: {targetQuest.questData.questName}");
+
             if (QuestArrow.Instance != null)
             {
-                // Скидаємо ручний сюжетний фокус, бо дейліки мають зараз вищий пріоритет
+                // Скидаємо інші цілі та активуємо стрілку
                 QuestArrow.Instance.ClearOverrideTarget();
-                // Пробуджуємо стрілку в ієрархії
                 QuestArrow.Instance.gameObject.SetActive(true);
             }
         }
+        else
+        {
+            Debug.LogError($"[DailyQuest] Спроба стежити за квестом з неіснуючим індексом: {index}");
+            return;
+        }
 
+        // Оновлюємо інтерфейс
         OnDailyQuestsChanged?.Invoke();
     }
 
