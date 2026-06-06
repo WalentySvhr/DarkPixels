@@ -197,7 +197,12 @@ public class QuestGiver : MonoBehaviour
 
     private void OnMouseDown()
     {
-        // Перевірка EventSystem повністю видалена для стабільної роботи кліку
+        // ЗАПОБІЖНИК: Якщо відкрито магазин, інвентар або діалог - ігноруємо клік
+        if (UIManager.IsAnyWindowOpen)
+        {
+            return;
+        }
+
         Debug.Log("Клік по квест-гіверу: " + gameObject.name);
 
         if (playerInRange)

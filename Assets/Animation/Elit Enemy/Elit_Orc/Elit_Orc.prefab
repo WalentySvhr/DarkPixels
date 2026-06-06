@@ -644,7 +644,7 @@ Rigidbody2D:
   m_Mass: 20
   m_LinearDamping: 0
   m_AngularDamping: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 0
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -730,6 +730,8 @@ MonoBehaviour:
   attackCooldown: 1.2
   isAggroedByDamage: 0
   spriteFacingLeft: 0
+  cullDistance: 15
+  cullCheckInterval: 0.5
   hpBarTransform: {fileID: 0}
 --- !u!114 &930796037514732674
 MonoBehaviour:

@@ -10,11 +10,21 @@ public class InventoryToggle : MonoBehaviour
     {
         if (inventoryPanel == null) return;
 
-        bool isActive = inventoryPanel.activeSelf;
-        inventoryPanel.SetActive(!isActive);
+        bool nextState = !inventoryPanel.activeSelf;
+        inventoryPanel.SetActive(nextState);
+
+        // === ГЛОБАЛЬНИЙ ЗАПОБІЖНИК (ОНОВЛЕНО НА ЛІЧИЛЬНИК) ===
+        if (nextState)
+        {
+            UIManager.RegisterWindowOpen();
+        }
+        else
+        {
+            UIManager.RegisterWindowClose();
+        }
 
         // Якщо відкрили — оновлюємо іконки
-        if (!isActive) UpdateUIInPanel();
+        if (nextState) UpdateUIInPanel();
     }
 
     // Окремий метод ТІЛЬКИ для закриття (зручно для кнопки "Х")
@@ -22,7 +32,15 @@ public class InventoryToggle : MonoBehaviour
     {
         if (inventoryPanel != null)
         {
-            inventoryPanel.SetActive(false);
+            // Перевіряємо, чи інвентар взагалі був відкритий, 
+            // щоб не зменшувати лічильник в UIManager вхолосту
+            if (inventoryPanel.activeSelf)
+            {
+                inventoryPanel.SetActive(false);
+
+                // === ГЛОБАЛЬНИЙ ЗАПОБІЖНИК (ОНОВЛЕНО НА ЛІЧИЛЬНИК) ===
+                UIManager.RegisterWindowClose();
+            }
         }
     }
 
@@ -32,6 +50,7 @@ public class InventoryToggle : MonoBehaviour
         InventoryUI ui = inventoryPanel.GetComponentInChildren<InventoryUI>();
         if (ui != null) ui.UpdateUI();
     }
+
     void Update()
     {
         // Клавіша Escape в Unity на Android відповідає системній кнопці "Назад"

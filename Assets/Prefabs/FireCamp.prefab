@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 9001857889944111731}
   - component: {fileID: 9201075696799271001}
   - component: {fileID: 553261923317359500}
+  - component: {fileID: 3882873372430113673}
   m_Layer: 2
   m_Name: FireCamp
   m_TagString: Untagged
@@ -229,6 +230,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healAmount: 5
   interval: 1
+--- !u!114 &3882873372430113673
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2304171988604996098}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9abf50e9a4d864a43b9aaecc9855b2cd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LightCullingUnity6
+  activationDistance: 40
+  checkInterval: 0.4
+  lightHolder: {fileID: 5941166467158982282}
 --- !u!1 &5941166467158982282
 GameObject:
   m_ObjectHideFlags: 0

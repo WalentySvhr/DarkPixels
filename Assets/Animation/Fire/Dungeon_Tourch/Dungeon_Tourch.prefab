@@ -95,6 +95,7 @@ GameObject:
   - component: {fileID: 4235531385299414588}
   - component: {fileID: 215618730540074959}
   - component: {fileID: 6307750859526954751}
+  - component: {fileID: -7258371032678669195}
   m_Layer: 0
   m_Name: Dungeon_Tourch
   m_TagString: Untagged
@@ -199,3 +200,18 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &-7258371032678669195
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8415586621049329767}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9abf50e9a4d864a43b9aaecc9855b2cd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LightCulling
+  activationDistance: 40
+  checkInterval: 0.4
+  lightHolder: {fileID: 7795187442660823286}

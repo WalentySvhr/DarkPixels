@@ -39,21 +39,35 @@ public class EnemyAI : MonoBehaviour
     public bool isAggroedByDamage = false;
     public bool spriteFacingLeft = false;
 
+    // === НАЛАШТУВАННЯ ОПТИМІЗАЦІЇ ДЛЯ ТЕЛЕФОНУ ===
+    [Header("Mobile Optimization")]
+    [SerializeField] private float cullDistance = 15f;      // Дистанція, на якій моб "засинає"
+    [SerializeField] private float cullCheckInterval = 0.5f; // Як часто перевіряти відстань (сек)
+    private float cullTimer = 0f;
+    private bool isCulled = false;
+
     [Header("References")]
     public Transform hpBarTransform;
     private Animator anim;
     private Rigidbody2D rb;
     private Transform target;
     private Vector2 moveDirection;
+    private Collider2D myCollider;
+    private SpriteRenderer myRenderer;
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
+        myCollider = GetComponent<Collider2D>();
+        myRenderer = GetComponent<SpriteRenderer>();
         startPosition = transform.position;
 
         GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
         if (playerObj != null) target = playerObj.transform;
+
+        // Рандомізуємо старт таймера, щоб моби не робили перевірку в один і той самий кадр
+        cullTimer = Random.Range(0f, cullCheckInterval);
     }
 
     public void OnTakeDamage()
@@ -100,7 +114,40 @@ public class EnemyAI : MonoBehaviour
     {
         if (target == null) return;
 
-        float distanceToPlayer = Vector2.Distance(transform.position, target.position);
+        // --- БЛОК ОПТИМІЗАЦІЇ ---
+        cullTimer += Time.deltaTime;
+        if (cullTimer >= cullCheckInterval)
+        {
+            cullTimer = 0f;
+            float distanceToPlayer = Vector2.Distance(transform.position, target.transform.position);
+
+            // Якщо ворог заагрений по шкоді, ми його НЕ ховаємо, поки він не заспокоїться
+            bool newCullState = (distanceToPlayer > cullDistance) && !isAggroedByDamage;
+
+            if (newCullState != isCulled)
+            {
+                isCulled = newCullState;
+
+                // Вимикаємо візуалізацію та колайдер
+                if (myCollider != null) myCollider.enabled = !isCulled;
+                if (myRenderer != null) myRenderer.enabled = !isCulled;
+                if (hpBarTransform != null) hpBarTransform.gameObject.SetActive(!isCulled);
+
+                // Якщо моб заснув, зупиняємо його фізично
+                if (isCulled && rb != null)
+                {
+                    rb.linearVelocity = Vector2.zero;
+                    moveDirection = Vector2.zero;
+                    if (anim != null) anim.SetFloat("Speed", 0f);
+                }
+            }
+        }
+
+        // Якщо моб оптимізований (заснув) — повністю виходимо з Update, нічого не рахуємо!
+        if (isCulled) return;
+        // ------------------------
+
+        float distanceToPlayerActual = Vector2.Distance(transform.position, target.position);
 
         switch (currentState)
         {
@@ -110,7 +157,7 @@ public class EnemyAI : MonoBehaviour
 
             case EnemyState.Idle:
                 moveDirection = Vector2.zero;
-                if (distanceToPlayer <= checkRadius || isAggroedByDamage)
+                if (distanceToPlayerActual <= checkRadius || isAggroedByDamage)
                 {
                     currentState = EnemyState.Chasing;
                     currentLoseAggroTimer = 0f;
@@ -131,7 +178,7 @@ public class EnemyAI : MonoBehaviour
                 break;
 
             case EnemyState.Chasing:
-                if (distanceToPlayer > loseAggroDistance)
+                if (distanceToPlayerActual > loseAggroDistance)
                 {
                     currentLoseAggroTimer += Time.deltaTime;
                     if (currentLoseAggroTimer >= loseAggroTime)
@@ -146,7 +193,7 @@ public class EnemyAI : MonoBehaviour
                     currentLoseAggroTimer = 0f;
                 }
 
-                if (distanceToPlayer > stopDistance)
+                if (distanceToPlayerActual > stopDistance)
                 {
                     moveDirection = (target.position - transform.position).normalized;
                     HandleFlip(target.position.x);
@@ -156,7 +203,7 @@ public class EnemyAI : MonoBehaviour
                     moveDirection = Vector2.zero;
                 }
 
-                if (distanceToPlayer <= attackRange && Time.time >= nextAttackTime)
+                if (distanceToPlayerActual <= attackRange && Time.time >= nextAttackTime)
                 {
                     TriggerAttack();
                     nextAttackTime = Time.time + attackCooldown;
@@ -177,7 +224,7 @@ public class EnemyAI : MonoBehaviour
                     hasAttemptedToFlee = false;
                 }
 
-                if (distanceToPlayer <= checkRadius || isAggroedByDamage)
+                if (distanceToPlayerActual <= checkRadius || isAggroedByDamage)
                 {
                     currentState = EnemyState.Chasing;
                 }
@@ -218,9 +265,9 @@ public class EnemyAI : MonoBehaviour
 
     void FixedUpdate()
     {
-        // === ВИПРАВЛЕННЯ: Змінено логіку руху ===
-        // Використовуємо rb.velocity замість rb.MovePosition. 
-        // Це запобігає "биттю" колайдерів (дьорганню), коли моб підходить впритул до гравця.
+        // === Якщо моб за межами екрана — фізику руху взагалі не прораховуємо ===
+        if (isCulled) return;
+
         if (currentState != EnemyState.Hit)
         {
             float currentSpeed = (currentState == EnemyState.Fleeing) ? fleeSpeed : speed;

@@ -119,7 +119,14 @@ public class DialogManager : MonoBehaviour
 
     private void PrepareDialogUI(DialogData data)
     {
-        dialogPanel.SetActive(true);
+        // === ГЛОБАЛЬНИЙ ЗАПОБІЖНИК (ОНОВЛЕНО НА ЛІЧИЛЬНИК) ===
+        // Реєструємо відкриття вікна лише якщо панель діалогу до цього була закрита
+        if (dialogPanel != null && !dialogPanel.activeSelf)
+        {
+            UIManager.RegisterWindowOpen();
+        }
+
+        if (dialogPanel != null) dialogPanel.SetActive(true);
 
         if (nameText != null) nameText.text = data.npcName;
 
@@ -213,7 +220,14 @@ public class DialogManager : MonoBehaviour
 
     void EndDialog()
     {
-        dialogPanel.SetActive(false);
+        // === ГЛОБАЛЬНИЙ ЗАПОБІЖНИК (ОНОВЛЕНО НА ЛІЧИЛЬНИК) ===
+        // Зменшуємо лічильник тільки якщо вікно діалогу зараз дійсно активне і закривається
+        if (dialogPanel != null && dialogPanel.activeSelf)
+        {
+            dialogPanel.SetActive(false);
+            UIManager.RegisterWindowClose();
+        }
+
         if (questButtonsPanel != null) questButtonsPanel.SetActive(false);
         currentGiver = null;
 

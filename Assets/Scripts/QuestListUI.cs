@@ -4,13 +4,13 @@ using System.Collections.Generic;
 [System.Serializable]
 public class StoryQuestWrapper
 {
-    [Tooltip("Перетягни сюди файл квесту (звідси скрипт сам візьме назву квесту)")]
+    [Tooltip("Перетягніть сюди файл квесту (звідси скрипт сам візьме назву квесту)")]
     public QuestData questData;
 
     [Tooltip("ID твого NPC на карті (наприклад: AlchemistNPC), до якого має вести стрілочка")]
     public string npcTargetID;
 
-    [Tooltip("ОПЦІОНАЛЬНО: Квест, ПІСЛЯ виконання якого цей квест з'явиться у списку. Для самого першого квесту в ланцюжку залиш це поле ПУСТИМ (null).")]
+    [Tooltip("ОПЦІОНАЛЬНО: Квест, ПІСЛЯ виконання якого цей квест з'явиться у списку. Для самого першого квесту в ланцюжку залиште це поле ПУСТИМ (null).")]
     public QuestData prerequisiteQuest;
 }
 
@@ -21,12 +21,18 @@ public class QuestListUI : MonoBehaviour
     public Transform contentParent;
 
     [Header("СПИСОК СЮЖЕТНИХ КВЕСТІВ")]
-    [Tooltip("Натискай '+', додавай елементи і вибудовуй сюжетні ланцюжки!")]
+    [Tooltip("Натискайте '+', додавайте елементи і вибудовуйте сюжетні ланцюжки!")]
     public List<StoryQuestWrapper> storyQuests = new List<StoryQuestWrapper>();
 
     void Awake()
     {
         if (contentParent == null) contentParent = transform;
+    }
+
+    // === АВТОМАТИЧНЕ ОНОВЛЕННЯ ПРИ ВІДКРИТТІ (Як в інвентарі) ===
+    private void OnEnable()
+    {
+        RefreshList();
     }
 
     public void RefreshList()

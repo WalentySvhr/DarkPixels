@@ -4,36 +4,43 @@ using System.Collections.Generic;
 public class DailyQuestWindowUI : MonoBehaviour
 {
     [Header("References")]
-    public GameObject windowPanel; // Сама панель, яку будемо вмикати/вимикати
-    public Transform questListContainer; // Де будуть спавнитись слоти
-    public GameObject questSlotPrefab; // Префаб DailyQuestSlot
+    public GameObject windowPanel; // Сюди перетягни панель квестів
+    public Transform questListContainer;
+    public GameObject questSlotPrefab;
 
-    // Список створених слотів, щоб не створювати їх безкінечно, а просто оновлювати
     private List<DailyQuestSlotUI> spawnedSlots = new List<DailyQuestSlotUI>();
 
-    private void Start()
-    {
-        // Гарантуємо, що при старті вікно закрите
-        windowPanel.SetActive(false);
-    }
-
-    // Цей метод ми повісимо на кнопку-календар
+    // МЕТОД ОДИН В ОДИН ЯК В ІНВЕНТАРІ
     public void ToggleWindow()
     {
-        bool isActive = windowPanel.activeSelf;
-        windowPanel.SetActive(!isActive);
+        if (windowPanel == null) return;
 
-        if (!isActive)
+        bool nextState = !windowPanel.activeSelf;
+        windowPanel.SetActive(nextState);
+
+        // === ГЛОБАЛЬНИЙ ЗАПОБІЖНИК ===
+        if (nextState)
         {
-            // Якщо ми тільки що ВІДКРИЛИ вікно, оновлюємо інфу
-            RefreshUI();
+            UIManager.RegisterWindowOpen();
+            RefreshUI(); // Оновлюємо квести тільки при відкритті
+        }
+        else
+        {
+            UIManager.RegisterWindowClose();
         }
     }
 
-    // Цей метод повісимо на кнопку "Х" (закрити)
+    // МЕТОД ДЛЯ КНОПКИ "Х"
     public void CloseWindow()
     {
-        windowPanel.SetActive(false);
+        if (windowPanel != null)
+        {
+            if (windowPanel.activeSelf)
+            {
+                windowPanel.SetActive(false);
+                UIManager.RegisterWindowClose();
+            }
+        }
     }
 
     public void RefreshUI()
@@ -41,8 +48,8 @@ public class DailyQuestWindowUI : MonoBehaviour
         if (DailyQuestManager.Instance == null) return;
 
         var activeQuests = DailyQuestManager.Instance.activeDailies;
+        if (activeQuests == null) return; // Страховка від пустого списку
 
-        // Якщо слотів ще не вистачає (перший раз відкрили), створюємо їх
         while (spawnedSlots.Count < activeQuests.Count)
         {
             GameObject newSlotObj = Instantiate(questSlotPrefab, questListContainer);
@@ -50,17 +57,29 @@ public class DailyQuestWindowUI : MonoBehaviour
             spawnedSlots.Add(slotUI);
         }
 
-        // Оновлюємо інформацію в слотах
         for (int i = 0; i < activeQuests.Count; i++)
         {
-            spawnedSlots[i].gameObject.SetActive(true);
-            spawnedSlots[i].Setup(activeQuests[i], i);
+            if (spawnedSlots[i] != null)
+            {
+                spawnedSlots[i].gameObject.SetActive(true);
+                spawnedSlots[i].Setup(activeQuests[i], i);
+            }
         }
 
-        // Ховаємо зайві слоти, якщо раптом їх стало менше (хоча їх завжди 3)
         for (int i = activeQuests.Count; i < spawnedSlots.Count; i++)
         {
-            spawnedSlots[i].gameObject.SetActive(false);
+            if (spawnedSlots[i] != null) spawnedSlots[i].gameObject.SetActive(false);
+        }
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (windowPanel != null && windowPanel.activeSelf)
+            {
+                CloseWindow();
+            }
         }
     }
 }

@@ -1,6 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using System.Collections.Generic; // Необхідно для роботи зі списками List<>
+using System.Collections.Generic;
 
 public class PauseMenu : MonoBehaviour
 {
@@ -33,13 +33,21 @@ public class PauseMenu : MonoBehaviour
 
     public void Resume()
     {
+        if (pauseMenuUI == null) return;
+
         pauseMenuUI.SetActive(false);
         Time.timeScale = 1f;
         isPaused = false;
+
+        // === ГЛОБАЛЬНИЙ ЗАПОБІЖНИК ===
+        // Меню паузи закрилося — зменшуємо лічильник
+        UIManager.RegisterWindowClose();
     }
 
     public void Pause()
     {
+        if (pauseMenuUI == null) return;
+
         pauseMenuUI.SetActive(true);
 
         // При відкритті паузи за замовчуванням показуємо статистику, а квести ховаємо
@@ -48,6 +56,10 @@ public class PauseMenu : MonoBehaviour
 
         Time.timeScale = 0f;
         isPaused = true;
+
+        // === ГЛОБАЛЬНИЙ ЗАПОБІЖНИК ===
+        // Меню паузи відкрилося — збільшуємо лічильник
+        UIManager.RegisterWindowOpen();
 
         // Оновлюємо статистику при відкритті паузи
         if (StatsUIManager.Instance != null)
@@ -62,7 +74,7 @@ public class PauseMenu : MonoBehaviour
         if (statisticsContainer != null) statisticsContainer.SetActive(false); // Ховаємо статистику
         if (questContainer != null) questContainer.SetActive(true);           // Вмикаємо квести
 
-        // === ОНОВЛЕНО: Просто даємо команду інтерфейсу малювати свій ручний список ===
+        // Просто даємо команду інтерфейсу малювати свій ручний список
         if (questListManager != null)
         {
             questListManager.RefreshList();
@@ -79,13 +91,47 @@ public class PauseMenu : MonoBehaviour
     public void Restart()
     {
         Time.timeScale = 1f;
+
+        // ЗНАХОДИМО UIManager НА СЦЕНІ ТА ВИКЛИКАЄМО ЙОГО МЕТОД ЗАХИСТУ
+        UIManager uiManager = FindObjectOfType<UIManager>();
+        if (uiManager != null)
+        {
+            uiManager.ForceResetCounter();
+        }
+
         fader.FadeTo(SceneManager.GetActiveScene().name);
     }
 
     public void LoadMainMenu()
     {
         Time.timeScale = 1f;
+
+        // ЗНАХОДИМО UIManager НА СЦЕНІ ТА ВИКЛИКАЄМО ЙОГО МЕТОД ЗАХИСТУ
+        UIManager uiManager = FindObjectOfType<UIManager>();
+        if (uiManager != null)
+        {
+            uiManager.ForceResetCounter();
+        }
+
         Screen.orientation = ScreenOrientation.LandscapeLeft;
         fader.FadeTo("MainMenu");
+    }
+
+    void Update()
+    {
+        // Кнопка Escape (або Назад на Android) тепер керує паузою
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            // Якщо квести всередині паузи відкриті — кнопка Escape повертає нас до статистики
+            if (isPaused && questContainer != null && questContainer.activeSelf)
+            {
+                CloseQuestClicked();
+            }
+            // Якщо відкрита просто чиста пауза (або гра йде) — працює як Toggle
+            else
+            {
+                ToggleMenu();
+            }
+        }
     }
 }

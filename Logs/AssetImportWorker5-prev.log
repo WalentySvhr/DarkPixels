@@ -1,11 +1,11 @@
 [Licensing::Module] Trying to connect to existing licensing client channel...
 Built from '6000.3/staging' branch; Version is '6000.3.13f1 (8c4f11e4fb20) revision 9195281'; Using compiler version '194234433'; Build Type 'Release'
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-limon" at "2026-06-06T19:51:43.8345953Z"
 OS: 'Windows 10  (10.0.19045) 64bit Professional' Language: 'uk' Physical Memory: 16334 MB
 BatchMode: 1, IsHumanControllingUs: 0, StartBugReporterOnCrash: 0, Is64bit: 1
-[Licensing::IpcConnector] Successfully connected to: "LicenseClient-limon" at "2026-06-05T18:48:23.6848483Z"
 System  architecture: x64
 Process architecture: x64
-Date: 2026-06-05T18:48:23Z
+Date: 2026-06-06T19:51:43Z
 
 COMMAND LINE ARGUMENTS:
 D:\Unity\6000.3.13f1\Editor\Unity.exe
@@ -19,7 +19,7 @@ D:/GameDev/DarkPixels-main
 -logFile
 Logs/AssetImportWorker5.log
 -srvPort
-51437
+64039
 -licensingIpc
 LicenseClient-limon
 -job-worker-count
@@ -67,12 +67,12 @@ D:/GameDev/DarkPixels-main
     "memorysetup-job-temp-allocator-block-size-background=1048576"
     "memorysetup-job-temp-allocator-reduction-small-platforms=262144"
     "memorysetup-temp-allocator-size-cloud-worker=32768"
-Player connection [26316]  Target information:
+Player connection [21928]  Target information:
 
-Player connection [26316]  * "[IP] 192.168.0.28 [Port] 0 [Flags] 2 [Guid] 3963343714 [EditorId] 3963343714 [Version] 1048832 [Id] WindowsEditor(7,DESKTOP-4DD92S9) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" 
+Player connection [21928]  * "[IP] 192.168.0.28 [Port] 0 [Flags] 2 [Guid] 2660151012 [EditorId] 2660151012 [Version] 1048832 [Id] WindowsEditor(7,DESKTOP-4DD92S9) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" 
 
-Player connection [26316] Host joined multi-casting on [225.0.0.222:54997]...
-Player connection [26316] Host joined alternative multi-casting on [225.0.0.222:34997]...
+Player connection [21928] Host joined multi-casting on [225.0.0.222:54997]...
+Player connection [21928] Host joined alternative multi-casting on [225.0.0.222:34997]...
 JobSystem: Creating JobQueue using job-worker-count value 5
 Input System module state changed to: Initialized.
 [Physics::Module] Initialized fallback backend.
@@ -90,24 +90,24 @@ Library Redirect Path: Library/
 	ResponseStatus: Unsupported protocol version '1.18.1'.
 [Licensing::Module] Error: Failed to handshake to channel: "LicenseClient-limon"
 [Licensing::IpcConnector] LicenseClient-limon channel disconnected successfully.
-[Licensing::IpcConnector] Successfully connected to: "LicenseClient-limon-6000.3.13" at "2026-06-05T18:48:25.2403647Z"
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-limon-6000.3.13" at "2026-06-06T19:51:45.3826221Z"
 [Licensing::Client] Handshaking with LicensingClient:
   Version:                 1.18.1+9fbee8e
-  Session Id:              70093b3fadc34a3e83678f4de3842e3c
-  Correlation Id:          83975af9952a0ab990c4f53852f5aada
-  External correlation Id: 7516887032928796887
+  Session Id:              cd3a4e738613487e8cb45b482134bf25
+  Correlation Id:          cbcc6b2bf065e0fcd5f8880c0f6a83ac
+  External correlation Id: 5941267582250014375
   Machine Id:              4D8GW8ETA38K6LsA7GOMWmqZxN4=
-[Licensing::Module] Successfully connected to LicensingClient on channel: "LicenseClient-limon-6000.3.13" (connect: 0.00s, validation: 0.00s, handshake: 1.66s)
-[Licensing::IpcConnector] Successfully connected to: "LicenseClient-limon-6000.3.13-notifications" at "2026-06-05T18:48:26.9082686Z"
-[Licensing::Module] Licensing Background thread has ended after 3.22s
-[Licensing::Module] Licensing is initialized (took 2.94s).
+[Licensing::Module] Successfully connected to LicensingClient on channel: "LicenseClient-limon-6000.3.13" (connect: 0.00s, validation: 0.00s, handshake: 1.19s)
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-limon-6000.3.13-notifications" at "2026-06-06T19:51:46.579119Z"
+[Licensing::Module] Licensing Background thread has ended after 2.74s
+[Licensing::Module] Licensing is initialized (took 2.44s).
 [Licensing::Client] Successfully resolved entitlement details
 [Licensing::Module] License group:
   Id: 7971680487528-UnityPersXXXX
   Product: Unity Personal
   Type: Assigned
   Expiration: Unlimited
-Refreshing native plugins compatible for Editor in 54.69 ms, found 5 plugins.
+Refreshing native plugins compatible for Editor in 18.88 ms, found 5 plugins.
 Preloading 0 native plugins for Editor in 0.00 ms.
 Initialize engine version: 6000.3.13f1 (8c4f11e4fb20)
 [Subsystems] Discovering subsystems at path D:/Unity/6000.3.13f1/Editor/Data/Resources/UnitySubsystems
@@ -123,13 +123,13 @@ Initialize mono
 Mono path[0] = 'D:/Unity/6000.3.13f1/Editor/Data/Managed'
 Mono path[1] = 'D:/Unity/6000.3.13f1/Editor/Data/MonoBleedingEdge/lib/mono/unityjit-win32'
 Mono config path = 'D:/Unity/6000.3.13f1/Editor/Data/MonoBleedingEdge/etc'
-Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56536
+Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56164
 Begin MonoManager ReloadAssembly
 Registering precompiled unity dll's ...
 Register platform support module: D:/Unity/6000.3.13f1/Editor/Data/PlaybackEngines/WindowsStandaloneSupport/UnityEditor.WindowsStandalone.Extensions.dll
 Register platform support module: D:/Unity/6000.3.13f1/Editor/Data/PlaybackEngines/AndroidPlayer/UnityEditor.Android.Extensions.dll
-Registered in 0.007549 seconds.
-- Loaded All Assemblies, in  0.722 seconds
+Registered in 0.002800 seconds.
+- Loaded All Assemblies, in  0.667 seconds
 Native extension for Android target not found
 Native extension for WindowsStandalone target not found
 Package Manager log level set to [2]
@@ -138,35 +138,35 @@ Package Manager log level set to [2]
 [Package Manager] Cannot connect to Unity Package Manager local server
 ScheduleIndexationOnStartup MainProcess:False IndexOnStartup:True
 Mono: successfully reloaded assembly
-- Finished resetting the current domain, in  0.602 seconds
-Domain Reload Profiling: 1324ms
-	BeginReloadAssembly (309ms)
+- Finished resetting the current domain, in  0.708 seconds
+Domain Reload Profiling: 1374ms
+	BeginReloadAssembly (186ms)
 		ExecutionOrderSort (0ms)
 		DisableScriptedObjects (0ms)
 		BackupInstance (0ms)
 		ReleaseScriptingObjects (0ms)
 		CreateAndSetChildDomain (1ms)
-	RebuildCommonClasses (59ms)
-	RebuildNativeTypeToScriptingClass (19ms)
+	RebuildCommonClasses (69ms)
+	RebuildNativeTypeToScriptingClass (25ms)
 	initialDomainReloadingComplete (69ms)
-	LoadAllAssembliesAndSetupDomain (264ms)
-		LoadAssemblies (310ms)
+	LoadAllAssembliesAndSetupDomain (318ms)
+		LoadAssemblies (186ms)
 		RebuildTransferFunctionScriptingTraits (0ms)
-		AnalyzeDomain (258ms)
-			TypeCache.Refresh (256ms)
-				TypeCache.ScanAssembly (237ms)
+		AnalyzeDomain (312ms)
+			TypeCache.Refresh (309ms)
+				TypeCache.ScanAssembly (287ms)
 			BuildScriptInfoCaches (0ms)
 			ResolveRequiredComponents (1ms)
-	FinalizeReload (603ms)
+	FinalizeReload (708ms)
 		ReleaseScriptCaches (0ms)
 		RebuildScriptCaches (0ms)
-		SetupLoadedEditorAssemblies (532ms)
+		SetupLoadedEditorAssemblies (612ms)
 			LogAssemblyErrors (0ms)
-			InitializePlatformSupportModulesInManaged (87ms)
-			SetLoadedEditorAssemblies (5ms)
-			BeforeProcessingInitializeOnLoad (112ms)
-			ProcessInitializeOnLoadAttributes (190ms)
-			ProcessInitializeOnLoadMethodAttributes (137ms)
+			InitializePlatformSupportModulesInManaged (109ms)
+			SetLoadedEditorAssemblies (7ms)
+			BeforeProcessingInitializeOnLoad (144ms)
+			ProcessInitializeOnLoadAttributes (230ms)
+			ProcessInitializeOnLoadMethodAttributes (121ms)
 			AfterProcessingInitializeOnLoad (0ms)
 			EditorAssembliesLoaded (0ms)
 		ExecutionOrderSort2 (0ms)
@@ -178,8 +178,8 @@ Begin MonoManager ReloadAssembly
 [Licensing::Client] Successfully resolved entitlement details
 Duplicate assembly 'log4net.dll' with different versions detected, using 'Packages/com.unity.package-validation-suite/Lib/Editor/log4net.dll, AssemblyName=log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a' and ignoring 'Packages/com.unity.collab-proxy/Lib/Editor/log4netPlastic.dll, AssemblyName=log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a'.Symbol file LoadedFromMemory is not a mono symbol file
 Symbol file LoadedFromMemory is not a mono symbol file
-- Loaded All Assemblies, in  1.748 seconds
-Refreshing native plugins compatible for Editor in 11.52 ms, found 5 plugins.
+- Loaded All Assemblies, in  1.763 seconds
+Refreshing native plugins compatible for Editor in 15.02 ms, found 5 plugins.
 Native extension for Android target not found
 Native extension for WindowsStandalone target not found
 [Package Manager] Failed to launch server process. Reason: Unity was launched with the -noUpm command-line argument
@@ -188,509 +188,327 @@ Native extension for WindowsStandalone target not found
 [Package Manager] Failed to launch server process. Reason: Unity was launched with the -noUpm command-line argument
 [Package Manager] Unable to send message (not connected to server process).
 [Package Manager] Cannot connect to Unity Package Manager local server
-Refreshing native plugins compatible for Editor in 11.23 ms, found 5 plugins.
+Refreshing native plugins compatible for Editor in 11.97 ms, found 5 plugins.
 [Package Manager] Failed to launch server process. Reason: Unity was launched with the -noUpm command-line argument
 [Package Manager] Unable to send message (not connected to server process).
 [Package Manager] Cannot connect to Unity Package Manager local server
 ScheduleIndexationOnStartup MainProcess:False IndexOnStartup:True
 Mono: successfully reloaded assembly
-- Finished resetting the current domain, in  1.519 seconds
-Domain Reload Profiling: 3262ms
-	BeginReloadAssembly (243ms)
+- Finished resetting the current domain, in  2.015 seconds
+Domain Reload Profiling: 3773ms
+	BeginReloadAssembly (306ms)
 		ExecutionOrderSort (0ms)
-		DisableScriptedObjects (8ms)
+		DisableScriptedObjects (14ms)
 		BackupInstance (0ms)
 		ReleaseScriptingObjects (0ms)
-		CreateAndSetChildDomain (32ms)
-	RebuildCommonClasses (54ms)
-	RebuildNativeTypeToScriptingClass (20ms)
-	initialDomainReloadingComplete (55ms)
-	LoadAllAssembliesAndSetupDomain (1371ms)
-		LoadAssemblies (1003ms)
+		CreateAndSetChildDomain (48ms)
+	RebuildCommonClasses (72ms)
+	RebuildNativeTypeToScriptingClass (21ms)
+	initialDomainReloadingComplete (79ms)
+	LoadAllAssembliesAndSetupDomain (1279ms)
+		LoadAssemblies (759ms)
 		RebuildTransferFunctionScriptingTraits (0ms)
-		AnalyzeDomain (513ms)
-			TypeCache.Refresh (359ms)
-				TypeCache.ScanAssembly (331ms)
-			BuildScriptInfoCaches (128ms)
-			ResolveRequiredComponents (20ms)
-	FinalizeReload (1519ms)
+		AnalyzeDomain (690ms)
+			TypeCache.Refresh (480ms)
+				TypeCache.ScanAssembly (441ms)
+			BuildScriptInfoCaches (175ms)
+			ResolveRequiredComponents (28ms)
+	FinalizeReload (2016ms)
 		ReleaseScriptCaches (0ms)
 		RebuildScriptCaches (0ms)
-		SetupLoadedEditorAssemblies (1305ms)
+		SetupLoadedEditorAssemblies (1738ms)
 			LogAssemblyErrors (0ms)
-			InitializePlatformSupportModulesInManaged (11ms)
+			InitializePlatformSupportModulesInManaged (16ms)
 			SetLoadedEditorAssemblies (5ms)
-			BeforeProcessingInitializeOnLoad (228ms)
-			ProcessInitializeOnLoadAttributes (605ms)
-			ProcessInitializeOnLoadMethodAttributes (452ms)
-			AfterProcessingInitializeOnLoad (3ms)
-			EditorAssembliesLoaded (0ms)
-		ExecutionOrderSort2 (0ms)
-		AwakeInstancesAfterBackupRestoration (7ms)
-Launched and connected shader compiler UnityShaderCompiler.exe after 0.04 seconds
-Refreshing native plugins compatible for Editor in 10.75 ms, found 5 plugins.
-Preloading 0 native plugins for Editor in 0.00 ms.
-Unloading 17 Unused Serialized files (Serialized files now loaded: 0)
-Unloading 9063 unused Assets / (5.4 MB). Loaded Objects now: 9901.
-Memory consumption went from 189.5 MB to 184.1 MB.
-Total: 12.656500 ms (FindLiveObjects: 1.228300 ms CreateObjectMapping: 0.675900 ms MarkObjects: 7.667000 ms  DeleteObjects: 3.083800 ms)
-
-========================================================================
-Received Prepare
-Refreshing native plugins compatible for Editor in 12.22 ms, found 5 plugins.
-Preloading 0 native plugins for Editor in 0.00 ms.
-Unloading 17 Unused Serialized files (Serialized files now loaded: 0)
-Unloading 9012 unused Assets / (4.9 MB). Loaded Objects now: 9902.
-Memory consumption went from 188.2 MB to 183.3 MB.
-Total: 16.336800 ms (FindLiveObjects: 1.845700 ms CreateObjectMapping: 1.952200 ms MarkObjects: 8.744400 ms  DeleteObjects: 3.793000 ms)
-
-Prepare: number of updated asset objects reloaded= 0
-========================================================================
-Received Prepare
-[Licensing::Client] Successfully resolved entitlement details
-Begin MonoManager ReloadAssembly
-[Licensing::Client] Successfully resolved entitlement details
-Duplicate assembly 'log4net.dll' with different versions detected, using 'Packages/com.unity.package-validation-suite/Lib/Editor/log4net.dll, AssemblyName=log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a' and ignoring 'Packages/com.unity.collab-proxy/Lib/Editor/log4netPlastic.dll, AssemblyName=log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a'.Symbol file LoadedFromMemory is not a mono symbol file
-Symbol file LoadedFromMemory is not a mono symbol file
-- Loaded All Assemblies, in  1.521 seconds
-Refreshing native plugins compatible for Editor in 13.22 ms, found 5 plugins.
-Native extension for Android target not found
-Native extension for WindowsStandalone target not found
-[Package Manager] Failed to launch server process. Reason: Unity was launched with the -noUpm command-line argument
-[Package Manager] Unable to send message (not connected to server process).
-[Package Manager] Cannot connect to Unity Package Manager local server
-[Package Manager] Failed to launch server process. Reason: Unity was launched with the -noUpm command-line argument
-[Package Manager] Unable to send message (not connected to server process).
-[Package Manager] Cannot connect to Unity Package Manager local server
-[Package Manager] Failed to launch server process. Reason: Unity was launched with the -noUpm command-line argument
-[Package Manager] Unable to send message (not connected to server process).
-[Package Manager] Cannot connect to Unity Package Manager local server
-ScheduleIndexationOnStartup MainProcess:False IndexOnStartup:True
-Mono: successfully reloaded assembly
-- Finished resetting the current domain, in  1.902 seconds
-Domain Reload Profiling: 3431ms
-	BeginReloadAssembly (360ms)
-		ExecutionOrderSort (0ms)
-		DisableScriptedObjects (24ms)
-		BackupInstance (0ms)
-		ReleaseScriptingObjects (0ms)
-		CreateAndSetChildDomain (93ms)
-	RebuildCommonClasses (55ms)
-	RebuildNativeTypeToScriptingClass (22ms)
-	initialDomainReloadingComplete (44ms)
-	LoadAllAssembliesAndSetupDomain (1047ms)
-		LoadAssemblies (689ms)
-		RebuildTransferFunctionScriptingTraits (0ms)
-		AnalyzeDomain (501ms)
-			TypeCache.Refresh (16ms)
-				TypeCache.ScanAssembly (3ms)
-			BuildScriptInfoCaches (444ms)
-			ResolveRequiredComponents (33ms)
-	FinalizeReload (1903ms)
-		ReleaseScriptCaches (0ms)
-		RebuildScriptCaches (0ms)
-		SetupLoadedEditorAssemblies (1576ms)
-			LogAssemblyErrors (0ms)
-			InitializePlatformSupportModulesInManaged (24ms)
-			SetLoadedEditorAssemblies (56ms)
-			BeforeProcessingInitializeOnLoad (471ms)
-			ProcessInitializeOnLoadAttributes (762ms)
-			ProcessInitializeOnLoadMethodAttributes (256ms)
-			AfterProcessingInitializeOnLoad (5ms)
+			BeforeProcessingInitializeOnLoad (331ms)
+			ProcessInitializeOnLoadAttributes (795ms)
+			ProcessInitializeOnLoadMethodAttributes (586ms)
+			AfterProcessingInitializeOnLoad (4ms)
 			EditorAssembliesLoaded (1ms)
 		ExecutionOrderSort2 (0ms)
-		AwakeInstancesAfterBackupRestoration (32ms)
-Refreshing native plugins compatible for Editor in 15.10 ms, found 5 plugins.
+		AwakeInstancesAfterBackupRestoration (11ms)
+Launched and connected shader compiler UnityShaderCompiler.exe after 0.01 seconds
+Refreshing native plugins compatible for Editor in 12.98 ms, found 5 plugins.
 Preloading 0 native plugins for Editor in 0.00 ms.
 Unloading 17 Unused Serialized files (Serialized files now loaded: 0)
-Unloading 9063 unused Assets / (4.4 MB). Loaded Objects now: 9909.
-Memory consumption went from 192.0 MB to 187.6 MB.
-Total: 18.337300 ms (FindLiveObjects: 1.448200 ms CreateObjectMapping: 2.323100 ms MarkObjects: 9.702400 ms  DeleteObjects: 4.861500 ms)
-
-Prepare: number of updated asset objects reloaded= 0
-========================================================================
-Received Import Request.
-  Time since last request: 25464.611520 seconds.
-  path: Assets/Scripts/AppUpdater.cs
-  artifactKey: Guid(efdf13ae144dc9d4385b070ebe810340) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Scripts/AppUpdater.cs using Guid(efdf13ae144dc9d4385b070ebe810340) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '00000000000000000000000000000000') in 0.0070653 seconds
-Import Error Code:(4)
-Message: Build asset version error: assets/scripts/appupdater.cs in SourceAssetDB has modification time of '2026-06-05T18:49:38.9261036Z' while content on disk has modification time of '2026-06-05T18:50:01.3758766Z'
-  ERROR: Build asset version error: assets/scripts/appupdater.cs in SourceAssetDB has modification time of '2026-06-05T18:49:38.9261036Z' while content on disk has modification time of '2026-06-05T18:50:01.3758766Z'
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 0
+Unloading 9064 unused Assets / (6.0 MB). Loaded Objects now: 9907.
+Memory consumption went from 192.3 MB to 186.3 MB.
+Total: 21.080600 ms (FindLiveObjects: 1.487900 ms CreateObjectMapping: 1.333400 ms MarkObjects: 12.193000 ms  DeleteObjects: 6.064600 ms)
 
 ========================================================================
 Received Import Request.
-  Time since last request: 0.000043 seconds.
-  path: Assets/Scripts/AppUpdater.cs
-  artifactKey: Guid(efdf13ae144dc9d4385b070ebe810340) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Scripts/AppUpdater.cs using Guid(efdf13ae144dc9d4385b070ebe810340) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '00000000000000000000000000000000') in 0.0007674 seconds
-Import Error Code:(4)
-Message: Build asset version error: assets/scripts/appupdater.cs in SourceAssetDB has modification time of '2026-06-05T18:49:38.9261036Z' while content on disk has modification time of '2026-06-05T18:50:01.3758766Z'
-  ERROR: Build asset version error: assets/scripts/appupdater.cs in SourceAssetDB has modification time of '2026-06-05T18:49:38.9261036Z' while content on disk has modification time of '2026-06-05T18:50:01.3758766Z'
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 0
+  Time since last request: 30296.921655 seconds.
+  path: Assets/Resources/Items_Level/roguelikeSheet_transparent_28.asset
+  artifactKey: Guid(0fef42e2783842940829f126790ee2dc) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Items_Level/roguelikeSheet_transparent_28.asset using Guid(0fef42e2783842940829f126790ee2dc) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '9a015eeee4f3ac96de70d9ac558eb1c4') in 0.783603 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
 
 ========================================================================
 Received Import Request.
-  Time since last request: 0.096147 seconds.
-  path: Assets/Scripts/AppUpdater.cs
-  artifactKey: Guid(efdf13ae144dc9d4385b070ebe810340) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Scripts/AppUpdater.cs using Guid(efdf13ae144dc9d4385b070ebe810340) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '00000000000000000000000000000000') in 0.0007038 seconds
-Import Error Code:(4)
-Message: Build asset version error: assets/scripts/appupdater.cs in SourceAssetDB has modification time of '2026-06-05T18:49:38.9261036Z' while content on disk has modification time of '2026-06-05T18:50:01.3758766Z'
-  ERROR: Build asset version error: assets/scripts/appupdater.cs in SourceAssetDB has modification time of '2026-06-05T18:49:38.9261036Z' while content on disk has modification time of '2026-06-05T18:50:01.3758766Z'
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 0
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000029 seconds.
-  path: Assets/Scripts/AppUpdater.cs
-  artifactKey: Guid(efdf13ae144dc9d4385b070ebe810340) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Scripts/AppUpdater.cs using Guid(efdf13ae144dc9d4385b070ebe810340) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '00000000000000000000000000000000') in 0.0006812 seconds
-Import Error Code:(4)
-Message: Build asset version error: assets/scripts/appupdater.cs in SourceAssetDB has modification time of '2026-06-05T18:49:38.9261036Z' while content on disk has modification time of '2026-06-05T18:50:01.3758766Z'
-  ERROR: Build asset version error: assets/scripts/appupdater.cs in SourceAssetDB has modification time of '2026-06-05T18:49:38.9261036Z' while content on disk has modification time of '2026-06-05T18:50:01.3758766Z'
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 0
+  Time since last request: 0.000057 seconds.
+  path: Assets/Resources/Items_Level/Bridge_0.asset
+  artifactKey: Guid(5dc52883c76a009488cb83b34da80385) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Items_Level/Bridge_0.asset using Guid(5dc52883c76a009488cb83b34da80385) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '933943b39c4119ffdd004c2c261a3d77') in 0.599912 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
 
 ========================================================================
 Received Import Request.
   Time since last request: 0.000033 seconds.
-  path: Assets/Scripts/AppUpdater.cs
-  artifactKey: Guid(efdf13ae144dc9d4385b070ebe810340) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Scripts/AppUpdater.cs using Guid(efdf13ae144dc9d4385b070ebe810340) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '00000000000000000000000000000000') in 0.0006969 seconds
-Import Error Code:(4)
-Message: Build asset version error: assets/scripts/appupdater.cs in SourceAssetDB has modification time of '2026-06-05T18:49:38.9261036Z' while content on disk has modification time of '2026-06-05T18:50:01.3758766Z'
-  ERROR: Build asset version error: assets/scripts/appupdater.cs in SourceAssetDB has modification time of '2026-06-05T18:49:38.9261036Z' while content on disk has modification time of '2026-06-05T18:50:01.3758766Z'
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 0
+  path: Assets/Resources/Items_Level/Bridge_2.asset
+  artifactKey: Guid(d6ec1bdeac55116498e40694ce6fce06) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Items_Level/Bridge_2.asset using Guid(d6ec1bdeac55116498e40694ce6fce06) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '398e23781f87434b2470bb85e69532c4') in 0.5231784 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
 
 ========================================================================
 Received Import Request.
-  Time since last request: 0.000018 seconds.
-  path: Assets/Scripts/AppUpdater.cs
-  artifactKey: Guid(efdf13ae144dc9d4385b070ebe810340) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Scripts/AppUpdater.cs using Guid(efdf13ae144dc9d4385b070ebe810340) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '00000000000000000000000000000000') in 0.0005993 seconds
-Import Error Code:(4)
-Message: Build asset version error: assets/scripts/appupdater.cs in SourceAssetDB has modification time of '2026-06-05T18:49:38.9261036Z' while content on disk has modification time of '2026-06-05T18:50:01.3758766Z'
-  ERROR: Build asset version error: assets/scripts/appupdater.cs in SourceAssetDB has modification time of '2026-06-05T18:49:38.9261036Z' while content on disk has modification time of '2026-06-05T18:50:01.3758766Z'
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 0
+  Time since last request: 0.000046 seconds.
+  path: Assets/Resources/Items_Level/Hill_Ground_8.asset
+  artifactKey: Guid(cc33410c64f310044ac70a826c5d8ef3) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Items_Level/Hill_Ground_8.asset using Guid(cc33410c64f310044ac70a826c5d8ef3) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '9e838d55fec88c10f75eb88df2a004a9') in 0.5238937 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
 
 ========================================================================
 Received Import Request.
-  Time since last request: 0.000025 seconds.
-  path: Assets/Scripts/AppUpdater.cs
-  artifactKey: Guid(efdf13ae144dc9d4385b070ebe810340) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Scripts/AppUpdater.cs using Guid(efdf13ae144dc9d4385b070ebe810340) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '00000000000000000000000000000000') in 0.0007477 seconds
-Import Error Code:(4)
-Message: Build asset version error: assets/scripts/appupdater.cs in SourceAssetDB has modification time of '2026-06-05T18:49:38.9261036Z' while content on disk has modification time of '2026-06-05T18:50:01.3758766Z'
-  ERROR: Build asset version error: assets/scripts/appupdater.cs in SourceAssetDB has modification time of '2026-06-05T18:49:38.9261036Z' while content on disk has modification time of '2026-06-05T18:50:01.3758766Z'
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 0
+  Time since last request: 0.000031 seconds.
+  path: Assets/Resources/Items_Level/roguelikeSheet_transparent_7.asset
+  artifactKey: Guid(f69687a18c4608a43a6016d1b1a67193) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Items_Level/roguelikeSheet_transparent_7.asset using Guid(f69687a18c4608a43a6016d1b1a67193) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '9a8bca011ee5ceab202f5a5b882bed62') in 0.5073785 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
 
 ========================================================================
 Received Import Request.
   Time since last request: 0.000047 seconds.
-  path: Assets/Scripts/AppUpdater.cs
-  artifactKey: Guid(efdf13ae144dc9d4385b070ebe810340) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Scripts/AppUpdater.cs using Guid(efdf13ae144dc9d4385b070ebe810340) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '00000000000000000000000000000000') in 0.0005959 seconds
-Import Error Code:(4)
-Message: Build asset version error: assets/scripts/appupdater.cs in SourceAssetDB has modification time of '2026-06-05T18:49:38.9261036Z' while content on disk has modification time of '2026-06-05T18:50:01.3758766Z'
-  ERROR: Build asset version error: assets/scripts/appupdater.cs in SourceAssetDB has modification time of '2026-06-05T18:49:38.9261036Z' while content on disk has modification time of '2026-06-05T18:50:01.3758766Z'
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 0
+  path: Assets/Resources/Items_Level/roguelikeSheet_transparent_15.asset
+  artifactKey: Guid(86b5f8dd3bb96ab4085e1f68418792c2) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Items_Level/roguelikeSheet_transparent_15.asset using Guid(86b5f8dd3bb96ab4085e1f68418792c2) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '876b6bd78735bdc2bcb0d74ec8155a2c') in 0.5680381 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
 
 ========================================================================
 Received Import Request.
-  Time since last request: 0.000030 seconds.
-  path: Assets/Scripts/AppUpdater.cs
-  artifactKey: Guid(efdf13ae144dc9d4385b070ebe810340) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Scripts/AppUpdater.cs using Guid(efdf13ae144dc9d4385b070ebe810340) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '00000000000000000000000000000000') in 0.0006455 seconds
-Import Error Code:(4)
-Message: Build asset version error: assets/scripts/appupdater.cs in SourceAssetDB has modification time of '2026-06-05T18:49:38.9261036Z' while content on disk has modification time of '2026-06-05T18:50:01.3758766Z'
-  ERROR: Build asset version error: assets/scripts/appupdater.cs in SourceAssetDB has modification time of '2026-06-05T18:49:38.9261036Z' while content on disk has modification time of '2026-06-05T18:50:01.3758766Z'
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 0
+  Time since last request: 0.000042 seconds.
+  path: Assets/Resources/Items_Level/roguelikeSheet_transparent_21.asset
+  artifactKey: Guid(6f91c076f27e44c44bf412c6a2d44473) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Items_Level/roguelikeSheet_transparent_21.asset using Guid(6f91c076f27e44c44bf412c6a2d44473) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'e22ddb9fcde25dff0697bf45e2069575') in 0.5514944 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
 
 ========================================================================
 Received Import Request.
-  Time since last request: 0.000017 seconds.
-  path: Assets/Scripts/AppUpdater.cs
-  artifactKey: Guid(efdf13ae144dc9d4385b070ebe810340) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Scripts/AppUpdater.cs using Guid(efdf13ae144dc9d4385b070ebe810340) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '00000000000000000000000000000000') in 0.0005788 seconds
-Import Error Code:(4)
-Message: Build asset version error: assets/scripts/appupdater.cs in SourceAssetDB has modification time of '2026-06-05T18:49:38.9261036Z' while content on disk has modification time of '2026-06-05T18:50:01.3758766Z'
-  ERROR: Build asset version error: assets/scripts/appupdater.cs in SourceAssetDB has modification time of '2026-06-05T18:49:38.9261036Z' while content on disk has modification time of '2026-06-05T18:50:01.3758766Z'
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 0
+  Time since last request: 0.000043 seconds.
+  path: Assets/Resources/Items_Level/Hill_Ground_1.asset
+  artifactKey: Guid(99cfdc75b9fc87a4b87e47f14fa903c2) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Items_Level/Hill_Ground_1.asset using Guid(99cfdc75b9fc87a4b87e47f14fa903c2) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '63aedc7449d2ec8b530dc8b446583d7d') in 0.556931 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
 
 ========================================================================
 Received Import Request.
-  Time since last request: 0.000018 seconds.
-  path: Assets/Scripts/AppUpdater.cs
-  artifactKey: Guid(efdf13ae144dc9d4385b070ebe810340) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Scripts/AppUpdater.cs using Guid(efdf13ae144dc9d4385b070ebe810340) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '00000000000000000000000000000000') in 0.0007123 seconds
-Import Error Code:(4)
-Message: Build asset version error: assets/scripts/appupdater.cs in SourceAssetDB has modification time of '2026-06-05T18:49:38.9261036Z' while content on disk has modification time of '2026-06-05T18:50:01.3758766Z'
-  ERROR: Build asset version error: assets/scripts/appupdater.cs in SourceAssetDB has modification time of '2026-06-05T18:49:38.9261036Z' while content on disk has modification time of '2026-06-05T18:50:01.3758766Z'
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 0
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000027 seconds.
-  path: Assets/Scripts/AppUpdater.cs
-  artifactKey: Guid(efdf13ae144dc9d4385b070ebe810340) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Scripts/AppUpdater.cs using Guid(efdf13ae144dc9d4385b070ebe810340) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '00000000000000000000000000000000') in 0.0010863 seconds
-Import Error Code:(4)
-Message: Build asset version error: assets/scripts/appupdater.cs in SourceAssetDB has modification time of '2026-06-05T18:49:38.9261036Z' while content on disk has modification time of '2026-06-05T18:50:01.3758766Z'
-  ERROR: Build asset version error: assets/scripts/appupdater.cs in SourceAssetDB has modification time of '2026-06-05T18:49:38.9261036Z' while content on disk has modification time of '2026-06-05T18:50:01.3758766Z'
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 0
+  Time since last request: 0.000035 seconds.
+  path: Assets/Resources/Items_Level/roguelikeSheet_transparent_27.asset
+  artifactKey: Guid(79af7f6117e19bc4dae5ac5707088359) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Items_Level/roguelikeSheet_transparent_27.asset using Guid(79af7f6117e19bc4dae5ac5707088359) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'd196c37fd652c2151d315cafd63cce07') in 0.5156632 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
 
 ========================================================================
 Received Import Request.
   Time since last request: 0.000041 seconds.
-  path: Assets/Scripts/AppUpdater.cs
-  artifactKey: Guid(efdf13ae144dc9d4385b070ebe810340) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Scripts/AppUpdater.cs using Guid(efdf13ae144dc9d4385b070ebe810340) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '00000000000000000000000000000000') in 0.0005817 seconds
-Import Error Code:(4)
-Message: Build asset version error: assets/scripts/appupdater.cs in SourceAssetDB has modification time of '2026-06-05T18:49:38.9261036Z' while content on disk has modification time of '2026-06-05T18:50:01.3758766Z'
-  ERROR: Build asset version error: assets/scripts/appupdater.cs in SourceAssetDB has modification time of '2026-06-05T18:49:38.9261036Z' while content on disk has modification time of '2026-06-05T18:50:01.3758766Z'
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 0
+  path: Assets/Resources/Items_Level/Hill_Ground_14.asset
+  artifactKey: Guid(fd0a224928e41da4f9edef8766ad3a32) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Items_Level/Hill_Ground_14.asset using Guid(fd0a224928e41da4f9edef8766ad3a32) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '35cac7ef4b7b032c91b78c752db13b52') in 0.5000918 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
 
 ========================================================================
 Received Import Request.
-  Time since last request: 0.000018 seconds.
-  path: Assets/Scripts/AppUpdater.cs
-  artifactKey: Guid(efdf13ae144dc9d4385b070ebe810340) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Scripts/AppUpdater.cs using Guid(efdf13ae144dc9d4385b070ebe810340) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '00000000000000000000000000000000') in 0.0007076 seconds
-Import Error Code:(4)
-Message: Build asset version error: assets/scripts/appupdater.cs in SourceAssetDB has modification time of '2026-06-05T18:49:38.9261036Z' while content on disk has modification time of '2026-06-05T18:50:01.3758766Z'
-  ERROR: Build asset version error: assets/scripts/appupdater.cs in SourceAssetDB has modification time of '2026-06-05T18:49:38.9261036Z' while content on disk has modification time of '2026-06-05T18:50:01.3758766Z'
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 0
+  Time since last request: 565.665741 seconds.
+  path: Assets/Resources/Items_Level/Bridge.png
+  artifactKey: Guid(788466195746cb4438bc93cc75580e02) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Items_Level/Bridge.png using Guid(788466195746cb4438bc93cc75580e02) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter)[Licensing::Client] Successfully resolved entitlement details
+ -> (artifact id: '2ad2b2d07c0ed07536f178afd3911e32') in 0.568277 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
 
 ========================================================================
 Received Import Request.
-  Time since last request: 0.000029 seconds.
-  path: Assets/Scripts/AppUpdater.cs
-  artifactKey: Guid(efdf13ae144dc9d4385b070ebe810340) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Scripts/AppUpdater.cs using Guid(efdf13ae144dc9d4385b070ebe810340) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '00000000000000000000000000000000') in 0.0011056 seconds
-Import Error Code:(4)
-Message: Build asset version error: assets/scripts/appupdater.cs in SourceAssetDB has modification time of '2026-06-05T18:49:38.9261036Z' while content on disk has modification time of '2026-06-05T18:50:01.3758766Z'
-  ERROR: Build asset version error: assets/scripts/appupdater.cs in SourceAssetDB has modification time of '2026-06-05T18:49:38.9261036Z' while content on disk has modification time of '2026-06-05T18:50:01.3758766Z'
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 0
+  Time since last request: 0.000041 seconds.
+  path: Assets/Resources/Items_Level/roguelikeSheet_transparent_26.asset
+  artifactKey: Guid(2c8309d750e037146827b37d0452b1e0) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Items_Level/roguelikeSheet_transparent_26.asset using Guid(2c8309d750e037146827b37d0452b1e0) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '258bb1118dd9e6edd72ebe2ab497a735') in 0.4812137 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
 
 ========================================================================
 Received Import Request.
-  Time since last request: 0.000027 seconds.
-  path: Assets/Scripts/AppUpdater.cs
-  artifactKey: Guid(efdf13ae144dc9d4385b070ebe810340) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Scripts/AppUpdater.cs using Guid(efdf13ae144dc9d4385b070ebe810340) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '00000000000000000000000000000000') in 0.0006291 seconds
-Import Error Code:(4)
-Message: Build asset version error: assets/scripts/appupdater.cs in SourceAssetDB has modification time of '2026-06-05T18:49:38.9261036Z' while content on disk has modification time of '2026-06-05T18:50:01.3758766Z'
-  ERROR: Build asset version error: assets/scripts/appupdater.cs in SourceAssetDB has modification time of '2026-06-05T18:49:38.9261036Z' while content on disk has modification time of '2026-06-05T18:50:01.3758766Z'
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 0
+  Time since last request: 0.000044 seconds.
+  path: Assets/Resources/Items_Level/roguelikeSheet_transparent_5.asset
+  artifactKey: Guid(31145238cf0f66847a0fe17ef9d6d471) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Items_Level/roguelikeSheet_transparent_5.asset using Guid(31145238cf0f66847a0fe17ef9d6d471) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'a42ba363ea7d10d971d7a53e9a0f73ad') in 0.4993062 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
 
 ========================================================================
 Received Import Request.
-  Time since last request: 0.000030 seconds.
-  path: Assets/Scripts/AppUpdater.cs
-  artifactKey: Guid(efdf13ae144dc9d4385b070ebe810340) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Scripts/AppUpdater.cs using Guid(efdf13ae144dc9d4385b070ebe810340) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '00000000000000000000000000000000') in 0.0005694 seconds
-Import Error Code:(4)
-Message: Build asset version error: assets/scripts/appupdater.cs in SourceAssetDB has modification time of '2026-06-05T18:49:38.9261036Z' while content on disk has modification time of '2026-06-05T18:50:01.3758766Z'
-  ERROR: Build asset version error: assets/scripts/appupdater.cs in SourceAssetDB has modification time of '2026-06-05T18:49:38.9261036Z' while content on disk has modification time of '2026-06-05T18:50:01.3758766Z'
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 0
+  Time since last request: 0.000106 seconds.
+  path: Assets/Resources/Items_Level/Hill_Ground_11.asset
+  artifactKey: Guid(1e46e51bc2190bc4f87289fc12b52bf5) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Items_Level/Hill_Ground_11.asset using Guid(1e46e51bc2190bc4f87289fc12b52bf5) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '3881aa9b6901c8af20c1669b28018330') in 0.6149455 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
 
 ========================================================================
 Received Import Request.
-  Time since last request: 0.000019 seconds.
-  path: Assets/Scripts/AppUpdater.cs
-  artifactKey: Guid(efdf13ae144dc9d4385b070ebe810340) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Scripts/AppUpdater.cs using Guid(efdf13ae144dc9d4385b070ebe810340) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '00000000000000000000000000000000') in 0.0005669 seconds
-Import Error Code:(4)
-Message: Build asset version error: assets/scripts/appupdater.cs in SourceAssetDB has modification time of '2026-06-05T18:49:38.9261036Z' while content on disk has modification time of '2026-06-05T18:50:01.3758766Z'
-  ERROR: Build asset version error: assets/scripts/appupdater.cs in SourceAssetDB has modification time of '2026-06-05T18:49:38.9261036Z' while content on disk has modification time of '2026-06-05T18:50:01.3758766Z'
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 0
+  Time since last request: 0.000056 seconds.
+  path: Assets/Resources/Items_Level/roguelikeSheet_transparent_25.asset
+  artifactKey: Guid(ea470f858cac1dd48b5f81bf9b8b35a5) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Items_Level/roguelikeSheet_transparent_25.asset using Guid(ea470f858cac1dd48b5f81bf9b8b35a5) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '152ba6f9e3f42f66f81c0c489eb419d3') in 0.5533421 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
 
-========================================================================
-Received Prepare
-Refreshing native plugins compatible for Editor in 20.92 ms, found 5 plugins.
-Preloading 0 native plugins for Editor in 0.00 ms.
-Unloading 17 Unused Serialized files (Serialized files now loaded: 0)
-Unloading 9012 unused Assets / (7.0 MB). Loaded Objects now: 9911.
-Memory consumption went from 192.8 MB to 185.8 MB.
-Total: 66.546400 ms (FindLiveObjects: 1.508800 ms CreateObjectMapping: 2.493300 ms MarkObjects: 26.676700 ms  DeleteObjects: 35.865400 ms)
-
-Prepare: number of updated asset objects reloaded= 0
 ========================================================================
 Received Import Request.
-  Time since last request: 5.050094 seconds.
-  path: Assets/Scripts/AppUpdater.cs
-  artifactKey: Guid(efdf13ae144dc9d4385b070ebe810340) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Scripts/AppUpdater.cs using Guid(efdf13ae144dc9d4385b070ebe810340) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'b4b68d946ae0a5eb0f606d57ba30111b') in 0.0008289 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 0
+  Time since last request: 0.000038 seconds.
+  path: Assets/Resources/Items_Level/roguelikeSheet_transparent_6.asset
+  artifactKey: Guid(af3dd09ff5fd27e4a8b8223ef17a7280) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Items_Level/roguelikeSheet_transparent_6.asset using Guid(af3dd09ff5fd27e4a8b8223ef17a7280) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '7e7808d64b605d0a5fed616c22cf43e4') in 0.5255852 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
 
-========================================================================
-Received Prepare
-Refreshing native plugins compatible for Editor in 49.45 ms, found 5 plugins.
-Preloading 0 native plugins for Editor in 0.00 ms.
-Unloading 17 Unused Serialized files (Serialized files now loaded: 0)
-Unloading 9012 unused Assets / (4.9 MB). Loaded Objects now: 9911.
-Memory consumption went from 192.8 MB to 187.9 MB.
-Total: 77.442200 ms (FindLiveObjects: 22.022900 ms CreateObjectMapping: 3.418400 ms MarkObjects: 39.692700 ms  DeleteObjects: 12.305700 ms)
-
-Prepare: number of updated asset objects reloaded= 0
 ========================================================================
 Received Import Request.
-  Time since last request: 74.069441 seconds.
-  path: Assets/Scripts/AppUpdater.cs
-  artifactKey: Guid(efdf13ae144dc9d4385b070ebe810340) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Scripts/AppUpdater.cs using Guid(efdf13ae144dc9d4385b070ebe810340) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'c832de6e1f37738807ca15e6bf1b6e57') in 0.0007459 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 0
+  Time since last request: 0.000043 seconds.
+  path: Assets/Resources/Items_Level/roguelikeSheet_transparent_23.asset
+  artifactKey: Guid(1fa602ede139db14dbfb061faea31786) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Items_Level/roguelikeSheet_transparent_23.asset using Guid(1fa602ede139db14dbfb061faea31786) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '4e1b3eb4fa94e5d8af21c9b4ca09f11f') in 0.5290152 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
 
-========================================================================
-Received Prepare
-Refreshing native plugins compatible for Editor in 24.43 ms, found 5 plugins.
-Preloading 0 native plugins for Editor in 0.00 ms.
-Unloading 17 Unused Serialized files (Serialized files now loaded: 0)
-Unloading 9012 unused Assets / (4.0 MB). Loaded Objects now: 9911.
-Memory consumption went from 192.8 MB to 188.8 MB.
-Total: 33.357400 ms (FindLiveObjects: 2.325800 ms CreateObjectMapping: 2.447100 ms MarkObjects: 22.318100 ms  DeleteObjects: 6.264000 ms)
-
-Prepare: number of updated asset objects reloaded= 0
 ========================================================================
 Received Import Request.
-  Time since last request: 8.863687 seconds.
-  path: Assets/Scripts/AppUpdater.cs
-  artifactKey: Guid(efdf13ae144dc9d4385b070ebe810340) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Scripts/AppUpdater.cs using Guid(efdf13ae144dc9d4385b070ebe810340) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '8fb06514abd4c29ab48164f02623d74a') in 0.0010275 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 0
+  Time since last request: 0.000032 seconds.
+  path: Assets/Resources/Items_Level/Hill_Ground_12.asset
+  artifactKey: Guid(cd023951f9d59014f9a764b97d26e0ca) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Items_Level/Hill_Ground_12.asset using Guid(cd023951f9d59014f9a764b97d26e0ca) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'c57dc6fe4d545f308aa0b249310e0c08') in 0.5593405 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
 
 ========================================================================
-Received Prepare
-Refreshing native plugins compatible for Editor in 13.48 ms, found 5 plugins.
-Preloading 0 native plugins for Editor in 0.00 ms.
-Unloading 17 Unused Serialized files (Serialized files now loaded: 0)
-Unloading 9011 unused Assets / (5.1 MB). Loaded Objects now: 9910.
-Memory consumption went from 192.8 MB to 187.6 MB.
-Total: 16.452200 ms (FindLiveObjects: 1.343800 ms CreateObjectMapping: 1.024900 ms MarkObjects: 8.989900 ms  DeleteObjects: 5.091900 ms)
+Received Import Request.
+  Time since last request: 0.000045 seconds.
+  path: Assets/Resources/Items_Level/Hill_Ground_13.asset
+  artifactKey: Guid(42f18ca17800c3d4f9c0057f02b4fb6e) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Items_Level/Hill_Ground_13.asset using Guid(42f18ca17800c3d4f9c0057f02b4fb6e) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '15163480f6f9b6a7baac56be9e068e43') in 0.5495357 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
 
-Prepare: number of updated asset objects reloaded= 0
 ========================================================================
-Received Prepare
-[Licensing::Client] Successfully resolved entitlement details
-Begin MonoManager ReloadAssembly
-[Licensing::Client] Successfully resolved entitlement details
-Duplicate assembly 'log4net.dll' with different versions detected, using 'Packages/com.unity.package-validation-suite/Lib/Editor/log4net.dll, AssemblyName=log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a' and ignoring 'Packages/com.unity.collab-proxy/Lib/Editor/log4netPlastic.dll, AssemblyName=log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a'.Symbol file LoadedFromMemory is not a mono symbol file
-Symbol file LoadedFromMemory is not a mono symbol file
-- Loaded All Assemblies, in  1.592 seconds
-Refreshing native plugins compatible for Editor in 13.70 ms, found 5 plugins.
-Native extension for Android target not found
-Native extension for WindowsStandalone target not found
-[Package Manager] Failed to launch server process. Reason: Unity was launched with the -noUpm command-line argument
-[Package Manager] Unable to send message (not connected to server process).
-[Package Manager] Cannot connect to Unity Package Manager local server
-[Package Manager] Failed to launch server process. Reason: Unity was launched with the -noUpm command-line argument
-[Package Manager] Unable to send message (not connected to server process).
-[Package Manager] Cannot connect to Unity Package Manager local server
-[Package Manager] Failed to launch server process. Reason: Unity was launched with the -noUpm command-line argument
-[Package Manager] Unable to send message (not connected to server process).
-[Package Manager] Cannot connect to Unity Package Manager local server
-ScheduleIndexationOnStartup MainProcess:False IndexOnStartup:True
-Mono: successfully reloaded assembly
-- Finished resetting the current domain, in  1.327 seconds
-Domain Reload Profiling: 2922ms
-	BeginReloadAssembly (359ms)
-		ExecutionOrderSort (0ms)
-		DisableScriptedObjects (27ms)
-		BackupInstance (0ms)
-		ReleaseScriptingObjects (0ms)
-		CreateAndSetChildDomain (79ms)
-	RebuildCommonClasses (56ms)
-	RebuildNativeTypeToScriptingClass (25ms)
-	initialDomainReloadingComplete (41ms)
-	LoadAllAssembliesAndSetupDomain (1113ms)
-		LoadAssemblies (829ms)
-		RebuildTransferFunctionScriptingTraits (0ms)
-		AnalyzeDomain (443ms)
-			TypeCache.Refresh (22ms)
-				TypeCache.ScanAssembly (3ms)
-			BuildScriptInfoCaches (394ms)
-			ResolveRequiredComponents (20ms)
-	FinalizeReload (1327ms)
-		ReleaseScriptCaches (0ms)
-		RebuildScriptCaches (0ms)
-		SetupLoadedEditorAssemblies (1046ms)
-			LogAssemblyErrors (0ms)
-			InitializePlatformSupportModulesInManaged (12ms)
-			SetLoadedEditorAssemblies (5ms)
-			BeforeProcessingInitializeOnLoad (270ms)
-			ProcessInitializeOnLoadAttributes (518ms)
-			ProcessInitializeOnLoadMethodAttributes (237ms)
-			AfterProcessingInitializeOnLoad (3ms)
-			EditorAssembliesLoaded (1ms)
-		ExecutionOrderSort2 (0ms)
-		AwakeInstancesAfterBackupRestoration (19ms)
-Refreshing native plugins compatible for Editor in 11.62 ms, found 5 plugins.
-Preloading 0 native plugins for Editor in 0.00 ms.
-Unloading 17 Unused Serialized files (Serialized files now loaded: 0)
-Unloading 9062 unused Assets / (5.1 MB). Loaded Objects now: 9916.
-Memory consumption went from 192.8 MB to 187.7 MB.
-Total: 12.453000 ms (FindLiveObjects: 1.250400 ms CreateObjectMapping: 0.691800 ms MarkObjects: 7.308400 ms  DeleteObjects: 3.200800 ms)
+Received Import Request.
+  Time since last request: 0.000031 seconds.
+  path: Assets/Resources/Items_Level/Hill_Ground_2.asset
+  artifactKey: Guid(b23863ec60901cb49b5daab6d8099934) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Items_Level/Hill_Ground_2.asset using Guid(b23863ec60901cb49b5daab6d8099934) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'cfc5c3ee56874feb4e852397dfe063fc') in 0.5434987 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
 
-Prepare: number of updated asset objects reloaded= 0
 ========================================================================
-Received Prepare
-Begin MonoManager ReloadAssembly
-Duplicate assembly 'log4net.dll' with different versions detected, using 'Packages/com.unity.package-validation-suite/Lib/Editor/log4net.dll, AssemblyName=log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a' and ignoring 'Packages/com.unity.collab-proxy/Lib/Editor/log4netPlastic.dll, AssemblyName=log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a'.Symbol file LoadedFromMemory is not a mono symbol file
-Symbol file LoadedFromMemory is not a mono symbol file
-- Loaded All Assemblies, in  1.326 seconds
-Refreshing native plugins compatible for Editor in 13.12 ms, found 5 plugins.
-Native extension for Android target not found
-Native extension for WindowsStandalone target not found
-[Package Manager] Failed to launch server process. Reason: Unity was launched with the -noUpm command-line argument
-[Package Manager] Unable to send message (not connected to server process).
-[Package Manager] Cannot connect to Unity Package Manager local server
-[Package Manager] Failed to launch server process. Reason: Unity was launched with the -noUpm command-line argument
-[Package Manager] Unable to send message (not connected to server process).
-[Package Manager] Cannot connect to Unity Package Manager local server
-[Package Manager] Failed to launch server process. Reason: Unity was launched with the -noUpm command-line argument
-[Package Manager] Unable to send message (not connected to server process).
-[Package Manager] Cannot connect to Unity Package Manager local server
-ScheduleIndexationOnStartup MainProcess:False IndexOnStartup:True
-Mono: successfully reloaded assembly
-- Finished resetting the current domain, in  1.251 seconds
-Domain Reload Profiling: 2580ms
-	BeginReloadAssembly (352ms)
-		ExecutionOrderSort (0ms)
-		DisableScriptedObjects (19ms)
-		BackupInstance (0ms)
-		ReleaseScriptingObjects (0ms)
-		CreateAndSetChildDomain (75ms)
-	RebuildCommonClasses (53ms)
-	RebuildNativeTypeToScriptingClass (22ms)
-	initialDomainReloadingComplete (43ms)
-	LoadAllAssembliesAndSetupDomain (858ms)
-		LoadAssemblies (602ms)
-		RebuildTransferFunctionScriptingTraits (0ms)
-		AnalyzeDomain (402ms)
-			TypeCache.Refresh (9ms)
-				TypeCache.ScanAssembly (0ms)
-			BuildScriptInfoCaches (367ms)
-			ResolveRequiredComponents (20ms)
-	FinalizeReload (1252ms)
-		ReleaseScriptCaches (0ms)
-		RebuildScriptCaches (0ms)
-		SetupLoadedEditorAssemblies (999ms)
-			LogAssemblyErrors (0ms)
-			InitializePlatformSupportModulesInManaged (11ms)
-			SetLoadedEditorAssemblies (5ms)
-			BeforeProcessingInitializeOnLoad (246ms)
-			ProcessInitializeOnLoadAttributes (512ms)
-			ProcessInitializeOnLoadMethodAttributes (221ms)
-			AfterProcessingInitializeOnLoad (3ms)
-			EditorAssembliesLoaded (1ms)
-		ExecutionOrderSort2 (0ms)
-		AwakeInstancesAfterBackupRestoration (21ms)
-Refreshing native plugins compatible for Editor in 12.63 ms, found 5 plugins.
-Preloading 0 native plugins for Editor in 0.00 ms.
-Unloading 17 Unused Serialized files (Serialized files now loaded: 0)
-Unloading 9062 unused Assets / (5.2 MB). Loaded Objects now: 9922.
-Memory consumption went from 192.9 MB to 187.7 MB.
-Total: 14.325300 ms (FindLiveObjects: 1.300300 ms CreateObjectMapping: 1.263000 ms MarkObjects: 8.311100 ms  DeleteObjects: 3.449200 ms)
+Received Import Request.
+  Time since last request: 0.000044 seconds.
+  path: Assets/Resources/Items_Level/Hill_Ground_0.asset
+  artifactKey: Guid(74742df45934ac546a7cc43de606c40a) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Items_Level/Hill_Ground_0.asset using Guid(74742df45934ac546a7cc43de606c40a) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '1c8ea9e29aea8167ab441cea8039e0d4') in 0.5335818 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
 
-Prepare: number of updated asset objects reloaded= 0
+========================================================================
+Received Import Request.
+  Time since last request: 0.000037 seconds.
+  path: Assets/Resources/Items_Level/Palm.png
+  artifactKey: Guid(b920c498f33e7d841a73da340f694703) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Items_Level/Palm.png using Guid(b920c498f33e7d841a73da340f694703) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '0df154e6692066fcad54d0c4ebc21c22') in 0.5518102 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000043 seconds.
+  path: Assets/Resources/Items_Level/roguelikeSheet_transparent_10.asset
+  artifactKey: Guid(3a2ca5745ce234c4e971eb0be8d3a65e) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Items_Level/roguelikeSheet_transparent_10.asset using Guid(3a2ca5745ce234c4e971eb0be8d3a65e) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'c6720a7d67ffffe150369741a13161bf') in 0.5735251 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000031 seconds.
+  path: Assets/Resources/Items_Level/Hill_Ground.png
+  artifactKey: Guid(aa7671384e611c24ebc6cd2c30a6b2d1) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Items_Level/Hill_Ground.png using Guid(aa7671384e611c24ebc6cd2c30a6b2d1) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '7236df51a6ab0101a96396db3ac1b82b') in 0.5977533 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000050 seconds.
+  path: Assets/Resources/Items_Level/roguelikeSheet_transparent_4.asset
+  artifactKey: Guid(5b127681838e5ea438c47612b3d3cd97) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Items_Level/roguelikeSheet_transparent_4.asset using Guid(5b127681838e5ea438c47612b3d3cd97) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'dc2543215f46e85ad3770602cfd96ecf') in 0.5570838 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000036 seconds.
+  path: Assets/Resources/Items_Level/roguelikeSheet_transparent_14.asset
+  artifactKey: Guid(274209fd7afe8874c8d730a03ce0404d) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Items_Level/roguelikeSheet_transparent_14.asset using Guid(274209fd7afe8874c8d730a03ce0404d) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '1d78e0d9ffe5790b7f9c10e93cdc8ea8') in 0.5588389 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000045 seconds.
+  path: Assets/Resources/Items_Level/roguelikeSheet_transparent_3.asset
+  artifactKey: Guid(6939df69f21065d42a2a6d78253093d9) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Items_Level/roguelikeSheet_transparent_3.asset using Guid(6939df69f21065d42a2a6d78253093d9) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '9e93a3496e3ccc1814db6cd3082cc0c9') in 0.5536594 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000033 seconds.
+  path: Assets/Resources/Items_Level/Hill_Ground_9.asset
+  artifactKey: Guid(e868617910522644aae1b5d101dff057) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Items_Level/Hill_Ground_9.asset using Guid(e868617910522644aae1b5d101dff057) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '83f0a4c83a7a1cdfb8caa3435b1687d9') in 0.5465696 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000043 seconds.
+  path: Assets/Resources/Items_Level/roguelikeSheet_transparent_1.asset
+  artifactKey: Guid(c919ffbc531eefa418cbdee3a9333125) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Items_Level/roguelikeSheet_transparent_1.asset using Guid(c919ffbc531eefa418cbdee3a9333125) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'b41c1a2f98eeff5774a2ffd6045f935c') in 0.5412676 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000033 seconds.
+  path: Assets/Resources/Items_Level/roguelikeSheet_transparent_24.asset
+  artifactKey: Guid(136c3b49ffd78134aa2762b69274ca9b) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Items_Level/roguelikeSheet_transparent_24.asset using Guid(136c3b49ffd78134aa2762b69274ca9b) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '1aa3d2066e65c68fad517d01b320a8cc') in 0.5740157 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000041 seconds.
+  path: Assets/Resources/Items_Level/roguelikeSheet_transparent_17.asset
+  artifactKey: Guid(d846ede6f7282894086cbd3a1252ccae) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Items_Level/roguelikeSheet_transparent_17.asset using Guid(d846ede6f7282894086cbd3a1252ccae) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'affd480267c12747e231a3dcb0650703') in 0.5542607 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000034 seconds.
+  path: Assets/Resources/Items_Level/roguelikeSheet_transparent_13.asset
+  artifactKey: Guid(31a9da9e3a61f884e9e5b45acc9855ca) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Items_Level/roguelikeSheet_transparent_13.asset using Guid(31a9da9e3a61f884e9e5b45acc9855ca) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'a552ffe171408037d8fc0de5c6801c2b') in 0.5856805 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000063 seconds.
+  path: Assets/Resources/Items_Level/roguelikeSheet_transparent_19.asset
+  artifactKey: Guid(b8a538ae039591447b1f9fc310c08725) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Items_Level/roguelikeSheet_transparent_19.asset using Guid(b8a538ae039591447b1f9fc310c08725) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '261fb2202d53443fb39a6a1761fc30cc') in 0.5746404 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000032 seconds.
+  path: Assets/Resources/Items_Level/Ground_Tile_DG.png
+  artifactKey: Guid(4a0d996db29e81c4e8368b9278f2738c) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Items_Level/Ground_Tile_DG.png using Guid(4a0d996db29e81c4e8368b9278f2738c) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '426bae443f56d52d07f9509c584cb135') in 0.6006694 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
+
+Editor requested this worker to shutdown with reason: Scaling down because of idle timeout
+AssetImportWorker is now disconnected from the server
+Process exiting
+Exiting without the bug reporter. Application will terminate with return code 0

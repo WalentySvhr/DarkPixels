@@ -28,7 +28,11 @@ public class ShopTrigger : MonoBehaviour
 
     private void OnMouseDown()
     {
-        // Перевірку EventSystem видалено
+        // ПЕРЕВІРКА: Якщо вікно відкрито - повністю ігноруємо клік
+        if (UIManager.IsAnyWindowOpen)
+        {
+            return;
+        }
 
         Debug.Log("Клік по торговцю: " + gameObject.name);
 

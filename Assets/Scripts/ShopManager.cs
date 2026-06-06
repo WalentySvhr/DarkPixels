@@ -28,6 +28,9 @@ public class ShopManager : MonoBehaviour
         currentShop = shop;
         currentNPC = npc;
 
+        // ВМИКАЄМО ЗАПОБІЖНИК: Кажемо грі, що вікно відкрито
+        UIManager.RegisterWindowOpen();
+
         shopPanel.SetActive(true);
         RefreshShop();
     }
@@ -40,20 +43,21 @@ public class ShopManager : MonoBehaviour
         // 2. Вимикаємо панель
         shopPanel.SetActive(false);
 
+        // ВИМИКАЄМО ЗАПОБІЖНИК: Кажемо грі, що вікон більше немає
+        UIManager.RegisterWindowClose();
+
         // 3. РОЗБЛОКУВАННЯ: Скидаємо виділення UI
         if (EventSystem.current != null)
         {
             EventSystem.current.SetSelectedGameObject(null);
         }
 
-        // 4. Якщо гра була на паузі (Time.timeScale = 0), розблоковуємо її
-        // Якщо ви цього не робите, залиште як є
+        // 4. Якщо гра була на паузі
         Time.timeScale = 1f;
 
         // 5. Логіка NPC
         if (currentNPC != null)
         {
-            // currentNPC.SendMessage("StopInteraction", SendMessageOptions.DontRequireReceiver);
             currentNPC = null;
         }
 
