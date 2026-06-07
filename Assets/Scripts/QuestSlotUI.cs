@@ -19,10 +19,18 @@ public class QuestSlotUI : MonoBehaviour
     public string normalButtonText = "Стежити";
     [Tooltip("Текст кнопки, коли цей квест уже відстежується")]
     public string trackingButtonText = "Стежимо";
+
+    [Header("Кольори кнопки стеження")]
     [Tooltip("Колір кнопки у звичайному стані")]
     public Color normalButtonColor = Color.white;
     [Tooltip("Колір кнопки, коли цей квест уже відстежується")]
     public Color trackingButtonColor = Color.gray;
+
+    // НОВІ ЗМІННІ ДЛЯ КОЛЬОРУ ТЕКСТУ КНОПКИ
+    [Tooltip("Колір тексту у звичайному стані")]
+    public Color normalTextColor = Color.black;
+    [Tooltip("Колір тексту, коли цей квест уже відстежується")]
+    public Color trackingTextColor = Color.white;
 
     [Header("Налаштування Текстів (Локалізація)")]
     public string targetPrefix = "Що треба: ";
@@ -93,7 +101,7 @@ public class QuestSlotUI : MonoBehaviour
 
             if (data.itemRewards != null && data.itemRewards.Length > 0)
             {
-                if (hasAnyReward) rewardBuilder.Append(" + ");
+                if (hasAnyReward) rewardBuilder.Append(" +  ");
                 for (int i = 0; i < data.itemRewards.Length; i++)
                 {
                     if (data.itemRewards[i] != null)
@@ -150,6 +158,7 @@ public class QuestSlotUI : MonoBehaviour
 
     public void SetTrackingState(bool isTracking)
     {
+        // Зміна кольору фону кнопки
         if (trackButton != null)
         {
             Image buttonImage = trackButton.GetComponent<Image>();
@@ -159,9 +168,11 @@ public class QuestSlotUI : MonoBehaviour
             }
         }
 
+        // Зміна тексту та кольору тексту всередині кнопки
         if (trackButtonText != null)
         {
             trackButtonText.text = isTracking ? trackingButtonText : normalButtonText;
+            trackButtonText.color = isTracking ? trackingTextColor : normalTextColor;
         }
     }
 }

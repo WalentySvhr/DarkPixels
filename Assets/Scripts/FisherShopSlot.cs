@@ -30,6 +30,26 @@ public class FisherShopSlot : MonoBehaviour, IPointerDownHandler, IPointerUpHand
         currentItem = item;
         isSellSlot = isSelling;
 
+        // --- ОБРОБКА ПОРОЖНЬОГО СЛОТА ---
+        if (item == null)
+        {
+            if (icon != null) icon.gameObject.SetActive(false);
+            if (nameText != null) nameText.gameObject.SetActive(false);
+            if (priceText != null) priceText.gameObject.SetActive(false);
+            if (amountText != null) amountText.gameObject.SetActive(false);
+            if (actionButtonText != null) actionButtonText.gameObject.SetActive(false);
+
+            return; // Виходимо з методу, залишаючи лише саму рамку префабу
+        }
+
+        // --- ОБРОБКА СЛОТА З ПРЕДМЕТОМ ---
+        // Увімкнення елементів, якщо вони були вимкнені попередніми пустими слотами
+        if (icon != null) icon.gameObject.SetActive(true);
+        if (nameText != null) nameText.gameObject.SetActive(true);
+        if (priceText != null) priceText.gameObject.SetActive(true);
+        if (actionButtonText != null) actionButtonText.gameObject.SetActive(true);
+
+        // Заповнення даними
         if (icon != null) icon.sprite = item.icon;
         if (nameText != null) nameText.text = item.itemName;
 
@@ -61,12 +81,15 @@ public class FisherShopSlot : MonoBehaviour, IPointerDownHandler, IPointerUpHand
 
     public void OnPointerDown(PointerEventData eventData)
     {
+        // Взаємодія дозволена тільки якщо в слоті є предмет
         if (currentItem != null)
             holdCoroutine = StartCoroutine(HoldTimer());
     }
 
     public void OnPointerUp(PointerEventData eventData)
     {
+        if (currentItem == null) return;
+
         StopHoldTimer();
         if (ItemInfoManager.Instance != null)
             ItemInfoManager.Instance.HideInfo();
@@ -92,6 +115,7 @@ public class FisherShopSlot : MonoBehaviour, IPointerDownHandler, IPointerUpHand
 
     public void OnPointerClick(PointerEventData eventData)
     {
+        // Якщо слот пустий — ігноруємо будь-які кліки
         if (currentItem == null) return;
 
         float timeSinceLastClick = Time.time - lastClickTime;
@@ -106,7 +130,7 @@ public class FisherShopSlot : MonoBehaviour, IPointerDownHandler, IPointerUpHand
         }
         else
         {
-            // Одиночний тап (нічого не робимо, бо інфо на затисканні)
+            // Одиночний тап
             Debug.Log("Одиночний тап зафіксовано");
             lastClickTime = Time.time;
         }

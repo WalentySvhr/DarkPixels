@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.EventSystems;
+using System.Collections;
 
 public class DailyQuestSlotUI : MonoBehaviour
 {
@@ -22,9 +24,14 @@ public class DailyQuestSlotUI : MonoBehaviour
     public TextMeshProUGUI trackButtonText;
     public string textTrack = "Стежити";
     public string textTracking = "Стежиться";
-    [Header("Tracking Colors")]
+
+    [Header("Tracking Component Colors")]
     public Color normalButtonColor = Color.white;
     public Color trackingButtonColor = Color.gray;
+
+    // НОВІ ЗМІННІ ДЛЯ КОЛЬОРУ ТЕКСТУ
+    public Color normalTextColor = Color.black;
+    public Color trackingTextColor = Color.white;
 
     [Header("Button Text Settings")]
     public string textInProgress = "В процесі";
@@ -32,7 +39,7 @@ public class DailyQuestSlotUI : MonoBehaviour
     public string textClaimed = "Отримано";
 
     private int myQuestIndex;
-    private bool isDescriptionOpen = false;
+    private bool isDescriptionOpen = true; // РЕВЕРС: Тепер за замовчуванням TRUE
     private RectTransform rectTransform;
     private ActiveDailyQuest myQuest;
 
@@ -60,8 +67,12 @@ public class DailyQuestSlotUI : MonoBehaviour
         progressSlider.maxValue = quest.questData.targetAmount;
         progressSlider.value = quest.currentProgress;
 
-        isDescriptionOpen = false;
-        descriptionText.gameObject.SetActive(false);
+        // РЕВЕРС: Опис відкритий відразу при створенні/оновленні карти квесту
+        isDescriptionOpen = true;
+        if (descriptionText != null)
+        {
+            descriptionText.gameObject.SetActive(true);
+        }
 
         if (titleButton != null)
         {
@@ -106,18 +117,28 @@ public class DailyQuestSlotUI : MonoBehaviour
                 trackButton.gameObject.SetActive(false);
             }
         }
+
+        // Оновлюємо розміри інтерфейсу, щоб відкритий текст не вилазив за межі контейнера при спавні
+        RebuildUI();
     }
 
     public void SetTrackingState(bool isTracking)
     {
         if (trackButton != null)
         {
+            // Зміна кольору самої кнопки (фон)
             Image buttonImage = trackButton.GetComponent<Image>();
             if (buttonImage != null)
             {
                 buttonImage.color = isTracking ? trackingButtonColor : normalButtonColor;
             }
-            trackButtonText.text = isTracking ? textTracking : textTrack;
+
+            // Зміна тексту та кольору тексту кнопки
+            if (trackButtonText != null)
+            {
+                trackButtonText.text = isTracking ? textTracking : textTrack;
+                trackButtonText.color = isTracking ? trackingTextColor : normalTextColor;
+            }
         }
     }
 
@@ -128,9 +149,18 @@ public class DailyQuestSlotUI : MonoBehaviour
         isDescriptionOpen = !isDescriptionOpen;
         descriptionText.gameObject.SetActive(isDescriptionOpen);
 
+        RebuildUI();
+    }
+
+    // Виніс оновлення інтерфейсу в окремий метод, щоб викликати його і при старті, і при кліках
+    private void RebuildUI()
+    {
         Canvas.ForceUpdateCanvases();
-        if (rectTransform != null) LayoutRebuilder.ForceRebuildLayoutImmediate(rectTransform);
-        if (transform.parent != null && transform.parent is RectTransform parentRect) LayoutRebuilder.ForceRebuildLayoutImmediate(parentRect);
+        if (rectTransform != null)
+            LayoutRebuilder.ForceRebuildLayoutImmediate(rectTransform);
+
+        if (transform.parent != null && transform.parent is RectTransform parentRect)
+            LayoutRebuilder.ForceRebuildLayoutImmediate(parentRect);
     }
 
     private void OnClaimClicked()
@@ -145,21 +175,17 @@ public class DailyQuestSlotUI : MonoBehaviour
     {
         if (DailyQuestManager.Instance == null) return;
 
-        // Перевіряємо, чи цей квест вже відстежується
         bool isAlreadyTracked = (DailyQuestManager.Instance.trackedDailyIndex == myQuestIndex);
 
         if (isAlreadyTracked)
         {
-            // Якщо вже відстежується — відміняємо (передаємо -1 або інший індикатор відміни)
             DailyQuestManager.Instance.SetTrackedDaily(-1);
             SetTrackingState(false);
         }
         else
         {
-            // Якщо ні — встановлюємо цей
             DailyQuestManager.Instance.SetTrackedDaily(myQuestIndex);
 
-            // Оновлюємо всі слоти (вимикаємо інші, включаємо цей)
             DailyQuestSlotUI[] allSlots = transform.parent.GetComponentsInChildren<DailyQuestSlotUI>();
             foreach (DailyQuestSlotUI slot in allSlots)
             {

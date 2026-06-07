@@ -12,6 +12,10 @@ public class ShopManager : MonoBehaviour
     public Transform traderPlayerContent;
     public GameObject shopPanel;
 
+    [Header("Налаштування рамок")]
+    public int maxTraderSlots = 12; // Скільки всього рамок показувати у NPC
+    public int maxPlayerSlots = 12; // Скільки всього рамок показувати у Гравця
+
     public InventoryManager playerInv;
 
     public ShopData currentShop;
@@ -80,15 +84,23 @@ public class ShopManager : MonoBehaviour
     {
         foreach (Transform child in container) Destroy(child.gameObject);
 
-        foreach (Item item in items)
+        // Цикл тепер працює до maxTraderSlots, створюючи рамки завжди
+        for (int i = 0; i < maxTraderSlots; i++)
         {
-            if (item == null) continue;
             GameObject obj = Instantiate(slotPrefab, container);
-
             FisherShopSlot slotScript = obj.GetComponent<FisherShopSlot>();
+
             if (slotScript != null)
             {
-                slotScript.Setup(item, false);
+                // Перевіряємо, чи є товар для цього індексу
+                if (i < items.Count && items[i] != null)
+                {
+                    slotScript.Setup(items[i], false); // Звичайне налаштування з товаром
+                }
+                else
+                {
+                    slotScript.Setup(null, false); // Передаємо null, бо слот порожній
+                }
             }
         }
     }
@@ -97,14 +109,24 @@ public class ShopManager : MonoBehaviour
     {
         foreach (Transform child in container) Destroy(child.gameObject);
 
-        foreach (var stack in stacks)
+        // Цикл працює до maxPlayerSlots
+        for (int i = 0; i < maxPlayerSlots; i++)
         {
-            if (stack == null || stack.item == null) continue;
             GameObject obj = Instantiate(slotPrefab, container);
-
             FisherShopSlot slotScript = obj.GetComponent<FisherShopSlot>();
+
             if (slotScript != null)
-                slotScript.Setup(stack.item, true, stack.amount);
+            {
+                // Перевіряємо, чи є стек предметів для цього індексу
+                if (i < stacks.Count && stacks[i] != null && stacks[i].item != null)
+                {
+                    slotScript.Setup(stacks[i].item, true, stacks[i].amount);
+                }
+                else
+                {
+                    slotScript.Setup(null, true); // Передаємо null для порожнього слота
+                }
+            }
         }
     }
 
