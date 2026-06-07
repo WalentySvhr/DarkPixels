@@ -5,34 +5,58 @@ public class MobileQuitHandler : MonoBehaviour
     [Header("UI Reference")]
     public GameObject quitPanel; // Перетягни сюди свою панель QuitCanvas
 
+    private void Awake()
+    {
+        // ГАРАНТІЯ: Як тільки завантажується головне меню, ми ПРИМУСОВО 
+        // повертаємо час до норми. Це миттєво оживить усі кнопки!
+        Time.timeScale = 1f;
+    }
+
+    private void Start()
+    {
+        // Ховаємо панель при старті гри, якщо забули сховати в редакторі
+        if (quitPanel != null)
+            quitPanel.SetActive(false);
+    }
+
     void Update()
     {
         // Якщо натиснуто "Назад" на телефоні або Escape
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            // Якщо вікно вже відкрите — закриваємо його (відміна)
-            // Якщо закрите — відкриваємо
-            if (quitPanel.activeSelf)
+            if (quitPanel != null)
             {
-                CancelQuit();
-            }
-            else
-            {
-                ShowQuitPanel();
+                if (quitPanel.activeSelf)
+                {
+                    CancelQuit();
+                }
+                else
+                {
+                    ShowQuitPanel();
+                }
             }
         }
     }
 
     public void ShowQuitPanel()
     {
-        quitPanel.SetActive(true);
-        Time.timeScale = 0f; // Ставимо гру на паузу, поки гравець думає
+        if (quitPanel != null)
+        {
+            quitPanel.SetActive(true);
+
+            // За прикладом OpenSettings() в меню: час зупиняти НЕ ТРЕБА!
+            // Примусово тримаємо його в нормі (1f), щоб анімації та кнопки працювали.
+            Time.timeScale = 1f;
+        }
     }
 
     public void CancelQuit()
     {
-        quitPanel.SetActive(false);
-        Time.timeScale = 1f; // Повертаємо гру до життя
+        if (quitPanel != null)
+        {
+            quitPanel.SetActive(false);
+            Time.timeScale = 1f; // Гарантуємо нормальний хід часу
+        }
     }
 
     public void ConfirmQuit()
