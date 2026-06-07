@@ -1,7 +1,7 @@
 using UnityEngine;
 
-// Категорії предметів (ДОДАНО Belt)
-public enum ItemType { Food, Potion, Resource, Junk, Weapon, Amulet, Ring, Belt, Pet }
+// Категорії предметів
+public enum ItemType { Food, Potion, Resource, Junk, Weapon, Amulet, Ring, Belt, Pet, Helmet }
 
 // Структура для розділеного опису предмета
 public struct ItemDescription
@@ -31,7 +31,6 @@ public class Item : ScriptableObject
     [Header("Ефекти (якщо є)")]
     public int healValue = 0;
 
-    // --- ДОДАНО: Налаштування квестів ---
     [Header("Квестові налаштування")]
     public bool isQuestItem = false;
 
@@ -40,7 +39,7 @@ public class Item : ScriptableObject
         ItemDescription desc = new ItemDescription();
 
         // 1. Основні характеристики
-        string typeDisplay = GetUkrainianTypeName();
+        string typeDisplay = GetTypeName();
         string main = $"Type: {typeDisplay}\n";
 
         if (healValue > 0)
@@ -49,11 +48,10 @@ public class Item : ScriptableObject
             main += "Material for crafting";
         else if (type == ItemType.Junk)
             main += "Has no practical value";
-        // Об'єднав логіку для всіх магічних аксесуарів, включаючи Belt
-        else if (type == ItemType.Ring || type == ItemType.Amulet || type == ItemType.Belt)
+        // Додано Helmet у список магічних аксесуарів
+        else if (type == ItemType.Ring || type == ItemType.Amulet || type == ItemType.Belt || type == ItemType.Helmet)
             main += "Magical accessory";
 
-        // Додаємо позначку квестового предмета в основний опис
         if (isQuestItem)
         {
             main += "\n<color=magenta>Quest Item</color>";
@@ -67,7 +65,7 @@ public class Item : ScriptableObject
             desc.extraStats = $"Stackable up to: {maxStackSize} items";
         }
 
-        // --- ОНОВЛЕНО: Відображення ціни або заборони продажу ---
+        // Відображення ціни або заборони продажу
         if (isQuestItem)
         {
             desc.priceText = "<color=red>Cannot be sold</color>";
@@ -80,7 +78,7 @@ public class Item : ScriptableObject
         return desc;
     }
 
-    private string GetUkrainianTypeName()
+    private string GetTypeName()
     {
         switch (type)
         {
@@ -91,8 +89,9 @@ public class Item : ScriptableObject
             case ItemType.Weapon: return "Weapon";
             case ItemType.Amulet: return "Amulet";
             case ItemType.Ring: return "Ring";
-            case ItemType.Belt: return "Belt"; // --- ДОДАНО ---
-            case ItemType.Pet: return "Pet"; // --- ДОДАНО ---
+            case ItemType.Belt: return "Belt";
+            case ItemType.Pet: return "Pet";
+            case ItemType.Helmet: return "Helmet"; // Додано
             default: return "Item";
         }
     }

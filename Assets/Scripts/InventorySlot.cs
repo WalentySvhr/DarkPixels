@@ -11,7 +11,8 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     public bool isAmuletEquipmentSlot = false;
     public bool isRingEquipmentSlot = false;
     public bool isBeltEquipmentSlot = false;
-    public bool isPetEquipmentSlot = false; // --- ДОДАНО ГАЛОЧКУ ДЛЯ ПЕТА ---
+    public bool isPetEquipmentSlot = false;
+    public bool isHelmetEquipmentSlot = false; // --- ДОДАНО ГАЛОЧКУ ДЛЯ ШОЛОМА ---
 
     [Tooltip("Для кілець: вкажи 1 або 2. Для інших слотів залиш 0.")]
     public int ringSlotIndex = 0;
@@ -97,9 +98,9 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     {
         if (ItemInfoManager.Instance != null) ItemInfoManager.Instance.HideInfo();
 
-        // Якщо це слот екіпіровки — виходимо
+        // Якщо це слот екіпіровки — виходимо (ОНОВЛЕНО: додано перевірку шолома)
         if (isWeaponEquipmentSlot || isAmuletEquipmentSlot || isRingEquipmentSlot ||
-            isBeltEquipmentSlot || isPetEquipmentSlot) return;
+            isBeltEquipmentSlot || isPetEquipmentSlot || isHelmetEquipmentSlot) return;
 
         Item itemToEquip = currentItem;
         string slotType = "";
@@ -109,7 +110,8 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         else if (itemToEquip is WeaponData) slotType = "Weapon";
         else if (itemToEquip is RingData) { slotType = "Ring"; targetSlotIndex = 1; }
         else if (itemToEquip is BeltData) slotType = "Belt";
-        else if (itemToEquip is PetData) slotType = "Pet"; // логіка для пета
+        else if (itemToEquip is PetData) slotType = "Pet";
+        else if (itemToEquip is HelmetData) slotType = "Helmet"; // --- ДОДАНО ТИП ДЛЯ ШОЛОМА ---
         else
         {
             InventoryManager.Instance.UseItem(itemToEquip);
@@ -126,10 +128,9 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         // Забираємо новий предмет з інвентаря
         InventoryManager.Instance.Remove(itemToEquip);
 
-        // --- ВИПРАВЛЕНО: Правильне повернення старого предмета ---
+        // --- Правильне повернення старого предмета ---
         if (replaceItem != null)
         {
-            // Якщо це пет - повертаємо тільки якщо такого ще немає (захист від дублів)
             if (replaceItem is PetData)
             {
                 if (!InventoryManager.Instance.Contains(replaceItem))
@@ -137,7 +138,7 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
             }
             else
             {
-                // Зброю, кільця, амулети повертаємо ЗАВЖДИ!
+                // Зброю, кільця, амулети та ШОЛОМИ повертаємо ЗАВЖДИ!
                 InventoryManager.Instance.Add(replaceItem);
             }
         }
@@ -150,12 +151,12 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
             else if (slotType == "Amulet" && slot.isAmuletEquipmentSlot) slot.AddItem(itemToEquip, 1);
             else if (slotType == "Belt" && slot.isBeltEquipmentSlot) slot.AddItem(itemToEquip, 1);
             else if (slotType == "Ring" && slot.isRingEquipmentSlot && slot.ringSlotIndex == targetSlotIndex) slot.AddItem(itemToEquip, 1);
-            else if (slotType == "Pet" && slot.isPetEquipmentSlot) slot.AddItem(itemToEquip, 1); // петомець тільки в UI
+            else if (slotType == "Pet" && slot.isPetEquipmentSlot) slot.AddItem(itemToEquip, 1);
+            else if (slotType == "Helmet" && slot.isHelmetEquipmentSlot) slot.AddItem(itemToEquip, 1); // --- ДОДАНО ВІЗУАЛ ДЛЯ ШОЛОМА ---
         }
 
         InventoryManager.Instance.UpdateUI();
     }
-
 
     public void OnBeginDrag(PointerEventData eventData)
     {
@@ -201,22 +202,24 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
             else stackText.gameObject.SetActive(false);
         }
 
-        // --- ВИПРАВЛЕНО: Тепер ми розкоментували логіку і делегуємо все Інвентарю ---
+        // Делегуємо екіпірування Інвентарю (ОНОВЛЕНО: додано шолом)
         if (isWeaponEquipmentSlot) InventoryManager.Instance.EquipItem(newItem, "Weapon");
         else if (isAmuletEquipmentSlot) InventoryManager.Instance.EquipItem(newItem, "Amulet");
         else if (isRingEquipmentSlot) InventoryManager.Instance.EquipItem(newItem, "Ring", ringSlotIndex);
         else if (isBeltEquipmentSlot) InventoryManager.Instance.EquipItem(newItem, "Belt");
         else if (isPetEquipmentSlot) InventoryManager.Instance.EquipItem(newItem, "Pet");
+        else if (isHelmetEquipmentSlot) InventoryManager.Instance.EquipItem(newItem, "Helmet"); // --- ДОДАНО ЕКІП ШОЛОМА ---
     }
 
     public void ClearSlot()
     {
-        // --- ВИПРАВЛЕНО: Так само делегуємо зняття Інвентарю (він сам прибере бафи і зброю/пета зі сцени) ---
+        // Делегуємо зняття Інвентарю (ОНОВЛЕНО: додано шолом)
         if (isWeaponEquipmentSlot) InventoryManager.Instance.UnequipItem("Weapon");
         else if (isAmuletEquipmentSlot) InventoryManager.Instance.UnequipItem("Amulet");
         else if (isRingEquipmentSlot) InventoryManager.Instance.UnequipItem("Ring", ringSlotIndex);
         else if (isBeltEquipmentSlot) InventoryManager.Instance.UnequipItem("Belt");
         else if (isPetEquipmentSlot) InventoryManager.Instance.UnequipItem("Pet");
+        else if (isHelmetEquipmentSlot) InventoryManager.Instance.UnequipItem("Helmet"); // --- ДОДАНО ЗНЯТТЯ ШОЛОМА ---
 
         currentItem = null;
         currentAmount = 0;
@@ -226,49 +229,6 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         if (placeholderImage != null) placeholderImage.SetActive(true);
         if (stackText != null) stackText.gameObject.SetActive(false);
     }
-
-    // public void ClearSlot()
-    // {
-    //     if (isWeaponEquipmentSlot)
-    //     {
-    //         PlayerCombat combat = FindFirstObjectByType<PlayerCombat>();
-    //         if (combat != null) combat.EquipWeapon(null);
-    //         InventoryManager.Instance.UnequipItem("Weapon");
-    //     }
-    //     else if (isAmuletEquipmentSlot)
-    //     {
-    //         PlayerEquipment equipment = FindFirstObjectByType<PlayerEquipment>();
-    //         if (equipment != null) equipment.UnequipAmulet();
-    //         InventoryManager.Instance.UnequipItem("Amulet");
-    //     }
-    //     else if (isRingEquipmentSlot)
-    //     {
-    //         PlayerEquipment equipment = FindFirstObjectByType<PlayerEquipment>();
-    //         if (equipment != null) equipment.UnequipRing(ringSlotIndex);
-    //         InventoryManager.Instance.UnequipItem("Ring", ringSlotIndex);
-    //     }
-    //     else if (isBeltEquipmentSlot)
-    //     {
-    //         PlayerEquipment equipment = FindFirstObjectByType<PlayerEquipment>();
-    //         if (equipment != null) equipment.UnequipBelt();
-    //         InventoryManager.Instance.UnequipItem("Belt");
-    //     }
-    //     // --- ВИПРАВЛЕНО: Тепер ми знімаємо пета і видаляємо його через PlayerEquipment ---
-    //     else if (isPetEquipmentSlot)
-    //     {
-    //         PlayerEquipment equipment = FindFirstObjectByType<PlayerEquipment>();
-    //         if (equipment != null) equipment.UnequipPet(); // <--- Прибираємо зі сцени
-    //         InventoryManager.Instance.UnequipItem("Pet");
-    //     }
-
-    //     currentItem = null;
-    //     currentAmount = 0;
-    //     icon.sprite = null;
-    //     icon.enabled = false;
-
-    //     if (placeholderImage != null) placeholderImage.SetActive(true);
-    //     if (stackText != null) stackText.gameObject.SetActive(false);
-    // }
 
     // === ІДЕАЛЬНИЙ DRAG & DROP ===
     public void OnDrop(PointerEventData eventData)
@@ -283,12 +243,15 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         if (this.isAmuletEquipmentSlot && !(dragItem is AmuletData)) return;
         if (this.isRingEquipmentSlot && !(dragItem is RingData)) return;
         if (this.isBeltEquipmentSlot && !(dragItem is BeltData)) return;
-        if (this.isPetEquipmentSlot && !(dragItem is PetData)) return; // --- ЗАХИСТ СЛОТУ ПЕТА ---
+        if (this.isPetEquipmentSlot && !(dragItem is PetData)) return;
+        if (this.isHelmetEquipmentSlot && !(dragItem is HelmetData)) return; // --- ЗАХИСТ СЛОТУ ШОЛОМА ---
 
+        // ОНОВЛЕНО: Враховуємо новий слот шолома в перевірках приналежності до екіпіровки
         bool isThisEquip = this.isWeaponEquipmentSlot || this.isAmuletEquipmentSlot || this.isRingEquipmentSlot ||
-                           this.isBeltEquipmentSlot || this.isPetEquipmentSlot;
+                           this.isBeltEquipmentSlot || this.isPetEquipmentSlot || this.isHelmetEquipmentSlot;
+
         bool isSourceEquip = sourceSlot.isWeaponEquipmentSlot || sourceSlot.isAmuletEquipmentSlot || sourceSlot.isRingEquipmentSlot ||
-                             sourceSlot.isBeltEquipmentSlot || sourceSlot.isPetEquipmentSlot;
+                             sourceSlot.isBeltEquipmentSlot || sourceSlot.isPetEquipmentSlot || sourceSlot.isHelmetEquipmentSlot;
 
         Item replaceItem = this.currentItem;
 
@@ -297,7 +260,6 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         {
             InventoryManager.Instance.Remove(dragItem);
 
-            // --- ВИПРАВЛЕНО: Правильне повернення старого предмета ---
             if (replaceItem != null)
             {
                 if (replaceItem is PetData)
@@ -322,5 +284,4 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 
         InventoryManager.Instance.UpdateUI();
     }
-
 }

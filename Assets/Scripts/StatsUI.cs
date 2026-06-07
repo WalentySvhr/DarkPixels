@@ -49,10 +49,13 @@ public class StatsUI : MonoBehaviour
         if (playerHealth == null) playerHealth = FindFirstObjectByType<PlayerHealth>();
         if (playerMovement == null) playerMovement = FindFirstObjectByType<PlayerMovement>();
 
+        // Отримуємо посилання на систему екіпіровки для підрахунку чистих бонусів
+        PlayerEquipment eq = FindFirstObjectByType<PlayerEquipment>();
+
         // --- 1. БОЙОВІ ХАРАКТЕРИСТИКИ ---
         if (playerCombat != null)
         {
-            // Урон
+            // ⚔️ УРОН
             int baseDamage = playerCombat.currentWeaponData != null ? playerCombat.currentWeaponData.damage : playerCombat.unarmedDamage;
             int bonusDamage = playerCombat.extraAmuletDamage + playerCombat.extraRingDamage;
             int totalDamage = baseDamage + bonusDamage;
@@ -63,47 +66,97 @@ public class StatsUI : MonoBehaviour
                 damageText.text = $"{damageLabel}{totalDamage}{bonusStr}";
             }
 
-            // Швидкість атаки (APS - Attacks Per Second)
+            // ⚡ ШВИДКІСТЬ АТАКИ (APS)
             if (attackSpeedText != null)
             {
                 float baseCd = playerCombat.currentWeaponData != null ? playerCombat.currentWeaponData.cooldown : playerCombat.unarmedCooldown;
                 float totalBonus = playerCombat.extraAttackSpeed + playerCombat.extraRingAttackSpeed;
 
-                // Формула: (1 / Базовий кулдаун) * (1 + Бонус %)
-                float aps = (1f / baseCd) * (1f + totalBonus);
-                attackSpeedText.text = $"{attackSpeedLabel}{aps:F1} aps";
+                float baseAps = 1f / baseCd;
+                float totalAps = baseAps * (1f + totalBonus);
+                float bonusAps = totalAps - baseAps;
+
+                string bonusStr = bonusAps > 0.05f ? $" <color={bonusColorTag}>(+{bonusAps:F1})</color>" : "";
+                attackSpeedText.text = $"{attackSpeedLabel}{totalAps:F1} aps{bonusStr}";
             }
 
-            // Шанс крита
+            // 🎯 ШАНС КРИТА
             if (critChanceText != null)
             {
-                float critPct = playerCombat.critChance * 100f;
-                critChanceText.text = $"{critChanceLabel}{Mathf.RoundToInt(critPct)}%";
+                float totalCritPct = playerCombat.critChance * 100f;
+                float bonusCritPct = 0f;
+
+                if (eq != null)
+                {
+                    bonusCritPct = ((eq.currentAmulet?.bonusCritChance ?? 0f) +
+                                    (eq.currentBelt?.bonusCritChance ?? 0f) +
+                                    (eq.currentHelmet?.bonusCritChance ?? 0f) +
+                                    (eq.currentRing1?.bonusCritChance ?? 0f) +
+                                    (eq.currentRing2?.bonusCritChance ?? 0f)) * 100f;
+                }
+
+                string bonusStr = bonusCritPct > 0f ? $" <color={bonusColorTag}>(+{Mathf.RoundToInt(bonusCritPct)}%)</color>" : "";
+                critChanceText.text = $"{critChanceLabel}{Mathf.RoundToInt(totalCritPct)}%{bonusStr}";
             }
 
-            // Сила крита
+            // 🔥 СИЛА КРИТА
             if (critDamageText != null)
             {
-                critDamageText.text = $"{critDamageLabel}x{playerCombat.critMultiplier}";
+                float bonusCritM = 0f;
+                if (eq != null)
+                {
+                    bonusCritM += (eq.currentAmulet != null && eq.currentAmulet.bonusCritMultiplier > 2f) ? eq.currentAmulet.bonusCritMultiplier - 2f : 0f;
+                    bonusCritM += (eq.currentBelt != null && eq.currentBelt.bonusCritMultiplier > 2f) ? eq.currentBelt.bonusCritMultiplier - 2f : 0f;
+                    bonusCritM += (eq.currentHelmet != null && eq.currentHelmet.bonusCritMultiplier > 2f) ? eq.currentHelmet.bonusCritMultiplier - 2f : 0f;
+                    if (eq.currentRing1 != null && eq.currentRing1.bonusCritMultiplier > 2f) bonusCritM += eq.currentRing1.bonusCritMultiplier - 2f;
+                    if (eq.currentRing2 != null && eq.currentRing2.bonusCritMultiplier > 2f) bonusCritM += eq.currentRing2.bonusCritMultiplier - 2f;
+                }
+
+                string bonusStr = bonusCritM > 0f ? $" <color={bonusColorTag}>(+{bonusCritM:F1}x)</color>" : "";
+                critDamageText.text = $"{critDamageLabel}x{playerCombat.critMultiplier}{bonusStr}";
             }
         }
 
         // --- 2. ВИЖИВАННЯ ---
         if (playerHealth != null)
         {
-            if (maxHealthText != null) maxHealthText.text = $"{healthLabel}{playerHealth.maxHealth}";
-
-            if (armorText != null)
+            // ❤️ МАКСИМАЛЬНЕ ЗДОРОВ'Я
+            if (maxHealthText != null)
             {
-                float totalArmor = playerHealth.amuletArmorPercent + playerHealth.ringArmorPercent;
-                totalArmor = Mathf.Clamp(totalArmor, 0f, 0.9f);
-                armorText.text = $"{armorLabel}{Mathf.RoundToInt(totalArmor * 100f)}%";
+                int bonusHealth = 0;
+                if (eq != null)
+                {
+                    bonusHealth = (eq.currentAmulet?.bonusMaxHealth ?? 0) +
+                                  (eq.currentBelt?.bonusMaxHealth ?? 0) +
+                                  (eq.currentHelmet?.bonusMaxHealth ?? 0) +
+                                  (eq.currentRing1?.bonusMaxHealth ?? 0) +
+                                  (eq.currentRing2?.bonusMaxHealth ?? 0) +
+                                  (int)(eq.currentPet?.bonusHealth ?? 0f);
+                }
+
+                string bonusStr = bonusHealth > 0 ? $" <color={bonusColorTag}>(+{bonusHealth})</color>" : "";
+                maxHealthText.text = $"{healthLabel}{playerHealth.maxHealth}{bonusStr}";
             }
 
+            // 🛡️ БРОНЯ
+            if (armorText != null)
+            {
+                float totalArmor = playerHealth.amuletArmorPercent + playerHealth.ringArmorPercent + playerHealth.helmetArmorPercent;
+                totalArmor = Mathf.Clamp(totalArmor, 0f, 0.9f);
+                int totalArmorPct = Mathf.RoundToInt(totalArmor * 100f);
+
+                // Оскільки вся броня зараз іде від речей, показуємо її як бонус
+                string bonusStr = totalArmorPct > 0 ? $" <color={bonusColorTag}>(+{totalArmorPct}%)</color>" : "";
+                armorText.text = $"{armorLabel}{totalArmorPct}%{bonusStr}";
+            }
+
+            // 🧪 РЕГЕНЕРАЦІЯ
             if (healthRegenText != null)
             {
-                int totalRegen = playerHealth.amuletRegen + playerHealth.ringRegen;
-                healthRegenText.text = $"{regenLabel}+{totalRegen} HP/s";
+                int totalRegen = playerHealth.amuletRegen + playerHealth.ringRegen + playerHealth.helmetRegen;
+
+                string bonusStr = totalRegen > 0 ? $" <color={bonusColorTag}>(+{totalRegen})</color>" : "";
+                healthRegenText.text = $"{regenLabel}+{totalRegen} HP/s{bonusStr}";
             }
         }
 
@@ -111,8 +164,12 @@ public class StatsUI : MonoBehaviour
         if (playerMovement != null && moveSpeedText != null)
         {
             float totalSpeedBonus = playerMovement.extraSpeedMultiplier + playerMovement.extraRingSpeedMultiplier;
-            float finalSpeed = playerMovement.moveSpeed * (1f + totalSpeedBonus);
-            moveSpeedText.text = $"{speedLabel}{finalSpeed:F1}";
+            float baseSpeed = playerMovement.moveSpeed;
+            float finalSpeed = baseSpeed * (1f + totalSpeedBonus);
+            float bonusSpeed = finalSpeed - baseSpeed;
+
+            string bonusStr = bonusSpeed > 0.05f ? $" <color={bonusColorTag}>(+{bonusSpeed:F1})</color>" : "";
+            moveSpeedText.text = $"{speedLabel}{finalSpeed:F1}{bonusStr}";
         }
     }
 }

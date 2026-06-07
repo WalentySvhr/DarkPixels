@@ -10,11 +10,11 @@ public class InventoryManager : MonoBehaviour
     public List<ItemStack> items = new List<ItemStack>();
     public int space = 20;
 
-    // --- НОВЕ: Окремий список та налаштування для петів ---
+    // --- Окремий список та налаштування для петів ---
     [Header("Інвентар Петів")]
     public List<ItemStack> petItems = new List<ItemStack>();
     public int petSpace = 6; // Максимальна кількість петів у колекції
-    public PetInventoryUI petInventoryUI; // Скрипт інтерфейсу петів (створимо згодом)
+    public PetInventoryUI petInventoryUI;
 
     [Header("UI посилання")]
     public InventoryUI inventoryUI;
@@ -28,7 +28,7 @@ public class InventoryManager : MonoBehaviour
     public int coins = 0;
     public TextMeshProUGUI[] coinTexts;
 
-    // --- НОВЕ: Змінні для преміум-валюти (Діамантів) ---
+    // --- Змінні для преміум-валюти (Діамантів) ---
     public int diamonds = 0;
     public TextMeshProUGUI[] diamondTexts;
 
@@ -57,9 +57,9 @@ public class InventoryManager : MonoBehaviour
     void Start()
     {
         UpdateCoinUI();
-        UpdateDiamondUI(); // --- Оновлюємо UI діамантів при старті ---
+        UpdateDiamondUI();
         UpdateUI();
-        UpdatePetUI();     // --- Початкове оновлення UI петів ---
+        UpdatePetUI();
         if (buffUIContainer != null) buffUIContainer.SetActive(false);
     }
 
@@ -67,23 +67,20 @@ public class InventoryManager : MonoBehaviour
     {
         if (item == null) return false;
 
-        // --- НОВЕ: Перевірка, чи це петомець ---
+        // --- Перевірка, чи це петомець ---
         if (item.type == ItemType.Pet)
         {
-            // Перевіряємо, чи такий пет вже є в колекції (вони унікальні, копії не потрібні)
             ItemStack existingPet = petItems.Find(s => s.item == item);
             if (existingPet != null) return false;
 
-            // Перевіряємо, чи є вільне місце в сумці для петів
             if (petItems.Count >= petSpace) return false;
 
-            // Додаємо в окремий список петів
             petItems.Add(new ItemStack(item, 1));
             UpdatePetUI();
             return true;
         }
 
-        // --- СТАРИЙ КОД ДЛЯ ЗВИЧАЙНИХ ПРЕДМЕТІВ ---
+        // --- КОД ДЛЯ ЗВИЧАЙНИХ ПРЕДМЕТІВ (Шолом іде сюди) ---
         if (item.isStackable)
         {
             ItemStack stack = items.Find(s => s.item == item && s.amount < item.maxStackSize);
@@ -109,7 +106,7 @@ public class InventoryManager : MonoBehaviour
     {
         if (item == null) return;
 
-        // --- НОВЕ: Видалення з інвентарю петів, якщо це пет ---
+        // --- Видалення з інвентарю петів, якщо це пет ---
         if (item.type == ItemType.Pet)
         {
             ItemStack petStack = petItems.Find(s => s.item == item);
@@ -142,7 +139,6 @@ public class InventoryManager : MonoBehaviour
     {
         if (itemToFind == null) return 0;
 
-        // --- НОВЕ: Перевірка кількості для петів ---
         if (itemToFind.type == ItemType.Pet)
         {
             ItemStack petStack = petItems.Find(s => s.item == itemToFind);
@@ -161,7 +157,6 @@ public class InventoryManager : MonoBehaviour
     {
         if (itemToRemove == null) return;
 
-        // --- НОВЕ: Видалення петів через RemoveItems (про всяк випадок для квестів) ---
         if (itemToRemove.type == ItemType.Pet)
         {
             Remove(itemToRemove);
@@ -196,16 +191,14 @@ public class InventoryManager : MonoBehaviour
     {
         string slotKey = slotIndex > 0 ? $"{slotType}_{slotIndex}" : slotType;
 
-        // Якщо в цьому слоті вже щось є - знімаємо його
         if (equippedItems.ContainsKey(slotKey))
         {
             UnequipItem(slotType, slotIndex);
         }
 
-        // Записуємо в інвентар (дані)
         equippedItems[slotKey] = itemToEquip;
 
-        // --- НОВЕ: ФАКТИЧНО ОДЯГАЄМО ПРЕДМЕТ НА ГРАВЦЯ ---
+        // --- ОДЯГАЄМО ПРЕДМЕТ НА ГРАВЦЯ (ДОДАНО ШОЛОМ) ---
         if (playerEquipment != null)
         {
             if (itemToEquip is WeaponData weapon) playerEquipment.EquipWeapon(weapon);
@@ -213,6 +206,7 @@ public class InventoryManager : MonoBehaviour
             else if (itemToEquip is AmuletData amulet) playerEquipment.EquipAmulet(amulet);
             else if (itemToEquip is BeltData belt) playerEquipment.EquipBelt(belt);
             else if (itemToEquip is RingData ring) playerEquipment.EquipRing(ring, slotIndex);
+            else if (itemToEquip is HelmetData helmet) playerEquipment.EquipHelmet(helmet); // <--- ОНОВЛЕНО
         }
 
         Debug.Log($"[InventoryManager] В слот {slotKey} записано та одягнено {itemToEquip.name}");
@@ -227,7 +221,7 @@ public class InventoryManager : MonoBehaviour
             Item itemToReturn = equippedItems[slotKey];
             equippedItems.Remove(slotKey);
 
-            // --- НОВЕ: ФАКТИЧНО ЗНІМАЄМО ПРЕДМЕТ З ГРАВЦЯ ---
+            // --- ЗНІМАЄМО ПРЕДМЕТ З ГРАВЦЯ (ДОДАНО ШОЛОМ) ---
             if (playerEquipment != null)
             {
                 if (itemToReturn is WeaponData) playerEquipment.UnequipWeapon();
@@ -235,6 +229,7 @@ public class InventoryManager : MonoBehaviour
                 else if (itemToReturn is AmuletData) playerEquipment.UnequipAmulet();
                 else if (itemToReturn is BeltData) playerEquipment.UnequipBelt();
                 else if (itemToReturn is RingData) playerEquipment.UnequipRing(slotIndex);
+                else if (itemToReturn is HelmetData) playerEquipment.UnequipHelmet(); // <--- ОНОВЛЕНО
             }
 
             Debug.Log($"[InventoryManager] Зі слота {slotKey} знято предмет: {itemToReturn.name}");
@@ -257,7 +252,6 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
-    // --- МЕТОДИ: Керування балансом та відображенням діамантів ---
     public void ChangeDiamonds(int amount)
     {
         diamonds += amount;
@@ -289,9 +283,7 @@ public class InventoryManager : MonoBehaviour
                 if (stack.amount <= 0) items.Remove(stack);
                 UpdateUI();
             }
-
         }
-
     }
 
     public void UpdateUI()
@@ -308,11 +300,8 @@ public class InventoryManager : MonoBehaviour
         {
             StatsUI.Instance.UpdateStatsUI();
         }
-
     }
 
-
-    // --- НОВЕ: Метод оновлення інтерфейсу для вкладки петів ---
     public void UpdatePetUI()
     {
         if (petInventoryUI != null)
@@ -355,7 +344,7 @@ public class InventoryManager : MonoBehaviour
         int finalAmount = Mathf.RoundToInt(baseAmount * coinMultiplier);
         ChangeCoins(finalAmount);
     }
-    // ✅ Новий метод для перевірки дублювання предметів
+
     public bool Contains(Item item)
     {
         if (item == null) return false;
@@ -367,5 +356,4 @@ public class InventoryManager : MonoBehaviour
 
         return items.Exists(s => s.item == item);
     }
-
 }
