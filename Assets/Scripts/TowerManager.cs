@@ -68,6 +68,8 @@ public class TowerManager : MonoBehaviour
     public BossTrigger bossTrigger;
     public GameObject player;
     public Camera mainCamera;
+    [Header("Tower State")]
+    public bool IsTowerRunActive { get; private set; }
 
     private void Awake()
     {
@@ -130,9 +132,9 @@ public class TowerManager : MonoBehaviour
 
     public void StartTowerRun()
     {
+        IsTowerRunActive = true;
         currentFloor = 1;
 
-        // Перевіряємо рекорд навіть на 1 поверсі (раптом це перший забіг)
         CheckForNewRecord();
 
         PrepareLevel();
@@ -258,6 +260,8 @@ public class TowerManager : MonoBehaviour
 
     public void ResetTowerProgress()
     {
+        IsTowerRunActive = false;
+
         currentFloor = 1;
         UpdateFloorText();
         HideTowerUI();

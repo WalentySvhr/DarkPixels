@@ -175,13 +175,11 @@ public class SaveManager : MonoBehaviour
         }
 
         // 2. Перевірка башти
-        if (TowerManager.Instance != null && TowerManager.Instance.floorUIContainer != null)
+        if (TowerManager.Instance != null &&
+            TowerManager.Instance.IsTowerRunActive)
         {
-            if (TowerManager.Instance.floorUIContainer.activeSelf)
-            {
-                if (isManual) Debug.LogWarning("<color=red>[SaveSystem]</color> Блокування: спроба зберегтись під час забігу в башні!");
-                return false;
-            }
+            Debug.LogWarning("<color=red>[SaveSystem]</color> Збереження заблоковано: гравець знаходиться в башті.");
+            return false;
         }
 
         GameData data = new GameData();
