@@ -1,8 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using UnityEngine.EventSystems;
-using System.Collections;
 
 public class DailyQuestSlotUI : MonoBehaviour
 {
@@ -12,6 +10,10 @@ public class DailyQuestSlotUI : MonoBehaviour
     public Slider progressSlider;
     public Button claimButton;
     public TextMeshProUGUI claimButtonText;
+
+    // НОВЕ ПОЛЕ: Окремий текст для відображення нагороди
+    [Tooltip("Текст, де буде відображатися нагорода за квест")]
+    public TextMeshProUGUI rewardText;
 
     [Header("Description Settings")]
     [Tooltip("Кнопка, яка висить на заголовку квесту")]
@@ -29,17 +31,24 @@ public class DailyQuestSlotUI : MonoBehaviour
     public Color normalButtonColor = Color.white;
     public Color trackingButtonColor = Color.gray;
 
-    // НОВІ ЗМІННІ ДЛЯ КОЛЬОРУ ТЕКСТУ
+    [Header("Tracking Text Colors")]
     public Color normalTextColor = Color.black;
     public Color trackingTextColor = Color.white;
 
     [Header("Button Text Settings")]
     public string textInProgress = "В процесі";
-    public string textClaimReward = "Забрати {amount}";
+    public string textClaimReward = "Забрати";
     public string textClaimed = "Отримано";
 
+    [Header("Reward & Localization Settings")]
+    [Tooltip("Шаблон виведення нагороди. Можна використовувати TMP теги, наприклад:\n<color=#FFCC00>Нагорода:</color> {reward}")]
+    public string rewardTemplate = "<color=#FFCC00>Нагорода:</color> {reward}";
+    [Tooltip("Формат виведення кількості монет")]
+    public string coinsFormat = "<color=#FFFF00>{amount} монет</color>";
+    public string defaultRewardText = "Досвід";
+
     private int myQuestIndex;
-    private bool isDescriptionOpen = true; // РЕВЕРС: Тепер за замовчуванням TRUE
+    private bool isDescriptionOpen = true;
     private RectTransform rectTransform;
     private ActiveDailyQuest myQuest;
 
@@ -55,19 +64,34 @@ public class DailyQuestSlotUI : MonoBehaviour
         myQuest = quest;
         myQuestIndex = index;
 
+        // 1. Заповнюємо Назву
         titleText.text = quest.questData.questName;
 
+        // 2. Заповнюємо Опис (залишаємо тільки {target}, оскільки {reward} винесено)
         string rawDescription = quest.questData.description ?? "";
-        string parsedDescription = rawDescription
-            .Replace("{target}", quest.questData.targetAmount.ToString())
-            .Replace("{reward}", quest.questData.goldReward.ToString());
-
+        string parsedDescription = rawDescription.Replace("{target}", quest.questData.targetAmount.ToString());
         descriptionText.text = parsedDescription;
+
+        // 3. Заповнюємо Прогрес
         progressText.text = $"{quest.currentProgress} / {quest.questData.targetAmount}";
         progressSlider.maxValue = quest.questData.targetAmount;
         progressSlider.value = quest.currentProgress;
 
-        // РЕВЕРС: Опис відкритий відразу при створенні/оновленні карти квесту
+        // === ОНОВЛЕНО: Виведення нагороди в окреме текстове поле ===
+        if (rewardText != null)
+        {
+            string rewardContent = defaultRewardText;
+
+            if (quest.questData.goldReward > 0)
+            {
+                rewardContent = coinsFormat.Replace("{amount}", quest.questData.goldReward.ToString());
+            }
+
+            // Підставляємо сформований текст нагороди у головний шаблон
+            rewardText.text = rewardTemplate.Replace("{reward}", rewardContent);
+        }
+
+        // Керування відображенням опису при спавні
         isDescriptionOpen = true;
         if (descriptionText != null)
         {
@@ -83,6 +107,7 @@ public class DailyQuestSlotUI : MonoBehaviour
         claimButton.onClick.RemoveAllListeners();
         claimButton.onClick.AddListener(OnClaimClicked);
 
+        // 4. Стан кнопки отримання нагороди (тепер текст чистий, без цифр)
         if (quest.isRewardClaimed)
         {
             claimButton.interactable = false;
@@ -91,7 +116,7 @@ public class DailyQuestSlotUI : MonoBehaviour
         else if (quest.isCompleted)
         {
             claimButton.interactable = true;
-            claimButtonText.text = textClaimReward.Replace("{amount}", quest.questData.goldReward.ToString());
+            claimButtonText.text = textClaimReward;
         }
         else
         {
@@ -99,6 +124,7 @@ public class DailyQuestSlotUI : MonoBehaviour
             claimButtonText.text = textInProgress;
         }
 
+        // 5. Логіка стеження
         if (trackButton != null)
         {
             bool isTrackable = quest.canBeTracked && !quest.isCompleted;
@@ -118,7 +144,6 @@ public class DailyQuestSlotUI : MonoBehaviour
             }
         }
 
-        // Оновлюємо розміри інтерфейсу, щоб відкритий текст не вилазив за межі контейнера при спавні
         RebuildUI();
     }
 
@@ -126,14 +151,12 @@ public class DailyQuestSlotUI : MonoBehaviour
     {
         if (trackButton != null)
         {
-            // Зміна кольору самої кнопки (фон)
             Image buttonImage = trackButton.GetComponent<Image>();
             if (buttonImage != null)
             {
                 buttonImage.color = isTracking ? trackingButtonColor : normalButtonColor;
             }
 
-            // Зміна тексту та кольору тексту кнопки
             if (trackButtonText != null)
             {
                 trackButtonText.text = isTracking ? textTracking : textTrack;
@@ -152,7 +175,6 @@ public class DailyQuestSlotUI : MonoBehaviour
         RebuildUI();
     }
 
-    // Виніс оновлення інтерфейсу в окремий метод, щоб викликати його і при старті, і при кліках
     private void RebuildUI()
     {
         Canvas.ForceUpdateCanvases();

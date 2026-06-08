@@ -1,11 +1,11 @@
 [Licensing::Module] Trying to connect to existing licensing client channel...
 Built from '6000.3/staging' branch; Version is '6000.3.13f1 (8c4f11e4fb20) revision 9195281'; Using compiler version '194234433'; Build Type 'Release'
 OS: 'Windows 10  (10.0.19045) 64bit Professional' Language: 'uk' Physical Memory: 16334 MB
-[Licensing::IpcConnector] Successfully connected to: "LicenseClient-limon" at "2026-06-07T18:22:21.8717303Z"
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-limon" at "2026-06-07T21:15:59.5185553Z"
 BatchMode: 1, IsHumanControllingUs: 0, StartBugReporterOnCrash: 0, Is64bit: 1
 System  architecture: x64
 Process architecture: x64
-Date: 2026-06-07T18:22:21Z
+Date: 2026-06-07T21:15:59Z
 
 COMMAND LINE ARGUMENTS:
 D:\Unity\6000.3.13f1\Editor\Unity.exe
@@ -19,7 +19,7 @@ D:/GameDev/DarkPixels-main
 -logFile
 Logs/AssetImportWorker5.log
 -srvPort
-52300
+57225
 -licensingIpc
 LicenseClient-limon
 -job-worker-count
@@ -67,12 +67,12 @@ D:/GameDev/DarkPixels-main
     "memorysetup-job-temp-allocator-block-size-background=1048576"
     "memorysetup-job-temp-allocator-reduction-small-platforms=262144"
     "memorysetup-temp-allocator-size-cloud-worker=32768"
-Player connection [7416]  Target information:
+Player connection [16468]  Target information:
 
-Player connection [7416]  * "[IP] 192.168.0.28 [Port] 0 [Flags] 2 [Guid] 846962766 [EditorId] 846962766 [Version] 1048832 [Id] WindowsEditor(7,DESKTOP-4DD92S9) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" 
+Player connection [16468]  * "[IP] 192.168.0.28 [Port] 0 [Flags] 2 [Guid] 2304455925 [EditorId] 2304455925 [Version] 1048832 [Id] WindowsEditor(7,DESKTOP-4DD92S9) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" 
 
-Player connection [7416] Host joined multi-casting on [225.0.0.222:54997]...
-Player connection [7416] Host joined alternative multi-casting on [225.0.0.222:34997]...
+Player connection [16468] Host joined multi-casting on [225.0.0.222:54997]...
+Player connection [16468] Host joined alternative multi-casting on [225.0.0.222:34997]...
 JobSystem: Creating JobQueue using job-worker-count value 5
 Input System module state changed to: Initialized.
 [Physics::Module] Initialized fallback backend.
@@ -90,24 +90,24 @@ Library Redirect Path: Library/
 	ResponseStatus: Unsupported protocol version '1.18.1'.
 [Licensing::Module] Error: Failed to handshake to channel: "LicenseClient-limon"
 [Licensing::IpcConnector] LicenseClient-limon channel disconnected successfully.
-[Licensing::IpcConnector] Successfully connected to: "LicenseClient-limon-6000.3.13" at "2026-06-07T18:22:23.3230219Z"
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-limon-6000.3.13" at "2026-06-07T21:16:00.7881541Z"
 [Licensing::Client] Handshaking with LicensingClient:
   Version:                 1.18.1+9fbee8e
-  Session Id:              8d9a491adab54ef881b720a3c3d83d5a
-  Correlation Id:          e54d749828a2db678c7efde1db55834b
-  External correlation Id: 5616851982034945883
+  Session Id:              89ca5df36df74b308d71f0d0a57b193f
+  Correlation Id:          f13104310d8b5aaa10fbd057707cfb80
+  External correlation Id: 4245070355455454536
   Machine Id:              4D8GW8ETA38K6LsA7GOMWmqZxN4=
-[Licensing::Module] Successfully connected to LicensingClient on channel: "LicenseClient-limon-6000.3.13" (connect: 0.00s, validation: 0.00s, handshake: 1.43s)
-[Licensing::IpcConnector] Successfully connected to: "LicenseClient-limon-6000.3.13-notifications" at "2026-06-07T18:22:24.7574753Z"
-[Licensing::Module] Licensing Background thread has ended after 2.89s
-[Licensing::Module] Licensing is initialized (took 2.61s).
+[Licensing::Module] Successfully connected to LicensingClient on channel: "LicenseClient-limon-6000.3.13" (connect: 0.00s, validation: 0.00s, handshake: 1.00s)
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-limon-6000.3.13-notifications" at "2026-06-07T21:16:01.7888476Z"
+[Licensing::Module] Licensing Background thread has ended after 2.27s
+[Licensing::Module] Licensing is initialized (took 2.02s).
 [Licensing::Client] Successfully resolved entitlement details
 [Licensing::Module] License group:
   Id: 7971680487528-UnityPersXXXX
   Product: Unity Personal
   Type: Assigned
   Expiration: Unlimited
-Refreshing native plugins compatible for Editor in 22.62 ms, found 5 plugins.
+Refreshing native plugins compatible for Editor in 17.25 ms, found 5 plugins.
 Preloading 0 native plugins for Editor in 0.00 ms.
 Initialize engine version: 6000.3.13f1 (8c4f11e4fb20)
 [Subsystems] Discovering subsystems at path D:/Unity/6000.3.13f1/Editor/Data/Resources/UnitySubsystems
@@ -123,13 +123,13 @@ Initialize mono
 Mono path[0] = 'D:/Unity/6000.3.13f1/Editor/Data/Managed'
 Mono path[1] = 'D:/Unity/6000.3.13f1/Editor/Data/MonoBleedingEdge/lib/mono/unityjit-win32'
 Mono config path = 'D:/Unity/6000.3.13f1/Editor/Data/MonoBleedingEdge/etc'
-Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56116
+Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56388
 Begin MonoManager ReloadAssembly
 Registering precompiled unity dll's ...
 Register platform support module: D:/Unity/6000.3.13f1/Editor/Data/PlaybackEngines/WindowsStandaloneSupport/UnityEditor.WindowsStandalone.Extensions.dll
 Register platform support module: D:/Unity/6000.3.13f1/Editor/Data/PlaybackEngines/AndroidPlayer/UnityEditor.Android.Extensions.dll
-Registered in 0.002861 seconds.
-- Loaded All Assemblies, in  0.765 seconds
+Registered in 0.002929 seconds.
+- Loaded All Assemblies, in  0.565 seconds
 Native extension for Android target not found
 Native extension for WindowsStandalone target not found
 Package Manager log level set to [2]
@@ -138,35 +138,35 @@ Package Manager log level set to [2]
 [Package Manager] Cannot connect to Unity Package Manager local server
 ScheduleIndexationOnStartup MainProcess:False IndexOnStartup:True
 Mono: successfully reloaded assembly
-- Finished resetting the current domain, in  0.875 seconds
-Domain Reload Profiling: 1639ms
-	BeginReloadAssembly (232ms)
+- Finished resetting the current domain, in  0.578 seconds
+Domain Reload Profiling: 1142ms
+	BeginReloadAssembly (179ms)
 		ExecutionOrderSort (0ms)
 		DisableScriptedObjects (0ms)
 		BackupInstance (0ms)
 		ReleaseScriptingObjects (0ms)
-		CreateAndSetChildDomain (3ms)
-	RebuildCommonClasses (69ms)
-	RebuildNativeTypeToScriptingClass (22ms)
-	initialDomainReloadingComplete (72ms)
-	LoadAllAssembliesAndSetupDomain (369ms)
-		LoadAssemblies (231ms)
+		CreateAndSetChildDomain (1ms)
+	RebuildCommonClasses (55ms)
+	RebuildNativeTypeToScriptingClass (20ms)
+	initialDomainReloadingComplete (60ms)
+	LoadAllAssembliesAndSetupDomain (250ms)
+		LoadAssemblies (179ms)
 		RebuildTransferFunctionScriptingTraits (0ms)
-		AnalyzeDomain (363ms)
-			TypeCache.Refresh (359ms)
-				TypeCache.ScanAssembly (332ms)
+		AnalyzeDomain (244ms)
+			TypeCache.Refresh (242ms)
+				TypeCache.ScanAssembly (224ms)
 			BuildScriptInfoCaches (0ms)
 			ResolveRequiredComponents (1ms)
-	FinalizeReload (875ms)
+	FinalizeReload (578ms)
 		ReleaseScriptCaches (0ms)
 		RebuildScriptCaches (0ms)
-		SetupLoadedEditorAssemblies (767ms)
+		SetupLoadedEditorAssemblies (506ms)
 			LogAssemblyErrors (0ms)
-			InitializePlatformSupportModulesInManaged (127ms)
-			SetLoadedEditorAssemblies (8ms)
-			BeforeProcessingInitializeOnLoad (159ms)
-			ProcessInitializeOnLoadAttributes (286ms)
-			ProcessInitializeOnLoadMethodAttributes (186ms)
+			InitializePlatformSupportModulesInManaged (86ms)
+			SetLoadedEditorAssemblies (5ms)
+			BeforeProcessingInitializeOnLoad (115ms)
+			ProcessInitializeOnLoadAttributes (201ms)
+			ProcessInitializeOnLoadMethodAttributes (98ms)
 			AfterProcessingInitializeOnLoad (0ms)
 			EditorAssembliesLoaded (0ms)
 		ExecutionOrderSort2 (0ms)
@@ -178,8 +178,8 @@ Begin MonoManager ReloadAssembly
 [Licensing::Client] Successfully resolved entitlement details
 Duplicate assembly 'log4net.dll' with different versions detected, using 'Packages/com.unity.package-validation-suite/Lib/Editor/log4net.dll, AssemblyName=log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a' and ignoring 'Packages/com.unity.collab-proxy/Lib/Editor/log4netPlastic.dll, AssemblyName=log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a'.Symbol file LoadedFromMemory is not a mono symbol file
 Symbol file LoadedFromMemory is not a mono symbol file
-- Loaded All Assemblies, in  1.895 seconds
-Refreshing native plugins compatible for Editor in 13.51 ms, found 5 plugins.
+- Loaded All Assemblies, in  1.433 seconds
+Refreshing native plugins compatible for Editor in 13.28 ms, found 5 plugins.
 Native extension for Android target not found
 Native extension for WindowsStandalone target not found
 [Package Manager] Failed to launch server process. Reason: Unity was launched with the -noUpm command-line argument
@@ -188,1462 +188,518 @@ Native extension for WindowsStandalone target not found
 [Package Manager] Failed to launch server process. Reason: Unity was launched with the -noUpm command-line argument
 [Package Manager] Unable to send message (not connected to server process).
 [Package Manager] Cannot connect to Unity Package Manager local server
-Refreshing native plugins compatible for Editor in 16.53 ms, found 5 plugins.
+Refreshing native plugins compatible for Editor in 12.70 ms, found 5 plugins.
 [Package Manager] Failed to launch server process. Reason: Unity was launched with the -noUpm command-line argument
 [Package Manager] Unable to send message (not connected to server process).
 [Package Manager] Cannot connect to Unity Package Manager local server
 ScheduleIndexationOnStartup MainProcess:False IndexOnStartup:True
 Mono: successfully reloaded assembly
-- Finished resetting the current domain, in  2.096 seconds
-Domain Reload Profiling: 3986ms
-	BeginReloadAssembly (328ms)
+- Finished resetting the current domain, in  1.643 seconds
+Domain Reload Profiling: 3073ms
+	BeginReloadAssembly (248ms)
 		ExecutionOrderSort (0ms)
-		DisableScriptedObjects (10ms)
+		DisableScriptedObjects (8ms)
 		BackupInstance (0ms)
 		ReleaseScriptingObjects (0ms)
-		CreateAndSetChildDomain (51ms)
-	RebuildCommonClasses (85ms)
-	RebuildNativeTypeToScriptingClass (26ms)
-	initialDomainReloadingComplete (80ms)
-	LoadAllAssembliesAndSetupDomain (1370ms)
-		LoadAssemblies (843ms)
+		CreateAndSetChildDomain (33ms)
+	RebuildCommonClasses (55ms)
+	RebuildNativeTypeToScriptingClass (25ms)
+	initialDomainReloadingComplete (55ms)
+	LoadAllAssembliesAndSetupDomain (1046ms)
+		LoadAssemblies (658ms)
 		RebuildTransferFunctionScriptingTraits (0ms)
-		AnalyzeDomain (724ms)
-			TypeCache.Refresh (507ms)
-				TypeCache.ScanAssembly (468ms)
-			BuildScriptInfoCaches (183ms)
-			ResolveRequiredComponents (27ms)
-	FinalizeReload (2096ms)
+		AnalyzeDomain (531ms)
+			TypeCache.Refresh (379ms)
+				TypeCache.ScanAssembly (347ms)
+			BuildScriptInfoCaches (127ms)
+			ResolveRequiredComponents (19ms)
+	FinalizeReload (1644ms)
 		ReleaseScriptCaches (0ms)
 		RebuildScriptCaches (0ms)
-		SetupLoadedEditorAssemblies (1776ms)
+		SetupLoadedEditorAssemblies (1407ms)
 			LogAssemblyErrors (0ms)
-			InitializePlatformSupportModulesInManaged (16ms)
-			SetLoadedEditorAssemblies (8ms)
-			BeforeProcessingInitializeOnLoad (323ms)
-			ProcessInitializeOnLoadAttributes (827ms)
-			ProcessInitializeOnLoadMethodAttributes (598ms)
+			InitializePlatformSupportModulesInManaged (11ms)
+			SetLoadedEditorAssemblies (5ms)
+			BeforeProcessingInitializeOnLoad (240ms)
+			ProcessInitializeOnLoadAttributes (652ms)
+			ProcessInitializeOnLoadMethodAttributes (495ms)
+			AfterProcessingInitializeOnLoad (3ms)
+			EditorAssembliesLoaded (0ms)
+		ExecutionOrderSort2 (0ms)
+		AwakeInstancesAfterBackupRestoration (7ms)
+Launched and connected shader compiler UnityShaderCompiler.exe after 0.07 seconds
+Refreshing native plugins compatible for Editor in 10.89 ms, found 5 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 17 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 9066 unused Assets / (5.0 MB). Loaded Objects now: 9909.
+Memory consumption went from 190.3 MB to 185.3 MB.
+Total: 13.449000 ms (FindLiveObjects: 1.268100 ms CreateObjectMapping: 0.971800 ms MarkObjects: 7.912700 ms  DeleteObjects: 3.295000 ms)
+
+========================================================================
+Received Import Request.
+  Time since last request: 36388.479459 seconds.
+  path: Assets/Resources/DailyQuest/Q_Alpinist_Level2 1.asset
+  artifactKey: Guid(9d655e0ad7b5a5c4094a072168e0805a) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/DailyQuest/Q_Alpinist_Level2 1.asset using Guid(9d655e0ad7b5a5c4094a072168e0805a) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'da570c7de1ad45dc9207938a4110907b') in 0.0282984 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.835259 seconds.
+  path: Assets/Resources/DailyQuest/Q_Alpinist_Level2 1.asset
+  artifactKey: Guid(9d655e0ad7b5a5c4094a072168e0805a) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/Resources/DailyQuest/Q_Alpinist_Level2 1.asset using Guid(9d655e0ad7b5a5c4094a072168e0805a) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (artifact id: 'e987b0e4607dceaa3ccf1381157c59e4') in 0.1127781 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
+
+========================================================================
+Received Import Request.
+  Time since last request: 634.169536 seconds.
+  path: Assets/Resources/DailyQuest/Q_Alpinist_Level3.asset
+  artifactKey: Guid(9d655e0ad7b5a5c4094a072168e0805a) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/DailyQuest/Q_Alpinist_Level3.asset using Guid(9d655e0ad7b5a5c4094a072168e0805a) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'e9cc009693122738a8a0952f4f0b8bf4') in 0.0017502 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.877010 seconds.
+  path: Assets/Resources/DailyQuest/Q_Alpinist_Level3.asset
+  artifactKey: Guid(9d655e0ad7b5a5c4094a072168e0805a) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/Resources/DailyQuest/Q_Alpinist_Level3.asset using Guid(9d655e0ad7b5a5c4094a072168e0805a) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (artifact id: '3e84e7b364cfae53481704b37e8583d4') in 0.0171831 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
+
+========================================================================
+Received Prepare
+[Licensing::Client] Successfully resolved entitlement details
+Begin MonoManager ReloadAssembly
+[Licensing::Client] Successfully resolved entitlement details
+Duplicate assembly 'log4net.dll' with different versions detected, using 'Packages/com.unity.package-validation-suite/Lib/Editor/log4net.dll, AssemblyName=log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a' and ignoring 'Packages/com.unity.collab-proxy/Lib/Editor/log4netPlastic.dll, AssemblyName=log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a'.Symbol file LoadedFromMemory is not a mono symbol file
+Symbol file LoadedFromMemory is not a mono symbol file
+- Loaded All Assemblies, in  1.490 seconds
+Refreshing native plugins compatible for Editor in 12.34 ms, found 5 plugins.
+Native extension for Android target not found
+Native extension for WindowsStandalone target not found
+[Package Manager] Failed to launch server process. Reason: Unity was launched with the -noUpm command-line argument
+[Package Manager] Unable to send message (not connected to server process).
+[Package Manager] Cannot connect to Unity Package Manager local server
+[Package Manager] Failed to launch server process. Reason: Unity was launched with the -noUpm command-line argument
+[Package Manager] Unable to send message (not connected to server process).
+[Package Manager] Cannot connect to Unity Package Manager local server
+[Package Manager] Failed to launch server process. Reason: Unity was launched with the -noUpm command-line argument
+[Package Manager] Unable to send message (not connected to server process).
+[Package Manager] Cannot connect to Unity Package Manager local server
+ScheduleIndexationOnStartup MainProcess:False IndexOnStartup:True
+Mono: successfully reloaded assembly
+- Finished resetting the current domain, in  1.339 seconds
+Domain Reload Profiling: 2832ms
+	BeginReloadAssembly (334ms)
+		ExecutionOrderSort (0ms)
+		DisableScriptedObjects (29ms)
+		BackupInstance (0ms)
+		ReleaseScriptingObjects (0ms)
+		CreateAndSetChildDomain (81ms)
+	RebuildCommonClasses (57ms)
+	RebuildNativeTypeToScriptingClass (21ms)
+	initialDomainReloadingComplete (43ms)
+	LoadAllAssembliesAndSetupDomain (1037ms)
+		LoadAssemblies (758ms)
+		RebuildTransferFunctionScriptingTraits (0ms)
+		AnalyzeDomain (422ms)
+			TypeCache.Refresh (11ms)
+				TypeCache.ScanAssembly (0ms)
+			BuildScriptInfoCaches (381ms)
+			ResolveRequiredComponents (23ms)
+	FinalizeReload (1340ms)
+		ReleaseScriptCaches (0ms)
+		RebuildScriptCaches (0ms)
+		SetupLoadedEditorAssemblies (1062ms)
+			LogAssemblyErrors (0ms)
+			InitializePlatformSupportModulesInManaged (11ms)
+			SetLoadedEditorAssemblies (5ms)
+			BeforeProcessingInitializeOnLoad (257ms)
+			ProcessInitializeOnLoadAttributes (539ms)
+			ProcessInitializeOnLoadMethodAttributes (245ms)
+			AfterProcessingInitializeOnLoad (4ms)
+			EditorAssembliesLoaded (1ms)
+		ExecutionOrderSort2 (0ms)
+		AwakeInstancesAfterBackupRestoration (20ms)
+Refreshing native plugins compatible for Editor in 15.06 ms, found 5 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 17 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 9065 unused Assets / (5.1 MB). Loaded Objects now: 9919.
+Memory consumption went from 193.6 MB to 188.5 MB.
+Total: 16.306300 ms (FindLiveObjects: 1.497700 ms CreateObjectMapping: 1.607800 ms MarkObjects: 8.699300 ms  DeleteObjects: 4.500000 ms)
+
+Prepare: number of updated asset objects reloaded= 0
+========================================================================
+Received Prepare
+Begin MonoManager ReloadAssembly
+Duplicate assembly 'log4net.dll' with different versions detected, using 'Packages/com.unity.package-validation-suite/Lib/Editor/log4net.dll, AssemblyName=log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a' and ignoring 'Packages/com.unity.collab-proxy/Lib/Editor/log4netPlastic.dll, AssemblyName=log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a'.Symbol file LoadedFromMemory is not a mono symbol file
+Symbol file LoadedFromMemory is not a mono symbol file
+- Loaded All Assemblies, in  1.371 seconds
+Refreshing native plugins compatible for Editor in 14.06 ms, found 5 plugins.
+Native extension for Android target not found
+Native extension for WindowsStandalone target not found
+[Package Manager] Failed to launch server process. Reason: Unity was launched with the -noUpm command-line argument
+[Package Manager] Unable to send message (not connected to server process).
+[Package Manager] Cannot connect to Unity Package Manager local server
+[Package Manager] Failed to launch server process. Reason: Unity was launched with the -noUpm command-line argument
+[Package Manager] Unable to send message (not connected to server process).
+[Package Manager] Cannot connect to Unity Package Manager local server
+[Package Manager] Failed to launch server process. Reason: Unity was launched with the -noUpm command-line argument
+[Package Manager] Unable to send message (not connected to server process).
+[Package Manager] Cannot connect to Unity Package Manager local server
+ScheduleIndexationOnStartup MainProcess:False IndexOnStartup:True
+Mono: successfully reloaded assembly
+- Finished resetting the current domain, in  1.284 seconds
+Domain Reload Profiling: 2660ms
+	BeginReloadAssembly (337ms)
+		ExecutionOrderSort (0ms)
+		DisableScriptedObjects (21ms)
+		BackupInstance (0ms)
+		ReleaseScriptingObjects (0ms)
+		CreateAndSetChildDomain (80ms)
+	RebuildCommonClasses (54ms)
+	RebuildNativeTypeToScriptingClass (22ms)
+	initialDomainReloadingComplete (39ms)
+	LoadAllAssembliesAndSetupDomain (922ms)
+		LoadAssemblies (677ms)
+		RebuildTransferFunctionScriptingTraits (0ms)
+		AnalyzeDomain (396ms)
+			TypeCache.Refresh (12ms)
+				TypeCache.ScanAssembly (0ms)
+			BuildScriptInfoCaches (358ms)
+			ResolveRequiredComponents (21ms)
+	FinalizeReload (1285ms)
+		ReleaseScriptCaches (0ms)
+		RebuildScriptCaches (0ms)
+		SetupLoadedEditorAssemblies (1024ms)
+			LogAssemblyErrors (0ms)
+			InitializePlatformSupportModulesInManaged (11ms)
+			SetLoadedEditorAssemblies (5ms)
+			BeforeProcessingInitializeOnLoad (250ms)
+			ProcessInitializeOnLoadAttributes (516ms)
+			ProcessInitializeOnLoadMethodAttributes (237ms)
+			AfterProcessingInitializeOnLoad (4ms)
+			EditorAssembliesLoaded (1ms)
+		ExecutionOrderSort2 (0ms)
+		AwakeInstancesAfterBackupRestoration (24ms)
+Refreshing native plugins compatible for Editor in 13.22 ms, found 5 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 17 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 9065 unused Assets / (4.4 MB). Loaded Objects now: 9925.
+Memory consumption went from 193.7 MB to 189.3 MB.
+Total: 15.586400 ms (FindLiveObjects: 1.349500 ms CreateObjectMapping: 1.677600 ms MarkObjects: 8.235600 ms  DeleteObjects: 4.321200 ms)
+
+Prepare: number of updated asset objects reloaded= 0
+========================================================================
+Received Prepare
+[Licensing::Client] Successfully resolved entitlement details
+Begin MonoManager ReloadAssembly
+[Licensing::Client] Successfully resolved entitlement details
+Duplicate assembly 'log4net.dll' with different versions detected, using 'Packages/com.unity.package-validation-suite/Lib/Editor/log4net.dll, AssemblyName=log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a' and ignoring 'Packages/com.unity.collab-proxy/Lib/Editor/log4netPlastic.dll, AssemblyName=log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a'.Symbol file LoadedFromMemory is not a mono symbol file
+Symbol file LoadedFromMemory is not a mono symbol file
+- Loaded All Assemblies, in  1.490 seconds
+Refreshing native plugins compatible for Editor in 12.24 ms, found 5 plugins.
+Native extension for Android target not found
+Native extension for WindowsStandalone target not found
+[Package Manager] Failed to launch server process. Reason: Unity was launched with the -noUpm command-line argument
+[Package Manager] Unable to send message (not connected to server process).
+[Package Manager] Cannot connect to Unity Package Manager local server
+[Package Manager] Failed to launch server process. Reason: Unity was launched with the -noUpm command-line argument
+[Package Manager] Unable to send message (not connected to server process).
+[Package Manager] Cannot connect to Unity Package Manager local server
+[Package Manager] Failed to launch server process. Reason: Unity was launched with the -noUpm command-line argument
+[Package Manager] Unable to send message (not connected to server process).
+[Package Manager] Cannot connect to Unity Package Manager local server
+ScheduleIndexationOnStartup MainProcess:False IndexOnStartup:True
+Mono: successfully reloaded assembly
+- Finished resetting the current domain, in  1.301 seconds
+Domain Reload Profiling: 2794ms
+	BeginReloadAssembly (328ms)
+		ExecutionOrderSort (0ms)
+		DisableScriptedObjects (20ms)
+		BackupInstance (0ms)
+		ReleaseScriptingObjects (0ms)
+		CreateAndSetChildDomain (74ms)
+	RebuildCommonClasses (57ms)
+	RebuildNativeTypeToScriptingClass (23ms)
+	initialDomainReloadingComplete (61ms)
+	LoadAllAssembliesAndSetupDomain (1024ms)
+		LoadAssemblies (774ms)
+		RebuildTransferFunctionScriptingTraits (0ms)
+		AnalyzeDomain (403ms)
+			TypeCache.Refresh (12ms)
+				TypeCache.ScanAssembly (0ms)
+			BuildScriptInfoCaches (362ms)
+			ResolveRequiredComponents (24ms)
+	FinalizeReload (1302ms)
+		ReleaseScriptCaches (0ms)
+		RebuildScriptCaches (0ms)
+		SetupLoadedEditorAssemblies (1037ms)
+			LogAssemblyErrors (0ms)
+			InitializePlatformSupportModulesInManaged (11ms)
+			SetLoadedEditorAssemblies (7ms)
+			BeforeProcessingInitializeOnLoad (253ms)
+			ProcessInitializeOnLoadAttributes (528ms)
+			ProcessInitializeOnLoadMethodAttributes (235ms)
 			AfterProcessingInitializeOnLoad (3ms)
 			EditorAssembliesLoaded (1ms)
 		ExecutionOrderSort2 (0ms)
-		AwakeInstancesAfterBackupRestoration (7ms)
-Launched and connected shader compiler UnityShaderCompiler.exe after 0.08 seconds
-Refreshing native plugins compatible for Editor in 14.32 ms, found 5 plugins.
+		AwakeInstancesAfterBackupRestoration (20ms)
+Refreshing native plugins compatible for Editor in 11.88 ms, found 5 plugins.
 Preloading 0 native plugins for Editor in 0.00 ms.
 Unloading 17 Unused Serialized files (Serialized files now loaded: 0)
-Unloading 9066 unused Assets / (6.2 MB). Loaded Objects now: 9909.
-Memory consumption went from 190.4 MB to 184.2 MB.
-Total: 23.420200 ms (FindLiveObjects: 1.781300 ms CreateObjectMapping: 1.899800 ms MarkObjects: 12.471200 ms  DeleteObjects: 7.265600 ms)
+Unloading 9065 unused Assets / (4.9 MB). Loaded Objects now: 9931.
+Memory consumption went from 193.7 MB to 188.9 MB.
+Total: 13.139100 ms (FindLiveObjects: 1.279300 ms CreateObjectMapping: 0.867800 ms MarkObjects: 7.401100 ms  DeleteObjects: 3.589600 ms)
+
+Prepare: number of updated asset objects reloaded= 0
+========================================================================
+Received Import Request.
+  Time since last request: 330.320560 seconds.
+  path: Assets/Resources/DailyQuest/Q_Alpinist_Level3.asset
+  artifactKey: Guid(9d655e0ad7b5a5c4094a072168e0805a) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/DailyQuest/Q_Alpinist_Level3.asset using Guid(9d655e0ad7b5a5c4094a072168e0805a) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '052ca2f7a017c31bd69dcc39ba86ebb5') in 0.0325654 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
 
 ========================================================================
 Received Import Request.
-  Time since last request: 25860.914753 seconds.
-  path: Assets/Resources/Fish/B - Fresh Water/Angelfish.png
-  artifactKey: Guid(f5252f95deb1edd46b7d205e17358e59) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Fish/B - Fresh Water/Angelfish.png using Guid(f5252f95deb1edd46b7d205e17358e59) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '4aac95888ae103bf22abb9e30c280327') in 0.8498366 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
+  Time since last request: 0.000026 seconds.
+  path: Assets/Resources/DailyQuest/Q_MeatGrinder.asset
+  artifactKey: Guid(05f310ac81cc09f4c81f5525756bc297) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/DailyQuest/Q_MeatGrinder.asset using Guid(05f310ac81cc09f4c81f5525756bc297) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'eb3e4aa662a0540ab8db87ec66b9c795') in 0.0014437 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
 
 ========================================================================
 Received Import Request.
-  Time since last request: 2.621735 seconds.
-  path: Assets/Resources/400+ Rpg items16x16/tile000.png
-  artifactKey: Guid(b1d641ead2a05ba4989623a72d7e3b59) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/400+ Rpg items16x16/tile000.png using Guid(b1d641ead2a05ba4989623a72d7e3b59) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '2950d18f326c6854fb0f78a2b9c88d30') in 0.5779835 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
+  Time since last request: 6.425780 seconds.
+  path: Assets/Resources/DailyQuest/Q_RichClient.asset
+  artifactKey: Guid(58c8d1bde1ee1774f9a0c6bf4eae6d56) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/DailyQuest/Q_RichClient.asset using Guid(58c8d1bde1ee1774f9a0c6bf4eae6d56) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'b6ba802e7701c361c96698f0de703ec0') in 0.0013675 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
 
 ========================================================================
-Received Import Request.
-  Time since last request: 0.000056 seconds.
-  path: Assets/Resources/400+ Rpg items16x16/tile150.png
-  artifactKey: Guid(c608e69d19b3bec448c519a154b20042) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/400+ Rpg items16x16/tile150.png using Guid(c608e69d19b3bec448c519a154b20042) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '3f1268762229afd69399cc68680589a6') in 0.6851754 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
+Received Prepare
+[Licensing::Client] Successfully resolved entitlement details
+Begin MonoManager ReloadAssembly
+[Licensing::Client] Successfully resolved entitlement details
+Duplicate assembly 'log4net.dll' with different versions detected, using 'Packages/com.unity.package-validation-suite/Lib/Editor/log4net.dll, AssemblyName=log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a' and ignoring 'Packages/com.unity.collab-proxy/Lib/Editor/log4netPlastic.dll, AssemblyName=log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a'.Symbol file LoadedFromMemory is not a mono symbol file
+Symbol file LoadedFromMemory is not a mono symbol file
+- Loaded All Assemblies, in  1.316 seconds
+Refreshing native plugins compatible for Editor in 11.83 ms, found 5 plugins.
+Native extension for Android target not found
+Native extension for WindowsStandalone target not found
+[Package Manager] Failed to launch server process. Reason: Unity was launched with the -noUpm command-line argument
+[Package Manager] Unable to send message (not connected to server process).
+[Package Manager] Cannot connect to Unity Package Manager local server
+[Package Manager] Failed to launch server process. Reason: Unity was launched with the -noUpm command-line argument
+[Package Manager] Unable to send message (not connected to server process).
+[Package Manager] Cannot connect to Unity Package Manager local server
+[Package Manager] Failed to launch server process. Reason: Unity was launched with the -noUpm command-line argument
+[Package Manager] Unable to send message (not connected to server process).
+[Package Manager] Cannot connect to Unity Package Manager local server
+ScheduleIndexationOnStartup MainProcess:False IndexOnStartup:True
+Mono: successfully reloaded assembly
+- Finished resetting the current domain, in  1.224 seconds
+Domain Reload Profiling: 2543ms
+	BeginReloadAssembly (319ms)
+		ExecutionOrderSort (0ms)
+		DisableScriptedObjects (26ms)
+		BackupInstance (0ms)
+		ReleaseScriptingObjects (0ms)
+		CreateAndSetChildDomain (69ms)
+	RebuildCommonClasses (52ms)
+	RebuildNativeTypeToScriptingClass (22ms)
+	initialDomainReloadingComplete (40ms)
+	LoadAllAssembliesAndSetupDomain (885ms)
+		LoadAssemblies (639ms)
+		RebuildTransferFunctionScriptingTraits (0ms)
+		AnalyzeDomain (388ms)
+			TypeCache.Refresh (10ms)
+				TypeCache.ScanAssembly (0ms)
+			BuildScriptInfoCaches (351ms)
+			ResolveRequiredComponents (21ms)
+	FinalizeReload (1225ms)
+		ReleaseScriptCaches (0ms)
+		RebuildScriptCaches (0ms)
+		SetupLoadedEditorAssemblies (979ms)
+			LogAssemblyErrors (0ms)
+			InitializePlatformSupportModulesInManaged (11ms)
+			SetLoadedEditorAssemblies (5ms)
+			BeforeProcessingInitializeOnLoad (233ms)
+			ProcessInitializeOnLoadAttributes (490ms)
+			ProcessInitializeOnLoadMethodAttributes (236ms)
+			AfterProcessingInitializeOnLoad (3ms)
+			EditorAssembliesLoaded (1ms)
+		ExecutionOrderSort2 (0ms)
+		AwakeInstancesAfterBackupRestoration (19ms)
+Refreshing native plugins compatible for Editor in 12.43 ms, found 5 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 17 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 9065 unused Assets / (4.7 MB). Loaded Objects now: 9937.
+Memory consumption went from 193.8 MB to 189.1 MB.
+Total: 13.610600 ms (FindLiveObjects: 1.298200 ms CreateObjectMapping: 1.226100 ms MarkObjects: 7.652500 ms  DeleteObjects: 3.431900 ms)
 
+Prepare: number of updated asset objects reloaded= 0
+========================================================================
+Received Prepare
+Begin MonoManager ReloadAssembly
+Duplicate assembly 'log4net.dll' with different versions detected, using 'Packages/com.unity.package-validation-suite/Lib/Editor/log4net.dll, AssemblyName=log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a' and ignoring 'Packages/com.unity.collab-proxy/Lib/Editor/log4netPlastic.dll, AssemblyName=log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a'.Symbol file LoadedFromMemory is not a mono symbol file
+Symbol file LoadedFromMemory is not a mono symbol file
+- Loaded All Assemblies, in  1.454 seconds
+Refreshing native plugins compatible for Editor in 11.99 ms, found 5 plugins.
+Native extension for Android target not found
+Native extension for WindowsStandalone target not found
+[Package Manager] Failed to launch server process. Reason: Unity was launched with the -noUpm command-line argument
+[Package Manager] Unable to send message (not connected to server process).
+[Package Manager] Cannot connect to Unity Package Manager local server
+[Package Manager] Failed to launch server process. Reason: Unity was launched with the -noUpm command-line argument
+[Package Manager] Unable to send message (not connected to server process).
+[Package Manager] Cannot connect to Unity Package Manager local server
+[Package Manager] Failed to launch server process. Reason: Unity was launched with the -noUpm command-line argument
+[Package Manager] Unable to send message (not connected to server process).
+[Package Manager] Cannot connect to Unity Package Manager local server
+ScheduleIndexationOnStartup MainProcess:False IndexOnStartup:True
+Mono: successfully reloaded assembly
+- Finished resetting the current domain, in  1.378 seconds
+Domain Reload Profiling: 2836ms
+	BeginReloadAssembly (352ms)
+		ExecutionOrderSort (0ms)
+		DisableScriptedObjects (30ms)
+		BackupInstance (0ms)
+		ReleaseScriptingObjects (0ms)
+		CreateAndSetChildDomain (76ms)
+	RebuildCommonClasses (72ms)
+	RebuildNativeTypeToScriptingClass (23ms)
+	initialDomainReloadingComplete (44ms)
+	LoadAllAssembliesAndSetupDomain (966ms)
+		LoadAssemblies (674ms)
+		RebuildTransferFunctionScriptingTraits (0ms)
+		AnalyzeDomain (448ms)
+			TypeCache.Refresh (18ms)
+				TypeCache.ScanAssembly (0ms)
+			BuildScriptInfoCaches (404ms)
+			ResolveRequiredComponents (20ms)
+	FinalizeReload (1379ms)
+		ReleaseScriptCaches (0ms)
+		RebuildScriptCaches (0ms)
+		SetupLoadedEditorAssemblies (1108ms)
+			LogAssemblyErrors (0ms)
+			InitializePlatformSupportModulesInManaged (11ms)
+			SetLoadedEditorAssemblies (5ms)
+			BeforeProcessingInitializeOnLoad (268ms)
+			ProcessInitializeOnLoadAttributes (555ms)
+			ProcessInitializeOnLoadMethodAttributes (265ms)
+			AfterProcessingInitializeOnLoad (4ms)
+			EditorAssembliesLoaded (1ms)
+		ExecutionOrderSort2 (0ms)
+		AwakeInstancesAfterBackupRestoration (21ms)
+Refreshing native plugins compatible for Editor in 13.13 ms, found 5 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 17 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 9065 unused Assets / (4.9 MB). Loaded Objects now: 9943.
+Memory consumption went from 193.8 MB to 188.9 MB.
+Total: 15.053500 ms (FindLiveObjects: 1.373500 ms CreateObjectMapping: 1.441900 ms MarkObjects: 8.385400 ms  DeleteObjects: 3.851200 ms)
+
+Prepare: number of updated asset objects reloaded= 0
 ========================================================================
 Received Import Request.
-  Time since last request: 0.000074 seconds.
-  path: Assets/Resources/400+ Rpg items16x16/tile143.png
-  artifactKey: Guid(81c95750cbb8c0448a8df0bb7655c181) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/400+ Rpg items16x16/tile143.png using Guid(81c95750cbb8c0448a8df0bb7655c181) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '04e36f63c919726dc59f0a4c85f9b4c4') in 0.5853496 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000036 seconds.
-  path: Assets/Resources/400+ Rpg items16x16/tile009.png
-  artifactKey: Guid(7b5b1044fdcdd1c42bb3f746bc081613) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/400+ Rpg items16x16/tile009.png using Guid(7b5b1044fdcdd1c42bb3f746bc081613) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'fc96750fd828aa05e2fe1eb15145af08') in 0.6315867 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000047 seconds.
-  path: Assets/Resources/400+ Rpg items16x16/tile026.png
-  artifactKey: Guid(fc70ccae6d44ddb4da3eb7eca19cf2a1) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/400+ Rpg items16x16/tile026.png using Guid(fc70ccae6d44ddb4da3eb7eca19cf2a1) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '984e343852bc3e5437d72a648ca6ff6d') in 0.6137741 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000034 seconds.
-  path: Assets/Resources/400+ Rpg items16x16/tile010.png
-  artifactKey: Guid(8db47940703f79849a858f9f9c2a20cf) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/400+ Rpg items16x16/tile010.png using Guid(8db47940703f79849a858f9f9c2a20cf) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'f0e41d1c969f39627d942e1c9895587e') in 0.6145864 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000068 seconds.
-  path: Assets/Resources/400+ Rpg items16x16/tile135.png
-  artifactKey: Guid(be7879ef681e4b94084653ffa0c5c0bd) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/400+ Rpg items16x16/tile135.png using Guid(be7879ef681e4b94084653ffa0c5c0bd) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '0852c7439ae244ff42e56aabaec525f9') in 0.566324 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000034 seconds.
-  path: Assets/Resources/400+ Rpg items16x16/tile119.png
-  artifactKey: Guid(9c4b241934dc16740862e874d4c311db) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/400+ Rpg items16x16/tile119.png using Guid(9c4b241934dc16740862e874d4c311db) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '5a21f641004fd92c68372980e51e3202') in 0.5856236 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000044 seconds.
-  path: Assets/Resources/400+ Rpg items16x16/tile120.png
-  artifactKey: Guid(b903e8a3b88c6eb4a89e4423170d8193) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/400+ Rpg items16x16/tile120.png using Guid(b903e8a3b88c6eb4a89e4423170d8193) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'ed95e6473431779b1493d505902045c6') in 0.5658848 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000041 seconds.
-  path: Assets/Resources/400+ Rpg items16x16/tile129.png
-  artifactKey: Guid(108315cb6ce18b24dbfc61df373bd908) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/400+ Rpg items16x16/tile129.png using Guid(108315cb6ce18b24dbfc61df373bd908) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '5da8c9d7a98a9a71d526e1a6307b2dab') in 0.5736668 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000042 seconds.
-  path: Assets/Resources/400+ Rpg items16x16/tile115.png
-  artifactKey: Guid(34a06080ff3ed194082912f41855f441) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/400+ Rpg items16x16/tile115.png using Guid(34a06080ff3ed194082912f41855f441) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '31fd6b46330b544b8a33158419577450') in 0.57798 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000046 seconds.
-  path: Assets/Resources/400+ Rpg items16x16/tile028.png
-  artifactKey: Guid(c1474ac6d78935a4c95a3f9d758b66a4) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/400+ Rpg items16x16/tile028.png using Guid(c1474ac6d78935a4c95a3f9d758b66a4) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '734c19bfe011692fbe8b4a673d81a82e') in 0.5638061 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000076 seconds.
-  path: Assets/Resources/400+ Rpg items16x16/tile104.png
-  artifactKey: Guid(9e396cc62f4834742a5b6c9ed1fa2e9e) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/400+ Rpg items16x16/tile104.png using Guid(9e396cc62f4834742a5b6c9ed1fa2e9e) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'a29191b09b8b1bf31412eaf780fa36a8') in 0.5859501 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000034 seconds.
-  path: Assets/Resources/400+ Rpg items16x16/tile098.png
-  artifactKey: Guid(64b4ef9b255278848b909d7268cd15eb) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/400+ Rpg items16x16/tile098.png using Guid(64b4ef9b255278848b909d7268cd15eb) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '3def7d8475a7a61f2c0aecf7dd069eac') in 0.5722117 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000051 seconds.
-  path: Assets/Resources/400+ Rpg items16x16/tile092.png
-  artifactKey: Guid(71813a1fc0ee1c141b0ca4c2e936c108) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/400+ Rpg items16x16/tile092.png using Guid(71813a1fc0ee1c141b0ca4c2e936c108) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '8e0bf3a0e44195f8880efa7e4742c689') in 0.6149509 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000056 seconds.
-  path: Assets/Resources/400+ Rpg items16x16/tile018.png
-  artifactKey: Guid(e31001c9b5c32794ea80006af8043f11) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/400+ Rpg items16x16/tile018.png using Guid(e31001c9b5c32794ea80006af8043f11) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'a78acf19829a940404e592596cdaac8d') in 0.5846097 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000042 seconds.
-  path: Assets/Resources/400+ Rpg items16x16/tile137.png
-  artifactKey: Guid(5bd7c1cc0b752d4479544113d7fc0e44) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/400+ Rpg items16x16/tile137.png using Guid(5bd7c1cc0b752d4479544113d7fc0e44) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'a1873459cea4e18f71be9c5c64d27e77') in 0.5877345 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000035 seconds.
-  path: Assets/Resources/400+ Rpg items16x16/tile134.png
-  artifactKey: Guid(3d7567537506daf43b53c2adbca2f3ba) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/400+ Rpg items16x16/tile134.png using Guid(3d7567537506daf43b53c2adbca2f3ba) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '0df6dac97f6ad6aa26e893a49af5e6f3') in 0.5723117 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000043 seconds.
-  path: Assets/Resources/400+ Rpg items16x16/tile201.png
-  artifactKey: Guid(cc1a910fa6d42354f997a9b72946191c) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/400+ Rpg items16x16/tile201.png using Guid(cc1a910fa6d42354f997a9b72946191c) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '2b0ea2135111706443e1aa6e593c9f36') in 0.5896408 seconds
+  Time since last request: 135.357762 seconds.
+  path: Assets/Resources/Attack_Button.png
+  artifactKey: Guid(922948878c2b2f34babb501f14917630) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Attack_Button.png using Guid(922948878c2b2f34babb501f14917630) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter)[Licensing::Client] Successfully resolved entitlement details
+ -> (artifact id: '0670d778a0bb7ec5903547c9b0dc1fac') in 0.6680136 seconds
 Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
 
 ========================================================================
 Received Import Request.
   Time since last request: 0.000032 seconds.
-  path: Assets/Resources/400+ Rpg items16x16/tile103.png
-  artifactKey: Guid(85b43e8676fe26b4e8606473c91c1e3e) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/400+ Rpg items16x16/tile103.png using Guid(85b43e8676fe26b4e8606473c91c1e3e) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'fe326b2ea5167a049ad9cb4581bf89ef') in 0.5816214 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000060 seconds.
-  path: Assets/Resources/400+ Rpg items16x16/tile144.png
-  artifactKey: Guid(fb90e6707ea9b5e4fba4972573c16bb3) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/400+ Rpg items16x16/tile144.png using Guid(fb90e6707ea9b5e4fba4972573c16bb3) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '9417eb6035581a62f6883ef1be8d33f6') in 0.541468 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000036 seconds.
-  path: Assets/Resources/400+ Rpg items16x16/tile060.png
-  artifactKey: Guid(6234dbab33442264b9ef5d91424322a5) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/400+ Rpg items16x16/tile060.png using Guid(6234dbab33442264b9ef5d91424322a5) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '203b71bd7d1c4941d018c82bbee4caa9') in 0.5833821 seconds
+  path: Assets/Resources/Colodaz.png
+  artifactKey: Guid(1465737cb42171c49a2ae0e72d8b0434) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Colodaz.png using Guid(1465737cb42171c49a2ae0e72d8b0434) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '7dc000671ccaa68c8080c4948c2bf173') in 0.5803871 seconds
 Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
 
 ========================================================================
 Received Import Request.
   Time since last request: 0.000048 seconds.
-  path: Assets/Resources/400+ Rpg items16x16/tile011.png
-  artifactKey: Guid(1770541b3a3caea409bb1f24b897bd4e) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/400+ Rpg items16x16/tile011.png using Guid(1770541b3a3caea409bb1f24b897bd4e) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'a1325f8bf260d58bc484f7060ce33f79') in 0.5892757 seconds
+  path: Assets/Resources/IconQuest_Get.png
+  artifactKey: Guid(ea42c470c0d09ab4a9eaa18ee690a1a5) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/IconQuest_Get.png using Guid(ea42c470c0d09ab4a9eaa18ee690a1a5) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'd1ea87069044ffe2d8a45602a31512d4') in 0.5554681 seconds
 Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
 
 ========================================================================
 Received Import Request.
-  Time since last request: 0.000032 seconds.
-  path: Assets/Resources/400+ Rpg items16x16/tile171.png
-  artifactKey: Guid(507c94002b37f444ca81727228fe1097) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/400+ Rpg items16x16/tile171.png using Guid(507c94002b37f444ca81727228fe1097) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '99e43f669412689bb40ff6c75d469117') in 0.5802428 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000043 seconds.
-  path: Assets/Resources/400+ Rpg items16x16/tile034.png
-  artifactKey: Guid(6742be8dbaa96df4ebd2c44d09320682) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/400+ Rpg items16x16/tile034.png using Guid(6742be8dbaa96df4ebd2c44d09320682) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '0f983478821cafcf25fbfab6caa7d556') in 0.5848521 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000031 seconds.
-  path: Assets/Resources/400+ Rpg items16x16/tile131.png
-  artifactKey: Guid(c587f25afa59f9f4dbd06ba393531e0c) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/400+ Rpg items16x16/tile131.png using Guid(c587f25afa59f9f4dbd06ba393531e0c) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'b85344771352b4a66489a26cbdd069e2') in 0.6027976 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000043 seconds.
-  path: Assets/Resources/400+ Rpg items16x16/tile094.png
-  artifactKey: Guid(b224a26a66227994c90281b871678984) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/400+ Rpg items16x16/tile094.png using Guid(b224a26a66227994c90281b871678984) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '1748108fa9542287070cf9ce1cc89167') in 0.5819169 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000034 seconds.
-  path: Assets/Resources/400+ Rpg items16x16/tile107.png
-  artifactKey: Guid(581beff5332d4f142b7fbcf0787b6476) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/400+ Rpg items16x16/tile107.png using Guid(581beff5332d4f142b7fbcf0787b6476) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '9db7c911b339f7304f00fa21efce31c2') in 0.5771395 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000045 seconds.
-  path: Assets/Resources/400+ Rpg items16x16/tile155.png
-  artifactKey: Guid(d6adfca010e9676498390bca0a28e82c) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/400+ Rpg items16x16/tile155.png using Guid(d6adfca010e9676498390bca0a28e82c) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '1e7a90a2caad5cdd35a5919d90d734c8') in 0.5730667 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000034 seconds.
-  path: Assets/Resources/400+ Rpg items16x16/tile136.png
-  artifactKey: Guid(869bfefb1c451864bad06f2bbb306ed4) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/400+ Rpg items16x16/tile136.png using Guid(869bfefb1c451864bad06f2bbb306ed4) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '56fb10871f05c7bc861559b9d9649ca9') in 0.6039336 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000045 seconds.
-  path: Assets/Resources/400+ Rpg items16x16/tile178.png
-  artifactKey: Guid(ec8851fe04c37334f91a12c459fa317f) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/400+ Rpg items16x16/tile178.png using Guid(ec8851fe04c37334f91a12c459fa317f) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '9c261a8e4ae01d2a8e33ed7d39975d7c') in 0.5924762 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000036 seconds.
-  path: Assets/Resources/400+ Rpg items16x16/tile068.png
-  artifactKey: Guid(abd8fb8a32efc8547a143d419a0f9151) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/400+ Rpg items16x16/tile068.png using Guid(abd8fb8a32efc8547a143d419a0f9151) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '8af4a76f821f98069c227e5533f7204e') in 0.5806812 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000047 seconds.
-  path: Assets/Resources/400+ Rpg items16x16/tile207.png
-  artifactKey: Guid(8e378b3cbd93f0c48a22eef92355d9d0) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/400+ Rpg items16x16/tile207.png using Guid(8e378b3cbd93f0c48a22eef92355d9d0) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'e013cce32f2492fc5d56b3f086260ef1') in 0.606802 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000033 seconds.
-  path: Assets/Resources/400+ Rpg items16x16/tile054.png
-  artifactKey: Guid(261ace4e0760a994491c3161b2696758) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/400+ Rpg items16x16/tile054.png using Guid(261ace4e0760a994491c3161b2696758) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'a931dcda37c1c152fd6ba329f504ebe7') in 0.587469 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000042 seconds.
-  path: Assets/Resources/400+ Rpg items16x16/tile112.png
-  artifactKey: Guid(03891603ec7bfa147a20a66b1226e169) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/400+ Rpg items16x16/tile112.png using Guid(03891603ec7bfa147a20a66b1226e169) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'bebb2f2f9942c34eca24021588a7bbe5') in 0.593745 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000044 seconds.
-  path: Assets/Resources/400+ Rpg items16x16/tile052.png
-  artifactKey: Guid(c65f3c121b6564f45b64bdbc4d72672a) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/400+ Rpg items16x16/tile052.png using Guid(c65f3c121b6564f45b64bdbc4d72672a) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'e88c02c534c392042476b9a07d820b3d') in 0.5772866 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000043 seconds.
-  path: Assets/Resources/400+ Rpg items16x16/tile168.png
-  artifactKey: Guid(d7def0d3dd4662341be1ae74e170d5ef) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/400+ Rpg items16x16/tile168.png using Guid(d7def0d3dd4662341be1ae74e170d5ef) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'abe90274947dfdc43a9e3f496f1f1e2f') in 0.5947946 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000031 seconds.
-  path: Assets/Resources/400+ Rpg items16x16/tile106.png
-  artifactKey: Guid(c0c77bcc0c7638844aa3635dec728e86) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/400+ Rpg items16x16/tile106.png using Guid(c0c77bcc0c7638844aa3635dec728e86) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'a04ff82ab346cbde5a6aa6d30f28383a') in 0.6127191 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000044 seconds.
-  path: Assets/Resources/400+ Rpg items16x16/tile130.png
-  artifactKey: Guid(44b0731b51f89b646a11a1884ac03355) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/400+ Rpg items16x16/tile130.png using Guid(44b0731b51f89b646a11a1884ac03355) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '7fbc0349560fa8e0d5360866c127153a') in 0.5729094 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000040 seconds.
-  path: Assets/Resources/400+ Rpg items16x16/tile002.png
-  artifactKey: Guid(69aa238f8605ed44db064d452714f7b9) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/400+ Rpg items16x16/tile002.png using Guid(69aa238f8605ed44db064d452714f7b9) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '93485b44b569acd295af8e499650762c') in 0.5907143 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000046 seconds.
-  path: Assets/Resources/400+ Rpg items16x16/tile025.png
-  artifactKey: Guid(a30bc1b9eef23d6458a1a7c7c180f4ad) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/400+ Rpg items16x16/tile025.png using Guid(a30bc1b9eef23d6458a1a7c7c180f4ad) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '11627e49f1859fec70448dbd35080c98') in 0.5923438 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000033 seconds.
-  path: Assets/Resources/400+ Rpg items16x16/tile158.png
-  artifactKey: Guid(cb9820c9734608f498e8ec6d48dfa604) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/400+ Rpg items16x16/tile158.png using Guid(cb9820c9734608f498e8ec6d48dfa604) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '54ea7b594aefbc1e22cbf2334bd891b8') in 0.6000581 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000045 seconds.
-  path: Assets/Resources/400+ Rpg items16x16/tile213.png
-  artifactKey: Guid(d197f46cbe504c14c9bbfbfa6f41c7a5) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/400+ Rpg items16x16/tile213.png using Guid(d197f46cbe504c14c9bbfbfa6f41c7a5) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'f002c32b69cd5280bf77296e5b64ff38') in 0.5811609 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000036 seconds.
-  path: Assets/Resources/400+ Rpg items16x16/tile019.png
-  artifactKey: Guid(6eb07e8da0239164388f82d958411df5) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/400+ Rpg items16x16/tile019.png using Guid(6eb07e8da0239164388f82d958411df5) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '76e36828d281a5b443452b7243854938') in 0.5942633 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000044 seconds.
-  path: Assets/Resources/400+ Rpg items16x16/tile078.png
-  artifactKey: Guid(9dae227e4ec9ab74884da50b1dd366f5) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/400+ Rpg items16x16/tile078.png using Guid(9dae227e4ec9ab74884da50b1dd366f5) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '2a1529986aba461054a383cfb519bb0e') in 0.6218883 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000031 seconds.
-  path: Assets/Resources/400+ Rpg items16x16/tile031.png
-  artifactKey: Guid(c36a37bd12624aa4eb3c5e8d962c82bd) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/400+ Rpg items16x16/tile031.png using Guid(c36a37bd12624aa4eb3c5e8d962c82bd) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '508ce321728337a29c8f3603d9699f19') in 0.6864896 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000043 seconds.
-  path: Assets/Resources/400+ Rpg items16x16/tile142.png
-  artifactKey: Guid(505dbe005e0d04c42bf49a56808b8d17) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/400+ Rpg items16x16/tile142.png using Guid(505dbe005e0d04c42bf49a56808b8d17) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'e818a675d65fdf422588dd31c202278c') in 0.6757794 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000035 seconds.
-  path: Assets/Resources/400+ Rpg items16x16/tile074.png
-  artifactKey: Guid(c212ca99d542db041a0d3134f67d1ff5) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/400+ Rpg items16x16/tile074.png using Guid(c212ca99d542db041a0d3134f67d1ff5) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '88fa498d46e0ea100c27bb291fbc127c') in 0.6407394 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000041 seconds.
-  path: Assets/Resources/400+ Rpg items16x16/tile055.png
-  artifactKey: Guid(419956ee01079094b854b4371440426f) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/400+ Rpg items16x16/tile055.png using Guid(419956ee01079094b854b4371440426f) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'fd13b978de4825f1e7fad5a8949441dd') in 0.5777509 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000064 seconds.
-  path: Assets/Resources/400+ Rpg items16x16/tile211.png
-  artifactKey: Guid(5fa8a989da3385b42ab6e9cffd4f009b) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/400+ Rpg items16x16/tile211.png using Guid(5fa8a989da3385b42ab6e9cffd4f009b) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '4a19cee153ca529b93c33ae2d8f10291') in 0.5474112 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000074 seconds.
-  path: Assets/Resources/400+ Rpg items16x16/tile076.png
-  artifactKey: Guid(98809666f15190145a956db386dcbdac) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/400+ Rpg items16x16/tile076.png using Guid(98809666f15190145a956db386dcbdac) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '0611a8da3811a474244bdc2f4853e361') in 0.6012435 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000049 seconds.
-  path: Assets/Resources/400+ Rpg items16x16/tile005.png
-  artifactKey: Guid(bfa795617b76072418166c6115632f2a) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/400+ Rpg items16x16/tile005.png using Guid(bfa795617b76072418166c6115632f2a) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '6041101727bdd850149cc1e9025745d9') in 0.5860215 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000041 seconds.
-  path: Assets/Resources/400+ Rpg items16x16/tile040.png
-  artifactKey: Guid(9c7fe45d37cd92b42902daa8de3ccb50) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/400+ Rpg items16x16/tile040.png using Guid(9c7fe45d37cd92b42902daa8de3ccb50) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'ebc7b86243f60a11b223e101e3d95443') in 0.5740967 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000039 seconds.
-  path: Assets/Resources/400+ Rpg items16x16/tile071.png
-  artifactKey: Guid(d6e6622f8d2859145877ee33ebeadd53) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/400+ Rpg items16x16/tile071.png using Guid(d6e6622f8d2859145877ee33ebeadd53) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '8f1e9337cda9d06ddf1703ba0e93dcec') in 0.5973612 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000042 seconds.
-  path: Assets/Resources/400+ Rpg items16x16/tile124.png
-  artifactKey: Guid(218b841f116d64d49ad5f7d79258687a) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/400+ Rpg items16x16/tile124.png using Guid(218b841f116d64d49ad5f7d79258687a) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'b1fb4d55dacaaa299e4e8b2b63aa4bf0') in 0.5882548 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000035 seconds.
-  path: Assets/Resources/400+ Rpg items16x16/tile146.png
-  artifactKey: Guid(57d16fe1073ab26429dd1639b74418e5) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/400+ Rpg items16x16/tile146.png using Guid(57d16fe1073ab26429dd1639b74418e5) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '49a08e05da0174ca1137a13b20d24682') in 0.6128283 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000043 seconds.
-  path: Assets/Resources/400+ Rpg items16x16/tile045.png
-  artifactKey: Guid(d2cfbd37708993d4294e3d66a36d6289) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/400+ Rpg items16x16/tile045.png using Guid(d2cfbd37708993d4294e3d66a36d6289) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'd771b162c63fbe3fc8aff3d749f1859d') in 0.5953354 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000033 seconds.
-  path: Assets/Resources/400+ Rpg items16x16/tile021.png
-  artifactKey: Guid(fb82e8c6a259daf438f141a20ae69cb5) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/400+ Rpg items16x16/tile021.png using Guid(fb82e8c6a259daf438f141a20ae69cb5) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '498a961f5ffda04241934b588a772ebc') in 0.5816053 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000040 seconds.
-  path: Assets/Resources/400+ Rpg items16x16/tile162.png
-  artifactKey: Guid(062098c642dc18f4395142902a90ca9c) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/400+ Rpg items16x16/tile162.png using Guid(062098c642dc18f4395142902a90ca9c) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '3e50ba73dedb90db2e8cf1b2e6fdb367') in 0.6096496 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000034 seconds.
-  path: Assets/Resources/400+ Rpg items16x16/tile081.png
-  artifactKey: Guid(bb83aafdea4f8b741b9785eadc47955c) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/400+ Rpg items16x16/tile081.png using Guid(bb83aafdea4f8b741b9785eadc47955c) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'ba72ebc7e5041eb48a2ed4f780971b37') in 0.6089809 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000046 seconds.
-  path: Assets/Resources/400+ Rpg items16x16/tile012.png
-  artifactKey: Guid(ce756abf5f7a25344a063b3e4eba53b0) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/400+ Rpg items16x16/tile012.png using Guid(ce756abf5f7a25344a063b3e4eba53b0) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'a1315159ca5c221ee17c04671e49e256') in 0.5983466 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000034 seconds.
-  path: Assets/Resources/400+ Rpg items16x16/tile073.png
-  artifactKey: Guid(d784ab4569a14cf439ddc9fd71a17f38) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/400+ Rpg items16x16/tile073.png using Guid(d784ab4569a14cf439ddc9fd71a17f38) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '1d62e4c70a035b2e3a345d28ab0fd290') in 0.6077457 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000050 seconds.
-  path: Assets/Resources/400+ Rpg items16x16/tile140.png
-  artifactKey: Guid(72e4831279f5c964085d063dac5167fa) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/400+ Rpg items16x16/tile140.png using Guid(72e4831279f5c964085d063dac5167fa) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '2a71523e7d8018ed393610dc73aee265') in 0.6127979 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000033 seconds.
-  path: Assets/Resources/400+ Rpg items16x16/tile044.png
-  artifactKey: Guid(1769caf937090374ba7c0257c94baca6) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/400+ Rpg items16x16/tile044.png using Guid(1769caf937090374ba7c0257c94baca6) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '6f90acdfa9f929e2f0a94d4871805a4f') in 0.5761559 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000045 seconds.
-  path: Assets/Resources/400+ Rpg items16x16/tile181.png
-  artifactKey: Guid(e694fb9b42530c149872bf8abc79b794) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/400+ Rpg items16x16/tile181.png using Guid(e694fb9b42530c149872bf8abc79b794) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '0b32dec8945ca6f42d75854cfc42b225') in 0.5824959 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000031 seconds.
-  path: Assets/Resources/400+ Rpg items16x16/tile199.png
-  artifactKey: Guid(c5cd059f35a70e04783d6a024debeb66) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/400+ Rpg items16x16/tile199.png using Guid(c5cd059f35a70e04783d6a024debeb66) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'e0cf368e2aa2bb6bed22c11cfb11bf33') in 0.5750438 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000043 seconds.
-  path: Assets/Resources/400+ Rpg items16x16/tile208.png
-  artifactKey: Guid(fa365dfa8b566784682146477ce42cb1) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/400+ Rpg items16x16/tile208.png using Guid(fa365dfa8b566784682146477ce42cb1) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'b12d5c140ff127f40a07fbfe2534a9a4') in 0.5442227 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000033 seconds.
-  path: Assets/Resources/400+ Rpg items16x16/tile122.png
-  artifactKey: Guid(2354d80cc93b6e64a8a660b7c84b4377) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/400+ Rpg items16x16/tile122.png using Guid(2354d80cc93b6e64a8a660b7c84b4377) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '3c675cf838b174f882f09459e7afc9ce') in 0.5129723 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000042 seconds.
-  path: Assets/Resources/400+ Rpg items16x16/tile165.png
-  artifactKey: Guid(2a43b1335fce3ef49a9c2e54f26d6585) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/400+ Rpg items16x16/tile165.png using Guid(2a43b1335fce3ef49a9c2e54f26d6585) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'a29c42eb6758448014b5d37bfb6ebb7b') in 0.567659 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000034 seconds.
-  path: Assets/Resources/400+ Rpg items16x16/tile148.png
-  artifactKey: Guid(f87db9e9f8768f04897db77407f93927) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/400+ Rpg items16x16/tile148.png using Guid(f87db9e9f8768f04897db77407f93927) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '0e8e08ae9dcae849d14e58493a4408de') in 0.5325608 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000050 seconds.
-  path: Assets/Resources/400+ Rpg items16x16/tile185.png
-  artifactKey: Guid(f38ee9f1eb9c0dc4f8ccc93f47964c1c) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/400+ Rpg items16x16/tile185.png using Guid(f38ee9f1eb9c0dc4f8ccc93f47964c1c) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'ee90fc9578d0074e5a5f46a01d4b2ca7') in 0.5300327 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000040 seconds.
-  path: Assets/Resources/400+ Rpg items16x16/tile087.png
-  artifactKey: Guid(08b624b86f430c1429b3d2b5835c0356) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/400+ Rpg items16x16/tile087.png using Guid(08b624b86f430c1429b3d2b5835c0356) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '776b8d8514e359a3e5d3a9b91b84da88') in 0.6036623 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000047 seconds.
-  path: Assets/Resources/400+ Rpg items16x16/tile200.png
-  artifactKey: Guid(ab95f38074525fd438b785d9608427db) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/400+ Rpg items16x16/tile200.png using Guid(ab95f38074525fd438b785d9608427db) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'ae26a469acbb05b9dc1474eb0ffcf8cd') in 0.5291028 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
-
-========================================================================
-Received Import Request.
-  Time since last request: 49.709723 seconds.
-  path: Assets/Resources/CompleteIconQuest.png
-  artifactKey: Guid(be558b34cf9632b4fa9eff43f5871780) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/CompleteIconQuest.png using Guid(be558b34cf9632b4fa9eff43f5871780) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '077cda6ff47e8192518e952abc76727c') in 0.5101553 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000039 seconds.
-  path: Assets/Resources/QuestArrow.png
-  artifactKey: Guid(07bcd1c0cda822b4886cf9173119b2de) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/QuestArrow.png using Guid(07bcd1c0cda822b4886cf9173119b2de) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '6e34e74ec92ba268724642075429a9fb') in 0.5420626 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000044 seconds.
-  path: Assets/Resources/Street_Lamp.png
-  artifactKey: Guid(50e95044d05781144a59a010df3a6b3b) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Street_Lamp.png using Guid(50e95044d05781144a59a010df3a6b3b) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'a39c84aab16efc2edc84b9bd4369c054') in 0.5321449 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000038 seconds.
+  Time since last request: 0.000030 seconds.
   path: Assets/Resources/potions_black_outline.png
   artifactKey: Guid(a9fe4898b61b4394886d460606cba7e9) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/potions_black_outline.png using Guid(a9fe4898b61b4394886d460606cba7e9) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '43510c9fe692cbee1444941528231c19') in 1.0832247 seconds
+Start importing Assets/Resources/potions_black_outline.png using Guid(a9fe4898b61b4394886d460606cba7e9) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '0539a02f80966f4f7acb4a4763b9c522') in 1.4344318 seconds
 Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
 
 ========================================================================
 Received Import Request.
-  Time since last request: 1.649984 seconds.
+  Time since last request: 0.000040 seconds.
+  path: Assets/Resources/Fill_HP_Bar.png
+  artifactKey: Guid(cb3a853a1ac95b944905793453c3aeec) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Fill_HP_Bar.png using Guid(cb3a853a1ac95b944905793453c3aeec) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'd57e861c75075f0bec7f6e9b6da64ecb') in 0.6275543 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000034 seconds.
+  path: Assets/Resources/BackGround_HP_Bar.png
+  artifactKey: Guid(2e134a6fe063a5243b2a998d9c0d952a) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/BackGround_HP_Bar.png using Guid(2e134a6fe063a5243b2a998d9c0d952a) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'cdfddb2ef04348f1893fb62afb75d848') in 0.5312587 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000045 seconds.
+  path: Assets/Resources/Tower_1.png
+  artifactKey: Guid(026a913376f47a54282d034435aaed48) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/Tower_1.png using Guid(026a913376f47a54282d034435aaed48) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '4065a480ddf076eb6fc41714609247c9') in 0.5818619 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000035 seconds.
+  path: Assets/Resources/TrashBasket.png
+  artifactKey: Guid(1e46078eaa88b354d8b1633c31c5ea49) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Resources/TrashBasket.png using Guid(1e46078eaa88b354d8b1633c31c5ea49) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '9346a34cd0f6163196bee01acc4de42f') in 0.5519506 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
+
+========================================================================
+Received Import Request.
+  Time since last request: 16.552901 seconds.
   path: Assets/New Sprite Atlas.spriteatlasv2
   artifactKey: Guid(f31d293d6555e6842a1c4d03a09a9555) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/New Sprite Atlas.spriteatlasv2 using Guid(f31d293d6555e6842a1c4d03a09a9555) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'f4c398210f3144757d05dc9a321e9d95') in 0.015159 seconds
+Start importing Assets/New Sprite Atlas.spriteatlasv2 using Guid(f31d293d6555e6842a1c4d03a09a9555) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '592dee10651b6c24627b923c4330140a') in 0.0121186 seconds
 Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 2
 
 ========================================================================
 Received Import Request.
-  Time since last request: 0.000022 seconds.
+  Time since last request: 0.000043 seconds.
   path: Assets/Palm_0.asset
   artifactKey: Guid(d61fc2fb862877a4eb6e4aaada142e4a) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Palm_0.asset using Guid(d61fc2fb862877a4eb6e4aaada142e4a) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'bd175a2a65bc725646b2b723ba9a961b') in 0.5101025 seconds
+Start importing Assets/Palm_0.asset using Guid(d61fc2fb862877a4eb6e4aaada142e4a) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '0c8320063afa1afdd9fa939c692364ef') in 0.5223776 seconds
 Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
 
 ========================================================================
 Received Import Request.
-  Time since last request: 1.409662 seconds.
+  Time since last request: 4.391545 seconds.
   path: Assets/Prefabs/Enemy_Wolf.prefab
   artifactKey: Guid(a18df3f2375875d49921011445bdc4b0) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Prefabs/Enemy_Wolf.prefab using Guid(a18df3f2375875d49921011445bdc4b0) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'fde490ac410753a79ccea5e12954f6fe') in 1.1327847 seconds
+Start importing Assets/Prefabs/Enemy_Wolf.prefab using Guid(a18df3f2375875d49921011445bdc4b0) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '78b48911def3bccd9822e0ac61405286') in 1.1070882 seconds
 Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5105
 
 ========================================================================
 Received Import Request.
-  Time since last request: 0.000043 seconds.
-  path: Assets/Prefabs/ExitDoorToOpenWorld.prefab
-  artifactKey: Guid(411b8d095431622459ea2d6ad9988f88) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Prefabs/ExitDoorToOpenWorld.prefab using Guid(411b8d095431622459ea2d6ad9988f88) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '9793881ecac3120e5b14a160f3c8ebda') in 0.522 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5032
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000054 seconds.
-  path: Assets/Prefabs/NextFloorDoor.prefab
-  artifactKey: Guid(acac662dfcbe7bb4cadbfdc149a7ba98) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Prefabs/NextFloorDoor.prefab using Guid(acac662dfcbe7bb4cadbfdc149a7ba98) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '14084c21f68dd46d548eb5e883fb7826') in 0.4777069 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5029
-
-========================================================================
-Received Import Request.
-  Time since last request: 1.090458 seconds.
-  path: Assets/Prefabs/PrefabsJewelry/AmuletRegeneration.prefab
-  artifactKey: Guid(f870edc5d280b5f48ad945a99f0e8c55) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Prefabs/PrefabsJewelry/AmuletRegeneration.prefab using Guid(f870edc5d280b5f48ad945a99f0e8c55) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'b49f8d292a26d1e21ee371c6310e2842') in 0.5364765 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5036
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000051 seconds.
-  path: Assets/Prefabs/PrefabsJewelry/AmuletSpeedAttack.prefab
-  artifactKey: Guid(21b58a862c7dc374eb7dad8434a84a6c) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Prefabs/PrefabsJewelry/AmuletSpeedAttack.prefab using Guid(21b58a862c7dc374eb7dad8434a84a6c) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '3dd0740d50eb8a0005ecab1a4422c4b3') in 0.5172014 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5036
-
-========================================================================
-Received Import Request.
-  Time since last request: 33.793947 seconds.
-  path: Assets/Prefabs/PrefabsBelt/BeltArmorUncommon.prefab
-  artifactKey: Guid(10a671f91338be74da6ae78d07379ab9) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Prefabs/PrefabsBelt/BeltArmorUncommon.prefab using Guid(10a671f91338be74da6ae78d07379ab9) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '1503df246248b155a0262286b2e30722') in 0.5353447 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5036
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000048 seconds.
-  path: Assets/Prefabs/PrefabsBelt/BeltRegenerationUncommon.prefab
-  artifactKey: Guid(bd8ac1b10d275804ca425bff1e0e4d0e) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Prefabs/PrefabsBelt/BeltRegenerationUncommon.prefab using Guid(bd8ac1b10d275804ca425bff1e0e4d0e) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '93bd2b9122babaa91bd7ea99565f9dcb') in 0.5686012 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5036
-
-========================================================================
-Received Import Request.
-  Time since last request: 11.829189 seconds.
-  path: Assets/Pixel Monster Pack/32x32 monsters/wolf-white.png
-  artifactKey: Guid(e573449b0ffb8814e84905c16467421e) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Pixel Monster Pack/32x32 monsters/wolf-white.png using Guid(e573449b0ffb8814e84905c16467421e) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'db33b425d3ab54ce13cc3d30867604fe') in 0.5319022 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000042 seconds.
-  path: Assets/Pixel Monster Pack/64x64 monsters/worm-brown.png
-  artifactKey: Guid(778b60b99daa56241a73c210fb961e61) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Pixel Monster Pack/64x64 monsters/worm-brown.png using Guid(778b60b99daa56241a73c210fb961e61) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '504bd50be9180976874fd0912d671876') in 0.5591868 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000051 seconds.
-  path: Assets/Resources/Fish/C - Misc/Worm.png
-  artifactKey: Guid(502e45a0752dcc046b7e372640166e4e) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/Fish/C - Misc/Worm.png using Guid(502e45a0752dcc046b7e372640166e4e) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'b683267b157fb432fa831f4d0a3dc53e') in 0.5721263 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000042 seconds.
-  path: Assets/Pixel Monster Pack/64x64 monsters/worm-black.png
-  artifactKey: Guid(551cb54b2be67ba479d96244192ce9f2) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Pixel Monster Pack/64x64 monsters/worm-black.png using Guid(551cb54b2be67ba479d96244192ce9f2) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'abbfeac45c25554ceaf736aa08c449b8') in 0.4837423 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000058 seconds.
-  path: Assets/Resources/400+ Rpg items16x16/tile403.png
-  artifactKey: Guid(3656e07c20c7c6e43b75e1e1082957be) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/400+ Rpg items16x16/tile403.png using Guid(3656e07c20c7c6e43b75e1e1082957be) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'ff8f9799d4be119089f3f79e279cf7cc') in 0.5729258 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000044 seconds.
-  path: Assets/Resources/400+ Rpg items16x16/tile417.png
-  artifactKey: Guid(37565ce2108e67045ab16a205eec4f88) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/400+ Rpg items16x16/tile417.png using Guid(37565ce2108e67045ab16a205eec4f88) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '980598abd0b3b510806fb068429818a3') in 0.5448097 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000069 seconds.
-  path: Assets/Resources/400+ Rpg items16x16/tile385.png
-  artifactKey: Guid(d723eecba8b8183458d638123fc51e28) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/400+ Rpg items16x16/tile385.png using Guid(d723eecba8b8183458d638123fc51e28) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '74b7fe6f06c7f1cb30d209e190e6bb12') in 0.5142358 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
-
-========================================================================
-Received Import Request.
   Time since last request: 0.000040 seconds.
-  path: Assets/Resources/400+ Rpg items16x16/tile329.png
-  artifactKey: Guid(073d060a37757104cbbf7259cbca2f89) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/400+ Rpg items16x16/tile329.png using Guid(073d060a37757104cbbf7259cbca2f89) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '58ed29db5081d40b0733ab00c1ad772c') in 0.5106939 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
+  path: Assets/Prefabs/GoldPopup_Prefab.prefab
+  artifactKey: Guid(3e87bbc5133b9d5459204c72532fd674) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Prefabs/GoldPopup_Prefab.prefab using Guid(3e87bbc5133b9d5459204c72532fd674) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'ccc3c526dbdb56bb525faf87daac1e3f') in 0.5542681 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5044
 
-========================================================================
-Received Import Request.
-  Time since last request: 0.000062 seconds.
-  path: Assets/Resources/400+ Rpg items16x16/tile295.png
-  artifactKey: Guid(f6eaf630b0ff50d479c8f5e3b5cc1541) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/400+ Rpg items16x16/tile295.png using Guid(f6eaf630b0ff50d479c8f5e3b5cc1541) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'ca90193993f82eb5deeac7b9767e7115') in 0.5387545 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000040 seconds.
-  path: Assets/Resources/400+ Rpg items16x16/tile246.png
-  artifactKey: Guid(4f0498e52ac028b46b7027fdf658e02d) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/400+ Rpg items16x16/tile246.png using Guid(4f0498e52ac028b46b7027fdf658e02d) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '52f38b833172b56f9d436866eb76c492') in 0.560291 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000050 seconds.
-  path: Assets/Resources/400+ Rpg items16x16/tile263.png
-  artifactKey: Guid(9cb3976664447fc4bb3f53bd38f6433b) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/400+ Rpg items16x16/tile263.png using Guid(9cb3976664447fc4bb3f53bd38f6433b) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '90e55d907bd9b75265cee29bb7d17efb') in 0.5527521 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000057 seconds.
-  path: Assets/Resources/400+ Rpg items16x16/tile330.png
-  artifactKey: Guid(1541874df5817414498b20b35f67fd7b) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/400+ Rpg items16x16/tile330.png using Guid(1541874df5817414498b20b35f67fd7b) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '6ef553da56c759d0d277c5a6092f717f') in 0.6016038 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000062 seconds.
-  path: Assets/Resources/400+ Rpg items16x16/tile370.png
-  artifactKey: Guid(3c7943a962080824daaf9bcc68222ca7) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/400+ Rpg items16x16/tile370.png using Guid(3c7943a962080824daaf9bcc68222ca7) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '909adf8c89e742d88bab61decc32df5a') in 0.557075 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000042 seconds.
-  path: Assets/Resources/400+ Rpg items16x16/tile247.png
-  artifactKey: Guid(adfa57a67716c7b4f833bd1f9aeb97e8) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/400+ Rpg items16x16/tile247.png using Guid(adfa57a67716c7b4f833bd1f9aeb97e8) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '279a4a229b8506a6777ad58e88f8f45a') in 0.5670534 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000380 seconds.
-  path: Assets/Resources/400+ Rpg items16x16/tile427.png
-  artifactKey: Guid(569ab95ef315b3b48aa0be50a7eff688) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/400+ Rpg items16x16/tile427.png using Guid(569ab95ef315b3b48aa0be50a7eff688) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '2c7668d579c749380fc0a1263dd3627c') in 0.5223718 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000043 seconds.
-  path: Assets/Prefabs/PrefabsHelmet/BeltRegenerationRare.prefab
-  artifactKey: Guid(a45f9391af8c1574a9841bc2fca7d7a5) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Prefabs/PrefabsHelmet/BeltRegenerationRare.prefab using Guid(a45f9391af8c1574a9841bc2fca7d7a5) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '630c5d0ddb565f73aff39bcc7b1aa82b') in 0.5161542 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5036
-
-========================================================================
-Received Import Request.
-  Time since last request: 19.782967 seconds.
-  path: Assets/Resources/400+ Rpg items16x16/tile401.png
-  artifactKey: Guid(db56d89222f25be4790d7565f4168650) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/400+ Rpg items16x16/tile401.png using Guid(db56d89222f25be4790d7565f4168650) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'f2a82d177de7be67d145c9d22ae980e4') in 0.5884094 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000043 seconds.
-  path: Assets/Resources/400+ Rpg items16x16/tile433.png
-  artifactKey: Guid(6be210a6ca20a3f43a5511da5f2d6d82) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/400+ Rpg items16x16/tile433.png using Guid(6be210a6ca20a3f43a5511da5f2d6d82) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '7f74553bcfbbc205ff42c274b4e9d83a') in 0.6400192 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000064 seconds.
-  path: Assets/Resources/400+ Rpg items16x16/tile346.png
-  artifactKey: Guid(c5bbd1fdcf4767945b30fad9c170e818) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/400+ Rpg items16x16/tile346.png using Guid(c5bbd1fdcf4767945b30fad9c170e818) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '96964fd12140f857b6b39d7f689a50b8') in 0.5732418 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000053 seconds.
-  path: Assets/Resources/400+ Rpg items16x16/tile276.png
-  artifactKey: Guid(88ea881e8312231458d7805ea27501c3) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/400+ Rpg items16x16/tile276.png using Guid(88ea881e8312231458d7805ea27501c3) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '098d71c10a7ef0e5bd6c9c5560fdb457') in 0.5840472 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000050 seconds.
-  path: Assets/Resources/400+ Rpg items16x16/tile285.png
-  artifactKey: Guid(8cf8aa74d9703384abbe5fa7b4a064ca) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/400+ Rpg items16x16/tile285.png using Guid(8cf8aa74d9703384abbe5fa7b4a064ca) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '56fd5076118ecbb08e868f977c825576') in 0.6121188 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000045 seconds.
-  path: Assets/Resources/400+ Rpg items16x16/tile240.png
-  artifactKey: Guid(aa24052d6d48c0c4b9911d2f07128f9f) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/400+ Rpg items16x16/tile240.png using Guid(aa24052d6d48c0c4b9911d2f07128f9f) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '6c10c035784a495d8b502eb455492029') in 0.6100861 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000059 seconds.
-  path: Assets/Resources/400+ Rpg items16x16/tile377.png
-  artifactKey: Guid(96f5a0d5364ab6249856f71f3beba3ea) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/400+ Rpg items16x16/tile377.png using Guid(96f5a0d5364ab6249856f71f3beba3ea) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'd8203996309333b1a92c8d7ca99fdd05') in 0.572289 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000045 seconds.
-  path: Assets/Resources/400+ Rpg items16x16/tile332.png
-  artifactKey: Guid(50cedb7bc98ac3745b0a0aee04997f67) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/400+ Rpg items16x16/tile332.png using Guid(50cedb7bc98ac3745b0a0aee04997f67) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'a6d10330259b2f78eb809d34c1d8aa81') in 0.5835418 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000055 seconds.
-  path: Assets/Resources/400+ Rpg items16x16/tile394.png
-  artifactKey: Guid(67619a9c341368149b05189927e3733d) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Resources/400+ Rpg items16x16/tile394.png using Guid(67619a9c341368149b05189927e3733d) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '3cae29f2494b1dae73d6297ec38d7c51') in 0.5444066 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5022
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000039 seconds.
-  path: Assets/Prefabs/PrefabsHelmet/BeltRegenerationRare.prefab
-  artifactKey: Guid(a45f9391af8c1574a9841bc2fca7d7a5) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Prefabs/PrefabsHelmet/BeltRegenerationRare.prefab using Guid(a45f9391af8c1574a9841bc2fca7d7a5) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'ed3f8cdcceff26f566f29c218fdcdd57') in 0.4888132 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5036
-
-========================================================================
-Received Prepare
-[Licensing::Client] Successfully resolved entitlement details
-Begin MonoManager ReloadAssembly
-[Licensing::Client] Successfully resolved entitlement details
-Duplicate assembly 'log4net.dll' with different versions detected, using 'Packages/com.unity.package-validation-suite/Lib/Editor/log4net.dll, AssemblyName=log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a' and ignoring 'Packages/com.unity.collab-proxy/Lib/Editor/log4netPlastic.dll, AssemblyName=log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a'.Symbol file LoadedFromMemory is not a mono symbol file
-Symbol file LoadedFromMemory is not a mono symbol file
-- Loaded All Assemblies, in  1.308 seconds
-Refreshing native plugins compatible for Editor in 13.56 ms, found 5 plugins.
-Native extension for Android target not found
-Native extension for WindowsStandalone target not found
-[Package Manager] Failed to launch server process. Reason: Unity was launched with the -noUpm command-line argument
-[Package Manager] Unable to send message (not connected to server process).
-[Package Manager] Cannot connect to Unity Package Manager local server
-[Package Manager] Failed to launch server process. Reason: Unity was launched with the -noUpm command-line argument
-[Package Manager] Unable to send message (not connected to server process).
-[Package Manager] Cannot connect to Unity Package Manager local server
-[Package Manager] Failed to launch server process. Reason: Unity was launched with the -noUpm command-line argument
-[Package Manager] Unable to send message (not connected to server process).
-[Package Manager] Cannot connect to Unity Package Manager local server
-ScheduleIndexationOnStartup MainProcess:False IndexOnStartup:True
-Mono: successfully reloaded assembly
-- Finished resetting the current domain, in  1.242 seconds
-Domain Reload Profiling: 2552ms
-	BeginReloadAssembly (360ms)
-		ExecutionOrderSort (0ms)
-		DisableScriptedObjects (53ms)
-		BackupInstance (0ms)
-		ReleaseScriptingObjects (0ms)
-		CreateAndSetChildDomain (87ms)
-	RebuildCommonClasses (52ms)
-	RebuildNativeTypeToScriptingClass (21ms)
-	initialDomainReloadingComplete (39ms)
-	LoadAllAssembliesAndSetupDomain (837ms)
-		LoadAssemblies (599ms)
-		RebuildTransferFunctionScriptingTraits (0ms)
-		AnalyzeDomain (372ms)
-			TypeCache.Refresh (16ms)
-				TypeCache.ScanAssembly (3ms)
-			BuildScriptInfoCaches (331ms)
-			ResolveRequiredComponents (20ms)
-	FinalizeReload (1242ms)
-		ReleaseScriptCaches (0ms)
-		RebuildScriptCaches (0ms)
-		SetupLoadedEditorAssemblies (968ms)
-			LogAssemblyErrors (0ms)
-			InitializePlatformSupportModulesInManaged (11ms)
-			SetLoadedEditorAssemblies (5ms)
-			BeforeProcessingInitializeOnLoad (235ms)
-			ProcessInitializeOnLoadAttributes (489ms)
-			ProcessInitializeOnLoadMethodAttributes (223ms)
-			AfterProcessingInitializeOnLoad (4ms)
-			EditorAssembliesLoaded (1ms)
-		ExecutionOrderSort2 (0ms)
-		AwakeInstancesAfterBackupRestoration (20ms)
-Refreshing native plugins compatible for Editor in 11.71 ms, found 5 plugins.
-Preloading 0 native plugins for Editor in 0.00 ms.
-Unloading 17 Unused Serialized files (Serialized files now loaded: 0)
-Unloading 9068 unused Assets / (5.9 MB). Loaded Objects now: 10007.
-Memory consumption went from 196.5 MB to 190.6 MB.
-Total: 14.522600 ms (FindLiveObjects: 1.276600 ms CreateObjectMapping: 1.163000 ms MarkObjects: 7.541900 ms  DeleteObjects: 4.539800 ms)
-
-Prepare: number of updated asset objects reloaded= 0
-========================================================================
-Received Prepare
-[Licensing::Client] Successfully resolved entitlement details
-Begin MonoManager ReloadAssembly
-[Licensing::Client] Successfully resolved entitlement details
-Duplicate assembly 'log4net.dll' with different versions detected, using 'Packages/com.unity.package-validation-suite/Lib/Editor/log4net.dll, AssemblyName=log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a' and ignoring 'Packages/com.unity.collab-proxy/Lib/Editor/log4netPlastic.dll, AssemblyName=log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a'.Symbol file LoadedFromMemory is not a mono symbol file
-Symbol file LoadedFromMemory is not a mono symbol file
-- Loaded All Assemblies, in  1.429 seconds
-Refreshing native plugins compatible for Editor in 13.39 ms, found 5 plugins.
-Native extension for Android target not found
-Native extension for WindowsStandalone target not found
-[Package Manager] Failed to launch server process. Reason: Unity was launched with the -noUpm command-line argument
-[Package Manager] Unable to send message (not connected to server process).
-[Package Manager] Cannot connect to Unity Package Manager local server
-[Package Manager] Failed to launch server process. Reason: Unity was launched with the -noUpm command-line argument
-[Package Manager] Unable to send message (not connected to server process).
-[Package Manager] Cannot connect to Unity Package Manager local server
-[Package Manager] Failed to launch server process. Reason: Unity was launched with the -noUpm command-line argument
-[Package Manager] Unable to send message (not connected to server process).
-[Package Manager] Cannot connect to Unity Package Manager local server
-ScheduleIndexationOnStartup MainProcess:False IndexOnStartup:True
-Mono: successfully reloaded assembly
-- Finished resetting the current domain, in  1.374 seconds
-Domain Reload Profiling: 2807ms
-	BeginReloadAssembly (325ms)
-		ExecutionOrderSort (0ms)
-		DisableScriptedObjects (25ms)
-		BackupInstance (0ms)
-		ReleaseScriptingObjects (0ms)
-		CreateAndSetChildDomain (74ms)
-	RebuildCommonClasses (54ms)
-	RebuildNativeTypeToScriptingClass (22ms)
-	initialDomainReloadingComplete (44ms)
-	LoadAllAssembliesAndSetupDomain (988ms)
-		LoadAssemblies (677ms)
-		RebuildTransferFunctionScriptingTraits (0ms)
-		AnalyzeDomain (448ms)
-			TypeCache.Refresh (11ms)
-				TypeCache.ScanAssembly (0ms)
-			BuildScriptInfoCaches (405ms)
-			ResolveRequiredComponents (26ms)
-	FinalizeReload (1374ms)
-		ReleaseScriptCaches (0ms)
-		RebuildScriptCaches (0ms)
-		SetupLoadedEditorAssemblies (1053ms)
-			LogAssemblyErrors (0ms)
-			InitializePlatformSupportModulesInManaged (12ms)
-			SetLoadedEditorAssemblies (5ms)
-			BeforeProcessingInitializeOnLoad (264ms)
-			ProcessInitializeOnLoadAttributes (531ms)
-			ProcessInitializeOnLoadMethodAttributes (235ms)
-			AfterProcessingInitializeOnLoad (4ms)
-			EditorAssembliesLoaded (1ms)
-		ExecutionOrderSort2 (0ms)
-		AwakeInstancesAfterBackupRestoration (20ms)
-Refreshing native plugins compatible for Editor in 11.46 ms, found 5 plugins.
-Preloading 0 native plugins for Editor in 0.00 ms.
-Unloading 17 Unused Serialized files (Serialized files now loaded: 0)
-Unloading 9065 unused Assets / (5.6 MB). Loaded Objects now: 10013.
-Memory consumption went from 196.3 MB to 190.7 MB.
-Total: 16.979400 ms (FindLiveObjects: 1.393400 ms CreateObjectMapping: 1.162000 ms MarkObjects: 8.035700 ms  DeleteObjects: 6.386200 ms)
-
-Prepare: number of updated asset objects reloaded= 0
-========================================================================
-Received Prepare
-[Licensing::Client] Successfully resolved entitlement details
-Begin MonoManager ReloadAssembly
-[Licensing::Client] Successfully resolved entitlement details
-Duplicate assembly 'log4net.dll' with different versions detected, using 'Packages/com.unity.package-validation-suite/Lib/Editor/log4net.dll, AssemblyName=log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a' and ignoring 'Packages/com.unity.collab-proxy/Lib/Editor/log4netPlastic.dll, AssemblyName=log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a'.Symbol file LoadedFromMemory is not a mono symbol file
-Symbol file LoadedFromMemory is not a mono symbol file
-- Loaded All Assemblies, in  1.284 seconds
-Refreshing native plugins compatible for Editor in 12.91 ms, found 5 plugins.
-Native extension for Android target not found
-Native extension for WindowsStandalone target not found
-[Package Manager] Failed to launch server process. Reason: Unity was launched with the -noUpm command-line argument
-[Package Manager] Unable to send message (not connected to server process).
-[Package Manager] Cannot connect to Unity Package Manager local server
-[Package Manager] Failed to launch server process. Reason: Unity was launched with the -noUpm command-line argument
-[Package Manager] Unable to send message (not connected to server process).
-[Package Manager] Cannot connect to Unity Package Manager local server
-[Package Manager] Failed to launch server process. Reason: Unity was launched with the -noUpm command-line argument
-[Package Manager] Unable to send message (not connected to server process).
-[Package Manager] Cannot connect to Unity Package Manager local server
-ScheduleIndexationOnStartup MainProcess:False IndexOnStartup:True
-Mono: successfully reloaded assembly
-- Finished resetting the current domain, in  1.803 seconds
-Domain Reload Profiling: 3091ms
-	BeginReloadAssembly (312ms)
-		ExecutionOrderSort (0ms)
-		DisableScriptedObjects (25ms)
-		BackupInstance (0ms)
-		ReleaseScriptingObjects (0ms)
-		CreateAndSetChildDomain (68ms)
-	RebuildCommonClasses (54ms)
-	RebuildNativeTypeToScriptingClass (22ms)
-	initialDomainReloadingComplete (40ms)
-	LoadAllAssembliesAndSetupDomain (859ms)
-		LoadAssemblies (595ms)
-		RebuildTransferFunctionScriptingTraits (0ms)
-		AnalyzeDomain (396ms)
-			TypeCache.Refresh (21ms)
-				TypeCache.ScanAssembly (5ms)
-			BuildScriptInfoCaches (349ms)
-			ResolveRequiredComponents (21ms)
-	FinalizeReload (1804ms)
-		ReleaseScriptCaches (0ms)
-		RebuildScriptCaches (0ms)
-		SetupLoadedEditorAssemblies (1357ms)
-			LogAssemblyErrors (0ms)
-			InitializePlatformSupportModulesInManaged (15ms)
-			SetLoadedEditorAssemblies (8ms)
-			BeforeProcessingInitializeOnLoad (393ms)
-			ProcessInitializeOnLoadAttributes (660ms)
-			ProcessInitializeOnLoadMethodAttributes (275ms)
-			AfterProcessingInitializeOnLoad (5ms)
-			EditorAssembliesLoaded (1ms)
-		ExecutionOrderSort2 (0ms)
-		AwakeInstancesAfterBackupRestoration (42ms)
-Refreshing native plugins compatible for Editor in 21.94 ms, found 5 plugins.
-Preloading 0 native plugins for Editor in 0.00 ms.
-Unloading 17 Unused Serialized files (Serialized files now loaded: 0)
-Unloading 9065 unused Assets / (4.6 MB). Loaded Objects now: 10019.
-Memory consumption went from 196.3 MB to 191.7 MB.
-Total: 29.615500 ms (FindLiveObjects: 1.554600 ms CreateObjectMapping: 2.108900 ms MarkObjects: 13.775900 ms  DeleteObjects: 12.173400 ms)
-
-Prepare: number of updated asset objects reloaded= 0
-========================================================================
-Received Prepare
-Begin MonoManager ReloadAssembly
-Duplicate assembly 'log4net.dll' with different versions detected, using 'Packages/com.unity.package-validation-suite/Lib/Editor/log4net.dll, AssemblyName=log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a' and ignoring 'Packages/com.unity.collab-proxy/Lib/Editor/log4netPlastic.dll, AssemblyName=log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a'.Symbol file LoadedFromMemory is not a mono symbol file
-Symbol file LoadedFromMemory is not a mono symbol file
-- Loaded All Assemblies, in  1.315 seconds
-Refreshing native plugins compatible for Editor in 13.16 ms, found 5 plugins.
-Native extension for Android target not found
-Native extension for WindowsStandalone target not found
-[Package Manager] Failed to launch server process. Reason: Unity was launched with the -noUpm command-line argument
-[Package Manager] Unable to send message (not connected to server process).
-[Package Manager] Cannot connect to Unity Package Manager local server
-[Package Manager] Failed to launch server process. Reason: Unity was launched with the -noUpm command-line argument
-[Package Manager] Unable to send message (not connected to server process).
-[Package Manager] Cannot connect to Unity Package Manager local server
-[Package Manager] Failed to launch server process. Reason: Unity was launched with the -noUpm command-line argument
-[Package Manager] Unable to send message (not connected to server process).
-[Package Manager] Cannot connect to Unity Package Manager local server
-ScheduleIndexationOnStartup MainProcess:False IndexOnStartup:True
-Mono: successfully reloaded assembly
-- Finished resetting the current domain, in  1.305 seconds
-Domain Reload Profiling: 2624ms
-	BeginReloadAssembly (301ms)
-		ExecutionOrderSort (0ms)
-		DisableScriptedObjects (19ms)
-		BackupInstance (0ms)
-		ReleaseScriptingObjects (0ms)
-		CreateAndSetChildDomain (69ms)
-	RebuildCommonClasses (57ms)
-	RebuildNativeTypeToScriptingClass (23ms)
-	initialDomainReloadingComplete (40ms)
-	LoadAllAssembliesAndSetupDomain (897ms)
-		LoadAssemblies (610ms)
-		RebuildTransferFunctionScriptingTraits (0ms)
-		AnalyzeDomain (422ms)
-			TypeCache.Refresh (10ms)
-				TypeCache.ScanAssembly (0ms)
-			BuildScriptInfoCaches (386ms)
-			ResolveRequiredComponents (21ms)
-	FinalizeReload (1306ms)
-		ReleaseScriptCaches (0ms)
-		RebuildScriptCaches (0ms)
-		SetupLoadedEditorAssemblies (1022ms)
-			LogAssemblyErrors (0ms)
-			InitializePlatformSupportModulesInManaged (11ms)
-			SetLoadedEditorAssemblies (6ms)
-			BeforeProcessingInitializeOnLoad (245ms)
-			ProcessInitializeOnLoadAttributes (504ms)
-			ProcessInitializeOnLoadMethodAttributes (253ms)
-			AfterProcessingInitializeOnLoad (4ms)
-			EditorAssembliesLoaded (1ms)
-		ExecutionOrderSort2 (0ms)
-		AwakeInstancesAfterBackupRestoration (20ms)
-Refreshing native plugins compatible for Editor in 12.39 ms, found 5 plugins.
-Preloading 0 native plugins for Editor in 0.00 ms.
-Unloading 17 Unused Serialized files (Serialized files now loaded: 0)
-Unloading 9065 unused Assets / (5.1 MB). Loaded Objects now: 10025.
-Memory consumption went from 196.4 MB to 191.3 MB.
-Total: 14.065100 ms (FindLiveObjects: 1.283700 ms CreateObjectMapping: 0.963500 ms MarkObjects: 7.693600 ms  DeleteObjects: 4.122600 ms)
-
-Prepare: number of updated asset objects reloaded= 0
-========================================================================
-Received Prepare
-[Licensing::Client] Successfully resolved entitlement details
-Begin MonoManager ReloadAssembly
-[Licensing::Client] Successfully resolved entitlement details
-Duplicate assembly 'log4net.dll' with different versions detected, using 'Packages/com.unity.package-validation-suite/Lib/Editor/log4net.dll, AssemblyName=log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a' and ignoring 'Packages/com.unity.collab-proxy/Lib/Editor/log4netPlastic.dll, AssemblyName=log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a'.Symbol file LoadedFromMemory is not a mono symbol file
-Symbol file LoadedFromMemory is not a mono symbol file
-- Loaded All Assemblies, in  1.336 seconds
-Refreshing native plugins compatible for Editor in 13.35 ms, found 5 plugins.
-Native extension for Android target not found
-Native extension for WindowsStandalone target not found
-[Package Manager] Failed to launch server process. Reason: Unity was launched with the -noUpm command-line argument
-[Package Manager] Unable to send message (not connected to server process).
-[Package Manager] Cannot connect to Unity Package Manager local server
-[Package Manager] Failed to launch server process. Reason: Unity was launched with the -noUpm command-line argument
-[Package Manager] Unable to send message (not connected to server process).
-[Package Manager] Cannot connect to Unity Package Manager local server
-[Package Manager] Failed to launch server process. Reason: Unity was launched with the -noUpm command-line argument
-[Package Manager] Unable to send message (not connected to server process).
-[Package Manager] Cannot connect to Unity Package Manager local server
-ScheduleIndexationOnStartup MainProcess:False IndexOnStartup:True
-Mono: successfully reloaded assembly
-- Finished resetting the current domain, in  1.282 seconds
-Domain Reload Profiling: 2621ms
-	BeginReloadAssembly (320ms)
-		ExecutionOrderSort (0ms)
-		DisableScriptedObjects (28ms)
-		BackupInstance (0ms)
-		ReleaseScriptingObjects (0ms)
-		CreateAndSetChildDomain (67ms)
-	RebuildCommonClasses (54ms)
-	RebuildNativeTypeToScriptingClass (22ms)
-	initialDomainReloadingComplete (43ms)
-	LoadAllAssembliesAndSetupDomain (898ms)
-		LoadAssemblies (627ms)
-		RebuildTransferFunctionScriptingTraits (0ms)
-		AnalyzeDomain (405ms)
-			TypeCache.Refresh (16ms)
-				TypeCache.ScanAssembly (3ms)
-			BuildScriptInfoCaches (364ms)
-			ResolveRequiredComponents (20ms)
-	FinalizeReload (1284ms)
-		ReleaseScriptCaches (0ms)
-		RebuildScriptCaches (0ms)
-		SetupLoadedEditorAssemblies (1026ms)
-			LogAssemblyErrors (0ms)
-			InitializePlatformSupportModulesInManaged (11ms)
-			SetLoadedEditorAssemblies (5ms)
-			BeforeProcessingInitializeOnLoad (272ms)
-			ProcessInitializeOnLoadAttributes (493ms)
-			ProcessInitializeOnLoadMethodAttributes (240ms)
-			AfterProcessingInitializeOnLoad (5ms)
-			EditorAssembliesLoaded (1ms)
-		ExecutionOrderSort2 (0ms)
-		AwakeInstancesAfterBackupRestoration (21ms)
-Refreshing native plugins compatible for Editor in 11.97 ms, found 5 plugins.
-Preloading 0 native plugins for Editor in 0.00 ms.
-Unloading 17 Unused Serialized files (Serialized files now loaded: 0)
-Unloading 9065 unused Assets / (5.1 MB). Loaded Objects now: 10031.
-Memory consumption went from 196.4 MB to 191.3 MB.
-Total: 14.245200 ms (FindLiveObjects: 1.292300 ms CreateObjectMapping: 0.764000 ms MarkObjects: 8.748900 ms  DeleteObjects: 3.438700 ms)
-
-Prepare: number of updated asset objects reloaded= 0
-========================================================================
-Received Prepare
-Begin MonoManager ReloadAssembly
-Duplicate assembly 'log4net.dll' with different versions detected, using 'Packages/com.unity.package-validation-suite/Lib/Editor/log4net.dll, AssemblyName=log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a' and ignoring 'Packages/com.unity.collab-proxy/Lib/Editor/log4netPlastic.dll, AssemblyName=log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a'.Symbol file LoadedFromMemory is not a mono symbol file
-Symbol file LoadedFromMemory is not a mono symbol file
-- Loaded All Assemblies, in  1.333 seconds
-Refreshing native plugins compatible for Editor in 12.41 ms, found 5 plugins.
-Native extension for Android target not found
-Native extension for WindowsStandalone target not found
-[Package Manager] Failed to launch server process. Reason: Unity was launched with the -noUpm command-line argument
-[Package Manager] Unable to send message (not connected to server process).
-[Package Manager] Cannot connect to Unity Package Manager local server
-[Package Manager] Failed to launch server process. Reason: Unity was launched with the -noUpm command-line argument
-[Package Manager] Unable to send message (not connected to server process).
-[Package Manager] Cannot connect to Unity Package Manager local server
-[Package Manager] Failed to launch server process. Reason: Unity was launched with the -noUpm command-line argument
-[Package Manager] Unable to send message (not connected to server process).
-[Package Manager] Cannot connect to Unity Package Manager local server
-ScheduleIndexationOnStartup MainProcess:False IndexOnStartup:True
-Mono: successfully reloaded assembly
-- Finished resetting the current domain, in  1.295 seconds
-Domain Reload Profiling: 2632ms
-	BeginReloadAssembly (315ms)
-		ExecutionOrderSort (0ms)
-		DisableScriptedObjects (19ms)
-		BackupInstance (0ms)
-		ReleaseScriptingObjects (0ms)
-		CreateAndSetChildDomain (70ms)
-	RebuildCommonClasses (53ms)
-	RebuildNativeTypeToScriptingClass (22ms)
-	initialDomainReloadingComplete (40ms)
-	LoadAllAssembliesAndSetupDomain (906ms)
-		LoadAssemblies (631ms)
-		RebuildTransferFunctionScriptingTraits (0ms)
-		AnalyzeDomain (415ms)
-			TypeCache.Refresh (10ms)
-				TypeCache.ScanAssembly (0ms)
-			BuildScriptInfoCaches (379ms)
-			ResolveRequiredComponents (20ms)
-	FinalizeReload (1296ms)
-		ReleaseScriptCaches (0ms)
-		RebuildScriptCaches (0ms)
-		SetupLoadedEditorAssemblies (1016ms)
-			LogAssemblyErrors (0ms)
-			InitializePlatformSupportModulesInManaged (14ms)
-			SetLoadedEditorAssemblies (6ms)
-			BeforeProcessingInitializeOnLoad (240ms)
-			ProcessInitializeOnLoadAttributes (517ms)
-			ProcessInitializeOnLoadMethodAttributes (234ms)
-			AfterProcessingInitializeOnLoad (5ms)
-			EditorAssembliesLoaded (1ms)
-		ExecutionOrderSort2 (0ms)
-		AwakeInstancesAfterBackupRestoration (20ms)
-Refreshing native plugins compatible for Editor in 11.03 ms, found 5 plugins.
-Preloading 0 native plugins for Editor in 0.00 ms.
-Unloading 17 Unused Serialized files (Serialized files now loaded: 0)
-Unloading 9065 unused Assets / (5.3 MB). Loaded Objects now: 10037.
-Memory consumption went from 196.5 MB to 191.2 MB.
-Total: 13.216900 ms (FindLiveObjects: 1.370200 ms CreateObjectMapping: 0.870600 ms MarkObjects: 7.344100 ms  DeleteObjects: 3.630800 ms)
-
-Prepare: number of updated asset objects reloaded= 0
-========================================================================
-Received Prepare
-Refreshing native plugins compatible for Editor in 37.77 ms, found 5 plugins.
-Preloading 0 native plugins for Editor in 0.00 ms.
-Unloading 17 Unused Serialized files (Serialized files now loaded: 0)
-Unloading 9014 unused Assets / (2.1 MB). Loaded Objects now: 10037.
-Memory consumption went from 196.4 MB to 194.3 MB.
-Total: 42.407200 ms (FindLiveObjects: 4.845900 ms CreateObjectMapping: 5.068600 ms MarkObjects: 18.616400 ms  DeleteObjects: 13.873000 ms)
-
-Prepare: number of updated asset objects reloaded= 0
-========================================================================
-Received Prepare
-[Licensing::Client] Successfully resolved entitlement details
-Begin MonoManager ReloadAssembly
-[Licensing::Client] Successfully resolved entitlement details
-Duplicate assembly 'log4net.dll' with different versions detected, using 'Packages/com.unity.package-validation-suite/Lib/Editor/log4net.dll, AssemblyName=log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a' and ignoring 'Packages/com.unity.collab-proxy/Lib/Editor/log4netPlastic.dll, AssemblyName=log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a'.Symbol file LoadedFromMemory is not a mono symbol file
-Symbol file LoadedFromMemory is not a mono symbol file
-- Loaded All Assemblies, in  1.304 seconds
-Refreshing native plugins compatible for Editor in 13.35 ms, found 5 plugins.
-Native extension for Android target not found
-Native extension for WindowsStandalone target not found
-[Package Manager] Failed to launch server process. Reason: Unity was launched with the -noUpm command-line argument
-[Package Manager] Unable to send message (not connected to server process).
-[Package Manager] Cannot connect to Unity Package Manager local server
-[Package Manager] Failed to launch server process. Reason: Unity was launched with the -noUpm command-line argument
-[Package Manager] Unable to send message (not connected to server process).
-[Package Manager] Cannot connect to Unity Package Manager local server
-[Package Manager] Failed to launch server process. Reason: Unity was launched with the -noUpm command-line argument
-[Package Manager] Unable to send message (not connected to server process).
-[Package Manager] Cannot connect to Unity Package Manager local server
-ScheduleIndexationOnStartup MainProcess:False IndexOnStartup:True
-Mono: successfully reloaded assembly
-- Finished resetting the current domain, in  1.262 seconds
-Domain Reload Profiling: 2570ms
-	BeginReloadAssembly (321ms)
-		ExecutionOrderSort (0ms)
-		DisableScriptedObjects (28ms)
-		BackupInstance (0ms)
-		ReleaseScriptingObjects (0ms)
-		CreateAndSetChildDomain (70ms)
-	RebuildCommonClasses (54ms)
-	RebuildNativeTypeToScriptingClass (22ms)
-	initialDomainReloadingComplete (40ms)
-	LoadAllAssembliesAndSetupDomain (871ms)
-		LoadAssemblies (604ms)
-		RebuildTransferFunctionScriptingTraits (0ms)
-		AnalyzeDomain (400ms)
-			TypeCache.Refresh (16ms)
-				TypeCache.ScanAssembly (3ms)
-			BuildScriptInfoCaches (355ms)
-			ResolveRequiredComponents (24ms)
-	FinalizeReload (1263ms)
-		ReleaseScriptCaches (0ms)
-		RebuildScriptCaches (0ms)
-		SetupLoadedEditorAssemblies (1010ms)
-			LogAssemblyErrors (0ms)
-			InitializePlatformSupportModulesInManaged (11ms)
-			SetLoadedEditorAssemblies (5ms)
-			BeforeProcessingInitializeOnLoad (253ms)
-			ProcessInitializeOnLoadAttributes (510ms)
-			ProcessInitializeOnLoadMethodAttributes (227ms)
-			AfterProcessingInitializeOnLoad (3ms)
-			EditorAssembliesLoaded (1ms)
-		ExecutionOrderSort2 (0ms)
-		AwakeInstancesAfterBackupRestoration (20ms)
-Refreshing native plugins compatible for Editor in 11.08 ms, found 5 plugins.
-Preloading 0 native plugins for Editor in 0.00 ms.
-Unloading 17 Unused Serialized files (Serialized files now loaded: 0)
-Unloading 9065 unused Assets / (5.0 MB). Loaded Objects now: 10043.
-Memory consumption went from 196.5 MB to 191.5 MB.
-Total: 13.315300 ms (FindLiveObjects: 1.374000 ms CreateObjectMapping: 0.884300 ms MarkObjects: 7.290300 ms  DeleteObjects: 3.765000 ms)
-
-Prepare: number of updated asset objects reloaded= 0
-========================================================================
-Received Prepare
-Begin MonoManager ReloadAssembly
-Duplicate assembly 'log4net.dll' with different versions detected, using 'Packages/com.unity.package-validation-suite/Lib/Editor/log4net.dll, AssemblyName=log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a' and ignoring 'Packages/com.unity.collab-proxy/Lib/Editor/log4netPlastic.dll, AssemblyName=log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a'.Symbol file LoadedFromMemory is not a mono symbol file
-Symbol file LoadedFromMemory is not a mono symbol file
-- Loaded All Assemblies, in  1.294 seconds
-Refreshing native plugins compatible for Editor in 12.69 ms, found 5 plugins.
-Native extension for Android target not found
-Native extension for WindowsStandalone target not found
-[Package Manager] Failed to launch server process. Reason: Unity was launched with the -noUpm command-line argument
-[Package Manager] Unable to send message (not connected to server process).
-[Package Manager] Cannot connect to Unity Package Manager local server
-[Package Manager] Failed to launch server process. Reason: Unity was launched with the -noUpm command-line argument
-[Package Manager] Unable to send message (not connected to server process).
-[Package Manager] Cannot connect to Unity Package Manager local server
-[Package Manager] Failed to launch server process. Reason: Unity was launched with the -noUpm command-line argument
-[Package Manager] Unable to send message (not connected to server process).
-[Package Manager] Cannot connect to Unity Package Manager local server
-ScheduleIndexationOnStartup MainProcess:False IndexOnStartup:True
-Mono: successfully reloaded assembly
-- Finished resetting the current domain, in  1.263 seconds
-Domain Reload Profiling: 2561ms
-	BeginReloadAssembly (317ms)
-		ExecutionOrderSort (0ms)
-		DisableScriptedObjects (19ms)
-		BackupInstance (0ms)
-		ReleaseScriptingObjects (0ms)
-		CreateAndSetChildDomain (71ms)
-	RebuildCommonClasses (53ms)
-	RebuildNativeTypeToScriptingClass (22ms)
-	initialDomainReloadingComplete (40ms)
-	LoadAllAssembliesAndSetupDomain (866ms)
-		LoadAssemblies (603ms)
-		RebuildTransferFunctionScriptingTraits (0ms)
-		AnalyzeDomain (398ms)
-			TypeCache.Refresh (9ms)
-				TypeCache.ScanAssembly (0ms)
-			BuildScriptInfoCaches (362ms)
-			ResolveRequiredComponents (21ms)
-	FinalizeReload (1264ms)
-		ReleaseScriptCaches (0ms)
-		RebuildScriptCaches (0ms)
-		SetupLoadedEditorAssemblies (984ms)
-			LogAssemblyErrors (0ms)
-			InitializePlatformSupportModulesInManaged (11ms)
-			SetLoadedEditorAssemblies (5ms)
-			BeforeProcessingInitializeOnLoad (238ms)
-			ProcessInitializeOnLoadAttributes (502ms)
-			ProcessInitializeOnLoadMethodAttributes (221ms)
-			AfterProcessingInitializeOnLoad (7ms)
-			EditorAssembliesLoaded (1ms)
-		ExecutionOrderSort2 (0ms)
-		AwakeInstancesAfterBackupRestoration (26ms)
-Refreshing native plugins compatible for Editor in 11.86 ms, found 5 plugins.
-Preloading 0 native plugins for Editor in 0.00 ms.
-Unloading 17 Unused Serialized files (Serialized files now loaded: 0)
-Unloading 9065 unused Assets / (5.1 MB). Loaded Objects now: 10049.
-Memory consumption went from 196.6 MB to 191.5 MB.
-Total: 12.645400 ms (FindLiveObjects: 1.389300 ms CreateObjectMapping: 0.799400 ms MarkObjects: 7.055600 ms  DeleteObjects: 3.399100 ms)
-
-Prepare: number of updated asset objects reloaded= 0
+Editor requested this worker to shutdown with reason: Scaling down because of idle timeout
+AssetImportWorker is now disconnected from the server
+Process exiting
+Exiting without the bug reporter. Application will terminate with return code 0

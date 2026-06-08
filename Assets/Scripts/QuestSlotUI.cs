@@ -9,121 +9,98 @@ public class QuestSlotUI : MonoBehaviour
     public TextMeshProUGUI titleText;
     public TextMeshProUGUI descriptionText;
     public TextMeshProUGUI targetText;
-    public TextMeshProUGUI rewardText;
+    public TextMeshProUGUI rewardText; // Для тексту золота/досвіду
     public Button trackButton;
 
+    [Header("Ручні Слоти Нагород (Іконки)")]
+    [Tooltip("Перетягніть сюди готові слоти нагород, які ви розставили в префабі вручну")]
+    public QuestRewardSlotUI[] manualRewardSlots;
+
     [Header("Налаштування кнопки стеження")]
-    [Tooltip("Перетягни сюди ТЕКСТ, який знаходиться ВСЕРЕДИНІ кнопки стеження")]
     public TextMeshProUGUI trackButtonText;
-    [Tooltip("Текст кнопки у звичайному стані")]
     public string normalButtonText = "Стежити";
-    [Tooltip("Текст кнопки, коли цей квест уже відстежується")]
     public string trackingButtonText = "Стежимо";
 
     [Header("Кольори кнопки стеження")]
-    [Tooltip("Колір кнопки у звичайному стані")]
     public Color normalButtonColor = Color.white;
-    [Tooltip("Колір кнопки, коли цей квест уже відстежується")]
     public Color trackingButtonColor = Color.gray;
-
-    // НОВІ ЗМІННІ ДЛЯ КОЛЬОРУ ТЕКСТУ КНОПКИ
-    [Tooltip("Колір тексту у звичайному стані")]
     public Color normalTextColor = Color.black;
-    [Tooltip("Колір тексту, коли цей квест уже відстежується")]
     public Color trackingTextColor = Color.white;
 
     [Header("Налаштування Текстів (Локалізація)")]
     public string targetPrefix = "Що треба: ";
     public string talkToNpcText = "Що треба: Поговорити з NPC";
-    public string rewardPrefix = "Нагорода: ";
-    public string coinsSuffix = " монет";
+    public string rewardTemplate = "<color=#FFCC00>Нагорода:</color> {reward}";
+    public string coinsFormat = "<color=#FFFF00>{amount} монет</color>";
     public string defaultRewardText = "Досвід або Повага";
 
     private string npcTargetID;
 
     void Start()
     {
-        if (trackButton != null)
-        {
-            trackButton.onClick.AddListener(OnTrackClick);
-        }
+        if (trackButton != null) trackButton.onClick.AddListener(OnTrackClick);
     }
 
     public void SetupQuestSlot(QuestData data, string npcID)
     {
         if (data == null) return;
-
         npcTargetID = npcID;
 
-        // 1. Заповнюємо Назву
+        // 1. Назва та опис квесту
         if (titleText != null) titleText.text = data.questName;
 
-        // === ОНОВЛЕНО: Динамічна заміна шаблонів {amount} та {level} в описі ===
         if (descriptionText != null)
         {
             string finalDescription = data.description;
-
             if (!string.IsNullOrEmpty(finalDescription))
             {
-                // Замінюємо {amount} на реальну кількість із QuestData
-                if (finalDescription.Contains("{amount}"))
-                {
-                    finalDescription = finalDescription.Replace("{amount}", data.requiredAmount.ToString());
-                }
-
-                // Замінюємо {level} на потрібний рівень вежі із QuestData
-                if (finalDescription.Contains("{level}"))
-                {
-                    finalDescription = finalDescription.Replace("{level}", data.requiredTowerLevel.ToString());
-                }
+                if (finalDescription.Contains("{amount}")) finalDescription = finalDescription.Replace("{amount}", data.requiredAmount.ToString());
+                if (finalDescription.Contains("{level}")) finalDescription = finalDescription.Replace("{level}", data.requiredTowerLevel.ToString());
             }
-
             descriptionText.text = finalDescription;
         }
 
-        // 2. Заповнюємо Цілі квесту
+        // 2. Цілі квесту
         if (targetText != null)
         {
             targetText.text = !string.IsNullOrEmpty(data.targetID) ? targetPrefix + data.targetID : talkToNpcText;
         }
 
-        // 3. Заповнюємо Нагороди (з урахуванням гарного імені предмета)
+        // 3. Текстова нагорода (Золото / Досвід)
         if (rewardText != null)
         {
-            StringBuilder rewardBuilder = new StringBuilder(rewardPrefix);
-            bool hasAnyReward = false;
-
+            StringBuilder txtBuilder = new StringBuilder();
             if (data.goldReward > 0)
             {
-                rewardBuilder.Append(data.goldReward).Append(coinsSuffix);
-                hasAnyReward = true;
+                txtBuilder.Append(coinsFormat.Replace("{amount}", data.goldReward.ToString()));
             }
-
-            if (data.itemRewards != null && data.itemRewards.Length > 0)
+            else
             {
-                if (hasAnyReward) rewardBuilder.Append(" +  ");
-                for (int i = 0; i < data.itemRewards.Length; i++)
-                {
-                    if (data.itemRewards[i] != null)
-                    {
-                        // Беремо красиве ім'я предмета, якщо воно є, інакше назву файлу
-                        string itemDisplayName = !string.IsNullOrEmpty(data.itemRewards[i].itemName)
-                            ? data.itemRewards[i].itemName
-                            : data.itemRewards[i].name;
-
-                        rewardBuilder.Append(itemDisplayName);
-
-                        if (i < data.itemRewards.Length - 1) rewardBuilder.Append(", ");
-                        hasAnyReward = true;
-                    }
-                }
+                txtBuilder.Append(defaultRewardText);
             }
-
-            if (!hasAnyReward) rewardBuilder.Append(defaultRewardText);
-            rewardText.text = rewardBuilder.ToString();
+            rewardText.text = rewardTemplate.Replace("{reward}", txtBuilder.ToString());
         }
 
-        // === Перевіряємо при створенні, чи саме цей квест зараз відстежується ===
+        // 4. ЗАПОВНЕННЯ РУЧНИХ СЛОТІВ ПРЕДМЕТАМИ
+        if (manualRewardSlots != null && manualRewardSlots.Length > 0)
+        {
+            for (int i = 0; i < manualRewardSlots.Length; i++)
+            {
+                // Перевіряємо, чи є у даних квесту предмет для цього слота
+                if (data.itemRewards != null && i < data.itemRewards.Length && data.itemRewards[i] != null)
+                {
+                    // Якщо предмет є — передаємо його в наш QuestRewardSlotUI (кількість = 1)
+                    manualRewardSlots[i].SetupReward(data.itemRewards[i], 1);
+                }
+                else
+                {
+                    // Якщо предметів менше, ніж слотів — просто вимикаємо зайвий слот
+                    manualRewardSlots[i].gameObject.SetActive(false);
+                }
+            }
+        }
+
+        // 5. Стан стеження
         bool isCurrentlyTracking = (QuestArrow.Instance != null && QuestArrow.Instance.CurrentOverrideTargetID == npcTargetID);
         SetTrackingState(isCurrentlyTracking);
     }
@@ -144,13 +121,8 @@ public class QuestSlotUI : MonoBehaviour
             else
             {
                 QuestArrow.Instance.TrackNPC(npcTargetID);
-
                 QuestSlotUI[] allSlots = transform.parent.GetComponentsInChildren<QuestSlotUI>();
-                foreach (QuestSlotUI slot in allSlots)
-                {
-                    slot.SetTrackingState(false);
-                }
-
+                foreach (QuestSlotUI slot in allSlots) slot.SetTrackingState(false);
                 SetTrackingState(true);
             }
         }
@@ -158,17 +130,12 @@ public class QuestSlotUI : MonoBehaviour
 
     public void SetTrackingState(bool isTracking)
     {
-        // Зміна кольору фону кнопки
         if (trackButton != null)
         {
             Image buttonImage = trackButton.GetComponent<Image>();
-            if (buttonImage != null)
-            {
-                buttonImage.color = isTracking ? trackingButtonColor : normalButtonColor;
-            }
+            if (buttonImage != null) buttonImage.color = isTracking ? trackingButtonColor : normalButtonColor;
         }
 
-        // Зміна тексту та кольору тексту всередині кнопки
         if (trackButtonText != null)
         {
             trackButtonText.text = isTracking ? trackingButtonText : normalButtonText;

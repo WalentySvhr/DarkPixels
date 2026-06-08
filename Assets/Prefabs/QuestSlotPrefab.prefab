@@ -579,6 +579,7 @@ RectTransform:
   - {fileID: 5057188920028785471}
   - {fileID: 7799626692594134707}
   - {fileID: 5793182526225336700}
+  - {fileID: 6004624631674823140}
   - {fileID: 5458424186203425792}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -604,6 +605,8 @@ MonoBehaviour:
   targetText: {fileID: 5652793246484979977}
   rewardText: {fileID: 7514438219107328867}
   trackButton: {fileID: 9111797330950629339}
+  manualRewardSlots:
+  - {fileID: 2556456894292084561}
   trackButtonText: {fileID: 457240193252462051}
   normalButtonText: Follow
   trackingButtonText: Unfollow
@@ -613,8 +616,8 @@ MonoBehaviour:
   trackingTextColor: {r: 1, g: 1, b: 1, a: 1}
   targetPrefix: 'What is needed: '
   talkToNpcText: 'What you need: Talk to the NPC '
-  rewardPrefix: '<color=yellow>Reward:  </color> '
-  coinsSuffix: ' coins '
+  rewardTemplate: <color=yellow>Reward:</color> {reward}
+  coinsFormat: <color=yellow>{amount} coin <b>+</b> </color>
   defaultRewardText: Experience or Respect
 --- !u!222 &268214888905374046
 CanvasRenderer:
@@ -820,7 +823,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -973,3 +976,124 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!1001 &3518459207080753044
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 212332447446828398}
+    m_Modifications:
+    - target: {fileID: -5641220683412034871, guid: 03ff2133ac074684688fd8b190efe11c, type: 3}
+      propertyPath: m_SortingLayer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5923117715492012622, guid: 03ff2133ac074684688fd8b190efe11c, type: 3}
+      propertyPath: m_RaycastTarget
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6344907324368340310, guid: 03ff2133ac074684688fd8b190efe11c, type: 3}
+      propertyPath: m_Name
+      value: QuestRewardSlot
+      objectReference: {fileID: 0}
+    - target: {fileID: 7169909037940201072, guid: 03ff2133ac074684688fd8b190efe11c, type: 3}
+      propertyPath: m_Pivot.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7169909037940201072, guid: 03ff2133ac074684688fd8b190efe11c, type: 3}
+      propertyPath: m_Pivot.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7169909037940201072, guid: 03ff2133ac074684688fd8b190efe11c, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7169909037940201072, guid: 03ff2133ac074684688fd8b190efe11c, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7169909037940201072, guid: 03ff2133ac074684688fd8b190efe11c, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7169909037940201072, guid: 03ff2133ac074684688fd8b190efe11c, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7169909037940201072, guid: 03ff2133ac074684688fd8b190efe11c, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7169909037940201072, guid: 03ff2133ac074684688fd8b190efe11c, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 2.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 7169909037940201072, guid: 03ff2133ac074684688fd8b190efe11c, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7169909037940201072, guid: 03ff2133ac074684688fd8b190efe11c, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7169909037940201072, guid: 03ff2133ac074684688fd8b190efe11c, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7169909037940201072, guid: 03ff2133ac074684688fd8b190efe11c, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7169909037940201072, guid: 03ff2133ac074684688fd8b190efe11c, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7169909037940201072, guid: 03ff2133ac074684688fd8b190efe11c, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7169909037940201072, guid: 03ff2133ac074684688fd8b190efe11c, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7169909037940201072, guid: 03ff2133ac074684688fd8b190efe11c, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 7.56
+      objectReference: {fileID: 0}
+    - target: {fileID: 7169909037940201072, guid: 03ff2133ac074684688fd8b190efe11c, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7169909037940201072, guid: 03ff2133ac074684688fd8b190efe11c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7169909037940201072, guid: 03ff2133ac074684688fd8b190efe11c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7169909037940201072, guid: 03ff2133ac074684688fd8b190efe11c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 03ff2133ac074684688fd8b190efe11c, type: 3}
+--- !u!114 &2556456894292084561 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: -7805221931008855867, guid: 03ff2133ac074684688fd8b190efe11c, type: 3}
+  m_PrefabInstance: {fileID: 3518459207080753044}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 530f0b9a56d31014290b56278122b079, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::QuestRewardSlotUI
+--- !u!224 &6004624631674823140 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 7169909037940201072, guid: 03ff2133ac074684688fd8b190efe11c, type: 3}
+  m_PrefabInstance: {fileID: 3518459207080753044}
+  m_PrefabAsset: {fileID: 0}
