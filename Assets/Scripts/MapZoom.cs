@@ -4,119 +4,77 @@ using UnityEngine;
 public class MapZoom : MonoBehaviour
 {
     private Camera mapCamera;
-    private Vector3 touchStartPos;
+    private Vector3 dragOrigin;
 
-    [Header("Посилання на гравця")]
-    [Tooltip("Перетягни сюди об'єкт твого гравця з Ієрархії")]
+    [Header("Налаштування")]
     [SerializeField] private Transform playerTransform;
-
-    [Header("Налаштування масштабу (Size)")]
-    [SerializeField] private float defaultSize = 35f;
-    [SerializeField] private float minSize = 20f;
+    [SerializeField] private float minSize = 5f; // Чим менше, тим ближче зум
     [SerializeField] private float maxSize = 50f;
+    [SerializeField] private float zoomSpeed = 20f;
 
-    [Header("Швидкість")]
-    [SerializeField] private float zoomSpeed = 0.05f;
-    [SerializeField] private float dragSpeed = 0.5f;
-    [Tooltip("Швидкість зуму кнопками на ПК клавіатурі")]
-    [SerializeField] private float keyboardZoomSpeed = 30f; // Збільшив швидкість для помітнішого тесту
+    [Header("Межі")]
+    [SerializeField] private float minX, maxX, minY, maxY;
 
-    [Header("Жорсткі межі карти (Координати острова на сцені)")]
-    [Tooltip("Лівий край острова (мінімальний X)")]
-    [SerializeField] private float minX = 10f;
-    [Tooltip("Правий край острова (максимальний X)")]
-    [SerializeField] private float maxX = 70f;
-    [Tooltip("Нижній край острова (мінімальний Y)")]
-    [SerializeField] private float minY = -45f;
-    [Tooltip("Верхній край острова (максимальний Y)")]
-    [SerializeField] private float maxY = 0f;
+    private void Awake() => mapCamera = GetComponent<Camera>();
 
-    private void Awake()
+    private void Start() => CenterOnPlayer();
+
+    private void Update()
     {
-        mapCamera = GetComponent<Camera>();
-        mapCamera.orthographicSize = defaultSize;
+        HandleZoom();
+        HandleDrag();
+        ClampCamera();
     }
 
-    private void OnEnable()
+    private void HandleZoom()
     {
-        CenterOnPlayer();
+        float scroll = Input.GetAxis("Mouse ScrollWheel");
+        if (scroll != 0)
+        {
+            // Зберігаємо точку під курсором до зуму
+            Vector3 mouseBefore = mapCamera.ScreenToWorldPoint(Input.mousePosition);
+
+            // Змінюємо розмір
+            mapCamera.orthographicSize = Mathf.Clamp(mapCamera.orthographicSize - scroll * zoomSpeed, minSize, maxSize);
+
+            // Коригуємо позицію, щоб курсор залишився над тією ж точкою мапи
+            Vector3 mouseAfter = mapCamera.ScreenToWorldPoint(Input.mousePosition);
+            transform.position += (mouseBefore - mouseAfter);
+        }
+    }
+
+    private void HandleDrag()
+    {
+        if (Input.GetMouseButtonDown(0)) dragOrigin = mapCamera.ScreenToWorldPoint(Input.mousePosition);
+
+        if (Input.GetMouseButton(0))
+        {
+            Vector3 difference = dragOrigin - mapCamera.ScreenToWorldPoint(Input.mousePosition);
+            transform.position += difference;
+        }
+    }
+
+    private void ClampCamera()
+    {
+        float vertExtent = mapCamera.orthographicSize;
+        float horzExtent = vertExtent * mapCamera.aspect;
+
+        // Розраховуємо межі, куди може потрапити край камери
+        float minXClamped = minX + horzExtent;
+        float maxXClamped = maxX - horzExtent;
+        float minYClamped = minY + vertExtent;
+        float maxYClamped = maxY - vertExtent;
+
+        // Якщо мапа менша за камеру, центруємо її, інакше обмежуємо
+        float x = (maxXClamped < minXClamped) ? (minX + maxX) / 2f : Mathf.Clamp(transform.position.x, minXClamped, maxXClamped);
+        float y = (maxYClamped < minYClamped) ? (minY + maxY) / 2f : Mathf.Clamp(transform.position.y, minYClamped, maxYClamped);
+
+        transform.position = new Vector3(x, y, transform.position.z);
     }
 
     public void CenterOnPlayer()
     {
-        if (playerTransform != null)
-        {
-            Vector3 targetPosition = new Vector3(playerTransform.position.x, playerTransform.position.y, transform.position.z);
-            targetPosition.x = Mathf.Clamp(targetPosition.x, minX, maxX);
-            targetPosition.y = Mathf.Clamp(targetPosition.y, minY, maxY);
-            transform.position = targetPosition;
-        }
-    }
-
-    private void Update()
-    {
-        // --- 1. ТЕСТ КЛАВІАТУРИ (ПЕРЕНЕСЕНО НА САМИЙ ВЕРХ ДЛЯ НАДІЙНОСТІ) ---
-        if (Input.GetKey(KeyCode.KeypadPlus) || Input.GetKey(KeyCode.Equals) || Input.GetKey(KeyCode.W))
-        {
-            Debug.Log("Натиснуто кнопку НАБЛИЖЕННЯ (+) або W. Поточний розмір камери: " + mapCamera.orthographicSize);
-            ExecuteZoom(-keyboardZoomSpeed * Time.deltaTime);
-        }
-
-        if (Input.GetKey(KeyCode.KeypadMinus) || Input.GetKey(KeyCode.Minus) || Input.GetKey(KeyCode.S))
-        {
-            Debug.Log("Натиснуто кнопку ВІДДАЛЕННЯ (-) або S. Поточний розмір камери: " + mapCamera.orthographicSize);
-            ExecuteZoom(keyboardZoomSpeed * Time.deltaTime);
-        }
-
-        // --- 2. ЛОГІКА ЗУМУ ДЛЯ МОБІЛКИ ---
-        if (Input.touchCount == 2)
-        {
-            Touch touchZero = Input.GetTouch(0);
-            Touch touchOne = Input.GetTouch(1);
-
-            Vector2 touchZeroPrevPos = touchZero.position - touchZero.deltaPosition;
-            Vector2 touchOnePrevPos = touchOne.position - touchOne.deltaPosition;
-
-            float prevTouchDeltaMag = (touchZeroPrevPos - touchOnePrevPos).magnitude;
-            float touchDeltaMag = (touchZero.position - touchOne.position).magnitude;
-
-            float deltaMagnitudeDiff = prevTouchDeltaMag - touchDeltaMag;
-
-            ExecuteZoom(deltaMagnitudeDiff * zoomSpeed);
-            return; // Тут ретурн безпечний, бо клавіатура вже перевірилась вище
-        }
-
-        // --- 3. ПЕРЕТЯГУВАННЯ МИШКОЮ ---
-        if (Input.GetMouseButtonDown(0))
-        {
-            touchStartPos = mapCamera.ScreenToWorldPoint(Input.mousePosition);
-        }
-        else if (Input.GetMouseButton(0))
-        {
-            Vector3 direction = touchStartPos - mapCamera.ScreenToWorldPoint(Input.mousePosition);
-            transform.position += direction * dragSpeed;
-        }
-
-        // --- 4. ПЕРЕТЯГУВАННЯ ПАЛЬЦЕМ ---
-        if (Input.touchCount == 1)
-        {
-            Touch touch = Input.GetTouch(0);
-            if (touch.phase == TouchPhase.Moved)
-            {
-                Vector2 touchDelta = touch.deltaPosition;
-                transform.position -= new Vector3(touchDelta.x, touchDelta.y, 0) * (mapCamera.orthographicSize / 1000f) * dragSpeed;
-            }
-        }
-
-        // --- 5. ОБМЕЖЕННЯ КАМЕРИ ---
-        Vector3 clampedPosition = transform.position;
-        clampedPosition.x = Mathf.Clamp(clampedPosition.x, minX, maxX);
-        clampedPosition.y = Mathf.Clamp(clampedPosition.y, minY, maxY);
-        transform.position = clampedPosition;
-    }
-
-    private void ExecuteZoom(float increment)
-    {
-        mapCamera.orthographicSize = Mathf.Clamp(mapCamera.orthographicSize + increment, minSize, maxSize);
+        if (playerTransform == null) playerTransform = GameObject.FindGameObjectWithTag("Player")?.transform;
+        if (playerTransform != null) transform.position = new Vector3(playerTransform.position.x, playerTransform.position.y, transform.position.z);
     }
 }
