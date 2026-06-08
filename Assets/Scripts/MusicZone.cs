@@ -11,9 +11,11 @@ public class MusicZone : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        // Переконайся, що на твоєму персонажі в Інспекторі стоїть Tag "Player"
+        Debug.Log($"Об'єкт {other.name} увійшов у зону. Тег: {other.tag}"); // ДОДАЙТЕ ЦЕ
+
         if (other.CompareTag("Player") && zonePlaylist.Count > 0)
         {
+            Debug.Log("Умова виконана, викликаю ChangeZonePlaylist"); // ДОДАЙТЕ ЦЕ
             ContinuousPlaylist.instance?.ChangeZonePlaylist(zonePlaylist, shuffleThisZone);
         }
     }

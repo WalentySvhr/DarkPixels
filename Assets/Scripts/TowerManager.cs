@@ -26,6 +26,7 @@ public struct EnvironmentTier
 public class TowerManager : MonoBehaviour
 {
     public static TowerManager Instance;
+    public bool IsPlayerInTower { get; set; } = false;
 
     [Header("Chest Settings")]
     public ChestSpawner chestSpawner;

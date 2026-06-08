@@ -32,7 +32,6 @@ public class LocalTeleport : MonoBehaviour
                 collision.transform.position = targetLocation.position;
 
                 // 3. АВТОМАТИЧНИЙ ПОШУК КАМЕРИ
-                // Шукаємо віртуальну камеру на сцені безпосередньо в момент ТП
                 CinemachineVirtualCamera vcam = FindFirstObjectByType<CinemachineVirtualCamera>();
 
                 if (vcam != null)
@@ -48,8 +47,16 @@ public class LocalTeleport : MonoBehaviour
 
             if (TowerManager.Instance != null)
             {
-                if (isEntranceToTower) TowerManager.Instance.StartTowerRun();
-                else if (resetTowerOnExit) TowerManager.Instance.ResetTowerProgress();
+                if (isEntranceToTower)
+                {
+                    TowerManager.Instance.IsPlayerInTower = true; // Блокуємо відкриття мапи
+                    TowerManager.Instance.StartTowerRun();
+                }
+                else if (resetTowerOnExit)
+                {
+                    TowerManager.Instance.IsPlayerInTower = false; // Розблоковуємо мапу
+                    TowerManager.Instance.ResetTowerProgress();
+                }
             }
         }
     }
