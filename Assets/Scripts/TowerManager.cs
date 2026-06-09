@@ -20,8 +20,9 @@ public struct EnvironmentTier
     public int maxFloor;
     public Transform floorEntryPoint;
     public Color skyColor;
-    public FloorData floorData; // Посилання на дані конкретного данжу (Spawner/BossTrigger)
-    public ChestSpawner chestSpawner; // Додайте це!
+
+    public BossTrigger floorBossTrigger;
+    public ChestSpawner chestSpawner;
 }
 
 public class TowerManager : MonoBehaviour
@@ -93,14 +94,14 @@ public class TowerManager : MonoBehaviour
             {
                 if (mainCamera != null) mainCamera.backgroundColor = tier.skyColor;
 
-                if (tier.floorData != null)
+                if (tier.floorBossTrigger != null)
                 {
-                    bossTrigger = tier.floorData.floorBossTrigger;
+                    bossTrigger = tier.floorBossTrigger;
                     currentChestSpawner = tier.chestSpawner;
                 }
                 else
                 {
-                    Debug.LogError($"TowerManager: Об'єкт FloorData не призначений для {tier.themeName}!");
+                    Debug.LogError($"TowerManager: BossTrigger не призначений для {tier.themeName}!");
                 }
 
                 TeleportPlayerToPoint(tier.floorEntryPoint);
@@ -246,6 +247,8 @@ public class TowerManager : MonoBehaviour
                 ts.isSpawningActive = true;
                 ts.RestartSpawner();
             }
+            Debug.Log($"Boss floor = {IsBossFloor()}");
+            Debug.Log($"ChestSpawner = {currentChestSpawner}");
         }
     }
 

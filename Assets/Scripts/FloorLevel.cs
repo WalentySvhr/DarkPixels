@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class FloorData : MonoBehaviour
+public class FloorLevel : MonoBehaviour
 {
     public TowerSpawner floorSpawner;
     public BossTrigger floorBossTrigger;
