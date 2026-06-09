@@ -21,6 +21,7 @@ public struct EnvironmentTier
     public Transform floorEntryPoint;
     public Color skyColor;
     public FloorData floorData; // Посилання на дані конкретного данжу (Spawner/BossTrigger)
+    public ChestSpawner chestSpawner; // Додайте це!
 }
 
 public class TowerManager : MonoBehaviour
@@ -28,8 +29,7 @@ public class TowerManager : MonoBehaviour
     public static TowerManager Instance;
     public bool IsPlayerInTower { get; set; } = false;
 
-    [Header("Chest Settings")]
-    public ChestSpawner chestSpawner;
+
 
     [Header("Loot Container (Динамічний лут)")]
     [Tooltip("Перетягніть сюди порожній об'єкт DynamicLootContainer з ієрархії")]
@@ -71,6 +71,7 @@ public class TowerManager : MonoBehaviour
     public Camera mainCamera;
     [Header("Tower State")]
     public bool IsTowerRunActive { get; private set; }
+    private ChestSpawner currentChestSpawner;
 
     private void Awake()
     {
@@ -79,7 +80,7 @@ public class TowerManager : MonoBehaviour
 
         if (floorUIContainer != null) floorUIContainer.SetActive(false);
         if (mainCamera == null) mainCamera = Camera.main;
-        if (chestSpawner == null) chestSpawner = FindObjectOfType<ChestSpawner>();
+
     }
 
     // --- Логіка перемикання данжів ---
@@ -95,6 +96,7 @@ public class TowerManager : MonoBehaviour
                 if (tier.floorData != null)
                 {
                     bossTrigger = tier.floorData.floorBossTrigger;
+                    currentChestSpawner = tier.chestSpawner;
                 }
                 else
                 {
@@ -216,7 +218,8 @@ public class TowerManager : MonoBehaviour
         ClearEnemies();
         ClearLoot(); // Виклик очищення контейнера
 
-        if (chestSpawner != null) chestSpawner.ClearChests();
+        if (currentChestSpawner != null)
+            currentChestSpawner.ClearChests();
         if (bossTrigger != null) bossTrigger.ResetTrigger();
     }
 
@@ -235,7 +238,7 @@ public class TowerManager : MonoBehaviour
         }
         else
         {
-            if (chestSpawner != null) chestSpawner.SpawnChestsForFloor();
+            if (currentChestSpawner != null) currentChestSpawner.SpawnChestsForFloor();
 
             if (ts != null)
             {
@@ -269,7 +272,7 @@ public class TowerManager : MonoBehaviour
         StopSpawners();
         ClearLoot();
 
-        if (chestSpawner != null) chestSpawner.ClearChests();
+        if (currentChestSpawner != null) currentChestSpawner.ClearChests();
 
         if (DungeonAdUI.Instance != null)
         {

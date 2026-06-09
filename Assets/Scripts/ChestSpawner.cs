@@ -97,18 +97,21 @@ public class ChestSpawner : MonoBehaviour
 
     private bool IsWallNearby(Vector3Int cell)
     {
-        // Перевіряємо сусідні клітинки, щоб скриня не "врізалася" в стіну візуально
         for (int x = -1; x <= 1; x++)
         {
             for (int y = -1; y <= 1; y++)
             {
-                if (wallTilemap.HasTile(new Vector3Int(cell.x + x, cell.y + y, cell.z)))
+                Vector3Int checkPos = new Vector3Int(cell.x + x, cell.y + y, cell.z);
+                if (wallTilemap.HasTile(checkPos))
+                {
+                    // Дебаг допоможе побачити, чи тайлмеп "бачить" стіни там, де ви їх не бачите
+                    Debug.Log($"Знайдено стіну біля {checkPos}");
                     return true;
+                }
             }
         }
         return false;
     }
-
     public void ClearChests()
     {
         foreach (Transform child in transform)
