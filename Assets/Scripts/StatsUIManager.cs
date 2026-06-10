@@ -7,16 +7,21 @@ public class StatsUIManager : MonoBehaviour
 
     [Header("Текстові поля статистики")]
     public TextMeshProUGUI maxFloorText;
+    public TextMeshProUGUI maxKillsText; // Нове поле для вбитих монстрів
 
-    [Header("Формати тексту (Можна міняти в Інспекторі)")]
-    [Tooltip("Використовуй {0} там, де має з'явитися цифра рекорду")]
+    [Header("Формати тексту Башні")]
+    [Tooltip("Використовуй {0} там, де має з'явитися цифра рекорду поверху")]
     public string recordFoundFormat = "Рекорд Башні: <color=yellow>{0} поверх</color>";
 
     [Tooltip("Текст, який показується, якщо забігів ще не було")]
     public string noRecordFormat = "Рекорд Башні: <color=gray>0</color>";
 
-    // --- ДЛЯ МАЙБУТНЬОГО ---
-    // public TextMeshProUGUI totalCoinsText;
+    [Header("Формати тексту Вбивств")]
+    [Tooltip("Використовуй {0} там, де має з'явитися цифра рекорду вбивств")]
+    public string killsFoundFormat = "Макс. убито монстрів: <color=red>{0}</color>";
+
+    [Tooltip("Текст, якщо ще нікого не вбили")]
+    public string noKillsFormat = "Макс. убито монстрів: <color=gray>0</color>";
 
     void Awake()
     {
@@ -24,22 +29,36 @@ public class StatsUIManager : MonoBehaviour
         else Destroy(gameObject);
     }
 
-    // Цей метод просто оновлює текст. 
-    // Ми будемо викликати його в момент натискання на паузу.
+    // Викликаємо цей метод при відкритті меню паузи / кінця гри
     public void UpdateStatsUI()
     {
-        if (TowerManager.Instance != null && maxFloorText != null)
-        {
-            int record = TowerManager.Instance.maxFloorRecord;
+        if (TowerManager.Instance == null) return;
 
-            if (record > 0)
+        // 1. Оновлення рекорду поверху
+        if (maxFloorText != null)
+        {
+            int floorRecord = TowerManager.Instance.maxFloorRecord;
+            if (floorRecord > 0)
             {
-                // Підставляємо значення record замість {0} у текст з Інспектора
-                maxFloorText.text = string.Format(recordFoundFormat, record);
+                maxFloorText.text = string.Format(recordFoundFormat, floorRecord);
             }
             else
             {
                 maxFloorText.text = noRecordFormat;
+            }
+        }
+
+        // 2. Оновлення рекорду вбивств
+        if (maxKillsText != null)
+        {
+            int killsRecord = TowerManager.Instance.maxKillsRecord; // Беремо дані з TowerManager
+            if (killsRecord > 0)
+            {
+                maxKillsText.text = string.Format(killsFoundFormat, killsRecord);
+            }
+            else
+            {
+                maxKillsText.text = noKillsFormat;
             }
         }
     }

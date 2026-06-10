@@ -23,15 +23,13 @@ public struct EnvironmentTier
 
     public BossTrigger floorBossTrigger;
     public ChestSpawner chestSpawner;
-    public TrapSpawner trapSpawner; // <-- Додаємо сюди
+    public TrapSpawner trapSpawner;
 }
 
 public class TowerManager : MonoBehaviour
 {
     public static TowerManager Instance;
     public bool IsPlayerInTower { get; set; } = false;
-
-
 
     [Header("Loot Container (Динамічний лут)")]
     [Tooltip("Перетягніть сюди порожній об'єкт DynamicLootContainer з ієрархії")]
@@ -41,9 +39,13 @@ public class TowerManager : MonoBehaviour
     public int currentFloor = 1;
     public int bossEveryXFloors = 5;
 
-    // --- НОВЕ: Змінна для зберігання рекорду ---
+    // --- НАЛАШТУВАННЯ РЕКОРДІВ ---
     [Header("Record")]
     public int maxFloorRecord = 0;
+    public int maxKillsRecord = 0; // Перенесено сюди для порядку в Інспекторі
+
+    [Header("Current Run Stats")]
+    public int currentRunKills = 0; // --- НОВЕ: Лічильник вбивств за поточний забіг ---
 
     [Header("Difficulty Scaling")]
     public float enemyMultiplierPerFloor = 0.1f;
@@ -71,6 +73,7 @@ public class TowerManager : MonoBehaviour
     public BossTrigger bossTrigger;
     public GameObject player;
     public Camera mainCamera;
+
     [Header("Tower State")]
     public bool IsTowerRunActive { get; private set; }
     private ChestSpawner currentChestSpawner;
@@ -83,7 +86,6 @@ public class TowerManager : MonoBehaviour
 
         if (floorUIContainer != null) floorUIContainer.SetActive(false);
         if (mainCamera == null) mainCamera = Camera.main;
-
     }
 
     // --- Логіка перемикання данжів ---
@@ -145,6 +147,7 @@ public class TowerManager : MonoBehaviour
     {
         IsTowerRunActive = true;
         currentFloor = 1;
+        currentRunKills = 0; // --- НОВЕ: Обнуляємо вбивства при новому забігу ---
 
         CheckForNewRecord();
 
@@ -166,12 +169,8 @@ public class TowerManager : MonoBehaviour
     {
         currentFloor++;
 
-        // --- НОВЕ: Перевіряємо, чи побили ми рекорд, при кожному переході ---
         CheckForNewRecord();
 
-        // ============================================================================
-        // --- ЗБІЛЬШЕННЯ VICTORY COUNT ПІСЛЯ ПЕРЕМОГИ НАД БОСОМ ---
-        // ============================================================================
         if ((currentFloor - 1) % bossEveryXFloors == 0)
         {
             if (SaveManager.Instance != null)
@@ -211,20 +210,37 @@ public class TowerManager : MonoBehaviour
         {
             maxFloorRecord = currentFloor;
             Debug.Log($"<color=gold>[TowerRecord] НОВИЙ РЕКОРД! Максимальний поверх: {maxFloorRecord}</color>");
-
-            //     if (SaveManager.Instance != null)
-            //     {
-            //         SaveManager.Instance.SaveGame();
-            //     }
-            // }
         }
     }
+
+    // --- НОВЕ: Метод додавання вбивства ворога ---
+    public void AddKill()
+    {
+        if (!IsTowerRunActive) return; // Рахуємо вбивства тільки всередині забігу Башні
+
+        currentRunKills++;
+        Debug.Log($"<color=orange>TowerManager: Убито монстрів за забіг: {currentRunKills}</color>");
+
+        // Перевіряємо, чи побито рекорд вбивств
+        if (currentRunKills > maxKillsRecord)
+        {
+            maxKillsRecord = currentRunKills;
+            Debug.Log($"<color=red>[TowerRecord] НОВИЙ РЕКОРД ВБИВСТВ! Кількість: {maxKillsRecord}</color>");
+
+            // Якщо хочеш зберігати рекорд ОДРАЗУ в момент вбивства:
+            if (SaveManager.Instance != null)
+            {
+                SaveManager.Instance.SaveGame();
+            }
+        }
+    }
+
     private void PrepareLevel()
     {
         ApplyFloorEnvironment();
         StopSpawners();
         ClearEnemies();
-        ClearLoot(); // Виклик очищення контейнера
+        ClearLoot();
 
         if (currentChestSpawner != null)
             currentChestSpawner.ClearChests();
@@ -279,6 +295,7 @@ public class TowerManager : MonoBehaviour
         IsTowerRunActive = false;
 
         currentFloor = 1;
+        currentRunKills = 0; // Скидаємо лічильник забігу при програші/виході
         UpdateFloorText();
         HideTowerUI();
         StopSpawners();
@@ -311,12 +328,10 @@ public class TowerManager : MonoBehaviour
         }
     }
 
-    // --- МОДИФІКОВАНО ДЛЯ ВАРІАНТУ 1 ---
     private void ClearLoot()
     {
         if (lootContainer != null)
         {
-            // Видаляємо лише ті об'єкти, які лежать всередині контейнера
             foreach (Transform child in lootContainer)
             {
                 Destroy(child.gameObject);
@@ -325,7 +340,6 @@ public class TowerManager : MonoBehaviour
         }
         else
         {
-            // Безпечний вихід на випадок, якщо забули прикріпити контейнер в Інспекторі
             Debug.LogWarning("TowerManager: lootContainer не призначено в Інспекторі! Лут не очищено.");
         }
     }
@@ -351,16 +365,18 @@ public class TowerManager : MonoBehaviour
     public bool IsBossFloor() => currentFloor % bossEveryXFloors == 0;
 
     // ==========================================
-    // ЗБЕРЕЖЕННЯ / ЗАВАНТАЖЕННЯ РЕКОРДУ
+    // ЗБЕРЕЖЕННЯ / ЗАВАНТАЖЕННЯ РЕКОРДУчерез SaveManager
     // ==========================================
     public GameData CaptureTowerState(GameData data)
     {
         data.maxTowerFloor = maxFloorRecord;
+        data.maxTowerKills = maxKillsRecord; // --- НОВЕ: Передаємо рекорд вбивств у збереження ---
         return data;
     }
 
     public void LoadTowerState(GameData data)
     {
         maxFloorRecord = data.maxTowerFloor;
+        maxKillsRecord = data.maxTowerKills; // --- НОВЕ: Завантажуємо рекорд вбивств ---
     }
 }

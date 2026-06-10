@@ -112,6 +112,8 @@ public class EnemyHealth : MonoBehaviour
             ai.OnTakeDamage();
         }
 
+
+
         SpawnDamagePopup(damage, isCrit);
 
         if (currentHealth <= 0)
@@ -150,6 +152,8 @@ public class EnemyHealth : MonoBehaviour
         isDead = true;
 
         StopAllCoroutines();
+
+        if (TowerManager.Instance != null) TowerManager.Instance.AddKill();
 
         if (spriteRenderer != null) spriteRenderer.color = originalColor;
         if (animator != null) animator.SetTrigger("Die");

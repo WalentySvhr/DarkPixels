@@ -12,6 +12,12 @@ public class MapZoom : MonoBehaviour
     [SerializeField] private float maxSize = 50f;
     [SerializeField] private float zoomSpeed = 20f;
 
+    [Header("Піксельна сітка")]
+    [Tooltip("Кількість пікселів на юніт у твоїх спрайтах (наприклад, 16 або 32)")]
+    [SerializeField] private float pixelsPerUnit = 16f;
+    [Tooltip("Увімкнути прив'язку камери до піксельної сітки")]
+    [SerializeField] private bool enablePixelSnapping = true;
+
     [Header("Межі")]
     [SerializeField] private float minX, maxX, minY, maxY;
 
@@ -29,7 +35,15 @@ public class MapZoom : MonoBehaviour
 
         HandleZoom();
         HandleDrag();
+    }
+
+    // Камери завжди мають позиціонуватися в LateUpdate, щоб уникнути тремтіння (jittering)
+    private void LateUpdate()
+    {
+        if (TowerManager.Instance != null && TowerManager.Instance.IsPlayerInTower) return;
+
         ClampCamera();
+        ApplyPixelSnapping();
     }
 
     private void HandleZoom()
@@ -70,6 +84,18 @@ public class MapZoom : MonoBehaviour
         float y = (maxYClamped < minYClamped) ? (minY + maxY) / 2f : Mathf.Clamp(transform.position.y, minYClamped, maxYClamped);
 
         transform.position = new Vector3(x, y, transform.position.z);
+    }
+
+    private void ApplyPixelSnapping()
+    {
+        if (!enablePixelSnapping || pixelsPerUnit <= 0) return;
+
+        // Округляємо фінальну позицію камери чітко до меж пікселів текстури
+        Vector3 snappedPosition = transform.position;
+        snappedPosition.x = Mathf.Round(snappedPosition.x * pixelsPerUnit) / pixelsPerUnit;
+        snappedPosition.y = Mathf.Round(snappedPosition.y * pixelsPerUnit) / pixelsPerUnit;
+
+        transform.position = snappedPosition;
     }
 
     public void CenterOnPlayer()

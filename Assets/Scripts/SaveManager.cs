@@ -27,6 +27,7 @@ public class GameData
     public bool isDiamondAdOnCooldown;
 
     public int maxTowerFloor;
+    public int maxTowerKills;
     public int victoryCount;
     public bool alreadyReviewed;
 }
