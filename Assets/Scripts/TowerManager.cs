@@ -23,6 +23,7 @@ public struct EnvironmentTier
 
     public BossTrigger floorBossTrigger;
     public ChestSpawner chestSpawner;
+    public TrapSpawner trapSpawner; // <-- Додаємо сюди
 }
 
 public class TowerManager : MonoBehaviour
@@ -73,6 +74,7 @@ public class TowerManager : MonoBehaviour
     [Header("Tower State")]
     public bool IsTowerRunActive { get; private set; }
     private ChestSpawner currentChestSpawner;
+    private TrapSpawner currentTrapSpawner;
 
     private void Awake()
     {
@@ -98,6 +100,11 @@ public class TowerManager : MonoBehaviour
                 {
                     bossTrigger = tier.floorBossTrigger;
                     currentChestSpawner = tier.chestSpawner;
+                    currentTrapSpawner = tier.trapSpawner;
+                    if (currentTrapSpawner != null)
+                    {
+                        currentTrapSpawner.SetSafeZone(tier.floorEntryPoint, 3.5f);
+                    }
                 }
                 else
                 {
@@ -240,6 +247,7 @@ public class TowerManager : MonoBehaviour
         else
         {
             if (currentChestSpawner != null) currentChestSpawner.SpawnChestsForFloor();
+            if (currentTrapSpawner != null) currentTrapSpawner.SpawnTrapsForFloor();
 
             if (ts != null)
             {
@@ -249,6 +257,7 @@ public class TowerManager : MonoBehaviour
             }
             Debug.Log($"Boss floor = {IsBossFloor()}");
             Debug.Log($"ChestSpawner = {currentChestSpawner}");
+            Debug.Log($"TrapSpawner = {currentTrapSpawner}");
         }
     }
 
@@ -276,6 +285,7 @@ public class TowerManager : MonoBehaviour
         ClearLoot();
 
         if (currentChestSpawner != null) currentChestSpawner.ClearChests();
+        if (currentTrapSpawner != null) currentTrapSpawner.ClearTraps();
 
         if (DungeonAdUI.Instance != null)
         {

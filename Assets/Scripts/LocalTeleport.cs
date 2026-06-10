@@ -67,4 +67,16 @@ public class LocalTeleport : MonoBehaviour
         SpriteRenderer sr = GetComponent<SpriteRenderer>();
         if (sr != null) sr.color = Color.white;
     }
+
+    private void OnDisable()
+    {
+        // Цей метод спрацює, якщо об'єкту роблять SetActive(false)
+        Debug.Log($"<color=yellow>[DEACTIVATED]</color> Двері '{gameObject.name}' були ВИМКНЕНІ! Перевір стек викликів нижче:", gameObject);
+    }
+
+    private void OnDestroy()
+    {
+        // Цей метод спрацює, якщо об'єкт видаляють через Destroy()
+        Debug.Log($"<color=red>[DESTROYED]</color> Двері '{gameObject.name}' були ЗНИЩЕНІ! Перевір стек викликів нижче:", gameObject);
+    }
 }

@@ -9,12 +9,18 @@ public class GoogleUpdateManager : MonoBehaviour
 
     private void Start()
     {
+        // Перевіряємо, чи ми на Android і чи це НЕ редактор Unity
+#if UNITY_ANDROID && !UNITY_EDITOR
         appUpdateManager = new AppUpdateManager();
         StartCoroutine(CheckForUpdates());
+#else
+        Debug.Log("[GoogleUpdateManager] Роботу плагіна вимкнено в редакторі ПК.");
+#endif
     }
 
     private IEnumerator CheckForUpdates()
     {
+        // Цей код виконається лише на Android, бо корутина викликається у Start() під умовою
         PlayAsyncOperation<AppUpdateInfo, AppUpdateErrorCode> appUpdateInfoOperation =
             appUpdateManager.GetAppUpdateInfo();
 
@@ -43,10 +49,13 @@ public class GoogleUpdateManager : MonoBehaviour
 
     private void OnEnable()
     {
+        // Додатковий захист для OnEnable, щоб він не викликався в редакторі
+#if UNITY_ANDROID && !UNITY_EDITOR
         if (appUpdateManager != null)
         {
             StartCoroutine(ResumeUpdate());
         }
+#endif
     }
 
     private IEnumerator ResumeUpdate()
