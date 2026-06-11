@@ -177,11 +177,11 @@ GameObject:
   - component: {fileID: 3716339743985564173}
   - component: {fileID: 1278956583839445802}
   - component: {fileID: 3848307052226823916}
-  - component: {fileID: 2120600207231184579}
   - component: {fileID: 2646265957668021635}
   - component: {fileID: 5082384193126791962}
   - component: {fileID: 1464135196581066432}
   - component: {fileID: 3700625067027646142}
+  - component: {fileID: 792018618864808291}
   m_Layer: 7
   m_Name: Fox
   m_TagString: Enemy
@@ -313,52 +313,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!61 &2120600207231184579
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2357111180173358902}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1.0625, y: 0.75}
-    newSize: {x: 1.0625, y: 0.75}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Size: {x: 0.78125, y: 0.625}
-  m_EdgeRadius: 0
 --- !u!114 &2646265957668021635
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -417,6 +371,7 @@ MonoBehaviour:
   enemyID: 
   allowedQuestItemIDs: []
   isElite: 0
+  isStructure: 0
 --- !u!114 &1464135196581066432
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -462,6 +417,42 @@ MonoBehaviour:
   minForce: 4
   maxForce: 7
   linearDamping: 3
+--- !u!58 &792018618864808291
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2357111180173358902}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0.114982605, y: -0.039478302}
+  m_Radius: 0.28071213
 --- !u!1 &2575377136573975654
 GameObject:
   m_ObjectHideFlags: 0

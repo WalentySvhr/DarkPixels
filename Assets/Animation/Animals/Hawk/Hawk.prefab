@@ -12,11 +12,11 @@ GameObject:
   - component: {fileID: 613323774741010951}
   - component: {fileID: 4583860452567426913}
   - component: {fileID: 5986156163484726702}
-  - component: {fileID: 6406480185923420826}
   - component: {fileID: 8473810231222269530}
   - component: {fileID: 5620247668539532749}
   - component: {fileID: 1480699642561496215}
   - component: {fileID: 7038312172724645908}
+  - component: {fileID: 7245854346743310371}
   m_Layer: 7
   m_Name: Hawk
   m_TagString: Enemy
@@ -148,52 +148,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!61 &6406480185923420826
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1093748194618228566}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1.25, y: 0.9375}
-    newSize: {x: 1.1875, y: 0.8125}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Size: {x: 0.78125, y: 0.625}
-  m_EdgeRadius: 0
 --- !u!114 &8473810231222269530
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -253,6 +207,7 @@ MonoBehaviour:
   allowedQuestItemIDs:
   - 
   isElite: 0
+  isStructure: 0
 --- !u!114 &1480699642561496215
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -303,6 +258,42 @@ MonoBehaviour:
   minForce: 4
   maxForce: 7
   linearDamping: 3
+--- !u!58 &7245854346743310371
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1093748194618228566}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0.13389969, y: -0.0037021637}
+  m_Radius: 0.43901634
 --- !u!1 &1693602510096976007
 GameObject:
   m_ObjectHideFlags: 0

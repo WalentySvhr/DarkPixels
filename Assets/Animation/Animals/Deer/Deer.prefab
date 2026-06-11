@@ -355,11 +355,11 @@ GameObject:
   - component: {fileID: 3700353572340458252}
   - component: {fileID: 6182772724640637640}
   - component: {fileID: 7694705256332501247}
-  - component: {fileID: 3894298394714496106}
   - component: {fileID: 8111827168102754657}
   - component: {fileID: 3339841058507473298}
   - component: {fileID: 4400431671711474728}
   - component: {fileID: 2304866948231650555}
+  - component: {fileID: -7197842227270457916}
   m_Layer: 7
   m_Name: Deer
   m_TagString: Enemy
@@ -376,7 +376,7 @@ Transform:
   m_GameObject: {fileID: 3492801941936855706}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -723.3952, y: -49.10482, z: 0}
+  m_LocalPosition: {x: -723.38, y: -49.123, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -491,52 +491,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!61 &3894298394714496106
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3492801941936855706}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1.0625, y: 1.125}
-    newSize: {x: 1.1875, y: 0.8125}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Size: {x: 0.78125, y: 0.625}
-  m_EdgeRadius: 0
 --- !u!114 &8111827168102754657
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -595,6 +549,7 @@ MonoBehaviour:
   enemyID: 
   allowedQuestItemIDs: []
   isElite: 0
+  isStructure: 0
 --- !u!114 &4400431671711474728
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -650,6 +605,42 @@ MonoBehaviour:
   minForce: 4
   maxForce: 7
   linearDamping: 3
+--- !u!58 &-7197842227270457916
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3492801941936855706}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: -0.09111118, y: -0.15649223}
+  m_Radius: 0.36640835
 --- !u!1 &4779349426670217953
 GameObject:
   m_ObjectHideFlags: 0

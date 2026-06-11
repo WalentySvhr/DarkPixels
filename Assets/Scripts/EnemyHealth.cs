@@ -45,6 +45,9 @@ public class EnemyHealth : MonoBehaviour
     [Header("Daily Quest Settings")]
     [Tooltip("Поставте галочку, якщо цей моб - елітний/міні-бос")]
     public bool isElite = false;
+    [Header("Налаштування типу об'єкта")]
+    [Tooltip("Увімкни це ТІЛЬКИ на префабі тотема чи бочки, щоб вони не рахувалися як живі вороги в квестах та рекордах")]
+    [SerializeField] private bool isStructure = false;
 
     // === Фізика ===
     private Rigidbody2D rb;
@@ -153,7 +156,9 @@ public class EnemyHealth : MonoBehaviour
 
         StopAllCoroutines();
 
-        if (TowerManager.Instance != null) TowerManager.Instance.AddKill();
+        // Зараховуємо вбивство в рекорд Башні, тільки якщо це ЖИВИЙ ВОРОГ, а не пастка
+        if (!isStructure && TowerManager.Instance != null)
+            TowerManager.Instance.AddKill();
 
         if (spriteRenderer != null) spriteRenderer.color = originalColor;
         if (animator != null) animator.SetTrigger("Die");
@@ -161,6 +166,7 @@ public class EnemyHealth : MonoBehaviour
         Collider2D mobCollider = GetComponent<Collider2D>();
         if (mobCollider != null) mobCollider.enabled = false;
 
+        // Якщо у тотема немає скрипта EnemyAI, Unity просто пропустить цей блок без помилок
         EnemyAI ai = GetComponent<EnemyAI>();
         if (ai != null)
         {
@@ -177,23 +183,29 @@ public class EnemyHealth : MonoBehaviour
         if (hpSlider != null) hpSlider.gameObject.SetActive(false);
         if (hpText != null) hpText.gameObject.SetActive(false);
 
-        if (mySpawner != null) mySpawner.EnemyDied();
-        if (towerSpawner != null) towerSpawner.EnemyDied(gameObject);
-        if (LevelManager.Instance != null) LevelManager.Instance.UnregisterEnemy();
+        // Звільнення лічильників кімнати робимо ТІЛЬКИ для монстрів.
+        // Якщо це тотем-пастка, ми не зменшуємо кількість ворогів, необхідних для зачистки поверху.
+        if (!isStructure)
+        {
+            if (mySpawner != null) mySpawner.EnemyDied();
+            if (towerSpawner != null) towerSpawner.EnemyDied(gameObject);
+            if (LevelManager.Instance != null) LevelManager.Instance.UnregisterEnemy();
+        }
 
         CheckForUniqueQuestDrop();
 
+        // Лут (монетки/хілки) тотем все одно скине, якщо на ньому висить скрипт lootDropper
         if (lootDropper != null) lootDropper.DropLoot();
 
-        // === ОНОВЛЕНА ЛОГІКА КВЕСТІВ ===
-        if (QuestManager.Instance != null)
+        // === ОНОВЛЕНА ЛОГІКА КВЕСТІВ (Тільки для монстрів) ===
+        if (!isStructure && QuestManager.Instance != null)
         {
-            // Викликаємо обидва типи дій, передаючи реальний enemyID моба
             QuestManager.Instance.OnQuestAction(QuestType.KillInTower, enemyID);
             QuestManager.Instance.OnQuestAction(QuestType.KillSpecific, enemyID);
         }
 
-        if (DailyQuestManager.Instance != null)
+        // Щоденні квести (не зараховуємо руйнування тотема як вбивство істоти)
+        if (!isStructure && DailyQuestManager.Instance != null)
         {
             DailyQuestManager.Instance.AddProgress(DailyQuestType.KillEnemies, 1);
             if (isElite)
