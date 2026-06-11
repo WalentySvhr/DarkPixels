@@ -20,6 +20,7 @@ public class GameData
     public string currentQuestID;
     public int questProgress;
     public List<FishingSpotSaveEntry> activeCooldowns = new List<FishingSpotSaveEntry>();
+    public List<string> unlockedTrueObjects = new List<string>();
     public List<string> completedQuestIDs = new List<string>();
 
     public int diamondAdsWatched;

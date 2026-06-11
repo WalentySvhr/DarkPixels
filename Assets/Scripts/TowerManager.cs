@@ -244,6 +244,11 @@ public class TowerManager : MonoBehaviour
 
         if (currentChestSpawner != null)
             currentChestSpawner.ClearChests();
+
+        //  ТУТ  ОЧИЩЕННЯ ПАСТОК!
+        if (currentTrapSpawner != null)
+            currentTrapSpawner.ClearTraps();
+
         if (bossTrigger != null) bossTrigger.ResetTrigger();
     }
 

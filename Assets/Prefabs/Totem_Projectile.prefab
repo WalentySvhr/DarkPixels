@@ -542,12 +542,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4973e93e12f4904cb5a4823b33dc512, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TotemTrap
+  totemMode: 1
+  fireRate: 5
   projectilePrefab: {fileID: 7864231861779244564, guid: 318b9b5f84d54fc449ce8806c9a3c527, type: 3}
   firePoint: {fileID: 4811401436180169151}
-  fireRate: 2.5
   projectileCount: 8
   projectileSpeed: 5
   damage: 10
+  puddlePrefab: {fileID: 2351045238591114563, guid: 7168031f23fdcfc4f8ddb0e6f3c1e355, type: 3}
+  puddleCount: 6
+  puddleZoneRadius: 2.5
+  minDistanceBetweenPuddles: 0.8
+  puddleOffset: {x: 5, y: 5}
   animator: {fileID: 1416470611916527089}
   shootTriggerName: Shoot
 --- !u!95 &1416470611916527089
