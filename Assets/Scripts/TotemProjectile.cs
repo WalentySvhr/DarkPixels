@@ -5,6 +5,16 @@ public class TotemProjectile : MonoBehaviour
     [Header("Damage Settings")]
     [SerializeField] private int damage = 10; // Шкода від одного снаряда за замовчуванням
 
+    [Header("Lifetime Settings")]
+    [Tooltip("Через скільки секунд снаряд знищиться сам, якщо нікуди не влучить")]
+    [SerializeField] private float lifetime = 5f;
+
+    private void Start()
+    {
+        // Вбудована фіча Unity: другим параметром передаємо затримку в секундах
+        Destroy(gameObject, lifetime);
+    }
+
     public void Setup(Vector2 direction, float speed, int dmg)
     {
         damage = dmg;

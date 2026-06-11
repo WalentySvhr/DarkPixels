@@ -10,7 +10,8 @@ public class TotemPuddle : MonoBehaviour
     [Header("Час життя калюжі")]
     [SerializeField] private float lifetime = 4f;
 
-    private float nextDamageTime = 0f; // Таймер для наступного тику шкоди
+    private PlayerHealth playerHealthInZone; // Посилання на гравця, якщо він всередині
+    private float tickTimer = 0f;            // Власний таймер для тиків
 
     private void Start()
     {
@@ -18,24 +19,54 @@ public class TotemPuddle : MonoBehaviour
         Destroy(gameObject, lifetime);
     }
 
-    private void OnTriggerStay2D(Collider2D collision)
+    private void Update()
     {
-        // Перевіряємо, чи це гравець
+        // Якщо гравець стоїть у калюжі — таймер рахує час незалежно від того, рухається він чи ні
+        if (playerHealthInZone != null)
+        {
+            tickTimer -= Time.deltaTime;
+
+            if (tickTimer <= 0f)
+            {
+                playerHealthInZone.TakeDamage(damagePerTick);
+
+                // Скидаємо таймер на заданий інтервал
+                tickTimer = tickInterval;
+
+                Debug.Log($"<color=purple>[Калюжа] Нанесено шкоду гравцю: {damagePerTick}. Наступний тик через {tickInterval} сек.</color>");
+            }
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
         if (collision.CompareTag("Player"))
         {
-            // Перевіряємо, чи настав час для наступного тику шкоди
-            if (Time.time >= nextDamageTime)
+            PlayerHealth playerHealth = collision.GetComponent<PlayerHealth>();
+            if (playerHealth != null)
             {
-                PlayerHealth playerHealth = collision.GetComponent<PlayerHealth>();
-                if (playerHealth != null)
-                {
-                    playerHealth.TakeDamage(damagePerTick);
+                playerHealthInZone = playerHealth;
 
-                    // Фіксуємо час наступного дозволеного удару
-                    nextDamageTime = Time.time + tickInterval;
+                // ЕФЕКТ НЕСПОДІВАНКИ: наносимо перший тик шкоди ОДРАЗУ при наступанні в калюжу
+                playerHealthInZone.TakeDamage(damagePerTick);
 
-                    Debug.Log($"<color=purple>[Калюжа] Нанесено шкоду гравцю: {damagePerTick}. Наступний тик через {tickInterval} сек.</color>");
-                }
+                // Запускаємо таймер для НАСТУПНОГО тику
+                tickTimer = tickInterval;
+
+                Debug.Log("<color=green>[Калюжа] Гравець наступив в зону! Перший урон нанесено одразу.</color>");
+            }
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Player"))
+        {
+            // Перевіряємо, чи вийшов саме той гравець, якого ми трекаємо
+            if (collision.GetComponent<PlayerHealth>() == playerHealthInZone)
+            {
+                playerHealthInZone = null;
+                Debug.Log("<color=yellow>[Калюжа] Гравець вийшов із зони ураження.</color>");
             }
         }
     }
