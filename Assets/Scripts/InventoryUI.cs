@@ -7,22 +7,22 @@ public class InventoryUI : MonoBehaviour
     public Transform itemsParent; // Об'єкт Grid (сітка інвентарю)
     public InventoryManager inventory; // Посилання на InventoryManager
 
-    // --- НОВЕ: Панелі вкладок для перемикання ---
+    // --- Панелі вкладок для перемикання ---
     [Header("Панелі Вкладок")]
     [Tooltip("Головний об'єкт Grid або ScrollView зі звичайними предметами")]
     public GameObject itemsPanel;
     [Tooltip("Новий об'єкт Grid або ScrollView, де налаштований PetInventoryUI")]
     public GameObject petsPanel;
 
-    private InventorySlot[] slots; // Список слотів у сітці
+    private InventorySlot[] slots; // Список усіх слотів у сітці (максимальна кількість)
     private bool isPetsTabActive = false; // Прапорець, яка вкладка зараз відкрита
 
     void Awake()
     {
-        // Знаходимо слоти один раз при старті
+        // Знаходимо всі слоти (включаючи приховані) один раз при старті
         RefreshSlots();
 
-        // Автоматично реєструємо цей UI в InventoryManager, якщо забув перетягнути в інспекторі
+        // Автоматично реєструємо цей UI в InventoryManager, якщо забули перетягнути в інспекторі
         if (inventory == null) inventory = InventoryManager.Instance;
         if (inventory != null) inventory.inventoryUI = this;
     }
@@ -37,6 +37,7 @@ public class InventoryUI : MonoBehaviour
     {
         if (itemsParent != null)
         {
+            // Передаємо 'true' у параметри, щоб Unity знаходив навіть неактивні (вимкнені) GameObjects
             slots = itemsParent.GetComponentsInChildren<InventorySlot>(true);
         }
     }
@@ -50,22 +51,44 @@ public class InventoryUI : MonoBehaviour
 
         if (slots == null || slots.Length == 0) RefreshSlots();
 
-        // Малюємо те, що є в сумці, у слотах:
+        // Отримуємо актуальний ліміт куплених слотів з InventoryManager
+        int allowedSpace = inventory.space;
+
+        // Проходимо циклом по абсолютно всіх ручних префабах, що лежать в itemsParent (наприклад, по всіх 40)
         for (int i = 0; i < slots.Length; i++)
         {
-            if (i < inventory.items.Count)
+            // Якщо індекс слота менший за поточний ліміт — гравець його вже купив/має
+            if (i < allowedSpace)
             {
-                slots[i].AddItem(inventory.items[i].item, inventory.items[i].amount);
+                // Активуємо слот, якщо він був прихований
+                if (!slots[i].gameObject.activeSelf)
+                {
+                    slots[i].gameObject.SetActive(true);
+                }
+
+                // Відображаємо предмет, якщо він є у списку сумки
+                if (i < inventory.items.Count)
+                {
+                    slots[i].AddItem(inventory.items[i].item, inventory.items[i].amount);
+                }
+                else
+                {
+                    slots[i].ClearSlot(); // Якщо предметів менше, ніж куплених слотів — слот порожній
+                }
             }
             else
             {
-                slots[i].ClearSlot();
+                // Якщо індекс слота виходить за рамки купленного простору — повністю ховаємо його з UI
+                if (slots[i].gameObject.activeSelf)
+                {
+                    slots[i].gameObject.SetActive(false);
+                }
             }
         }
     }
 
     // ==========================================
-    // --- НОВІ МЕТОДИ: Перемикання вкладок ---
+    // --- МЕТОДИ: Перемикання вкладок ---
     // ==========================================
 
     // Метод для кнопки "Предмети"
@@ -97,7 +120,6 @@ public class InventoryUI : MonoBehaviour
     // Автоматично оновлюємо UI при відкритті вікна інвентарю
     void OnEnable()
     {
-        // При відкритті всього вікна повертаємося на вкладку предметів, або просто оновлюємо поточну
         if (isPetsTabActive)
             ShowPetsTab();
         else
