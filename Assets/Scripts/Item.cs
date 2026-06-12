@@ -1,7 +1,7 @@
 using UnityEngine;
 
 // Категорії предметів
-public enum ItemType { Food, Potion, Resource, Junk, Weapon, Amulet, Ring, Belt, Pet, Helmet }
+public enum ItemType { Food, Potion, Resource, Junk, Weapon, Amulet, Ring, Belt, Pet, Helmet, Chestplate }
 
 // Структура для розділеного опису предмета
 public struct ItemDescription

@@ -13,6 +13,7 @@ public class PlayerEquipment : MonoBehaviour
     public RingData currentRing2;
     public BeltData currentBelt;
     public HelmetData currentHelmet;
+    public ChestplateData currentChestplate; // --- ДОДАНО НАГРУДНИК ---
     public PetData currentPet;
     public WeaponData currentWeapon;
 
@@ -93,6 +94,25 @@ public class PlayerEquipment : MonoBehaviour
         UpdateAllStats();
     }
 
+    // --- ЛОГІКА НАГРУДНИКА ---
+    public void EquipChestplate(ChestplateData newChestplate)
+    {
+        if (newChestplate == null || currentChestplate == newChestplate) return;
+        if (currentChestplate != null) UnequipChestplate();
+
+        currentChestplate = newChestplate;
+        if (playerHealth != null) playerHealth.AddBonusHealth(currentChestplate.bonusMaxHealth);
+        UpdateAllStats();
+    }
+
+    public void UnequipChestplate()
+    {
+        if (currentChestplate == null) return;
+        if (playerHealth != null) playerHealth.RemoveBonusHealth(currentChestplate.bonusMaxHealth);
+        currentChestplate = null;
+        UpdateAllStats();
+    }
+
     // --- ЛОГІКА КІЛЕЦЬ ---
     public void EquipRing(RingData newRing, int slotIndex)
     {
@@ -142,34 +162,43 @@ public class PlayerEquipment : MonoBehaviour
         UpdateAllStats();
     }
 
-    // --- МАГІЯ СУМУВАННЯ СТАТІВ (ОНОВЛЕНО ПОД ЧИСЕЛЬНУ БРОНЮ) ---
+    // --- МАГІЯ СУМУВАННЯ СТАТІВ (ОНОВЛЕНО ПІД НАГРУДНИК) ---
     public void UpdateAllStats()
     {
-        // Допоміжні змінні
+        // Стати амулета
         int amDmg = currentAmulet?.bonusDamage ?? 0;
         float amAtkSpd = currentAmulet?.bonusAttackSpeed ?? 0f;
         float amMovSpd = currentAmulet?.bonusMoveSpeed ?? 0f;
         float amCrit = currentAmulet?.bonusCritChance ?? 0f;
         float amCritM = (currentAmulet != null && currentAmulet.bonusCritMultiplier > 2f) ? currentAmulet.bonusCritMultiplier - 2f : 0f;
         int amRegen = currentAmulet?.healthRegenPerSecond ?? 0;
-
-        // ОНОВЛЕНО: Тепер беремо чисельну броню (переконайся, що перейменував це поле в AmuletData або залиш стару назву, якщо вона зчитує int)
         float amArmor = currentAmulet?.bonusArmor ?? 0f;
 
+        // Стати пояса
         int bDmg = currentBelt?.bonusDamage ?? 0;
         float bAtkSpd = currentBelt?.bonusAttackSpeed ?? 0f;
         float bMovSpd = currentBelt?.bonusMoveSpeed ?? 0f;
         float bCrit = currentBelt?.bonusCritChance ?? 0f;
         float bCritM = (currentBelt != null && currentBelt.bonusCritMultiplier > 2f) ? currentBelt.bonusCritMultiplier - 2f : 0f;
         int bRegen = currentBelt?.healthRegenPerSecond ?? 0;
-        float bArmor = currentBelt?.bonusArmor ?? 0f; // ОНОВЛЕНО
+        float bArmor = currentBelt?.bonusArmor ?? 0f;
 
         // Стати шолома
         float hCrit = currentHelmet?.bonusCritChance ?? 0f;
         float hCritM = (currentHelmet != null && currentHelmet.bonusCritMultiplier > 2f) ? currentHelmet.bonusCritMultiplier - 2f : 0f;
         int hRegen = currentHelmet?.healthRegenPerSecond ?? 0;
-        float hArmor = currentHelmet?.bonusArmor ?? 0f; // ОНОВЛЕНО
+        float hArmor = currentHelmet?.bonusArmor ?? 0f;
 
+        // Стати нагрудника --- ДОДАНО ---
+        int cpDmg = currentChestplate?.bonusDamage ?? 0;
+        float cpAtkSpd = currentChestplate?.bonusAttackSpeed ?? 0f;
+        float cpMovSpd = currentChestplate?.bonusMoveSpeed ?? 0f;
+        float cpCrit = currentChestplate?.bonusCritChance ?? 0f;
+        float cpCritM = (currentChestplate != null && currentChestplate.bonusCritMultiplier > 2f) ? currentChestplate.bonusCritMultiplier - 2f : 0f;
+        int cpRegen = currentChestplate?.healthRegenPerSecond ?? 0;
+        float cpArmor = currentChestplate?.bonusArmor ?? 0f;
+
+        // Стати пета
         int petDmg = currentPet?.bonusDamage ?? 0;
 
         // Розрахунок кілець
@@ -184,36 +213,41 @@ public class PlayerEquipment : MonoBehaviour
             rMovSpd += ring.bonusMoveSpeed;
             rCrit += ring.bonusCritChance;
             rRegen += ring.healthRegenPerSecond;
-            rArmor += ring.bonusArmor; // ОНОВЛЕНО
+            rArmor += ring.bonusArmor;
             if (ring.bonusCritMultiplier > 2f) rCritM += ring.bonusCritMultiplier - 2f;
         }
 
         AddRingStats(currentRing1);
         AddRingStats(currentRing2);
 
-        // Передача в системи
+        // Передача в системи бою (Combat)
         if (playerCombat != null)
         {
-            playerCombat.extraAmuletDamage = amDmg + bDmg + petDmg;
+            // Нагрудник додає базову шкоду та швидкість атаки
+            playerCombat.extraAmuletDamage = amDmg + bDmg + petDmg + cpDmg;
             playerCombat.extraRingDamage = rDmg;
-            playerCombat.extraAttackSpeed = amAtkSpd + bAtkSpd;
+            playerCombat.extraAttackSpeed = amAtkSpd + bAtkSpd + cpAtkSpd;
             playerCombat.extraRingAttackSpeed = rAtkSpd;
-            playerCombat.critChance = amCrit + bCrit + rCrit + hCrit;
-            playerCombat.critMultiplier = 2f + amCritM + bCritM + rCritM + hCritM;
+
+            // Сумуємо шанс кріта та множник
+            playerCombat.critChance = amCrit + bCrit + rCrit + hCrit + cpCrit;
+            playerCombat.critMultiplier = 2f + amCritM + bCritM + rCritM + hCritM + cpCritM;
         }
 
+        // Передача в системи руху (Movement)
         if (playerMovement != null)
         {
-            playerMovement.extraSpeedMultiplier = amMovSpd + bMovSpd;
+            playerMovement.extraSpeedMultiplier = amMovSpd + bMovSpd + cpMovSpd; // Нагрудник впливає на швидкість бігу
             playerMovement.extraRingSpeedMultiplier = rMovSpd;
         }
 
+        // Передача в системи здоров'я (Health)
         if (playerHealth != null)
         {
-            // Передаємо чисельну броню (amArmor + bArmor тощо) замість відсотків
             playerHealth.StartBuffs(amRegen + bRegen, amArmor + bArmor, 0); // 0 = Амулет/Пояс
             playerHealth.StartBuffs(rRegen, rArmor, 1);                     // 1 = Кільця
             playerHealth.StartBuffs(hRegen, hArmor, 2);                     // 2 = Шолом
+            playerHealth.StartBuffs(cpRegen, cpArmor, 3);                   // 3 = Нагрудник (ДОДАНО новий індекс)
         }
     }
 }

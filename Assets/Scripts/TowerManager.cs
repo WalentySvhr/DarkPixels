@@ -42,14 +42,27 @@ public class TowerManager : MonoBehaviour
     // --- НАЛАШТУВАННЯ РЕКОРДІВ ---
     [Header("Record")]
     public int maxFloorRecord = 0;
-    public int maxKillsRecord = 0; // Перенесено сюди для порядку в Інспекторі
+    public int maxKillsRecord = 0;
 
     [Header("Current Run Stats")]
-    public int currentRunKills = 0; // --- НОВЕ: Лічильник вбивств за поточний забіг ---
+    public int currentRunKills = 0;
 
-    [Header("Difficulty Scaling")]
+    [Header("Difficulty Scaling (HP / Общі параметри)")]
     public float enemyMultiplierPerFloor = 0.1f;
     public float bossMultiplierPerFloor = 0.2f;
+
+    // --- ДОДАНО ДЛЯ МАСШТАБУВАННЯ УРОНУ З КРОКОМ N ---
+    [Header("Damage Scaling (Урон з кроком N поверхів)")]
+    [Tooltip("На скільки відсотків збільшується урон звичайних ворогів за кожен крок (напр. 0.1 = +10%)")]
+    public float enemyDamageMultiplierPerStep = 0.15f;
+    [Tooltip("Крок поверхів для збільшення урону ворогів (напр. 2 = урон росте кожні 2 поверхи)")]
+    public int enemyDamageStepFloors = 2;
+
+    [Space(3)]
+    [Tooltip("На Скільки відсотків збільшується урон босів за кожен крок (напр. 0.25 = +25%)")]
+    public float bossDamageMultiplierPerStep = 0.25f;
+    [Tooltip("Крок поверхів для збільшення урону босів (напр. 5 = кожен наступний бос сильніший)")]
+    public int bossDamageStepFloors = 5;
 
     [Space(5)]
     public int baseEnemyCount = 5;
@@ -88,8 +101,6 @@ public class TowerManager : MonoBehaviour
         if (mainCamera == null) mainCamera = Camera.main;
     }
 
-    // --- Логіка перемикання данжів ---
-
     private void ApplyFloorEnvironment()
     {
         foreach (var tier in environmentTiers)
@@ -113,7 +124,7 @@ public class TowerManager : MonoBehaviour
                     Debug.LogError($"TowerManager: BossTrigger не призначений для {tier.themeName}!");
                 }
 
-                TeleportPlayerToPoint(tier.floorEntryPoint);
+                if (player != null) TeleportPlayerToPoint(tier.floorEntryPoint);
                 Debug.Log($"<color=cyan>TowerManager:</color> Данж оновлено: {tier.themeName}");
                 return;
             }
@@ -141,16 +152,13 @@ public class TowerManager : MonoBehaviour
         }
     }
 
-    // --- Основний ігровий цикл ---
-
     public void StartTowerRun()
     {
         IsTowerRunActive = true;
         currentFloor = 1;
-        currentRunKills = 0; // --- НОВЕ: Обнуляємо вбивства при новому забігу ---
+        currentRunKills = 0;
 
         CheckForNewRecord();
-
         PrepareLevel();
         ShowTowerUI();
 
@@ -213,21 +221,18 @@ public class TowerManager : MonoBehaviour
         }
     }
 
-    // --- НОВЕ: Метод додавання вбивства ворога ---
     public void AddKill()
     {
-        if (!IsTowerRunActive) return; // Рахуємо вбивства тільки всередині забігу Башні
+        if (!IsTowerRunActive) return;
 
         currentRunKills++;
         Debug.Log($"<color=orange>TowerManager: Убито монстрів за забіг: {currentRunKills}</color>");
 
-        // Перевіряємо, чи побито рекорд вбивств
         if (currentRunKills > maxKillsRecord)
         {
             maxKillsRecord = currentRunKills;
             Debug.Log($"<color=red>[TowerRecord] НОВИЙ РЕКОРД ВБИВСТВ! Кількість: {maxKillsRecord}</color>");
 
-            // Якщо хочеш зберігати рекорд ОДРАЗУ в момент вбивства:
             if (SaveManager.Instance != null)
             {
                 SaveManager.Instance.SaveGame();
@@ -242,13 +247,8 @@ public class TowerManager : MonoBehaviour
         ClearEnemies();
         ClearLoot();
 
-        if (currentChestSpawner != null)
-            currentChestSpawner.ClearChests();
-
-        //  ТУТ  ОЧИЩЕННЯ ПАСТОК!
-        if (currentTrapSpawner != null)
-            currentTrapSpawner.ClearTraps();
-
+        if (currentChestSpawner != null) currentChestSpawner.ClearChests();
+        if (currentTrapSpawner != null) currentTrapSpawner.ClearTraps();
         if (bossTrigger != null) bossTrigger.ResetTrigger();
     }
 
@@ -276,9 +276,6 @@ public class TowerManager : MonoBehaviour
                 ts.isSpawningActive = true;
                 ts.RestartSpawner();
             }
-            Debug.Log($"Boss floor = {IsBossFloor()}");
-            Debug.Log($"ChestSpawner = {currentChestSpawner}");
-            Debug.Log($"TrapSpawner = {currentTrapSpawner}");
         }
     }
 
@@ -298,9 +295,8 @@ public class TowerManager : MonoBehaviour
     public void ResetTowerProgress()
     {
         IsTowerRunActive = false;
-
         currentFloor = 1;
-        currentRunKills = 0; // Скидаємо лічильник забігу при програші/виході
+        currentRunKills = 0;
         UpdateFloorText();
         HideTowerUI();
         StopSpawners();
@@ -343,10 +339,6 @@ public class TowerManager : MonoBehaviour
             }
             Debug.Log("<color=green>TowerManager: Тимчасовий лут у контейнері зачищено.</color>");
         }
-        else
-        {
-            Debug.LogWarning("TowerManager: lootContainer не призначено в Інспекторі! Лут не очищено.");
-        }
     }
 
     private void UpdateFloorText() { if (floorText != null) floorText.text = "FLOOR: " + currentFloor; }
@@ -365,23 +357,40 @@ public class TowerManager : MonoBehaviour
     }
 
     public int GetEnemiesCountForCurrentFloor() => IsBossFloor() ? 0 : baseEnemyCount + (currentFloor - 1) * enemiesIncrementPerFloor;
+
+    // --- МНОЖНИКИ ЗДОРОВ'Я (Твої старі) ---
     public float GetDifficultyMultiplier() => 1f + ((currentFloor - 1) * enemyMultiplierPerFloor);
     public float GetBossDifficultyMultiplier() => 1f + ((currentFloor - 1) * bossMultiplierPerFloor);
+
+    // --- НОВІ МНОЖНИКИ ДЛЯ УРОНУ (З КРОКОМ N ПО ВЕРХАХ) ---
+    public float GetEnemyDamageMultiplier()
+    {
+        // Захист від ділення на 0 або від'ємних чисел у налаштуваннях кроку
+        int step = Mathf.Max(1, enemyDamageStepFloors);
+        // Розраховуємо, скільки повних кроків пройдено з 1-го поверху
+        int completedSteps = (currentFloor - 1) / step;
+        return 1f + (completedSteps * enemyDamageMultiplierPerStep);
+    }
+
+    public float GetBossDamageMultiplier()
+    {
+        int step = Mathf.Max(1, bossDamageStepFloors);
+        int completedSteps = (currentFloor - 1) / step;
+        return 1f + (completedSteps * bossDamageMultiplierPerStep);
+    }
+
     public bool IsBossFloor() => currentFloor % bossEveryXFloors == 0;
 
-    // ==========================================
-    // ЗБЕРЕЖЕННЯ / ЗАВАНТАЖЕННЯ РЕКОРДУчерез SaveManager
-    // ==========================================
     public GameData CaptureTowerState(GameData data)
     {
         data.maxTowerFloor = maxFloorRecord;
-        data.maxTowerKills = maxKillsRecord; // --- НОВЕ: Передаємо рекорд вбивств у збереження ---
+        data.maxTowerKills = maxKillsRecord;
         return data;
     }
 
     public void LoadTowerState(GameData data)
     {
         maxFloorRecord = data.maxTowerFloor;
-        maxKillsRecord = data.maxTowerKills; // --- НОВЕ: Завантажуємо рекорд вбивств ---
+        maxKillsRecord = data.maxTowerKills;
     }
 }

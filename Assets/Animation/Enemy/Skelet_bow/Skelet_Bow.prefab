@@ -486,13 +486,13 @@ GameObject:
   m_Component:
   - component: {fileID: 1497364681736181761}
   - component: {fileID: 4025999460794500452}
-  - component: {fileID: 7481947711892103910}
   - component: {fileID: 6159472908579616930}
   - component: {fileID: 6421702475570859171}
   - component: {fileID: 4531467788359035943}
   - component: {fileID: 8517523745045694470}
   - component: {fileID: 7103558029820387117}
   - component: {fileID: -7394814485982549567}
+  - component: {fileID: 4388879942965490517}
   m_Layer: 7
   m_Name: Skelet_Bow
   m_TagString: Enemy
@@ -532,51 +532,6 @@ MonoBehaviour:
   minForce: 4
   maxForce: 7
   linearDamping: 3
---- !u!114 &7481947711892103910
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4190017578930105916}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 35c825bdc2e2da64292516af9002c60a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  possibleLoot:
-  - name: "\u0421oin"
-    prefab: {fileID: 7565567695131184125, guid: cf2393411c1a440429e970d17ae75d66, type: 3}
-    dropChance: 100
-    minAmount: 1
-    maxAmount: 3
-  - name: Amulet_Speed
-    prefab: {fileID: 6640661003260574739, guid: 81b5365ecdcb0ce4c9bf5b9d3f64f182, type: 3}
-    dropChance: 10
-    minAmount: 1
-    maxAmount: 1
-  - name: Amulet_Health
-    prefab: {fileID: 6640661003260574739, guid: adb173cbae633034dadb1e442321bb16, type: 3}
-    dropChance: 7
-    minAmount: 1
-    maxAmount: 1
-  - name: AmuletRegeneration
-    prefab: {fileID: 6640661003260574739, guid: f870edc5d280b5f48ad945a99f0e8c55, type: 3}
-    dropChance: 7
-    minAmount: 1
-    maxAmount: 1
-  - name: AmuletDamage
-    prefab: {fileID: 6640661003260574739, guid: eb9ebf81d56db1b4d84c4a88d5906b1d, type: 3}
-    dropChance: 7
-    minAmount: 1
-    maxAmount: 1
-  - name: AmuletSpeedAttack
-    prefab: {fileID: 6640661003260574739, guid: 21b58a862c7dc374eb7dad8434a84a6c, type: 3}
-    dropChance: 7
-    minAmount: 1
-    maxAmount: 1
-  destroyItemsAfterTime: 1
-  itemLifetime: 30
 --- !u!114 &6159472908579616930
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -589,7 +544,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f230a22976044c46b9b9d40c699513a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 50
+  maxHealth: 80
   currentHealth: 0
   animator: {fileID: 6421702475570859171}
   spriteRenderer: {fileID: 7103558029820387117}
@@ -604,6 +559,7 @@ MonoBehaviour:
   enemyID: Skelet_Bow
   allowedQuestItemIDs: []
   isElite: 0
+  isStructure: 0
 --- !u!95 &6421702475570859171
 Animator:
   serializedVersion: 7
@@ -784,6 +740,96 @@ MonoBehaviour:
   isAggroedByDamage: 1
   spriteFacingLeft: 0
   hpBarTransform: {fileID: 0}
+--- !u!114 &4388879942965490517
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4190017578930105916}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35c825bdc2e2da64292516af9002c60a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  possibleLoot:
+  - name: "\u0421oin"
+    prefab: {fileID: 7565567695131184125, guid: cf2393411c1a440429e970d17ae75d66, type: 3}
+    dropChance: 100
+    minAmount: 1
+    maxAmount: 3
+  - name: Weak Healing Potion
+    prefab: {fileID: 6640661003260574739, guid: b82516164b7a22b4e9c866c6d8bf6246, type: 3}
+    dropChance: 20
+    minAmount: 1
+    maxAmount: 2
+  - name: Weak Healing Potion
+    prefab: {fileID: 6640661003260574739, guid: c70fb2cb79db6c2409ef1a2a7837f097, type: 3}
+    dropChance: 20
+    minAmount: 1
+    maxAmount: 2
+  - name: Weak Healing Potion
+    prefab: {fileID: 6640661003260574739, guid: 83fdffda36a38d84e87caa166a32c85e, type: 3}
+    dropChance: 20
+    minAmount: 1
+    maxAmount: 2
+  - name: Weak Healing Potion
+    prefab: {fileID: 6640661003260574739, guid: c73dfc385fe294e4faa9c120b4d5783c, type: 3}
+    dropChance: 20
+    minAmount: 1
+    maxAmount: 2
+  - name: Weak Healing Potion
+    prefab: {fileID: 6640661003260574739, guid: a7b4d323d3b0ef04ebc7c20313e2f4cb, type: 3}
+    dropChance: 20
+    minAmount: 1
+    maxAmount: 2
+  - name: amulet damage
+    prefab: {fileID: 6640661003260574739, guid: eb9ebf81d56db1b4d84c4a88d5906b1d, type: 3}
+    dropChance: 10
+    minAmount: 1
+    maxAmount: 1
+  - name: amulet damage
+    prefab: {fileID: 6640661003260574739, guid: adb173cbae633034dadb1e442321bb16, type: 3}
+    dropChance: 10
+    minAmount: 1
+    maxAmount: 1
+  - name: amulet damage
+    prefab: {fileID: 6640661003260574739, guid: 81b5365ecdcb0ce4c9bf5b9d3f64f182, type: 3}
+    dropChance: 10
+    minAmount: 1
+    maxAmount: 1
+  - name: amulet damage
+    prefab: {fileID: 6640661003260574739, guid: f870edc5d280b5f48ad945a99f0e8c55, type: 3}
+    dropChance: 10
+    minAmount: 1
+    maxAmount: 1
+  - name: amulet damage
+    prefab: {fileID: 6640661003260574739, guid: 333cbe43392b97840a2466b8b14b6509, type: 3}
+    dropChance: 10
+    minAmount: 1
+    maxAmount: 1
+  - name: amulet damage
+    prefab: {fileID: 6640661003260574739, guid: 6a659c533c2400647b5d646666bc0f35, type: 3}
+    dropChance: 10
+    minAmount: 1
+    maxAmount: 1
+  - name: amulet damage
+    prefab: {fileID: 6640661003260574739, guid: a45f9391af8c1574a9841bc2fca7d7a5, type: 3}
+    dropChance: 10
+    minAmount: 1
+    maxAmount: 1
+  - name: amulet damage
+    prefab: {fileID: 6640661003260574739, guid: 93a407a821ae0e143a7a843c6f21729e, type: 3}
+    dropChance: 10
+    minAmount: 1
+    maxAmount: 1
+  - name: amulet damage
+    prefab: {fileID: 6640661003260574739, guid: 93a407a821ae0e143a7a843c6f21729e, type: 3}
+    dropChance: 10
+    minAmount: 1
+    maxAmount: 1
+  destroyItemsAfterTime: 1
+  itemLifetime: 10
 --- !u!1 &4880586265829882900
 GameObject:
   m_ObjectHideFlags: 0

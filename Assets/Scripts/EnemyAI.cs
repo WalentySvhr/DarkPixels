@@ -68,6 +68,20 @@ public class EnemyAI : MonoBehaviour
 
         // Рандомізуємо старт таймера, щоб моби не робили перевірку в один і той самий кадр
         cullTimer = Random.Range(0f, cullCheckInterval);
+
+        // --- МАСШТАБУВАННЯ УРОНУ В БАШТІ ---
+        if (TowerManager.Instance != null && TowerManager.Instance.IsTowerRunActive)
+        {
+            // Визначаємо, який множник брати: для боса чи для звичайного моба
+            float damageMultiplier = TowerManager.Instance.IsBossFloor()
+                ? TowerManager.Instance.GetBossDamageMultiplier()
+                : TowerManager.Instance.GetEnemyDamageMultiplier();
+
+            // Множимо базовий урон на коефіцієнт
+            damage = Mathf.RoundToInt(damage * damageMultiplier);
+
+            Debug.Log($"[TowerAI] Ворогу {gameObject.name} успішно встановлено урон: {damage} (множник x{damageMultiplier})");
+        }
     }
 
     public void OnTakeDamage()

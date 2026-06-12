@@ -12,6 +12,17 @@ public class CurrencyExchangeUI : MonoBehaviour
     [Header("Покупка Петомця (Діаманти ->)")]
     public PetData petItem; // Сюди перетягни файл твого пета (напр. Pet_Dragon)
 
+    // --- ДОДАНО ДЛЯ СЛОТІВ ---
+    [Header("Налаштування Покупки Слоту")]
+    [Tooltip("Ціна розширення інвентарю в золоті")]
+    public int slotGoldPrice = 5000;
+    [Tooltip("Ціна розширення інвентарю в діамантах")]
+    public int slotDiamondPrice = 10;
+    [Tooltip("На скільки слотів збільшується інвентар за один раз")]
+    public int slotsPerUpgrade = 1;
+    [Tooltip("Максимальний розмір інвентарю, вище якого не можна купувати")]
+    public int maxInventorySpace = 40;
+
     [Header("UI Посилання")]
     public GameObject windowPanel;
     public TextMeshProUGUI statusText;
@@ -29,6 +40,13 @@ public class CurrencyExchangeUI : MonoBehaviour
     public string notEnoughDiamondsMessage = "<color=red>Недостатньо діамантів!</color>";
     [Tooltip("Текст, якщо такий пет вже є в рюкзаку")]
     public string alreadyOwnedMessage = "<color=yellow>У вас вже є цей помічник!</color>";
+
+    // --- ДОДАНО ДЛЯ СЛОТІВ ---
+    [Space]
+    [Tooltip("Текст при успішній покупці слоту")]
+    public string slotSuccessMessage = "<color=green>Інвентар успішно розширено!</color>";
+    [Tooltip("Текст, якщо досягнуто максимального ліміту інвентарю")]
+    public string maxSlotsReachedMessage = "<color=yellow>Досягнуто максимального розміру інвентарю!</color>";
 
     private void Awake()
     {
@@ -93,6 +111,70 @@ public class CurrencyExchangeUI : MonoBehaviour
         }
     }
 
+    // ==========================================
+    // 3. КУПІВЛЯ СЛОТУ ЗА ЗОЛОТО
+    // ==========================================
+    public void BuySlotWithGold()
+    {
+        if (InventoryManager.Instance == null) return;
+
+        // Перевірка на максимальний ліміт інвентарю
+        if (InventoryManager.Instance.space >= maxInventorySpace)
+        {
+            ShowStatus(maxSlotsReachedMessage);
+            return;
+        }
+
+        if (InventoryManager.Instance.coins >= slotGoldPrice)
+        {
+            InventoryManager.Instance.ChangeCoins(-slotGoldPrice);
+
+            // Збільшуємо змінну місткості в InventoryManager
+            InventoryManager.Instance.space += slotsPerUpgrade;
+
+            // Оновлюємо інтерфейс
+            InventoryManager.Instance.UpdateUI();
+
+            ShowStatus(slotSuccessMessage);
+        }
+        else
+        {
+            ShowStatus(notEnoughGoldMessage);
+        }
+    }
+
+    // ==========================================
+    // 4. КУПІВЛЯ СЛОТУ ЗА ДІАМАНТИ
+    // ==========================================
+    public void BuySlotWithDiamonds()
+    {
+        if (InventoryManager.Instance == null) return;
+
+        // Перевірка на максимальний ліміт інвентарю
+        if (InventoryManager.Instance.space >= maxInventorySpace)
+        {
+            ShowStatus(maxSlotsReachedMessage);
+            return;
+        }
+
+        if (InventoryManager.Instance.diamonds >= slotDiamondPrice)
+        {
+            InventoryManager.Instance.ChangeDiamonds(-slotDiamondPrice);
+
+            // Збільшуємо змінну місткості в InventoryManager
+            InventoryManager.Instance.space += slotsPerUpgrade;
+
+            // Оновлюємо інтерфейс
+            InventoryManager.Instance.UpdateUI();
+
+            ShowStatus(slotSuccessMessage);
+        }
+        else
+        {
+            ShowStatus(notEnoughDiamondsMessage);
+        }
+    }
+
     private bool HasItemInInventory(Item itemToCheck)
     {
         foreach (var stack in InventoryManager.Instance.petItems)
@@ -102,7 +184,6 @@ public class CurrencyExchangeUI : MonoBehaviour
         return false;
     }
 
-    // --- ОНОВЛЕНО: Тепер метод просто передає текст з твоїми тегами ---
     private void ShowStatus(string message)
     {
         if (statusText != null)
