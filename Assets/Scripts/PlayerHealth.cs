@@ -32,22 +32,24 @@ public class PlayerHealth : MonoBehaviour
     public GameObject damagePopupPrefab;
     public Vector3 popupOffset = new Vector3(0, 1.5f, 0);
 
-    [Header("Захист (Armor)")]
-    [Range(0, 1f)] public float amuletArmorPercent = 0f; // 0.1 = 10% захисту
-    [Range(0, 1f)] public float ringArmorPercent = 0f;   // 0.1 = 10% захисту
-    [Range(0, 1f)] public float helmetArmorPercent = 0f; // --- ДОДАНО: Захист шолома ---
+    [Header("Захист (Чисельна Armor)")]
+    [Tooltip("Точка балансу: при такій кількості загальної броні шкода зменшується рівно на 50%")]
+    [SerializeField] private float K = 400f;
+
+    public float amuletArmor = 0f;
+    public float ringArmor = 0f;
+    public float helmetArmor = 0f;
 
     // --- ПОЛЯ ДЛЯ СУМАРНОЇ РЕГЕНЕРАЦІЇ ---
     [HideInInspector] public int amuletRegen = 0;
     [HideInInspector] public int ringRegen = 0;
-    [HideInInspector] public int helmetRegen = 0; // --- ДОДАНО: Реген шолома ---
+    [HideInInspector] public int helmetRegen = 0;
     private Coroutine regenCoroutine;
 
     void Start()
     {
         currentHealth = maxHealth;
 
-        // Автоматично шукаємо компоненти, якщо вони не призначені
         if (animator == null) animator = GetComponent<Animator>();
         if (spriteRenderer == null) spriteRenderer = GetComponentInChildren<SpriteRenderer>();
 
@@ -66,12 +68,16 @@ public class PlayerHealth : MonoBehaviour
     {
         if (isDead) return;
 
-        // --- ЛОГІКА ЗАХИСТУ (ОНОВЛЕНО З ШОЛОМОМ) ---
-        float totalArmor = amuletArmorPercent + ringArmorPercent + helmetArmorPercent;
-        totalArmor = Mathf.Clamp(totalArmor, 0f, 0.9f);
-        float multiplier = 1f - totalArmor;
+        // --- НОВА ЛОГІКА ЧИ СЕЛЬНОГО ЗАХИСТУ ---
+        float totalArmor = amuletArmor + ringArmor + helmetArmor;
+
+        // Розраховуємо коефіцієнт зменшення шкоди (Dota 2 / LoL формула)
+        float multiplier = K / (K + totalArmor);
+
         int finalDamage = Mathf.CeilToInt(damage * multiplier);
-        if (finalDamage <= 0 && damage > 0 && totalArmor < 1f) finalDamage = 1;
+
+        // Гарантуємо мінімум 1 одиницю шкоди, якщо атака нанесла хоч щось
+        if (finalDamage <= 0 && damage > 0) finalDamage = 1;
 
         currentHealth -= finalDamage;
         SpawnDamageText(finalDamage);
@@ -85,7 +91,6 @@ public class PlayerHealth : MonoBehaviour
             flashCoroutine = StartCoroutine(FlashRoutine());
         }
 
-        // Зупиняємо гравця через скрипт пересування (якщо час оглушення більше нуля)
         PlayerMovement movementScript = GetComponent<PlayerMovement>();
         if (movementScript != null && hitStunDuration > 0f)
         {
@@ -102,7 +107,8 @@ public class PlayerHealth : MonoBehaviour
 
         if (totalArmor > 0)
         {
-            Debug.Log($"<color=blue>Броня спрацювала! Заблоковано: {damage - finalDamage} урону. Отримано: {finalDamage}</color>");
+            int blockedDamage = damage - finalDamage;
+            Debug.Log($"<color=blue>Броня ({totalArmor}) спрацювала! Заблоковано: {blockedDamage} урону. Отримано: {finalDamage}</color>");
         }
     }
 
@@ -115,13 +121,13 @@ public class PlayerHealth : MonoBehaviour
 
     private IEnumerator HitStunRoutine(PlayerMovement movementScript)
     {
-        movementScript.isStunned = true; // Блокуємо керування м'яко
+        movementScript.isStunned = true;
 
         yield return new WaitForSeconds(hitStunDuration);
 
         if (!isDead)
         {
-            movementScript.isStunned = false; // Вмикаємо керування назад
+            movementScript.isStunned = false;
         }
     }
 
@@ -161,23 +167,23 @@ public class PlayerHealth : MonoBehaviour
         UpdateUI();
     }
 
-    // --- ОНОВЛЕНО: Використовуємо int slotType (0 = Амулет/Пояс, 1 = Кільця, 2 = Шолом) ---
-    public void StartBuffs(int regen, float armor, int slotType)
+    // --- ОНОВЛЕНО: Тепер приймає чисельне значення armorValue замість відсотків ---
+    public void StartBuffs(int regen, float armorValue, int slotType)
     {
         if (slotType == 0)
         {
             amuletRegen = regen;
-            amuletArmorPercent = armor;
+            amuletArmor = armorValue;
         }
         else if (slotType == 1)
         {
             ringRegen = regen;
-            ringArmorPercent = armor;
+            ringArmor = armorValue;
         }
         else if (slotType == 2)
         {
             helmetRegen = regen;
-            helmetArmorPercent = armor;
+            helmetArmor = armorValue;
         }
 
         if (regenCoroutine == null && (amuletRegen > 0 || ringRegen > 0 || helmetRegen > 0))
@@ -191,17 +197,17 @@ public class PlayerHealth : MonoBehaviour
         if (slotType == 0)
         {
             amuletRegen = 0;
-            amuletArmorPercent = 0f;
+            amuletArmor = 0f;
         }
         else if (slotType == 1)
         {
             ringRegen = 0;
-            ringArmorPercent = 0f;
+            ringArmor = 0f;
         }
         else if (slotType == 2)
         {
             helmetRegen = 0;
-            helmetArmorPercent = 0f;
+            helmetArmor = 0f;
         }
 
         if (amuletRegen == 0 && ringRegen == 0 && helmetRegen == 0 && regenCoroutine != null)
@@ -217,7 +223,6 @@ public class PlayerHealth : MonoBehaviour
         {
             yield return new WaitForSeconds(1f);
 
-            // ОНОВЛЕНО: Сумуємо реген шолома
             int totalRegen = amuletRegen + ringRegen + helmetRegen;
 
             if (totalRegen > 0 && currentHealth < maxHealth && !isDead)
@@ -234,7 +239,6 @@ public class PlayerHealth : MonoBehaviour
                 Debug.Log($"<color=white>Регенерація: +{totalRegen}</color>");
             }
 
-            // ОНОВЛЕНО: Перевіряємо шолом
             if (amuletRegen == 0 && ringRegen == 0 && helmetRegen == 0) break;
         }
         regenCoroutine = null;
@@ -264,13 +268,12 @@ public class PlayerHealth : MonoBehaviour
         if (isDead) return;
         isDead = true;
 
-        // Зверни увагу: при смерті бонуси обнуляються. Після Revive() вони не повернуться автоматично.
         amuletRegen = 0;
         ringRegen = 0;
-        helmetRegen = 0; // Додано
-        amuletArmorPercent = 0f;
-        ringArmorPercent = 0f;
-        helmetArmorPercent = 0f; // Додано
+        helmetRegen = 0;
+        amuletArmor = 0f;
+        ringArmor = 0f;
+        helmetArmor = 0f;
 
         StopAllCoroutines();
 
@@ -280,7 +283,7 @@ public class PlayerHealth : MonoBehaviour
         PlayerMovement movementScript = GetComponent<PlayerMovement>();
         if (movementScript != null)
         {
-            movementScript.isStunned = true; // Блокуємо джойстик
+            movementScript.isStunned = true;
             movementScript.enabled = false;
         }
 
@@ -308,7 +311,6 @@ public class PlayerHealth : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
-    // --- ВІДРОДЖЕННЯ ---
     public void Revive()
     {
         Time.timeScale = 1f;
@@ -331,17 +333,15 @@ public class PlayerHealth : MonoBehaviour
 
         if (animator != null) animator.SetTrigger("Revive");
 
-        // --- ДОДАЄМО ЦЕЙ БЛОК ДЛЯ ПОВЕРНЕННЯ СТАТІВ ---
         PlayerEquipment equipment = GetComponent<PlayerEquipment>();
         if (equipment != null)
         {
-            // Наказуємо екіпіровці зібрати дані з усіх одягнених речей і надіслати їх сюди заново
             equipment.UpdateAllStats();
         }
 
-        Debug.Log("<color=green>Гравець відродився, стати відновлено!</color>");
+        Debug.Log("<color=green>Гравець відродився, чисельні стати відновлено!</color>");
     }
-    // Метод, який ми прив'яжемо до кнопки "Відродитися за рекламу" в UI
+
     public void OnClickReviveWithAd()
     {
         if (AdsChecker.Instance != null)

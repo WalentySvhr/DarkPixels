@@ -4,7 +4,7 @@ using UnityEngine;
 public class BeltData : Item
 {
     [Header("Бонуси пояса")]
-    [Tooltip("Скільки максимального здоров'я додає (наприклад: 50)")]
+    [Tooltip("Скільки maximalного здоров'я додає (наприклад: 50)")]
     public int bonusMaxHealth = 0;
 
     [Tooltip("Скільки додаткового урону наносить (наприклад: 5)")]
@@ -26,11 +26,11 @@ public class BeltData : Item
     [Tooltip("Множник критичного урону (наприклад: 2.0 для подвійного урону)")]
     public float bonusCritMultiplier = 2f;
 
-    [Tooltip("Відсоток поглинання урону (наприклад: 0.1 для 10% броні)")]
-    public float bonusArmorPercent = 0f;
+    [Tooltip("Чисельне значення броні (наприклад: 40)")] // ОНОВЛЕНО TOOLTIP
+    public float bonusArmor = 0f; // ПЕРЕЙМЕНОВАНО: Замість bonusArmorPercent
 
     /// <summary>
-    /// Перевизначений метод для розподілу бонусів пояса по трьох блоках UI
+    /// Перевизначений метод для розподілу бонусових показників пояса по трьох блоках UI
     /// </summary>
     public override ItemDescription GetDetailedInfo()
     {
@@ -43,8 +43,8 @@ public class BeltData : Item
         if (bonusMaxHealth > 0) main += $"Max HP: +{bonusMaxHealth}\n";
         if (bonusDamage > 0) main += $"Damage: +{bonusDamage}\n";
 
-        // Відображення броні в основних показниках
-        if (bonusArmorPercent > 0) main += $"Armor: +{bonusArmorPercent * 100}%\n";
+        // Відображення чисельної броні в основних показниках (без знаку %)
+        if (bonusArmor > 0) main += $"Armor: +{bonusArmor}\n"; // ОНОВЛЕНО ВИВЕДЕННЯ В UI
 
         if (healValue > 0) main += $"Instant Heal: +{healValue}\n";
 

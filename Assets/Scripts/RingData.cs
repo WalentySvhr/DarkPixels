@@ -27,9 +27,8 @@ public class RingData : Item
     [Tooltip("Множник урону при кріті (наприклад: 2 = подвійний урон)")]
     public float bonusCritMultiplier = 2f;
 
-    [Range(0, 1f)]
-    [Tooltip("Відсоток поглинання урону (0.2 = -20% урону)")]
-    public float bonusArmorPercent = 0f;
+    [Tooltip("Чисельне значення броні (наприклад: 15)")] // ОНОВЛЕНО TOOLTIP ТА ПРИБРАНО [Range]
+    public float bonusArmor = 0f; // ПЕРЕЙМЕНОВАНО: Замість bonusArmorPercent
 
     /// <summary>
     /// Перевизначений метод для відображення інформації про кільце в UI
@@ -45,8 +44,8 @@ public class RingData : Item
         if (bonusMaxHealth > 0) main += $"Max HP: +{bonusMaxHealth}\n";
         if (bonusDamage > 0) main += $"Damage: +{bonusDamage}\n";
 
-        // Відображаємо броню в основних статах
-        if (bonusArmorPercent > 0) main += $"Armor: +{bonusArmorPercent * 100}%\n";
+        // Відображаємо чисельну броню в основних статах (без знаку %)
+        if (bonusArmor > 0) main += $"Armor: +{bonusArmor}\n"; // ОНОВЛЕНО ВИВЕДЕННЯ В UI
 
         if (healValue > 0) main += $"Instant Heal: +{healValue}\n";
 

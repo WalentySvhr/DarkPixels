@@ -141,13 +141,21 @@ public class StatsUI : MonoBehaviour
             // 🛡️ БРОНЯ
             if (armorText != null)
             {
-                float totalArmor = playerHealth.amuletArmorPercent + playerHealth.ringArmorPercent + playerHealth.helmetArmorPercent;
-                totalArmor = Mathf.Clamp(totalArmor, 0f, 0.9f);
-                int totalArmorPct = Mathf.RoundToInt(totalArmor * 100f);
+                // 1. Рахуємо сумарну чисельну броню
+                float totalArmor = playerHealth.amuletArmor + playerHealth.ringArmor + playerHealth.helmetArmor;
 
-                // Оскільки вся броня зараз іде від речей, показуємо її як бонус
-                string bonusStr = totalArmorPct > 0 ? $" <color={bonusColorTag}>(+{totalArmorPct}%)</color>" : "";
-                armorText.text = $"{armorLabel}{totalArmorPct}%{bonusStr}";
+                // 2. Рахуємо реальний відсоток поглинання шкоди за нашою формулою (K = 400)
+                float K = 400f;
+                float multiplier = K / (K + totalArmor);
+                float damageReduction = (1f - multiplier) * 100f;
+                int damageReductionPct = Mathf.RoundToInt(damageReduction);
+
+                // 3. Формуємо рядок з бонусом. Тепер показуємо чисельну броню як основне значення.
+                string bonusStr = totalArmor > 0 ? $" <color={bonusColorTag}>(+{damageReductionPct}% )</color>" : ""; // protection/захисту в процентах для гравця, який не розуміє формулу броні, але бачить реальний ефект від неї. 
+
+
+                // Виведе на екран наприклад: Захист: 120 (+23% захисту)
+                armorText.text = $"{armorLabel}{totalArmor}{bonusStr}";
             }
 
             // 🧪 РЕГЕНЕРАЦІЯ

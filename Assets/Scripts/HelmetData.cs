@@ -7,11 +7,8 @@ public class HelmetData : Item
     [Tooltip("Скільки максимального здоров'я додає")]
     public int bonusMaxHealth = 0;
 
-    [Tooltip("Додатковий захист (фізичний)")]
-    public int bonusDefense = 0;
-
-    [Tooltip("Відсоток поглинання урону (наприклад: 0.1 для 10%)")]
-    public float bonusArmorPercent = 0f;
+    [Tooltip("Чисельне значення броні (наприклад: 40)")]
+    public float bonusArmor = 0f;
 
     [Tooltip("Скільки ХП відновлює кожну секунду")]
     public int healthRegenPerSecond = 0;
@@ -32,8 +29,9 @@ public class HelmetData : Item
         main += $"Type: {type}\n";
 
         if (bonusMaxHealth > 0) main += $"Max HP: +{bonusMaxHealth}\n";
-        if (bonusDefense > 0) main += $"Defense: +{bonusDefense}\n";
-        if (bonusArmorPercent > 0) main += $"Armor: +{bonusArmorPercent * 100}%\n";
+
+        // Відображення чисельної броні в основних показниках
+        if (bonusArmor > 0) main += $"Armor: +{bonusArmor}\n";
 
         desc.mainStats = main.TrimEnd();
 

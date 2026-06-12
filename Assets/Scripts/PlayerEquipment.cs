@@ -12,7 +12,7 @@ public class PlayerEquipment : MonoBehaviour
     public RingData currentRing1;
     public RingData currentRing2;
     public BeltData currentBelt;
-    public HelmetData currentHelmet; // ДОДАНО
+    public HelmetData currentHelmet;
     public PetData currentPet;
     public WeaponData currentWeapon;
 
@@ -74,7 +74,7 @@ public class PlayerEquipment : MonoBehaviour
         UpdateAllStats();
     }
 
-    // --- ЛОГІКА ШОЛОМА (ДОДАНО) ---
+    // --- ЛОГІКА ШОЛОМА ---
     public void EquipHelmet(HelmetData newHelmet)
     {
         if (newHelmet == null || currentHelmet == newHelmet) return;
@@ -142,7 +142,7 @@ public class PlayerEquipment : MonoBehaviour
         UpdateAllStats();
     }
 
-    // --- МАГІЯ СУМУВАННЯ СТАТІВ ---
+    // --- МАГІЯ СУМУВАННЯ СТАТІВ (ОНОВЛЕНО ПОД ЧИСЕЛЬНУ БРОНЮ) ---
     public void UpdateAllStats()
     {
         // Допоміжні змінні
@@ -152,7 +152,9 @@ public class PlayerEquipment : MonoBehaviour
         float amCrit = currentAmulet?.bonusCritChance ?? 0f;
         float amCritM = (currentAmulet != null && currentAmulet.bonusCritMultiplier > 2f) ? currentAmulet.bonusCritMultiplier - 2f : 0f;
         int amRegen = currentAmulet?.healthRegenPerSecond ?? 0;
-        float amArmor = currentAmulet?.bonusArmorPercent ?? 0f;
+
+        // ОНОВЛЕНО: Тепер беремо чисельну броню (переконайся, що перейменував це поле в AmuletData або залиш стару назву, якщо вона зчитує int)
+        float amArmor = currentAmulet?.bonusArmor ?? 0f;
 
         int bDmg = currentBelt?.bonusDamage ?? 0;
         float bAtkSpd = currentBelt?.bonusAttackSpeed ?? 0f;
@@ -160,13 +162,13 @@ public class PlayerEquipment : MonoBehaviour
         float bCrit = currentBelt?.bonusCritChance ?? 0f;
         float bCritM = (currentBelt != null && currentBelt.bonusCritMultiplier > 2f) ? currentBelt.bonusCritMultiplier - 2f : 0f;
         int bRegen = currentBelt?.healthRegenPerSecond ?? 0;
-        float bArmor = currentBelt?.bonusArmorPercent ?? 0f;
+        float bArmor = currentBelt?.bonusArmor ?? 0f; // ОНОВЛЕНО
 
         // Стати шолома
         float hCrit = currentHelmet?.bonusCritChance ?? 0f;
         float hCritM = (currentHelmet != null && currentHelmet.bonusCritMultiplier > 2f) ? currentHelmet.bonusCritMultiplier - 2f : 0f;
         int hRegen = currentHelmet?.healthRegenPerSecond ?? 0;
-        float hArmor = currentHelmet?.bonusArmorPercent ?? 0f;
+        float hArmor = currentHelmet?.bonusArmor ?? 0f; // ОНОВЛЕНО
 
         int petDmg = currentPet?.bonusDamage ?? 0;
 
@@ -182,7 +184,7 @@ public class PlayerEquipment : MonoBehaviour
             rMovSpd += ring.bonusMoveSpeed;
             rCrit += ring.bonusCritChance;
             rRegen += ring.healthRegenPerSecond;
-            rArmor += ring.bonusArmorPercent;
+            rArmor += ring.bonusArmor; // ОНОВЛЕНО
             if (ring.bonusCritMultiplier > 2f) rCritM += ring.bonusCritMultiplier - 2f;
         }
 
@@ -208,6 +210,7 @@ public class PlayerEquipment : MonoBehaviour
 
         if (playerHealth != null)
         {
+            // Передаємо чисельну броню (amArmor + bArmor тощо) замість відсотків
             playerHealth.StartBuffs(amRegen + bRegen, amArmor + bArmor, 0); // 0 = Амулет/Пояс
             playerHealth.StartBuffs(rRegen, rArmor, 1);                     // 1 = Кільця
             playerHealth.StartBuffs(hRegen, hArmor, 2);                     // 2 = Шолом
