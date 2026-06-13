@@ -562,32 +562,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35c825bdc2e2da64292516af9002c60a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  possibleLoot:
-  - name: "\u0421oin"
-    prefab: {fileID: 7565567695131184125, guid: cf2393411c1a440429e970d17ae75d66, type: 3}
-    dropChance: 100
-    minAmount: 1
-    maxAmount: 4
-  - name: "\u0421oin"
-    prefab: {fileID: 7565567695131184125, guid: cf2393411c1a440429e970d17ae75d66, type: 3}
-    dropChance: 20
-    minAmount: 1
-    maxAmount: 4
-  - name: Deer Hide
-    prefab: {fileID: 6640661003260574739, guid: 0078a7b08e0101d4a88571d2cc6ab0d1, type: 3}
-    dropChance: 15
-    minAmount: 1
-    maxAmount: 3
-  - name: Antler
-    prefab: {fileID: 6640661003260574739, guid: 94d78d9c3889335448e1d8dde1166d81, type: 3}
-    dropChance: 12
-    minAmount: 1
-    maxAmount: 2
-  - name: Dried Venison
-    prefab: {fileID: 6640661003260574739, guid: 630a23c2a1c37f544897a6e0f13d2dcb, type: 3}
-    dropChance: 15
-    minAmount: 1
-    maxAmount: 2
+  lootTable: {fileID: 11400000, guid: f1d9cd7a928d3ea41971112ec43f0752, type: 2}
+  dropRolls: 1
   destroyItemsAfterTime: 1
   itemLifetime: 10
 --- !u!114 &2304866948231650555

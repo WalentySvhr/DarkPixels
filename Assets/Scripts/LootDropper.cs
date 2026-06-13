@@ -2,24 +2,15 @@ using UnityEngine;
 
 public class LootDropper : MonoBehaviour
 {
-    [System.Serializable]
-    public class Loot
-    {
-        public string name;
-        public GameObject prefab;
-        [Range(0f, 100f)] public float dropChance;
-        public int minAmount = 1;
-        public int maxAmount = 1;
-    }
+    [Header("Таблиця луту")]
+    public LootTable lootTable;
 
-    [Header("Налаштування випадіння")]
-    public Loot[] possibleLoot;
+    [Header("Кількість спроб дропу")]
+    [Range(1, 5)] public int dropRolls = 1;
 
     [Header("Зникнення предметів (Оптимізація)")]
-    [Tooltip("Чи повинні предмети зникати з часом?")]
     public bool destroyItemsAfterTime = true;
-    [Tooltip("Скільки секунд предмет лежатиме на землі перед зникненням")]
-    public float itemLifetime = 30f;
+    public float itemLifetime = 15f;
 
     private LootPhysics lootPhysics;
     private SpriteRenderer enemySprite;
@@ -28,57 +19,44 @@ public class LootDropper : MonoBehaviour
     {
         lootPhysics = GetComponent<LootPhysics>();
         if (lootPhysics == null) lootPhysics = gameObject.AddComponent<LootPhysics>();
-
-        // Запам'ятовуємо спрайт ворога, щоб знати, на якому він шарі (світлі)
         enemySprite = GetComponentInChildren<SpriteRenderer>();
     }
 
     public void DropLoot()
     {
-        // Дізнаємося поточний шар ворога (наприклад, "Enemy_Inside" або "Enemy_Outside")
+        if (lootTable == null) return;
+
         string currentLayer = (enemySprite != null) ? enemySprite.sortingLayerName : "Default";
+        Transform targetContainer = (TowerManager.Instance != null) ? TowerManager.Instance.lootContainer : null;
 
-        // Отримуємо посилання на контейнер луту з нашого TowerManager
-        Transform targetContainer = null;
-        if (TowerManager.Instance != null && TowerManager.Instance.lootContainer != null)
+        for (int roll = 0; roll < dropRolls; roll++)
         {
-            targetContainer = TowerManager.Instance.lootContainer;
-        }
+            LootItemData droppedItemData = lootTable.GetRandomItem();
 
-        foreach (Loot item in possibleLoot)
-        {
-            if (item.prefab == null) continue;
+            if (droppedItemData == null || droppedItemData.prefab == null) continue;
 
-            float roll = Random.Range(0f, 100f);
-            if (roll <= item.dropChance)
+            // --- МОДИФІКОВАНО ---
+            // Тепер кількість береться індивідуально з самого Scriptable Object предмета
+            int amountToDrop = droppedItemData.GetRandomAmount();
+
+            for (int i = 0; i < amountToDrop; i++)
             {
-                int amountToDrop = Random.Range(item.minAmount, item.maxAmount + 1);
-
-                for (int i = 0; i < amountToDrop; i++)
+                GameObject droppedItem;
+                if (targetContainer != null)
                 {
-                    // --- МОДИФІКОВАНО ---
-                    // Спавнимо лут одразу всередину контейнера, якщо він існує
-                    GameObject droppedItem;
-                    if (targetContainer != null)
-                    {
-                        droppedItem = Instantiate(item.prefab, transform.position, Quaternion.identity, targetContainer);
-                    }
-                    else
-                    {
-                        droppedItem = Instantiate(item.prefab, transform.position, Quaternion.identity);
-                    }
+                    droppedItem = Instantiate(droppedItemData.prefab, transform.position, Quaternion.identity, targetContainer);
+                }
+                else
+                {
+                    droppedItem = Instantiate(droppedItemData.prefab, transform.position, Quaternion.identity);
+                }
 
-                    // Прив'язка до освітлення
-                    ApplyLighting(droppedItem, currentLayer);
+                ApplyLighting(droppedItem, currentLayer);
+                lootPhysics.ApplyExplosion(droppedItem);
 
-                    // Застосовуємо фізику (розліт)
-                    lootPhysics.ApplyExplosion(droppedItem);
-
-                    // --- Таймер знищення ---
-                    if (destroyItemsAfterTime)
-                    {
-                        Destroy(droppedItem, itemLifetime);
-                    }
+                if (destroyItemsAfterTime)
+                {
+                    Destroy(droppedItem, itemLifetime);
                 }
             }
         }
@@ -86,18 +64,10 @@ public class LootDropper : MonoBehaviour
 
     private void ApplyLighting(GameObject itemObj, string targetLayer)
     {
-        // 1. Міняємо шар для всіх спрайтів предмета
         SpriteRenderer[] sprites = itemObj.GetComponentsInChildren<SpriteRenderer>();
-        foreach (SpriteRenderer s in sprites)
-        {
-            s.sortingLayerName = targetLayer;
-        }
+        foreach (SpriteRenderer s in sprites) s.sortingLayerName = targetLayer;
 
-        // 2. Міняємо шар для Canvas (якщо у предмета є напис із назвою над ним)
         Canvas[] canvases = itemObj.GetComponentsInChildren<Canvas>();
-        foreach (Canvas c in canvases)
-        {
-            c.sortingLayerName = targetLayer;
-        }
+        foreach (Canvas c in canvases) c.sortingLayerName = targetLayer;
     }
 }

@@ -25,7 +25,27 @@ public class LightingZoneTrigger : MonoBehaviour
             ChangeSortingLayer(other.gameObject, enemyInsideLayer);
         }
     }
-
+    private void OnTriggerStay2D(Collider2D other)
+    {
+        // Якщо моб з'явився (респавнився) всередині, але його шар ще "Outside" — примусово міняємо на "Inside"
+        if (other.CompareTag("Enemy"))
+        {
+            SpriteRenderer sr = other.GetComponentInChildren<SpriteRenderer>();
+            if (sr != null && sr.sortingLayerName == enemyOutsideLayer)
+            {
+                Debug.Log("Моб заспавнився або знаходиться всередині з неправильним шаром! Виправляємо на: " + enemyInsideLayer);
+                ChangeSortingLayer(other.gameObject, enemyInsideLayer);
+            }
+        }
+        else if (other.CompareTag("Player"))
+        {
+            SpriteRenderer sr = other.GetComponentInChildren<SpriteRenderer>();
+            if (sr != null && sr.sortingLayerName == playerOutsideLayer)
+            {
+                ChangeSortingLayer(other.gameObject, playerInsideLayer);
+            }
+        }
+    }
     private void OnTriggerExit2D(Collider2D other)
     {
         // Коли виходить гравець

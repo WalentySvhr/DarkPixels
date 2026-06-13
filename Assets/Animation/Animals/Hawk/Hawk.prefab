@@ -220,27 +220,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35c825bdc2e2da64292516af9002c60a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  possibleLoot:
-  - name: "\u0421oin"
-    prefab: {fileID: 7565567695131184125, guid: cf2393411c1a440429e970d17ae75d66, type: 3}
-    dropChance: 100
-    minAmount: 3
-    maxAmount: 6
-  - name: Claw Hawk
-    prefab: {fileID: 6640661003260574739, guid: e9b50a76c7bbb394fb58df0839670d43, type: 3}
-    dropChance: 30
-    minAmount: 1
-    maxAmount: 2
-  - name: Feathers Hawk
-    prefab: {fileID: 6640661003260574739, guid: af9aea5cd86e5de4f8dd242a39da2c95, type: 3}
-    dropChance: 30
-    minAmount: 1
-    maxAmount: 4
-  - name: Beak Hawk
-    prefab: {fileID: 6640661003260574739, guid: 8d5e269621d018945a8b45b6d2198e02, type: 3}
-    dropChance: 25
-    minAmount: 1
-    maxAmount: 1
+  lootTable: {fileID: 11400000, guid: 3bc0c05b3e05b8041840d4801a6e4f2c, type: 2}
+  dropRolls: 1
   destroyItemsAfterTime: 1
   itemLifetime: 10
 --- !u!114 &7038312172724645908

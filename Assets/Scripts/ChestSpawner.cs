@@ -13,8 +13,18 @@ public class ChestSpawner : MonoBehaviour
     [SerializeField] private int minChests = 1;
     [SerializeField] private int maxChests = 3;
 
-    // Щоб скрині не спавнилися занадто близько одна до одної
+    [Header("Distance Settings")]
     [SerializeField] private float minDistanceBetweenChests = 3f;
+
+    [Header("Trap Settings (Пошук за назвою об'єкта)")]
+    [Tooltip("Жорстка дистанція від пасток, яка ніколи не зменшується")]
+    [SerializeField] private float safeDistanceFromTraps = 2.5f;
+
+    [Header("Safe Zone Settings")]
+    [Tooltip("Перетягни сюди об'єкт стартової точки з ієрархії (Spawn Point)")]
+    [SerializeField] private Transform spawnPoint;
+    [Tooltip("Мінімальна відстань від цієї точки, ближче якої скрині НЕ з'являться")]
+    [SerializeField] private float safeZoneRadius = 4.0f;
 
     private List<Vector2> spawnedChestPositions = new List<Vector2>();
 
@@ -64,14 +74,20 @@ public class ChestSpawner : MonoBehaviour
             // 1. Перевірка: чи точка ВЗАГАЛІ всередині фізичного колайдера підлоги?
             if (!spawnArea.OverlapPoint(potentialPos)) continue;
 
-            // 2. Додаткова перевірка (найнадійніша): чи є в цій точці тайл підлоги?
-            // Якщо у вас є окремий FloorTilemap, використовуйте його:
-            // Vector3Int floorCell = floorTilemap.WorldToCell(potentialPos);
-            // if (!floorTilemap.HasTile(floorCell)) continue;
-
-            // 3. Перевірка стін
+            // 2. Перевірка стін
             Vector3Int cellPos = wallTilemap.WorldToCell(potentialPos);
             if (wallTilemap.HasTile(cellPos) || IsWallNearby(cellPos)) continue;
+
+            // 3. ЗМІНЕНО: Перевірка безпечної зони навколо заданої точки в інспекторі
+            if (spawnPoint != null)
+            {
+                float distanceToSpawn = Vector2.Distance(potentialPos, spawnPoint.position);
+                if (distanceToSpawn < safeZoneRadius)
+                {
+                    // Точка занадто близько до старту, пропускаємо
+                    continue;
+                }
+            }
 
             // 4. Перевірка дистанції до інших скринь
             bool tooClose = false;
@@ -85,6 +101,12 @@ public class ChestSpawner : MonoBehaviour
             }
             if (tooClose) continue;
 
+            // 5. ПЕРЕВІРКА ЗА НАЗВОЮ: Чи є поруч пастки?
+            if (IsTrapNearby(potentialPos, safeDistanceFromTraps))
+            {
+                continue; // Якщо поруч виявлено пастку, пропускаємо цю точку
+            }
+
             // Якщо пройшли всі перевірки:
             GameObject prefab = chestPrefabs[Random.Range(0, chestPrefabs.Length)];
             Instantiate(prefab, potentialPos, Quaternion.identity, transform);
@@ -93,6 +115,31 @@ public class ChestSpawner : MonoBehaviour
         }
 
         return false;
+    }
+
+    // Метод перевіряє відстань до всіх пасток на сцені, орієнтуючись на їхнє ім'я
+    private bool IsTrapNearby(Vector2 targetPos, float radius)
+    {
+        Transform[] allObjects = FindObjectsByType<Transform>(FindObjectsSortMode.None);
+
+        foreach (Transform obj in allObjects)
+        {
+            string name = obj.name.ToLower();
+
+            // Перевіряємо, чи містить назва об'єкта ключові слова пасток
+            if (name.Contains("trap") || name.Contains("spike"))
+            {
+                float distance = Vector2.Distance(targetPos, obj.position);
+
+                if (distance < radius)
+                {
+                    Debug.Log($"<color=orange>Спавн скрині скасовано: поруч пастка '{obj.name}' (Відстань: {distance:F2}м)</color>");
+                    return true; // Пастка занадто близько
+                }
+            }
+        }
+
+        return false; // Поруч немає пасток
     }
 
     private bool IsWallNearby(Vector3Int cell)
@@ -104,14 +151,13 @@ public class ChestSpawner : MonoBehaviour
                 Vector3Int checkPos = new Vector3Int(cell.x + x, cell.y + y, cell.z);
                 if (wallTilemap.HasTile(checkPos))
                 {
-                    // Дебаг допоможе побачити, чи тайлмеп "бачить" стіни там, де ви їх не бачите
-                    Debug.Log($"Знайдено стіну біля {checkPos}");
                     return true;
                 }
             }
         }
         return false;
     }
+
     public void ClearChests()
     {
         foreach (Transform child in transform)
@@ -119,5 +165,22 @@ public class ChestSpawner : MonoBehaviour
             Destroy(child.gameObject);
         }
         spawnedChestPositions.Clear();
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        // Малюємо зони безпеки від пасток червоним
+        Gizmos.color = Color.red;
+        foreach (Vector2 pos in spawnedChestPositions)
+        {
+            Gizmos.DrawWireSphere(pos, safeDistanceFromTraps);
+        }
+
+        // Візуалізуємо бірюзовим колом безпечну зону навколо нашої точки
+        if (spawnPoint != null)
+        {
+            Gizmos.color = Color.cyan;
+            Gizmos.DrawWireSphere(spawnPoint.position, safeZoneRadius);
+        }
     }
 }

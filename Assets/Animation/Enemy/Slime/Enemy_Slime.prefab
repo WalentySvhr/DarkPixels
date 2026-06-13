@@ -427,11 +427,10 @@ GameObject:
   - component: {fileID: 4644534914322989839}
   - component: {fileID: 513793001618739278}
   - component: {fileID: 1616812931906655235}
-  - component: {fileID: -2815723365966025357}
-  - component: {fileID: 3925304545808330030}
   - component: {fileID: 2991753075670589045}
   - component: {fileID: 286959157954138569}
   - component: {fileID: 1204368656980043296}
+  - component: {fileID: -5133086397070081697}
   m_Layer: 7
   m_Name: Enemy_Slime
   m_TagString: Enemy
@@ -602,46 +601,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damage: 2
   attackSpeed: 1
---- !u!114 &-2815723365966025357
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6395545182073758250}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5e8d143ad1a8dcf43999d952b5eb32d6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  speed: 5
-  stopDistance: 0.0001
-  isAggro: 1
---- !u!114 &3925304545808330030
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6395545182073758250}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 35c825bdc2e2da64292516af9002c60a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  possibleLoot:
-  - name: Healing
-    prefab: {fileID: 6640661003260574739, guid: b82516164b7a22b4e9c866c6d8bf6246, type: 3}
-    dropChance: 100
-    minAmount: 1
-    maxAmount: 1
-  - name: Coin
-    prefab: {fileID: 7565567695131184125, guid: cf2393411c1a440429e970d17ae75d66, type: 3}
-    dropChance: 100
-    minAmount: 1
-    maxAmount: 3
-  destroyItemsAfterTime: 1
-  itemLifetime: 30
 --- !u!114 &2991753075670589045
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -738,6 +697,22 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!114 &-5133086397070081697
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6395545182073758250}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35c825bdc2e2da64292516af9002c60a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lootTable: {fileID: 11400000, guid: e488a13ea5461704592bb56def7098df, type: 2}
+  dropRolls: 1
+  destroyItemsAfterTime: 1
+  itemLifetime: 10
 --- !u!1 &6839496585043160122
 GameObject:
   m_ObjectHideFlags: 0

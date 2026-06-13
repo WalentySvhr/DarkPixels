@@ -166,7 +166,7 @@ GameObject:
   - component: {fileID: 1563556243142754718}
   - component: {fileID: 7060742205491362007}
   - component: {fileID: 6634498740145867417}
-  - component: {fileID: -6425594207767855875}
+  - component: {fileID: -577046046154356384}
   m_Layer: 7
   m_Name: Zombie
   m_TagString: Enemy
@@ -418,7 +418,7 @@ MonoBehaviour:
   allowedQuestItemIDs: []
   isElite: 0
   isStructure: 0
---- !u!114 &-6425594207767855875
+--- !u!114 &-577046046154356384
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -430,82 +430,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35c825bdc2e2da64292516af9002c60a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  possibleLoot:
-  - name: "\u0421oin"
-    prefab: {fileID: 7565567695131184125, guid: cf2393411c1a440429e970d17ae75d66, type: 3}
-    dropChance: 100
-    minAmount: 1
-    maxAmount: 3
-  - name: Weak Healing Potion
-    prefab: {fileID: 6640661003260574739, guid: b82516164b7a22b4e9c866c6d8bf6246, type: 3}
-    dropChance: 20
-    minAmount: 1
-    maxAmount: 2
-  - name: Weak Healing Potion
-    prefab: {fileID: 6640661003260574739, guid: c70fb2cb79db6c2409ef1a2a7837f097, type: 3}
-    dropChance: 20
-    minAmount: 1
-    maxAmount: 2
-  - name: Weak Healing Potion
-    prefab: {fileID: 6640661003260574739, guid: 83fdffda36a38d84e87caa166a32c85e, type: 3}
-    dropChance: 20
-    minAmount: 1
-    maxAmount: 2
-  - name: Weak Healing Potion
-    prefab: {fileID: 6640661003260574739, guid: c73dfc385fe294e4faa9c120b4d5783c, type: 3}
-    dropChance: 20
-    minAmount: 1
-    maxAmount: 2
-  - name: Weak Healing Potion
-    prefab: {fileID: 6640661003260574739, guid: a7b4d323d3b0ef04ebc7c20313e2f4cb, type: 3}
-    dropChance: 20
-    minAmount: 1
-    maxAmount: 2
-  - name: amulet damage
-    prefab: {fileID: 6640661003260574739, guid: eb9ebf81d56db1b4d84c4a88d5906b1d, type: 3}
-    dropChance: 10
-    minAmount: 1
-    maxAmount: 1
-  - name: amulet damage
-    prefab: {fileID: 6640661003260574739, guid: adb173cbae633034dadb1e442321bb16, type: 3}
-    dropChance: 10
-    minAmount: 1
-    maxAmount: 1
-  - name: amulet damage
-    prefab: {fileID: 6640661003260574739, guid: 81b5365ecdcb0ce4c9bf5b9d3f64f182, type: 3}
-    dropChance: 10
-    minAmount: 1
-    maxAmount: 1
-  - name: amulet damage
-    prefab: {fileID: 6640661003260574739, guid: f870edc5d280b5f48ad945a99f0e8c55, type: 3}
-    dropChance: 10
-    minAmount: 1
-    maxAmount: 1
-  - name: amulet damage
-    prefab: {fileID: 6640661003260574739, guid: 333cbe43392b97840a2466b8b14b6509, type: 3}
-    dropChance: 10
-    minAmount: 1
-    maxAmount: 1
-  - name: amulet damage
-    prefab: {fileID: 6640661003260574739, guid: 6a659c533c2400647b5d646666bc0f35, type: 3}
-    dropChance: 10
-    minAmount: 1
-    maxAmount: 1
-  - name: amulet damage
-    prefab: {fileID: 6640661003260574739, guid: a45f9391af8c1574a9841bc2fca7d7a5, type: 3}
-    dropChance: 10
-    minAmount: 1
-    maxAmount: 1
-  - name: amulet damage
-    prefab: {fileID: 6640661003260574739, guid: 93a407a821ae0e143a7a843c6f21729e, type: 3}
-    dropChance: 10
-    minAmount: 1
-    maxAmount: 1
-  - name: amulet damage
-    prefab: {fileID: 6640661003260574739, guid: 93a407a821ae0e143a7a843c6f21729e, type: 3}
-    dropChance: 10
-    minAmount: 1
-    maxAmount: 1
+  lootTable: {fileID: 11400000, guid: e488a13ea5461704592bb56def7098df, type: 2}
+  dropRolls: 1
   destroyItemsAfterTime: 1
   itemLifetime: 10
 --- !u!1 &5769061953914383739
@@ -1133,11 +1059,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35c825bdc2e2da64292516af9002c60a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  possibleLoot:
-  - name: Sword
-    prefab: {fileID: 6640661003260574739, guid: 7fac50a36d88ea94389f2745b5e9ba30, type: 3}
-    dropChance: 100
-    minAmount: 1
-    maxAmount: 2
+  lootTable: {fileID: 0}
+  dropRolls: 1
   destroyItemsAfterTime: 1
   itemLifetime: 30

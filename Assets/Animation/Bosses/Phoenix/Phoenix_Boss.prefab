@@ -574,8 +574,8 @@ GameObject:
   - component: {fileID: 7476763218311523173}
   - component: {fileID: 4765768612312126319}
   - component: {fileID: 185707235083514791}
-  - component: {fileID: 5363533720252084937}
   - component: {fileID: 4928851431081663779}
+  - component: {fileID: 5499388258541310663}
   m_Layer: 7
   m_Name: Phoenix_Boss
   m_TagString: Enemy
@@ -804,35 +804,6 @@ MonoBehaviour:
   hpText: {fileID: 4601915923711178979}
   damagePopupPrefab: {fileID: 754589129107080054, guid: 7724944ccc0288d4e86f01937b868403, type: 3}
   exitDoor: {fileID: 0}
---- !u!114 &5363533720252084937
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8334384985016651589}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 68988bbf0fab0be4bacc9f3bad2f429d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  lootTable:
-  - name: Gold
-    itemPrefab: {fileID: 7565567695131184125, guid: cf2393411c1a440429e970d17ae75d66, type: 3}
-    dropChance: 100
-    minAmount: 50
-    maxAmount: 50
-  - name: "\u041C\u0435\u0447 - \u041D\u0435\u0437\u0432\u0438\u0447\u0430\u0439\u043D\u0438\u0439"
-    itemPrefab: {fileID: 4541268859444003019, guid: 6ee6736bb6343684a9d4d87a6deb9820, type: 3}
-    dropChance: 25
-    minAmount: 1
-    maxAmount: 1
-  - name: Glefa
-    itemPrefab: {fileID: 6623768690276603527, guid: 9cf273d6488c1eb4db5289133b8e74ed, type: 3}
-    dropChance: 15
-    minAmount: 1
-    maxAmount: 1
-  victoryEffect: {fileID: 0}
 --- !u!114 &4928851431081663779
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -848,3 +819,19 @@ MonoBehaviour:
   minForce: 4
   maxForce: 7
   linearDamping: 3
+--- !u!114 &5499388258541310663
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8334384985016651589}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35c825bdc2e2da64292516af9002c60a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LootDropper
+  lootTable: {fileID: 11400000, guid: 32abdc1dad23db2428925ba45ac1568a, type: 2}
+  dropRolls: 3
+  destroyItemsAfterTime: 1
+  itemLifetime: 15

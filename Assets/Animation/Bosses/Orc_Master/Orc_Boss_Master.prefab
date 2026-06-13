@@ -555,8 +555,8 @@ GameObject:
   - component: {fileID: 6705479300431759517}
   - component: {fileID: 2228168717047157404}
   - component: {fileID: 2860470842394572760}
-  - component: {fileID: 2127354056689811232}
   - component: {fileID: 8648401448297633572}
+  - component: {fileID: -6184979466884371780}
   m_Layer: 7
   m_Name: Orc_Boss_Master
   m_TagString: Enemy
@@ -784,120 +784,6 @@ MonoBehaviour:
   hpText: {fileID: 4384984843579373878}
   damagePopupPrefab: {fileID: 754589129107080054, guid: 7724944ccc0288d4e86f01937b868403, type: 3}
   exitDoor: {fileID: 0}
---- !u!114 &2127354056689811232
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5809504634901911207}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 68988bbf0fab0be4bacc9f3bad2f429d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  lootTable:
-  - name: Gold
-    itemPrefab: {fileID: 7565567695131184125, guid: cf2393411c1a440429e970d17ae75d66, type: 3}
-    dropChance: 100
-    minAmount: 70
-    maxAmount: 100
-  - name: Sword - Unusual
-    itemPrefab: {fileID: 4541268859444003019, guid: a639e0e78de05b6449cc6343237992e2, type: 3}
-    dropChance: 30
-    minAmount: 1
-    maxAmount: 1
-  - name: Axe
-    itemPrefab: {fileID: 3517138325802830077, guid: 99724bea5f7384c43bdc4d24a9a54702, type: 3}
-    dropChance: 15
-    minAmount: 1
-    maxAmount: 1
-  - name: Glefa
-    itemPrefab: {fileID: 6623768690276603527, guid: 9cf273d6488c1eb4db5289133b8e74ed, type: 3}
-    dropChance: 15
-    minAmount: 1
-    maxAmount: 1
-  - name: BeltArmorRare
-    itemPrefab: {fileID: 6640661003260574739, guid: 78bf10a7a9d92b344b835d4b47af9a74, type: 3}
-    dropChance: 15
-    minAmount: 1
-    maxAmount: 1
-  - name: BeltArmorCommon
-    itemPrefab: {fileID: 6640661003260574739, guid: 12876b6df8180e74aae98d5a2ec027cf, type: 3}
-    dropChance: 15
-    minAmount: 1
-    maxAmount: 1
-  - name: BeltArmorUnCommon
-    itemPrefab: {fileID: 6640661003260574739, guid: 10a671f91338be74da6ae78d07379ab9, type: 3}
-    dropChance: 10
-    minAmount: 1
-    maxAmount: 1
-  - name: BeltRegenCommon
-    itemPrefab: {fileID: 6640661003260574739, guid: a1e76363130ab8741b759cd45f536ada, type: 3}
-    dropChance: 14
-    minAmount: 1
-    maxAmount: 1
-  - name: BeltRegenRare
-    itemPrefab: {fileID: 6640661003260574739, guid: 8662e4b211b988c459d998feca39b151, type: 3}
-    dropChance: 10
-    minAmount: 1
-    maxAmount: 1
-  - name: BeltRegenUnCommon
-    itemPrefab: {fileID: 6640661003260574739, guid: bd8ac1b10d275804ca425bff1e0e4d0e, type: 3}
-    dropChance: 12
-    minAmount: 1
-    maxAmount: 1
-  - name: Ironbow
-    itemPrefab: {fileID: 8462883720910630701, guid: 1d9e2f3e922b57d4c894f6c344903c95, type: 3}
-    dropChance: 20
-    minAmount: 1
-    maxAmount: 1
-  - name: Bronze Armor
-    itemPrefab: {fileID: 6640661003260574739, guid: 2882cd1b64dd76c479cbf4bd68dc8194, type: 3}
-    dropChance: 25
-    minAmount: 1
-    maxAmount: 1
-  - name: Guardsman armor
-    itemPrefab: {fileID: 6640661003260574739, guid: b9d239358144d864cb9cf9860b343a36, type: 3}
-    dropChance: 15
-    minAmount: 1
-    maxAmount: 1
-  - name: Dragon armor
-    itemPrefab: {fileID: 6640661003260574739, guid: be8487c3f6025f94b985d8c196b3bc43, type: 3}
-    dropChance: 3
-    minAmount: 1
-    maxAmount: 1
-  - name: Mithrii cuirass
-    itemPrefab: {fileID: 6640661003260574739, guid: f3b11631fa8ea0a4aa1077381ed14eb6, type: 3}
-    dropChance: 10
-    minAmount: 1
-    maxAmount: 1
-  - name: Royal cuirass
-    itemPrefab: {fileID: 6640661003260574739, guid: d7bd602c840ecb24880c68d041907e7e, type: 3}
-    dropChance: 10
-    minAmount: 1
-    maxAmount: 1
-  - name: Amulet damage
-    itemPrefab: {fileID: 6640661003260574739, guid: eb9ebf81d56db1b4d84c4a88d5906b1d, type: 3}
-    dropChance: 15
-    minAmount: 1
-    maxAmount: 1
-  - name: amulet regeneration
-    itemPrefab: {fileID: 6640661003260574739, guid: f870edc5d280b5f48ad945a99f0e8c55, type: 3}
-    dropChance: 20
-    minAmount: 1
-    maxAmount: 1
-  - name: Amulet ATSPD
-    itemPrefab: {fileID: 6640661003260574739, guid: 21b58a862c7dc374eb7dad8434a84a6c, type: 3}
-    dropChance: 20
-    minAmount: 1
-    maxAmount: 1
-  - name: Mithrii helmet
-    itemPrefab: {fileID: 6640661003260574739, guid: e30b2ec2473d5c44486cf2b41b69816b, type: 3}
-    dropChance: 10
-    minAmount: 1
-    maxAmount: 1
-  victoryEffect: {fileID: 0}
 --- !u!114 &8648401448297633572
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -913,6 +799,22 @@ MonoBehaviour:
   minForce: 4
   maxForce: 7
   linearDamping: 3
+--- !u!114 &-6184979466884371780
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5809504634901911207}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35c825bdc2e2da64292516af9002c60a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LootDropper
+  lootTable: {fileID: 11400000, guid: 32abdc1dad23db2428925ba45ac1568a, type: 2}
+  dropRolls: 3
+  destroyItemsAfterTime: 1
+  itemLifetime: 15
 --- !u!1 &6485470882450406266
 GameObject:
   m_ObjectHideFlags: 0

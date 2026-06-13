@@ -384,22 +384,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35c825bdc2e2da64292516af9002c60a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  possibleLoot:
-  - name: "\u0421oin"
-    prefab: {fileID: 7565567695131184125, guid: cf2393411c1a440429e970d17ae75d66, type: 3}
-    dropChance: 100
-    minAmount: 1
-    maxAmount: 4
-  - name: Fox Tail
-    prefab: {fileID: 6640661003260574739, guid: d6e70a3d123f4194c80633a675084e6b, type: 3}
-    dropChance: 25
-    minAmount: 1
-    maxAmount: 1
-  - name: Fox Hide
-    prefab: {fileID: 6640661003260574739, guid: 0cb4ec57141d6ba4fbee8f0310f15713, type: 3}
-    dropChance: 15
-    minAmount: 1
-    maxAmount: 2
+  lootTable: {fileID: 11400000, guid: cf83ad99d9271e2428c681961ce69fb8, type: 2}
+  dropRolls: 1
   destroyItemsAfterTime: 1
   itemLifetime: 10
 --- !u!114 &3700625067027646142

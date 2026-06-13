@@ -773,67 +773,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35c825bdc2e2da64292516af9002c60a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  possibleLoot:
-  - name: "\u0421oin"
-    prefab: {fileID: 7565567695131184125, guid: cf2393411c1a440429e970d17ae75d66, type: 3}
-    dropChance: 100
-    minAmount: 1
-    maxAmount: 3
-  - name: Weak Healing Potion
-    prefab: {fileID: 6640661003260574739, guid: b82516164b7a22b4e9c866c6d8bf6246, type: 3}
-    dropChance: 20
-    minAmount: 1
-    maxAmount: 2
-  - name: Weak Healing Potion
-    prefab: {fileID: 6640661003260574739, guid: a7b4d323d3b0ef04ebc7c20313e2f4cb, type: 3}
-    dropChance: 20
-    minAmount: 2
-    maxAmount: 5
-  - name: royal cuirass
-    prefab: {fileID: 6640661003260574739, guid: d7bd602c840ecb24880c68d041907e7e, type: 3}
-    dropChance: 10
-    minAmount: 1
-    maxAmount: 1
-  - name: royal helmet
-    prefab: {fileID: 6640661003260574739, guid: 11048064681403d47bb3f5ce9e6ef093, type: 3}
-    dropChance: 10
-    minAmount: 1
-    maxAmount: 1
-  - name: mithrii cuirass
-    prefab: {fileID: 6640661003260574739, guid: f3b11631fa8ea0a4aa1077381ed14eb6, type: 3}
-    dropChance: 10
-    minAmount: 1
-    maxAmount: 1
-  - name: mithrii helmet
-    prefab: {fileID: 6640661003260574739, guid: e30b2ec2473d5c44486cf2b41b69816b, type: 3}
-    dropChance: 10
-    minAmount: 1
-    maxAmount: 1
-  - name: bronze aramor
-    prefab: {fileID: 6640661003260574739, guid: 2882cd1b64dd76c479cbf4bd68dc8194, type: 3}
-    dropChance: 10
-    minAmount: 1
-    maxAmount: 1
-  - name: bronze helmet
-    prefab: {fileID: 6640661003260574739, guid: a45f9391af8c1574a9841bc2fca7d7a5, type: 3}
-    dropChance: 10
-    minAmount: 1
-    maxAmount: 1
-  - name: amulet speed
-    prefab: {fileID: 6640661003260574739, guid: 81b5365ecdcb0ce4c9bf5b9d3f64f182, type: 3}
-    dropChance: 10
-    minAmount: 1
-    maxAmount: 1
-  - name: amulet  attack speed
-    prefab: {fileID: 6640661003260574739, guid: 21b58a862c7dc374eb7dad8434a84a6c, type: 3}
-    dropChance: 10
-    minAmount: 1
-    maxAmount: 1
-  - name: amulet damage
-    prefab: {fileID: 6640661003260574739, guid: eb9ebf81d56db1b4d84c4a88d5906b1d, type: 3}
-    dropChance: 10
-    minAmount: 1
-    maxAmount: 1
+  lootTable: {fileID: 11400000, guid: 466a93620939b1e4fad915baf6b9a334, type: 2}
+  dropRolls: 1
   destroyItemsAfterTime: 1
   itemLifetime: 10
 --- !u!114 &142610752408244016

@@ -412,22 +412,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35c825bdc2e2da64292516af9002c60a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  possibleLoot:
-  - name: "\u0421oin"
-    prefab: {fileID: 7565567695131184125, guid: cf2393411c1a440429e970d17ae75d66, type: 3}
-    dropChance: 100
-    minAmount: 3
-    maxAmount: 6
-  - name: Leopard Tooth
-    prefab: {fileID: 6640661003260574739, guid: c870219ca1a3f9e4eb16b12614e48b39, type: 3}
-    dropChance: 30
-    minAmount: 1
-    maxAmount: 2
-  - name: Leopard Hide
-    prefab: {fileID: 6640661003260574739, guid: 609ae477298ef764aaa1052ca48a8ed4, type: 3}
-    dropChance: 30
-    minAmount: 1
-    maxAmount: 3
+  lootTable: {fileID: 11400000, guid: ec904b9e1454070469137aa12e862956, type: 2}
+  dropRolls: 1
   destroyItemsAfterTime: 1
   itemLifetime: 10
 --- !u!114 &7332972762345749676

@@ -18,7 +18,7 @@ public class BossHealth : MonoBehaviour
     [Tooltip("Тривалість блимання кольором")]
     public float flashDuration = 0.15f;
     [Tooltip("Затримка перед видаленням, щоб анімація смерті встигла програтися")]
-    public float deathAnimationDuration = 2f; // Для босів зазвичай потрібно більше часу
+    public float deathAnimationDuration = 2f;
 
     private Color originalColor;
     private Coroutine flashCoroutine;
@@ -83,11 +83,10 @@ public class BossHealth : MonoBehaviour
         if (isDead) return;
 
         currentHealth -= damage;
-        if (currentHealth < 0) currentHealth = 0; // Щоб HP не пішло в мінус візуально
+        if (currentHealth < 0) currentHealth = 0;
 
         UpdateUI();
 
-        // Анімація та ефект удару
         if (animator != null) animator.SetTrigger("TakeDamage");
 
         if (spriteRenderer != null)
@@ -98,7 +97,6 @@ public class BossHealth : MonoBehaviour
 
         SpawnDamagePopup(damage, isCrit);
 
-        // ПРОВОКАЦІЯ БОСА
         BossCombat combatScript = GetComponent<BossCombat>();
         if (combatScript != null)
         {
@@ -122,7 +120,6 @@ public class BossHealth : MonoBehaviour
     {
         if (damagePopupPrefab != null)
         {
-            // Для боса спливаючий текст піднімаємо трохи вище (Vector3.up * 1.5f), бо його спрайт зазвичай більший
             GameObject popup = Instantiate(damagePopupPrefab, transform.position + (Vector3.up * 1.5f), Quaternion.identity);
             DamagePopup popupScript = popup.GetComponent<DamagePopup>();
 
@@ -148,7 +145,6 @@ public class BossHealth : MonoBehaviour
 
         if (animator != null) animator.SetTrigger("Die");
 
-        // Зупиняємо фізику, щоб бос не ковзав
         Rigidbody2D rb = GetComponent<Rigidbody2D>();
         if (rb != null)
         {
@@ -159,17 +155,23 @@ public class BossHealth : MonoBehaviour
         Collider2D bossCollider = GetComponent<Collider2D>();
         if (bossCollider != null) bossCollider.enabled = false;
 
-        // Вимикаємо скрипти логіки бою явно, замість циклу foreach
         BossCombat combatScript = GetComponent<BossCombat>();
         if (combatScript != null) combatScript.enabled = false;
 
-        // Вимикаємо UI смужку здоров'я над босом (якщо вона прив'язана до нього)
         if (hpSlider != null) hpSlider.gameObject.SetActive(false);
         if (hpText != null) hpText.gameObject.SetActive(false);
 
-        // Дроп луту
-        BossLootDropper dropper = GetComponent<BossLootDropper>();
-        if (dropper != null) dropper.DropBossLoot();
+        // --- МОДИФІКОВАНО ---
+        // Викликаємо оновлений універсальний LootDropper
+        LootDropper dropper = GetComponent<LootDropper>();
+        if (dropper != null)
+        {
+            dropper.DropLoot();
+        }
+        else
+        {
+            Debug.LogWarning($"На об'єкті {gameObject.name} не знайдено компонент LootDropper! Лут не випаде.");
+        }
 
         // Відкриття дверей
         if (exitDoor != null)
