@@ -39,11 +39,15 @@ public class PlayerHealth : MonoBehaviour
     public float amuletArmor = 0f;
     public float ringArmor = 0f;
     public float helmetArmor = 0f;
+    public float chestplateArmor = 0f; // --- ДОДАНО ---
+    public float bracersArmor = 0f;    // --- ДОДАНО ---
 
     // --- ПОЛЯ ДЛЯ СУМАРНОЇ РЕГЕНЕРАЦІЇ ---
     [HideInInspector] public int amuletRegen = 0;
     [HideInInspector] public int ringRegen = 0;
     [HideInInspector] public int helmetRegen = 0;
+    [HideInInspector] public int chestplateRegen = 0; // --- ДОДАНО ---
+    [HideInInspector] public int bracersRegen = 0;    // --- ДОДАНО ---
     private Coroutine regenCoroutine;
 
     void Start()
@@ -68,8 +72,8 @@ public class PlayerHealth : MonoBehaviour
     {
         if (isDead) return;
 
-        // --- НОВА ЛОГІКА ЧИ СЕЛЬНОГО ЗАХИСТУ ---
-        float totalArmor = amuletArmor + ringArmor + helmetArmor;
+        // --- НОВА ЛОГІКА ЧИСЕЛЬНОГО ЗАХИСТУ (ОНОВЛЕНО) ---
+        float totalArmor = amuletArmor + ringArmor + helmetArmor + chestplateArmor + bracersArmor;
 
         // Розраховуємо коефіцієнт зменшення шкоди (Dota 2 / LoL формула)
         float multiplier = K / (K + totalArmor);
@@ -185,8 +189,19 @@ public class PlayerHealth : MonoBehaviour
             helmetRegen = regen;
             helmetArmor = armorValue;
         }
+        else if (slotType == 3) // --- ДОДАНО: Нагрудник ---
+        {
+            chestplateRegen = regen;
+            chestplateArmor = armorValue;
+        }
+        else if (slotType == 4) // --- ДОДАНО: Наручі ---
+        {
+            bracersRegen = regen;
+            bracersArmor = armorValue;
+        }
 
-        if (regenCoroutine == null && (amuletRegen > 0 || ringRegen > 0 || helmetRegen > 0))
+        // --- ОНОВЛЕНО: Перевірка всіх слотів на наявність регену ---
+        if (regenCoroutine == null && (amuletRegen > 0 || ringRegen > 0 || helmetRegen > 0 || chestplateRegen > 0 || bracersRegen > 0))
         {
             regenCoroutine = StartCoroutine(RegenRoutine());
         }
@@ -209,8 +224,19 @@ public class PlayerHealth : MonoBehaviour
             helmetRegen = 0;
             helmetArmor = 0f;
         }
+        else if (slotType == 3) // --- ДОДАНО: Нагрудник ---
+        {
+            chestplateRegen = 0;
+            chestplateArmor = 0f;
+        }
+        else if (slotType == 4) // --- ДОДАНО: Наручі ---
+        {
+            bracersRegen = 0;
+            bracersArmor = 0f;
+        }
 
-        if (amuletRegen == 0 && ringRegen == 0 && helmetRegen == 0 && regenCoroutine != null)
+        // --- ОНОВЛЕНО: Умова зупинки корутини ---
+        if (amuletRegen == 0 && ringRegen == 0 && helmetRegen == 0 && chestplateRegen == 0 && bracersRegen == 0 && regenCoroutine != null)
         {
             StopCoroutine(regenCoroutine);
             regenCoroutine = null;
@@ -223,7 +249,8 @@ public class PlayerHealth : MonoBehaviour
         {
             yield return new WaitForSeconds(1f);
 
-            int totalRegen = amuletRegen + ringRegen + helmetRegen;
+            // --- ОНОВЛЕНО: Сума всього регену ---
+            int totalRegen = amuletRegen + ringRegen + helmetRegen + chestplateRegen + bracersRegen;
 
             if (totalRegen > 0 && currentHealth < maxHealth && !isDead)
             {
@@ -239,7 +266,8 @@ public class PlayerHealth : MonoBehaviour
                 Debug.Log($"<color=white>Регенерація: +{totalRegen}</color>");
             }
 
-            if (amuletRegen == 0 && ringRegen == 0 && helmetRegen == 0) break;
+            // --- ОНОВЛЕНО: Умова виходу ---
+            if (amuletRegen == 0 && ringRegen == 0 && helmetRegen == 0 && chestplateRegen == 0 && bracersRegen == 0) break;
         }
         regenCoroutine = null;
     }
@@ -268,12 +296,18 @@ public class PlayerHealth : MonoBehaviour
         if (isDead) return;
         isDead = true;
 
+        // --- ОНОВЛЕНО: Обнулення нових слотів при смерті ---
         amuletRegen = 0;
         ringRegen = 0;
         helmetRegen = 0;
+        chestplateRegen = 0;
+        bracersRegen = 0;
+
         amuletArmor = 0f;
         ringArmor = 0f;
         helmetArmor = 0f;
+        chestplateArmor = 0f;
+        bracersArmor = 0f;
 
         StopAllCoroutines();
 

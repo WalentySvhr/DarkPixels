@@ -88,9 +88,12 @@ public class StatsUI : MonoBehaviour
 
                 if (eq != null)
                 {
+                    // --- ОНОВЛЕНО: Додано Нагрудник та Наручі ---
                     bonusCritPct = ((eq.currentAmulet?.bonusCritChance ?? 0f) +
                                     (eq.currentBelt?.bonusCritChance ?? 0f) +
                                     (eq.currentHelmet?.bonusCritChance ?? 0f) +
+                                    (eq.currentChestplate?.bonusCritChance ?? 0f) + // <- Нагрудник
+                                    (eq.currentBracers?.bonusCritChance ?? 0f) +    // <- Наручі
                                     (eq.currentRing1?.bonusCritChance ?? 0f) +
                                     (eq.currentRing2?.bonusCritChance ?? 0f)) * 100f;
                 }
@@ -108,6 +111,11 @@ public class StatsUI : MonoBehaviour
                     bonusCritM += (eq.currentAmulet != null && eq.currentAmulet.bonusCritMultiplier > 2f) ? eq.currentAmulet.bonusCritMultiplier - 2f : 0f;
                     bonusCritM += (eq.currentBelt != null && eq.currentBelt.bonusCritMultiplier > 2f) ? eq.currentBelt.bonusCritMultiplier - 2f : 0f;
                     bonusCritM += (eq.currentHelmet != null && eq.currentHelmet.bonusCritMultiplier > 2f) ? eq.currentHelmet.bonusCritMultiplier - 2f : 0f;
+
+                    // --- ДОДАНО: Сила крита для Нагрудника та Наручів ---
+                    if (eq.currentChestplate != null && eq.currentChestplate.bonusCritMultiplier > 2f) bonusCritM += eq.currentChestplate.bonusCritMultiplier - 2f;
+                    if (eq.currentBracers != null && eq.currentBracers.bonusCritMultiplier > 2f) bonusCritM += eq.currentBracers.bonusCritMultiplier - 2f;
+
                     if (eq.currentRing1 != null && eq.currentRing1.bonusCritMultiplier > 2f) bonusCritM += eq.currentRing1.bonusCritMultiplier - 2f;
                     if (eq.currentRing2 != null && eq.currentRing2.bonusCritMultiplier > 2f) bonusCritM += eq.currentRing2.bonusCritMultiplier - 2f;
                 }
@@ -126,9 +134,12 @@ public class StatsUI : MonoBehaviour
                 int bonusHealth = 0;
                 if (eq != null)
                 {
+                    // --- ОНОВЛЕНО: Додано ХП від Нагрудника та Наручів ---
                     bonusHealth = (eq.currentAmulet?.bonusMaxHealth ?? 0) +
                                   (eq.currentBelt?.bonusMaxHealth ?? 0) +
                                   (eq.currentHelmet?.bonusMaxHealth ?? 0) +
+                                  (eq.currentChestplate?.bonusMaxHealth ?? 0) + // <- Нагрудник
+                                  (eq.currentBracers?.bonusMaxHealth ?? 0) +    // <- Наручі
                                   (eq.currentRing1?.bonusMaxHealth ?? 0) +
                                   (eq.currentRing2?.bonusMaxHealth ?? 0) +
                                   (int)(eq.currentPet?.bonusHealth ?? 0f);
@@ -141,27 +152,27 @@ public class StatsUI : MonoBehaviour
             // 🛡️ БРОНЯ
             if (armorText != null)
             {
-                // 1. Рахуємо сумарну чисельну броню
-                float totalArmor = playerHealth.amuletArmor + playerHealth.ringArmor + playerHealth.helmetArmor;
+                // 1. Рахуємо сумарну чисельну броню (ВКЛЮЧАЮЧИ НАГРУДНИК ТА НАРУЧІ)
+                float totalArmor = playerHealth.amuletArmor + playerHealth.ringArmor + playerHealth.helmetArmor + playerHealth.chestplateArmor + playerHealth.bracersArmor;
 
-                // 2. Рахуємо реальний відсоток поглинання шкоди за нашою формулою (K = 400)
+                // 2. Рахуємо реальний відсоток поглинання шкоди за вашою формулою (K = 400)
                 float K = 400f;
                 float multiplier = K / (K + totalArmor);
                 float damageReduction = (1f - multiplier) * 100f;
                 int damageReductionPct = Mathf.RoundToInt(damageReduction);
 
                 // 3. Формуємо рядок з бонусом. Тепер показуємо чисельну броню як основне значення.
-                string bonusStr = totalArmor > 0 ? $" <color={bonusColorTag}>(+{damageReductionPct}% )</color>" : ""; // protection/захисту в процентах для гравця, який не розуміє формулу броні, але бачить реальний ефект від неї. 
+                string bonusStr = totalArmor > 0 ? $" <color={bonusColorTag}>(+{damageReductionPct}%)</color>" : "";
 
-
-                // Виведе на екран наприклад: Захист: 120 (+23% захисту)
+                // Виведе на екран наприклад: Броня: 120 (+23%)
                 armorText.text = $"{armorLabel}{totalArmor}{bonusStr}";
             }
 
             // 🧪 РЕГЕНЕРАЦІЯ
             if (healthRegenText != null)
             {
-                int totalRegen = playerHealth.amuletRegen + playerHealth.ringRegen + playerHealth.helmetRegen;
+                // --- ОНОВЛЕНО: Сумуємо регенерацію з усіх 5 слотів ---
+                int totalRegen = playerHealth.amuletRegen + playerHealth.ringRegen + playerHealth.helmetRegen + playerHealth.chestplateRegen + playerHealth.bracersRegen;
 
                 string bonusStr = totalRegen > 0 ? $" <color={bonusColorTag}>(+{totalRegen})</color>" : "";
                 healthRegenText.text = $"{regenLabel}+{totalRegen} HP/s{bonusStr}";

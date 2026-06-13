@@ -13,7 +13,8 @@ public class PlayerEquipment : MonoBehaviour
     public RingData currentRing2;
     public BeltData currentBelt;
     public HelmetData currentHelmet;
-    public ChestplateData currentChestplate; // --- ДОДАНО НАГРУДНИК ---
+    public ChestplateData currentChestplate;
+    public BracersData currentBracers; // --- НОВИЙ ТИП: НАРУЧІ ---
     public PetData currentPet;
     public WeaponData currentWeapon;
 
@@ -113,6 +114,25 @@ public class PlayerEquipment : MonoBehaviour
         UpdateAllStats();
     }
 
+    // --- ЛОГІКА НАРУЧІВ ---
+    public void EquipBracers(BracersData newBracers)
+    {
+        if (newBracers == null || currentBracers == newBracers) return;
+        if (currentBracers != null) UnequipBracers();
+
+        currentBracers = newBracers;
+        if (playerHealth != null) playerHealth.AddBonusHealth(currentBracers.bonusMaxHealth);
+        UpdateAllStats();
+    }
+
+    public void UnequipBracers()
+    {
+        if (currentBracers == null) return;
+        if (playerHealth != null) playerHealth.RemoveBonusHealth(currentBracers.bonusMaxHealth);
+        currentBracers = null;
+        UpdateAllStats();
+    }
+
     // --- ЛОГІКА КІЛЕЦЬ ---
     public void EquipRing(RingData newRing, int slotIndex)
     {
@@ -162,7 +182,7 @@ public class PlayerEquipment : MonoBehaviour
         UpdateAllStats();
     }
 
-    // --- МАГІЯ СУМУВАННЯ СТАТІВ (ОНОВЛЕНО ПІД НАГРУДНИК) ---
+    // --- МАГІЯ СУМУВАННЯ СТАТІВ ---
     public void UpdateAllStats()
     {
         // Стати амулета
@@ -189,7 +209,7 @@ public class PlayerEquipment : MonoBehaviour
         int hRegen = currentHelmet?.healthRegenPerSecond ?? 0;
         float hArmor = currentHelmet?.bonusArmor ?? 0f;
 
-        // Стати нагрудника --- ДОДАНО ---
+        // Стати нагрудника
         int cpDmg = currentChestplate?.bonusDamage ?? 0;
         float cpAtkSpd = currentChestplate?.bonusAttackSpeed ?? 0f;
         float cpMovSpd = currentChestplate?.bonusMoveSpeed ?? 0f;
@@ -197,6 +217,15 @@ public class PlayerEquipment : MonoBehaviour
         float cpCritM = (currentChestplate != null && currentChestplate.bonusCritMultiplier > 2f) ? currentChestplate.bonusCritMultiplier - 2f : 0f;
         int cpRegen = currentChestplate?.healthRegenPerSecond ?? 0;
         float cpArmor = currentChestplate?.bonusArmor ?? 0f;
+
+        // Стати наручів --- ДОДАНО ---
+        int brDmg = currentBracers?.bonusDamage ?? 0;
+        float brAtkSpd = currentBracers?.bonusAttackSpeed ?? 0f;
+        float brMovSpd = currentBracers?.bonusMoveSpeed ?? 0f;
+        float brCrit = currentBracers?.bonusCritChance ?? 0f;
+        float brCritM = (currentBracers != null && currentBracers.bonusCritMultiplier > 2f) ? currentBracers.bonusCritMultiplier - 2f : 0f;
+        int brRegen = currentBracers?.healthRegenPerSecond ?? 0;
+        float brArmor = currentBracers?.bonusArmor ?? 0f;
 
         // Стати пета
         int petDmg = currentPet?.bonusDamage ?? 0;
@@ -223,21 +252,22 @@ public class PlayerEquipment : MonoBehaviour
         // Передача в системи бою (Combat)
         if (playerCombat != null)
         {
-            // Нагрудник додає базову шкоду та швидкість атаки
-            playerCombat.extraAmuletDamage = amDmg + bDmg + petDmg + cpDmg;
+            // Наручі та нагрудник додають базову шкоду та швидкість атаки
+            playerCombat.extraAmuletDamage = amDmg + bDmg + petDmg + cpDmg + brDmg;
             playerCombat.extraRingDamage = rDmg;
-            playerCombat.extraAttackSpeed = amAtkSpd + bAtkSpd + cpAtkSpd;
+            playerCombat.extraAttackSpeed = amAtkSpd + bAtkSpd + cpAtkSpd + brAtkSpd;
             playerCombat.extraRingAttackSpeed = rAtkSpd;
 
-            // Сумуємо шанс кріта та множник
-            playerCombat.critChance = amCrit + bCrit + rCrit + hCrit + cpCrit;
-            playerCombat.critMultiplier = 2f + amCritM + bCritM + rCritM + hCritM + cpCritM;
+            // Сумуємо шанс кріта та множник (з урахуванням наручів)
+            playerCombat.critChance = amCrit + bCrit + rCrit + hCrit + cpCrit + brCrit;
+            playerCombat.critMultiplier = 2f + amCritM + bCritM + rCritM + hCritM + cpCritM + brCritM;
         }
 
         // Передача в системи руху (Movement)
         if (playerMovement != null)
         {
-            playerMovement.extraSpeedMultiplier = amMovSpd + bMovSpd + cpMovSpd; // Нагрудник впливає на швидкість бігу
+            // Наручі разом з нагрудником впливають на швидкість бігу
+            playerMovement.extraSpeedMultiplier = amMovSpd + bMovSpd + cpMovSpd + brMovSpd;
             playerMovement.extraRingSpeedMultiplier = rMovSpd;
         }
 
@@ -247,7 +277,8 @@ public class PlayerEquipment : MonoBehaviour
             playerHealth.StartBuffs(amRegen + bRegen, amArmor + bArmor, 0); // 0 = Амулет/Пояс
             playerHealth.StartBuffs(rRegen, rArmor, 1);                     // 1 = Кільця
             playerHealth.StartBuffs(hRegen, hArmor, 2);                     // 2 = Шолом
-            playerHealth.StartBuffs(cpRegen, cpArmor, 3);                   // 3 = Нагрудник (ДОДАНО новий індекс)
+            playerHealth.StartBuffs(cpRegen, cpArmor, 3);                   // 3 = Нагрудник
+            playerHealth.StartBuffs(brRegen, brArmor, 4);                   // 4 = Наручі (ДОДАНО новий індекс)
         }
     }
 }

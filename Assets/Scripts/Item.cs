@@ -1,7 +1,7 @@
 using UnityEngine;
 
 // Категорії предметів
-public enum ItemType { Food, Potion, Resource, Junk, Weapon, Amulet, Ring, Belt, Pet, Helmet, Chestplate }
+public enum ItemType { Food, Potion, Resource, Junk, Weapon, Amulet, Ring, Belt, Pet, Helmet, Chestplate, Bracers }
 
 // Структура для розділеного опису предмета
 public struct ItemDescription
@@ -48,8 +48,9 @@ public class Item : ScriptableObject
             main += "Material for crafting";
         else if (type == ItemType.Junk)
             main += "Has no practical value";
-        // Додано Helmet у список магічних аксесуарів
-        else if (type == ItemType.Ring || type == ItemType.Amulet || type == ItemType.Belt || type == ItemType.Helmet)
+        // --- ОНОВЛЕНО: Додано Helmet, Chestplate та Bracers у список екіпірування/аксесуарів ---
+        else if (type == ItemType.Ring || type == ItemType.Amulet || type == ItemType.Belt ||
+                 type == ItemType.Helmet || type == ItemType.Chestplate || type == ItemType.Bracers)
             main += "Magical accessory";
 
         if (isQuestItem)
@@ -91,7 +92,9 @@ public class Item : ScriptableObject
             case ItemType.Ring: return "Ring";
             case ItemType.Belt: return "Belt";
             case ItemType.Pet: return "Pet";
-            case ItemType.Helmet: return "Helmet"; // Додано
+            case ItemType.Helmet: return "Helmet";
+            case ItemType.Chestplate: return "Chestplate"; // --- ДОДАНО ---
+            case ItemType.Bracers: return "Bracers";       // --- ДОДАНО ---
             default: return "Item";
         }
     }
