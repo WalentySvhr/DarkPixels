@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine.SceneManagement;
 using System.Linq;
-using TMPro; // Додано для роботи з TextMeshPro
+using TMPro;
 
 [System.Serializable]
 public class GameData
@@ -16,6 +16,9 @@ public class GameData
     public List<ItemSaveEntry> backpack = new List<ItemSaveEntry>();
     public List<ItemSaveEntry> petBackpack = new List<ItemSaveEntry>();
     public List<EquippedItemSaveEntry> equippedItems = new List<EquippedItemSaveEntry>();
+
+    // --- НОВЕ: Список для збереження куплених рівнів магій ---
+    public List<AbilitySaveEntry> unlockedAbilities = new List<AbilitySaveEntry>();
 
     public string currentQuestID;
     public int questProgress;
@@ -31,6 +34,14 @@ public class GameData
     public int maxTowerKills;
     public int victoryCount;
     public bool alreadyReviewed;
+}
+
+// --- НОВЕ: Клас-контейнер для збереження однієї абілки ---
+[System.Serializable]
+public class AbilitySaveEntry
+{
+    public string abilityKey; // Унікальний ключ (наприклад, "Ability_Damage_Zone_Level")
+    public int level;         // Куплений рівень
 }
 
 [System.Serializable]
@@ -128,7 +139,7 @@ public class SaveManager : MonoBehaviour
         while (enableAutoSave)
         {
             yield return new WaitForSeconds(autoSaveInterval);
-            SaveGame(false); // Логіка показу UI тепер автоматично керується всередині SaveGame
+            SaveGame(false);
         }
     }
 
@@ -136,7 +147,6 @@ public class SaveManager : MonoBehaviour
     {
         if (autoSaveIndicatorUI != null)
         {
-            // Встановлюємо текст з інспектора перед показом плашки
             if (saveNotificationText != null)
             {
                 saveNotificationText.text = message;
@@ -169,18 +179,14 @@ public class SaveManager : MonoBehaviour
             Debug.Log("<color=orange>ЗБЕРЕЖЕННЯ ВИКЛИКАНО ЗІ СКРИПТА:</color>\n" + StackTraceUtility.ExtractStackTrace());
         }
 
-        // 1. Перевірка на заборонену зону
         if (!SaveForbiddenZone.CanSave)
         {
-            if (isManual) Debug.LogWarning("Збереження неможливе всередині башти!");
+            if (isManual) Debug.LogWarning("Збереження неможливе всередині башта!");
             return false;
         }
 
-        // 2. Перевірка башти
-        if (TowerManager.Instance != null &&
-            TowerManager.Instance.IsTowerRunActive)
+        if (TowerManager.Instance != null && TowerManager.Instance.IsTowerRunActive)
         {
-            Debug.LogWarning("<color=red>[SaveSystem]</color> Збереження заблоковано: гравець знаходиться в башті.");
             return false;
         }
 
@@ -223,6 +229,23 @@ public class SaveManager : MonoBehaviour
             }
         }
 
+        // --- НОВЕ: ЗБЕРЕЖЕННЯ РІВНІВ МАГІЙ ---
+        // Завантажуємо всі файли абілок з папки Resources, щоб перевірити їхні поточні рівні
+        data.unlockedAbilities.Clear();
+        AbilitySO[] allAbilities = Resources.LoadAll<AbilitySO>("Abilities");
+        foreach (var ability in allAbilities)
+        {
+            if (ability != null)
+            {
+                data.unlockedAbilities.Add(new AbilitySaveEntry
+                {
+                    abilityKey = ability.GetSaveKey(),
+                    level = ability.currentLevel
+                });
+            }
+        }
+        // ------------------------------------
+
         if (QuestManager.Instance != null) data = QuestManager.Instance.CaptureQuestState(data);
         if (AdsChecker.Instance != null) data = AdsChecker.Instance.CaptureAdsState(data);
         if (TowerManager.Instance != null) data = TowerManager.Instance.CaptureTowerState(data);
@@ -242,13 +265,12 @@ public class SaveManager : MonoBehaviour
         else
             Debug.Log("<color=green>[SaveSystem]</color> Дані успішно зафіксовані (Автозбереження).");
 
-        // --- КЕРУВАННЯ UI ПОВІДОМЛЕННЯМ ---
         if (isManual && showUiOnManualSave)
         {
             if (uiAnimationCoroutine != null) StopCoroutine(uiAnimationCoroutine);
             uiAnimationCoroutine = StartCoroutine(ShowSaveIndicator(manualSaveMessage));
         }
-        else if (!isManual) // Якщо це автозбереження
+        else if (!isManual)
         {
             if (uiAnimationCoroutine != null) StopCoroutine(uiAnimationCoroutine);
             uiAnimationCoroutine = StartCoroutine(ShowSaveIndicator(autoSaveMessage));
@@ -292,6 +314,39 @@ public class SaveManager : MonoBehaviour
             InventoryManager.Instance.UpdatePetUI();
         }
 
+        // --- ОНОВЛЕНЕ ТА ВИПРАВЛЕНЕ: ЗАВАНТАЖЕННЯ РІВНІВ МАГІЙ ---
+        AbilitySO[] allAbilities = Resources.LoadAll<AbilitySO>("Abilities");
+        foreach (var ability in allAbilities)
+        {
+            if (ability != null)
+            {
+                // Спочатку жорстко скидаємо в 0, щоб прибрати "сміття" з редактора Unity
+                ability.SetLoadedLevel(0);
+
+                // Шукаємо, чи є в нашому збереженні запис про цю конкретну магію
+                var savedEntry = data.unlockedAbilities.Find(x => x.abilityKey == ability.GetSaveKey());
+                if (savedEntry != null)
+                {
+                    ability.SetLoadedLevel(savedEntry.level);
+                }
+                else
+                {
+                    // ВИПРАВЛЕНО: Якщо запису немає (Нова гра) — рівень МАЄ БУТИ 0 (Заблоковано!)
+                    ability.SetLoadedLevel(0);
+                }
+
+                // Змушуємо Unity Редактор миттєво оновити інспектор файлу на екрані
+#if UNITY_EDITOR
+                UnityEditor.EditorUtility.SetDirty(ability);
+#endif
+            }
+        }
+
+#if UNITY_EDITOR
+        // Зберігаємо очищені/оновлені файли на диск в Unity, щоб цифра 3 зникла
+        UnityEditor.AssetDatabase.SaveAssets();
+#endif
+        // -------------------------------------------------------
         if (QuestManager.Instance != null) QuestManager.Instance.LoadQuestState(data);
         if (AdsChecker.Instance != null) AdsChecker.Instance.LoadAdsState(data);
         if (TowerManager.Instance != null) TowerManager.Instance.LoadTowerState(data);

@@ -309,6 +309,13 @@ public class PlayerHealth : MonoBehaviour
         chestplateArmor = 0f;
         bracersArmor = 0f;
 
+        // --- СИНХРОНІЗАЦІЯ З МАННОЮ ПРИ СМЕРТІ ---
+        PlayerMana manaScript = GetComponent<PlayerMana>();
+        if (manaScript != null)
+        {
+            manaScript.OnPlayerDeath();
+        }
+
         StopAllCoroutines();
 
         if (spriteRenderer != null) spriteRenderer.color = originalColor;
@@ -355,6 +362,13 @@ public class PlayerHealth : MonoBehaviour
         currentHealth = maxHealth;
         UpdateUI();
 
+        // --- СИНХРОНІЗАЦІЯ З МАННОЮ ПРИ ВІДРОДЖЕННІ ---
+        PlayerMana manaScript = GetComponent<PlayerMana>();
+        if (manaScript != null)
+        {
+            manaScript.OnPlayerRevive();
+        }
+
         Rigidbody2D rb = GetComponent<Rigidbody2D>();
         if (rb != null) rb.isKinematic = false;
 
@@ -373,7 +387,7 @@ public class PlayerHealth : MonoBehaviour
             equipment.UpdateAllStats();
         }
 
-        Debug.Log("<color=green>Гравець відродився, чисельні стати відновлено!</color>");
+        Debug.Log("<color=green>Гравець відродився, чисельні стати та манну відновлено!</color>");
     }
 
     public void OnClickReviveWithAd()

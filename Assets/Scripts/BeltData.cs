@@ -4,8 +4,12 @@ using UnityEngine;
 public class BeltData : Item
 {
     [Header("Бонуси пояса")]
-    [Tooltip("Скільки maximalного здоров'я додає (наприклад: 50)")]
+    [Tooltip("Скільки максимального здоров'я додає (наприклад: 50)")]
     public int bonusMaxHealth = 0;
+
+    // --- ДОДАНО: Бонус мани ---
+    [Tooltip("Скільки максимальної мани додає (наприклад: 30)")]
+    public int bonusMaxMana = 0;
 
     [Tooltip("Скільки додаткового урону наносить (наприклад: 5)")]
     public int bonusDamage = 0;
@@ -19,6 +23,10 @@ public class BeltData : Item
     [Tooltip("Скільки ХП відновлює кожну секунду (наприклад: 2)")]
     public int healthRegenPerSecond = 0;
 
+    // --- ДОДАНО: Регенерація мани ---
+    [Tooltip("Скільки мани відновлює кожну секунду (наприклад: 1)")]
+    public int manaRegenPerSecond = 0;
+
     [Header("Нові механіки (Кріт та Захист)")]
     [Tooltip("Шанс критичного удару (наприклад: 0.1 для 10%)")]
     public float bonusCritChance = 0f;
@@ -26,8 +34,8 @@ public class BeltData : Item
     [Tooltip("Множник критичного урону (наприклад: 2.0 для подвійного урону)")]
     public float bonusCritMultiplier = 2f;
 
-    [Tooltip("Чисельне значення броні (наприклад: 40)")] // ОНОВЛЕНО TOOLTIP
-    public float bonusArmor = 0f; // ПЕРЕЙМЕНОВАНО: Замість bonusArmorPercent
+    [Tooltip("Чисельне значення броні (наприклад: 40)")]
+    public float bonusArmor = 0f;
 
     /// <summary>
     /// Перевизначений метод для розподілу бонусових показників пояса по трьох блоках UI
@@ -41,10 +49,14 @@ public class BeltData : Item
         main += $"Type: {type}\n";
 
         if (bonusMaxHealth > 0) main += $"Max HP: +{bonusMaxHealth}\n";
+
+        // --- ДОДАНО: Вивід мани в основні стати ---
+        if (bonusMaxMana > 0) main += $"Max Mana: +{bonusMaxMana}\n";
+
         if (bonusDamage > 0) main += $"Damage: +{bonusDamage}\n";
 
         // Відображення чисельної броні в основних показниках (без знаку %)
-        if (bonusArmor > 0) main += $"Armor: +{bonusArmor}\n"; // ОНОВЛЕНО ВИВЕДЕННЯ В UI
+        if (bonusArmor > 0) main += $"Armor: +{bonusArmor}\n";
 
         if (healValue > 0) main += $"Instant Heal: +{healValue}\n";
 
@@ -58,7 +70,11 @@ public class BeltData : Item
 
         if (bonusMoveSpeed > 0) extra += $"Move Speed: +{bonusMoveSpeed * 100}%\n";
         if (bonusAttackSpeed > 0) extra += $"Attack Speed: +{bonusAttackSpeed * 100}%\n";
+
         if (healthRegenPerSecond > 0) extra += $"Health Regen: {healthRegenPerSecond}/sec\n";
+
+        // --- ДОДАНО: Вивід регену мани ---
+        if (manaRegenPerSecond > 0) extra += $"Mana Regen: {manaRegenPerSecond}/sec\n";
 
         // Відображення критів у спеціальних ефектах
         if (bonusCritChance > 0) extra += $"Crit Chance: +{bonusCritChance * 100}%\n";
