@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
 using System.Collections;
+using System.Collections.Generic; // --- ДОДАНО для використання Dictionary ---
 
 public class PlayerHealth : MonoBehaviour
 {
@@ -36,18 +37,11 @@ public class PlayerHealth : MonoBehaviour
     [Tooltip("Точка балансу: при такій кількості загальної броні шкода зменшується рівно на 50%")]
     [SerializeField] private float K = 400f;
 
-    public float amuletArmor = 0f;
-    public float ringArmor = 0f;
-    public float helmetArmor = 0f;
-    public float chestplateArmor = 0f; // --- ДОДАНО ---
-    public float bracersArmor = 0f;    // --- ДОДАНО ---
+    // --- УНІВЕРСАЛЬНА СИСТЕМА ДИНАМІЧНИХ ХАРАКТЕРИСТИК ---
+    // Ключ int — це ID вашого слоту (0 = амулет, 1 = кільце, 2 = шолом і т.д.)
+    private Dictionary<int, float> armorSlots = new Dictionary<int, float>();
+    private Dictionary<int, int> regenSlots = new Dictionary<int, int>();
 
-    // --- ПОЛЯ ДЛЯ СУМАРНОЇ РЕГЕНЕРАЦІЇ ---
-    [HideInInspector] public int amuletRegen = 0;
-    [HideInInspector] public int ringRegen = 0;
-    [HideInInspector] public int helmetRegen = 0;
-    [HideInInspector] public int chestplateRegen = 0; // --- ДОДАНО ---
-    [HideInInspector] public int bracersRegen = 0;    // --- ДОДАНО ---
     private Coroutine regenCoroutine;
 
     void Start()
@@ -68,16 +62,37 @@ public class PlayerHealth : MonoBehaviour
         UpdateUI();
     }
 
+    // Метод для динамічного підрахунку всієї броні в словнику
+    public float GetTotalArmor()
+    {
+        float total = 0f;
+        foreach (var armorValue in armorSlots.Values)
+        {
+            total += armorValue;
+        }
+        return total;
+    }
+
+    // Метод для динамічного підрахунку всього регену в словнику
+    public int GetTotalRegen()
+    {
+        int total = 0;
+        foreach (var regenValue in regenSlots.Values)
+        {
+            total += regenValue;
+        }
+        return total;
+    }
+
     public void TakeDamage(int damage)
     {
         if (isDead) return;
 
-        // --- НОВА ЛОГІКА ЧИСЕЛЬНОГО ЗАХИСТУ (ОНОВЛЕНО) ---
-        float totalArmor = amuletArmor + ringArmor + helmetArmor + chestplateArmor + bracersArmor;
+        // --- УНІВЕРСАЛЬНИЙ ПІДРАХУНОК БРОНІ ---
+        float totalArmor = GetTotalArmor();
 
         // Розраховуємо коефіцієнт зменшення шкоди (Dota 2 / LoL формула)
         float multiplier = K / (K + totalArmor);
-
         int finalDamage = Mathf.CeilToInt(damage * multiplier);
 
         // Гарантуємо мінімум 1 одиницю шкоди, якщо атака нанесла хоч щось
@@ -126,9 +141,7 @@ public class PlayerHealth : MonoBehaviour
     private IEnumerator HitStunRoutine(PlayerMovement movementScript)
     {
         movementScript.isStunned = true;
-
         yield return new WaitForSeconds(hitStunDuration);
-
         if (!isDead)
         {
             movementScript.isStunned = false;
@@ -171,72 +184,29 @@ public class PlayerHealth : MonoBehaviour
         UpdateUI();
     }
 
-    // --- ОНОВЛЕНО: Тепер приймає чисельне значення armorValue замість відсотків ---
+    // --- АБСОЛЮТНО УНІВЕРСАЛЬНИЙ СТАРТ БАФІВ (БЕЗ IF/ELSE) ---
     public void StartBuffs(int regen, float armorValue, int slotType)
     {
-        if (slotType == 0)
-        {
-            amuletRegen = regen;
-            amuletArmor = armorValue;
-        }
-        else if (slotType == 1)
-        {
-            ringRegen = regen;
-            ringArmor = armorValue;
-        }
-        else if (slotType == 2)
-        {
-            helmetRegen = regen;
-            helmetArmor = armorValue;
-        }
-        else if (slotType == 3) // --- ДОДАНО: Нагрудник ---
-        {
-            chestplateRegen = regen;
-            chestplateArmor = armorValue;
-        }
-        else if (slotType == 4) // --- ДОДАНО: Наручі ---
-        {
-            bracersRegen = regen;
-            bracersArmor = armorValue;
-        }
+        // Словники самі додають або оновлюють значення для будь-якого slotType!
+        armorSlots[slotType] = armorValue;
+        regenSlots[slotType] = regen;
 
-        // --- ОНОВЛЕНО: Перевірка всіх слотів на наявність регену ---
-        if (regenCoroutine == null && (amuletRegen > 0 || ringRegen > 0 || helmetRegen > 0 || chestplateRegen > 0 || bracersRegen > 0))
+        // Вмикаємо регенерацію, якщо вона є хоч десь і корутина ще не запущена
+        if (regenCoroutine == null && GetTotalRegen() > 0)
         {
             regenCoroutine = StartCoroutine(RegenRoutine());
         }
     }
 
+    // --- АБСОЛЮТНО УНІВЕРСАЛЬНА ЗУПИНКА БАФІВ ---
     public void StopBuffs(int slotType)
     {
-        if (slotType == 0)
-        {
-            amuletRegen = 0;
-            amuletArmor = 0f;
-        }
-        else if (slotType == 1)
-        {
-            ringRegen = 0;
-            ringArmor = 0f;
-        }
-        else if (slotType == 2)
-        {
-            helmetRegen = 0;
-            helmetArmor = 0f;
-        }
-        else if (slotType == 3) // --- ДОДАНО: Нагрудник ---
-        {
-            chestplateRegen = 0;
-            chestplateArmor = 0f;
-        }
-        else if (slotType == 4) // --- ДОДАНО: Наручі ---
-        {
-            bracersRegen = 0;
-            bracersArmor = 0f;
-        }
+        // Просто вичищаємо бафи цього слоту зі словника
+        armorSlots.Remove(slotType);
+        regenSlots.Remove(slotType);
 
-        // --- ОНОВЛЕНО: Умова зупинки корутини ---
-        if (amuletRegen == 0 && ringRegen == 0 && helmetRegen == 0 && chestplateRegen == 0 && bracersRegen == 0 && regenCoroutine != null)
+        // Якщо регену більше немає ніде — зупиняємо корутину
+        if (GetTotalRegen() == 0 && regenCoroutine != null)
         {
             StopCoroutine(regenCoroutine);
             regenCoroutine = null;
@@ -249,8 +219,7 @@ public class PlayerHealth : MonoBehaviour
         {
             yield return new WaitForSeconds(1f);
 
-            // --- ОНОВЛЕНО: Сума всього регену ---
-            int totalRegen = amuletRegen + ringRegen + helmetRegen + chestplateRegen + bracersRegen;
+            int totalRegen = GetTotalRegen();
 
             if (totalRegen > 0 && currentHealth < maxHealth && !isDead)
             {
@@ -266,8 +235,7 @@ public class PlayerHealth : MonoBehaviour
                 Debug.Log($"<color=white>Регенерація: +{totalRegen}</color>");
             }
 
-            // --- ОНОВЛЕНО: Умова виходу ---
-            if (amuletRegen == 0 && ringRegen == 0 && helmetRegen == 0 && chestplateRegen == 0 && bracersRegen == 0) break;
+            if (totalRegen == 0) break;
         }
         regenCoroutine = null;
     }
@@ -296,20 +264,10 @@ public class PlayerHealth : MonoBehaviour
         if (isDead) return;
         isDead = true;
 
-        // --- ОНОВЛЕНО: Обнулення нових слотів при смерті ---
-        amuletRegen = 0;
-        ringRegen = 0;
-        helmetRegen = 0;
-        chestplateRegen = 0;
-        bracersRegen = 0;
+        // --- УНІВЕРСАЛЬНЕ ОБНУЛЕННЯ СЛОВНИКІВ ---
+        armorSlots.Clear();
+        regenSlots.Clear();
 
-        amuletArmor = 0f;
-        ringArmor = 0f;
-        helmetArmor = 0f;
-        chestplateArmor = 0f;
-        bracersArmor = 0f;
-
-        // --- СИНХРОНІЗАЦІЯ З МАННОЮ ПРИ СМЕРТІ ---
         PlayerMana manaScript = GetComponent<PlayerMana>();
         if (manaScript != null)
         {
@@ -341,7 +299,6 @@ public class PlayerHealth : MonoBehaviour
     private IEnumerator GameOverRoutine()
     {
         yield return new WaitForSeconds(1.5f);
-
         Time.timeScale = 0f;
         if (gameOverPanel != null) gameOverPanel.SetActive(true);
     }
@@ -362,7 +319,6 @@ public class PlayerHealth : MonoBehaviour
         currentHealth = maxHealth;
         UpdateUI();
 
-        // --- СИНХРОНІЗАЦІЯ З МАННОЮ ПРИ ВІДРОДЖЕННІ ---
         PlayerMana manaScript = GetComponent<PlayerMana>();
         if (manaScript != null)
         {

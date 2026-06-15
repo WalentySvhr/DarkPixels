@@ -7,6 +7,10 @@ public class BracersData : Item
     [Tooltip("Скільки максимального здоров'я додає (наприклад: 50)")]
     public int bonusMaxHealth = 0;
 
+    // --- ДОДАНО: Бонус мани ---
+    [Tooltip("Скільки максимальної мани додає (наприклад: 20)")]
+    public int bonusMaxMana = 0;
+
     [Tooltip("Скільки додаткового урону наносить (наприклад: 5)")]
     public int bonusDamage = 0;
 
@@ -18,6 +22,10 @@ public class BracersData : Item
 
     [Tooltip("Скільки ХП відновлює кожну секунду (наприклад: 2)")]
     public int healthRegenPerSecond = 0;
+
+    // --- ДОДАНО: Регенерація мани ---
+    [Tooltip("Скільки мани відновлює кожну секунду (наприклад: 1)")]
+    public int manaRegenPerSecond = 0;
 
     [Header("Нові механіки (Кріт та Захист)")]
     [Tooltip("Шанс критичного удару (наприклад: 0.1 для 10%)")]
@@ -36,11 +44,15 @@ public class BracersData : Item
     {
         ItemDescription desc = new ItemDescription();
 
-        // 1. БЛОК: Основні показники (Виживання та Сила)
+        // 1. БЛОК: Основні показники (Виживання, Мана та Сила)
         string main = "";
         main += $"Type: {type}\n";
 
         if (bonusMaxHealth > 0) main += $"Max HP: +{bonusMaxHealth}\n";
+
+        // --- ДОДАНО: Вивід мани в основні стати наручів ---
+        if (bonusMaxMana > 0) main += $"Max Mana: +{bonusMaxMana}\n";
+
         if (bonusDamage > 0) main += $"Damage: +{bonusDamage}\n";
 
         // Відображення чисельної броні в основних показниках
@@ -59,6 +71,9 @@ public class BracersData : Item
         if (bonusMoveSpeed > 0) extra += $"Move Speed: +{bonusMoveSpeed * 100}%\n";
         if (bonusAttackSpeed > 0) extra += $"Attack Speed: +{bonusAttackSpeed * 100}%\n";
         if (healthRegenPerSecond > 0) extra += $"Health Regen: {healthRegenPerSecond}/sec\n";
+
+        // --- ДОДАНО: Вивід регену мани ---
+        if (manaRegenPerSecond > 0) extra += $"Mana Regen: {manaRegenPerSecond}/sec\n";
 
         // Відображення критів у спеціальних ефектах
         if (bonusCritChance > 0) extra += $"Crit Chance: +{bonusCritChance * 100}%\n";

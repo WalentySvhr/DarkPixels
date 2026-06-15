@@ -4,8 +4,12 @@ using UnityEngine;
 public class ChestplateData : Item
 {
     [Header("Бонуси нагрудника")]
-    [Tooltip("Скільки максимального здоров'я додає")]
+    [Tooltip("Скільки maximalного здоров'я додає")]
     public int bonusMaxHealth = 0;
+
+    // --- ДОДАНО: Бонус мани ---
+    [Tooltip("Скільки максимальної мани додає (наприклад: 40)")]
+    public int bonusMaxMana = 0;
 
     [Tooltip("Скільки додаткового урону наносить")]
     public int bonusDamage = 0;
@@ -18,6 +22,10 @@ public class ChestplateData : Item
 
     [Tooltip("Скільки ХП відновлює кожну секунду")]
     public int healthRegenPerSecond = 0;
+
+    // --- ДОДАНО: Регенерація мани ---
+    [Tooltip("Скільки мани відновлює кожну секунду (наприклад: 2)")]
+    public int manaRegenPerSecond = 0;
 
     [Header("Механіки (Кріт та Захист)")]
     [Tooltip("Шанс критичного удару (наприклад: 0.1 для 10%)")]
@@ -36,11 +44,15 @@ public class ChestplateData : Item
     {
         ItemDescription desc = new ItemDescription();
 
-        // 1. БЛОК: Основні показники
+        // 1. БЛОК: Основні показники (Захист, Здоров'я, Мана та Сила)
         string main = "";
         main += $"Type: {type}\n";
 
         if (bonusMaxHealth > 0) main += $"Max HP: +{bonusMaxHealth}\n";
+
+        // --- ДОДАНО: Вивід мани в основні стати нагрудника ---
+        if (bonusMaxMana > 0) main += $"Max Mana: +{bonusMaxMana}\n";
+
         if (bonusDamage > 0) main += $"Damage: +{bonusDamage}\n";
         if (bonusArmor > 0) main += $"Armor: +{bonusArmor}\n";
         if (healValue > 0) main += $"Instant Heal: +{healValue}\n";
@@ -56,6 +68,10 @@ public class ChestplateData : Item
         if (bonusMoveSpeed > 0) extra += $"Move Speed: +{bonusMoveSpeed * 100}%\n";
         if (bonusAttackSpeed > 0) extra += $"Attack Speed: +{bonusAttackSpeed * 100}%\n";
         if (healthRegenPerSecond > 0) extra += $"Health Regen: {healthRegenPerSecond}/sec\n";
+
+        // --- ДОДАНО: Вивід регену мани ---
+        if (manaRegenPerSecond > 0) extra += $"Mana Regen: {manaRegenPerSecond}/sec\n";
+
         if (bonusCritChance > 0) extra += $"Crit Chance: +{bonusCritChance * 100}%\n";
         if (bonusCritMultiplier > 2f) extra += $"Crit Multiplier: x{bonusCritMultiplier}\n";
 
