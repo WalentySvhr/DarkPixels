@@ -1,36 +1,64 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
 public class PlayerMana : MonoBehaviour
 {
-    [Header("Mana Settings")]
-    public float maxMana = 100f;
-    public float currentMana;
+    [Header("Базові налаштування (без шмоту)")]
+    [SerializeField] private float baseMaxMana = 100f;
     [SerializeField] private float baseRegenRate = 2f; // Базовий реген (одиниць у секунду)
+
+    public float currentMana { get; private set; }
     private bool isDead = false;
 
     [Header("UI References")]
     public Slider playerManaProgressBar;
     public TextMeshProUGUI manaText;
 
-    // --- ПОЛЯ ДЛЯ СУМАРНОЇ РЕГЕНЕРАЦІЇ МАННИ (як в PlayerHealth) ---
-    [HideInInspector] public float amuletManaRegen = 0f;
-    [HideInInspector] public float ringManaRegen = 0f;
-    [HideInInspector] public float helmetManaRegen = 0f;
-    [HideInInspector] public float chestplateManaRegen = 0f;
-    [HideInInspector] public float bracersManaRegen = 0f;
+    // --- ДИНАМІЧНІ СЛОВНИКИ МОДИФІКАТОРІВ (Як у PlayerHealth) ---
+    private Dictionary<string, int> maxManaModifiers = new Dictionary<string, int>();
+    private Dictionary<string, int> manaRegenModifiers = new Dictionary<string, int>();
+
+    // 🌟 ДИНАМІЧНА МАКСИМАЛЬНА МАНА (База + сума всіх бонусів зі шмоту)
+    public int maxMana
+    {
+        get
+        {
+            int totalBonus = 0;
+            foreach (var bonus in maxManaModifiers.Values)
+            {
+                totalBonus += bonus;
+            }
+            return Mathf.RoundToInt(baseMaxMana) + totalBonus;
+        }
+    }
+
+    // 🌟 ДИНАМІЧНА РЕГЕНЕРАЦІЯ МАНА (База + сума всіх бонусів зі шмоту)
+    public int totalManaRegen
+    {
+        get
+        {
+            int totalBonus = 0;
+            foreach (var bonus in manaRegenModifiers.Values)
+            {
+                totalBonus += bonus;
+            }
+            return Mathf.RoundToInt(baseRegenRate) + totalBonus;
+        }
+    }
 
     private Coroutine regenCoroutine;
 
     void Start()
     {
+        // Заповнюємо ману на старті відповідно до поточної maxMana
         currentMana = maxMana;
         UpdateUI();
 
-        // Запускаємо постійний реген (він працюватиме завжди, поки гравець живий)
+        // Запускаємо постійний реген
         if (regenCoroutine == null)
         {
             regenCoroutine = StartCoroutine(RegenRoutine());
@@ -61,7 +89,7 @@ public class PlayerMana : MonoBehaviour
             return true;
         }
 
-        return false; // Манна закінчилася, менеджер скілів повинен її вирубити
+        return false;
     }
 
     // Корутина регенерації (працює раз на секунду)
@@ -71,17 +99,15 @@ public class PlayerMana : MonoBehaviour
         {
             yield return new WaitForSeconds(1f);
 
-            // Рахуємо сумарний реген: база + шмот
-            float totalRegen = baseRegenRate + amuletManaRegen + ringManaRegen + helmetManaRegen + chestplateManaRegen + bracersManaRegen;
+            int regen = totalManaRegen;
 
-            if (totalRegen > 0 && currentMana < maxMana)
+            if (regen > 0 && currentMana < maxMana)
             {
-                currentMana += totalRegen;
+                currentMana += regen;
                 if (currentMana > maxMana) currentMana = maxMana;
 
-                // Спавн спливаючого тексту регену через глобальний FXManager
-                SpawnManaRegenText(totalRegen);
-
+                // Спавн спливаючого тексту регену
+                SpawnManaRegenText(regen);
                 UpdateUI();
             }
         }
@@ -90,7 +116,6 @@ public class PlayerMana : MonoBehaviour
 
     private void SpawnManaRegenText(float amount)
     {
-        // Стукаємо в глобальний FXManager і просимо його намалювати текст регену манни
         if (FXManager.instance != null)
         {
             FXManager.instance.SpawnManaText(Mathf.RoundToInt(amount));
@@ -107,39 +132,56 @@ public class PlayerMana : MonoBehaviour
 
         if (manaText != null)
         {
-            // Округлюємо до цілих перед виводом на екран
-            manaText.text = Mathf.RoundToInt(currentMana) + " / " + Mathf.RoundToInt(maxMana);
+            manaText.text = Mathf.RoundToInt(currentMana) + " / " + maxMana;
         }
     }
 
-    // --- МЕТОДИ ДЛЯ ЕКІПІРУВАННЯ (викликатимуться з PlayerEquipment) ---
-    public void StartManaBuffs(float regenBonus, int slotType)
+    // =================================================================
+    // 🌟 УНІВЕРСАЛЬНІ МЕТОДИ ДЛЯ КЕРУВАННЯ БОНУСАМИ (Аналог PlayerHealth)
+    // =================================================================
+
+    /// <summary>
+    /// Додає або оновлює бонус до максимальної мани та регенерації від предмета.
+    /// </summary>
+    /// <param name="sourceID">Унікальний ID предмета або назва слоту (напр. "Bracers", "Amulet")</param>
+    public void AddManaEquipmentBonuses(string sourceID, int bonusMaxMana, int bonusRegen)
     {
-        if (slotType == 0) amuletManaRegen = regenBonus;
-        else if (slotType == 1) ringManaRegen = regenBonus;
-        else if (slotType == 2) helmetManaRegen = regenBonus;
-        else if (slotType == 3) chestplateManaRegen = regenBonus;
-        else if (slotType == 4) bracersManaRegen = regenBonus;
+        // Ставимо/оновлюємо значення у словниках
+        maxManaModifiers[sourceID] = bonusMaxMana;
+        manaRegenModifiers[sourceID] = bonusRegen;
+
+        // Корректуємо поточну ману, щоб вона не перевищувала новий ліміт
+        if (currentMana > maxMana) currentMana = maxMana;
+
+        // Миттєво перемальовуємо UI
+        UpdateUI();
+
+        // Оновлюємо вікно статів StatsUI, якщо воно відкрите
+        if (StatsUI.Instance != null) StatsUI.Instance.UpdateStatsUI();
     }
 
-    public void StopManaBuffs(int slotType)
+    /// <summary>
+    /// Повністю видаляє бонуси предмета (викликається при знятті шмотки)
+    /// </summary>
+    public void RemoveManaEquipmentBonuses(string sourceID)
     {
-        if (slotType == 0) amuletManaRegen = 0f;
-        else if (slotType == 1) ringManaRegen = 0f;
-        else if (slotType == 2) helmetManaRegen = 0f;
-        else if (slotType == 3) chestplateManaRegen = 0f;
-        else if (slotType == 4) bracersManaRegen = 0f;
+        if (maxManaModifiers.ContainsKey(sourceID)) maxManaModifiers.Remove(sourceID);
+        if (manaRegenModifiers.ContainsKey(sourceID)) manaRegenModifiers.Remove(sourceID);
+
+        if (currentMana > maxMana) currentMana = maxMana;
+
+        UpdateUI();
+
+        if (StatsUI.Instance != null) StatsUI.Instance.UpdateStatsUI();
     }
 
-    // Інтеграція зі смертю/ревайвом (викликаються з PlayerHealth автоматично)
+    // =================================================================
+
     public void OnPlayerDeath()
     {
         isDead = true;
-        amuletManaRegen = 0;
-        ringManaRegen = 0;
-        helmetManaRegen = 0;
-        chestplateManaRegen = 0;
-        bracersManaRegen = 0;
+        maxManaModifiers.Clear();
+        manaRegenModifiers.Clear();
 
         if (regenCoroutine != null)
         {

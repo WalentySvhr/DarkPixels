@@ -6,6 +6,7 @@ public class PlayerEquipment : MonoBehaviour
     public PlayerHealth playerHealth;
     public PlayerCombat playerCombat;
     public PlayerMovement playerMovement;
+    public PlayerMana playerMana; // 🌟 ДОДАНО ПОСИЛАННЯ НА МАНУ ГРАВЦЯ
 
     [Header("Поточна екіпіровка")]
     public AmuletData currentAmulet;
@@ -53,6 +54,10 @@ public class PlayerEquipment : MonoBehaviour
     {
         if (currentAmulet == null) return;
         if (playerHealth != null) playerHealth.RemoveBonusHealth(currentAmulet.bonusMaxHealth);
+
+        // 🌟 Очищаємо бонуси мани перед обнуленням посилання
+        if (playerMana != null) playerMana.RemoveManaEquipmentBonuses("Amulet");
+
         currentAmulet = null;
         UpdateAllStats();
     }
@@ -72,6 +77,9 @@ public class PlayerEquipment : MonoBehaviour
     {
         if (currentBelt == null) return;
         if (playerHealth != null) playerHealth.RemoveBonusHealth(currentBelt.bonusMaxHealth);
+
+        if (playerMana != null) playerMana.RemoveManaEquipmentBonuses("Belt");
+
         currentBelt = null;
         UpdateAllStats();
     }
@@ -91,6 +99,9 @@ public class PlayerEquipment : MonoBehaviour
     {
         if (currentHelmet == null) return;
         if (playerHealth != null) playerHealth.RemoveBonusHealth(currentHelmet.bonusMaxHealth);
+
+        if (playerMana != null) playerMana.RemoveManaEquipmentBonuses("Helmet");
+
         currentHelmet = null;
         UpdateAllStats();
     }
@@ -110,6 +121,9 @@ public class PlayerEquipment : MonoBehaviour
     {
         if (currentChestplate == null) return;
         if (playerHealth != null) playerHealth.RemoveBonusHealth(currentChestplate.bonusMaxHealth);
+
+        if (playerMana != null) playerMana.RemoveManaEquipmentBonuses("Chestplate");
+
         currentChestplate = null;
         UpdateAllStats();
     }
@@ -129,6 +143,9 @@ public class PlayerEquipment : MonoBehaviour
     {
         if (currentBracers == null) return;
         if (playerHealth != null) playerHealth.RemoveBonusHealth(currentBracers.bonusMaxHealth);
+
+        if (playerMana != null) playerMana.RemoveManaEquipmentBonuses("Bracers");
+
         currentBracers = null;
         UpdateAllStats();
     }
@@ -152,6 +169,9 @@ public class PlayerEquipment : MonoBehaviour
         if (ringToRemove == null) return;
 
         if (playerHealth != null) playerHealth.RemoveBonusHealth(ringToRemove.bonusMaxHealth);
+
+        if (playerMana != null) playerMana.RemoveManaEquipmentBonuses("Ring" + slotIndex);
+
         if (slotIndex == 1) currentRing1 = null;
         else if (slotIndex == 2) currentRing2 = null;
         UpdateAllStats();
@@ -193,6 +213,9 @@ public class PlayerEquipment : MonoBehaviour
         float amCritM = (currentAmulet != null && currentAmulet.bonusCritMultiplier > 2f) ? currentAmulet.bonusCritMultiplier - 2f : 0f;
         int amRegen = currentAmulet?.healthRegenPerSecond ?? 0;
         float amArmor = currentAmulet?.bonusArmor ?? 0f;
+        // 🌟 Додаємо поля мани з Scriptable Object амулета (переконайся, що в змінних SO назва збігається)
+        int amMaxMana = currentAmulet?.bonusMaxMana ?? 0;
+        int amManaRegen = currentAmulet?.manaRegenPerSecond ?? 0;
 
         // Стати пояса
         int bDmg = currentBelt?.bonusDamage ?? 0;
@@ -202,12 +225,16 @@ public class PlayerEquipment : MonoBehaviour
         float bCritM = (currentBelt != null && currentBelt.bonusCritMultiplier > 2f) ? currentBelt.bonusCritMultiplier - 2f : 0f;
         int bRegen = currentBelt?.healthRegenPerSecond ?? 0;
         float bArmor = currentBelt?.bonusArmor ?? 0f;
+        int bMaxMana = currentBelt?.bonusMaxMana ?? 0;
+        int bManaRegen = currentBelt?.manaRegenPerSecond ?? 0;
 
         // Стати шолома
         float hCrit = currentHelmet?.bonusCritChance ?? 0f;
         float hCritM = (currentHelmet != null && currentHelmet.bonusCritMultiplier > 2f) ? currentHelmet.bonusCritMultiplier - 2f : 0f;
         int hRegen = currentHelmet?.healthRegenPerSecond ?? 0;
         float hArmor = currentHelmet?.bonusArmor ?? 0f;
+        int hMaxMana = currentHelmet?.bonusMaxMana ?? 0;
+        int hManaRegen = currentHelmet?.manaRegenPerSecond ?? 0;
 
         // Стати нагрудника
         int cpDmg = currentChestplate?.bonusDamage ?? 0;
@@ -217,8 +244,10 @@ public class PlayerEquipment : MonoBehaviour
         float cpCritM = (currentChestplate != null && currentChestplate.bonusCritMultiplier > 2f) ? currentChestplate.bonusCritMultiplier - 2f : 0f;
         int cpRegen = currentChestplate?.healthRegenPerSecond ?? 0;
         float cpArmor = currentChestplate?.bonusArmor ?? 0f;
+        int cpMaxMana = currentChestplate?.bonusMaxMana ?? 0;
+        int cpManaRegen = currentChestplate?.manaRegenPerSecond ?? 0;
 
-        // Стати наручів --- ДОДАНО ---
+        // Стати наручів
         int brDmg = currentBracers?.bonusDamage ?? 0;
         float brAtkSpd = currentBracers?.bonusAttackSpeed ?? 0f;
         float brMovSpd = currentBracers?.bonusMoveSpeed ?? 0f;
@@ -226,6 +255,8 @@ public class PlayerEquipment : MonoBehaviour
         float brCritM = (currentBracers != null && currentBracers.bonusCritMultiplier > 2f) ? currentBracers.bonusCritMultiplier - 2f : 0f;
         int brRegen = currentBracers?.healthRegenPerSecond ?? 0;
         float brArmor = currentBracers?.bonusArmor ?? 0f;
+        int brMaxMana = currentBracers?.bonusMaxMana ?? 0;
+        int brManaRegen = currentBracers?.manaRegenPerSecond ?? 0;
 
         // Стати пета
         int petDmg = currentPet?.bonusDamage ?? 0;
@@ -233,32 +264,43 @@ public class PlayerEquipment : MonoBehaviour
         // Розрахунок кілець
         int rDmg = 0; float rAtkSpd = 0f; float rMovSpd = 0f;
         float rCrit = 0f; float rCritM = 0f; int rRegen = 0; float rArmor = 0f;
+        int r1MaxMana = 0; int r1ManaRegen = 0;
+        int r2MaxMana = 0; int r2ManaRegen = 0;
 
-        void AddRingStats(RingData ring)
+        if (currentRing1 != null)
         {
-            if (ring == null) return;
-            rDmg += ring.bonusDamage;
-            rAtkSpd += ring.bonusAttackSpeed;
-            rMovSpd += ring.bonusMoveSpeed;
-            rCrit += ring.bonusCritChance;
-            rRegen += ring.healthRegenPerSecond;
-            rArmor += ring.bonusArmor;
-            if (ring.bonusCritMultiplier > 2f) rCritM += ring.bonusCritMultiplier - 2f;
+            rDmg += currentRing1.bonusDamage;
+            rAtkSpd += currentRing1.bonusAttackSpeed;
+            rMovSpd += currentRing1.bonusMoveSpeed;
+            rCrit += currentRing1.bonusCritChance;
+            rRegen += currentRing1.healthRegenPerSecond;
+            rArmor += currentRing1.bonusArmor;
+            if (currentRing1.bonusCritMultiplier > 2f) rCritM += currentRing1.bonusCritMultiplier - 2f;
+            r1MaxMana = currentRing1.bonusMaxMana;
+            r1ManaRegen = currentRing1.manaRegenPerSecond;
         }
 
-        AddRingStats(currentRing1);
-        AddRingStats(currentRing2);
+        if (currentRing2 != null)
+        {
+            rDmg += currentRing2.bonusDamage;
+            rAtkSpd += currentRing2.bonusAttackSpeed;
+            rMovSpd += currentRing2.bonusMoveSpeed;
+            rCrit += currentRing2.bonusCritChance;
+            rRegen += currentRing2.healthRegenPerSecond;
+            rArmor += currentRing2.bonusArmor;
+            if (currentRing2.bonusCritMultiplier > 2f) rCritM += currentRing2.bonusCritMultiplier - 2f;
+            r2MaxMana = currentRing2.bonusMaxMana;
+            r2ManaRegen = currentRing2.manaRegenPerSecond;
+        }
 
         // Передача в системи бою (Combat)
         if (playerCombat != null)
         {
-            // Наручі та нагрудник додають базову шкоду та швидкість атаки
             playerCombat.extraAmuletDamage = amDmg + bDmg + petDmg + cpDmg + brDmg;
             playerCombat.extraRingDamage = rDmg;
             playerCombat.extraAttackSpeed = amAtkSpd + bAtkSpd + cpAtkSpd + brAtkSpd;
             playerCombat.extraRingAttackSpeed = rAtkSpd;
 
-            // Сумуємо шанс кріта та множник (з урахуванням наручів)
             playerCombat.critChance = amCrit + bCrit + rCrit + hCrit + cpCrit + brCrit;
             playerCombat.critMultiplier = 2f + amCritM + bCritM + rCritM + hCritM + cpCritM + brCritM;
         }
@@ -266,7 +308,6 @@ public class PlayerEquipment : MonoBehaviour
         // Передача в системи руху (Movement)
         if (playerMovement != null)
         {
-            // Наручі разом з нагрудником впливають на швидкість бігу
             playerMovement.extraSpeedMultiplier = amMovSpd + bMovSpd + cpMovSpd + brMovSpd;
             playerMovement.extraRingSpeedMultiplier = rMovSpd;
         }
@@ -278,7 +319,19 @@ public class PlayerEquipment : MonoBehaviour
             playerHealth.StartBuffs(rRegen, rArmor, 1);                     // 1 = Кільця
             playerHealth.StartBuffs(hRegen, hArmor, 2);                     // 2 = Шолом
             playerHealth.StartBuffs(cpRegen, cpArmor, 3);                   // 3 = Нагрудник
-            playerHealth.StartBuffs(brRegen, brArmor, 4);                   // 4 = Наручі (ДОДАНО новий індекс)
+            playerHealth.StartBuffs(brRegen, brArmor, 4);                   // 4 = Наручі
+        }
+
+        // 🌟 ЦЕНТРАЛІЗОВАНА ПЕРЕДАЧА В СИСТЕМУ МАНИ (PlayerMana)
+        if (playerMana != null)
+        {
+            playerMana.AddManaEquipmentBonuses("Amulet", amMaxMana, amManaRegen);
+            playerMana.AddManaEquipmentBonuses("Belt", bMaxMana, bManaRegen);
+            playerMana.AddManaEquipmentBonuses("Helmet", hMaxMana, hManaRegen);
+            playerMana.AddManaEquipmentBonuses("Chestplate", cpMaxMana, cpManaRegen);
+            playerMana.AddManaEquipmentBonuses("Bracers", brMaxMana, brManaRegen);
+            playerMana.AddManaEquipmentBonuses("Ring1", r1MaxMana, r1ManaRegen);
+            playerMana.AddManaEquipmentBonuses("Ring2", r2MaxMana, r2ManaRegen);
         }
     }
 }
