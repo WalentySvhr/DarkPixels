@@ -11,12 +11,14 @@ public class AbilityManager : MonoBehaviour
         public AbilitySO data;
         public bool isActive;
         public float nextTickTime;
+        public GameObject spawnedFX; // <-- ДОДАНО: зберігає посилання на створений на сцені ефект
 
         public ActiveAbilityState(AbilitySO data)
         {
             this.data = data;
             this.isActive = false;
             this.nextTickTime = 0f;
+            this.spawnedFX = null;
         }
     }
 
@@ -54,7 +56,6 @@ public class AbilityManager : MonoBehaviour
 
         Debug.Log("[AbilityManager] Рівні абілок скинуто в 0 перед завантаженням JSON.");
 
-        // ПРИМУСОВЕ ЗАВАНТАЖЕННЯ JSON ОДРАЗУ ПІСЛЯ ОБНУЛЕННЯ
         if (SaveManager.Instance != null)
         {
             SaveManager.Instance.LoadGame();
@@ -71,6 +72,7 @@ public class AbilityManager : MonoBehaviour
 
         foreach (var ability in activeAbilities)
         {
+            var state = abilityStates.ContainsKey(ability); // Безпечна ініціалізація у Start
             RegisterAbility(ability);
         }
     }
@@ -101,7 +103,6 @@ public class AbilityManager : MonoBehaviour
 
     private void ExecuteInstantAbility(AbilitySO data)
     {
-        // ЗМІНЕНО: тепер береться мана з урахуванням рівня
         float currentManaCost = data.GetCurrentManaCost();
 
         if (playerMana.TrySpendMana(currentManaCost))
@@ -116,8 +117,28 @@ public class AbilityManager : MonoBehaviour
         var state = abilityStates[data];
         state.isActive = !state.isActive;
 
-        if (state.isActive) state.nextTickTime = 0f;
-        else StopToggleableAbility(data);
+        if (state.isActive)
+        {
+            state.nextTickTime = 0f;
+
+            // 🌟 ОНОВЛЕНО: Спавнить візуальний ефект та автоматично підганяє його розмір під радіус скіла
+            if (data.visualEffectPrefab != null && state.spawnedFX == null)
+            {
+                // Створюємо ефект як дочірній об'єкт гравця (передаємо transform як параметр батька)
+                state.spawnedFX = Instantiate(data.visualEffectPrefab, transform.position, Quaternion.identity, transform);
+                state.spawnedFX.transform.localPosition = Vector3.zero; // Центруємо під гравцем
+
+                // 📐 АВТО-МАСШТАБУВАННЯ:
+                // Множимо радіус на 2, тому що радіус — це відстань від центра до краю (половина діаметра),
+                // а компонент Transform.localScale змінює загальний габаритний розмір (діаметр) об'єкта.
+                float visualScale = data.radius * 2f * 0.5f; // Якщо вогонь завеликий, зменшуємо вдвічі
+                state.spawnedFX.transform.localScale = new Vector3(visualScale, visualScale, 1f);
+            }
+        }
+        else
+        {
+            StopToggleableAbility(data);
+        }
     }
 
     private void Update()
@@ -129,27 +150,36 @@ public class AbilityManager : MonoBehaviour
 
             if (data.type == AbilityType.Toggleable && state.isActive)
             {
-                // Таймер йде постійно, поки аура увімкнена
                 state.nextTickTime -= Time.deltaTime;
 
                 if (state.nextTickTime <= 0f)
                 {
-                    // Вираховуємо, скільки мани потрібно рівно на ОДИН удар.
-                    // (Ціна за секунду * частоту ударів).
+                    // Обчислюємо, скільки мани потрібно на один тік аури
                     float costPerTick = data.GetCurrentManaCost() * data.tickRate;
 
-                    // Спробуємо витратити ману одразу всією необхідною порцією
                     if (playerMana.TrySpendMana(costPerTick))
                     {
-                        // Мани вистачило! Б'ємо і скидаємо таймер.
+                        // Мани вистачило — завдаємо шкоди ворогам і скидаємо таймер
                         ApplyAoEDamage(data);
                         state.nextTickTime = data.tickRate;
+
+                        // 🌟 ОНОВЛЕНО: Якщо ефект з якихось причин зник, створюємо його знову та масштабуємо під радіус
+                        if (data.visualEffectPrefab != null && state.spawnedFX == null)
+                        {
+                            state.spawnedFX = Instantiate(data.visualEffectPrefab, transform.position, Quaternion.identity, transform);
+                            state.spawnedFX.transform.localPosition = Vector3.zero;
+
+                            // Авто-масштабування під радіус з AbilitySO
+                            float visualScale = data.radius * 2f;
+                            state.spawnedFX.transform.localScale = new Vector3(visualScale, visualScale, 1f);
+                        }
                     }
                     else
                     {
-                        // Якщо повноцінної суми мани немає — тримаємо таймер на нулі.
-                        // Аура "напоготові" і вдарить миттєво, щойно гравець накопичить costPerTick.
-                        state.nextTickTime = 0f;
+                        // 🌟 ВИПРАВЛЕННЯ БАГУ СТИСКАННЯ: Якщо мани не вистачило навіть на один тік, 
+                        // ми повністю гасимо ауру через StopToggleableAbility.
+                        // Це акуратно видалить префаб і переведе стан абілки в isActive = false.
+                        StopToggleableAbility(data);
                     }
                 }
             }
@@ -176,14 +206,48 @@ public class AbilityManager : MonoBehaviour
 
     private void StopToggleableAbility(AbilitySO data)
     {
-        if (abilityStates.ContainsKey(data)) abilityStates[data].isActive = false;
+        if (abilityStates.ContainsKey(data))
+        {
+            var state = abilityStates[data];
+            state.isActive = false;
+
+            if (state.spawnedFX != null)
+            {
+                Destroy(state.spawnedFX);
+                state.spawnedFX = null;
+            }
+
+            // 🌟 ДОДАЙ ЦЕЙ РЯДОК СЮДИ:
+            // Якщо вимкнена абілка — це та, яка зараз винесена на кнопку HUD, гасимо кнопку!
+            if (CombatAbilityButton.Instance != null && CombatAbilityButton.Instance.equippedAbility == data)
+            {
+                CombatAbilityButton.Instance.ForceUntoggle();
+            }
+        }
     }
 
     private void SpawnVisualEffect(AbilitySO data)
     {
+        // Цей метод залишається для Instant скілів (ефекти, які самі знищуються через скрипт руйнування за часом)
         if (data.visualEffectPrefab != null)
         {
             Instantiate(data.visualEffectPrefab, transform.position, Quaternion.identity, transform);
+        }
+    }
+    private void OnDrawGizmosSelected()
+    {
+        // Якщо гра запущена і є активна абілка, малюємо її радіус
+        if (activeAbilities != null)
+        {
+            foreach (var ability in activeAbilities)
+            {
+                if (ability != null && ability.type == AbilityType.Toggleable)
+                {
+                    // Малюємо червоне напівпрозоре коло навколо гравця в редакторі
+                    Gizmos.color = new Color(1f, 0f, 0f, 0.3f); // Червоний колір з альфою 0.3
+                    Gizmos.DrawWireSphere(transform.position, ability.radius);
+                }
+            }
         }
     }
 }

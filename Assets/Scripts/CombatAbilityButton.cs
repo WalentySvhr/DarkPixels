@@ -10,20 +10,26 @@ public class CombatAbilityButton : MonoBehaviour
     [SerializeField] private Image iconImage;
     [SerializeField] private Image activeOverlay; // Напівпрозора рамка активації аури
 
+    [Header("Налаштування ефекту натискання")]
+    [SerializeField] private float pressedScaleMultiplier = 0.9f; // На скільки стискається кнопка при кліку
+    [SerializeField] private float animationSpeed = 15f;          // Швидкість повернення розміру
+
     // Публічна властивість для читання зі слотів магазину
     public AbilitySO equippedAbility { get; private set; }
 
     private bool isToggled = false;
+    private Vector3 originalScale;
 
     private void Awake()
     {
-        // Ініціалізуємо синглтон при старті сцени
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
             return;
         }
         Instance = this;
+
+        originalScale = transform.localScale;
     }
 
     private void Start()
@@ -32,32 +38,39 @@ public class CombatAbilityButton : MonoBehaviour
         UpdateVisuals();
     }
 
+    private void Update()
+    {
+        // Плавне повернення кнопки до початкового розміру після кліку
+        if (transform.localScale != originalScale)
+        {
+            transform.localScale = Vector3.Lerp(transform.localScale, originalScale, Time.deltaTime * animationSpeed);
+        }
+    }
+
     // Метод для призначення магії на цю кнопку з UI магазину
     public void EquipAbility(AbilitySO newAbility)
     {
-        // 1. ПЕРЕВІРКА НА ЗНЯТТЯ: Якщо гравець знімає вміння (newAbility == null)
         if (newAbility == null && equippedAbility != null)
         {
-            // Якщо це була активована аура/зона і вона зараз ГОРИТЬ (isToggled == true)
             if (isToggled && equippedAbility.type == AbilityType.Toggleable && AbilityManager.Instance != null)
             {
-                // Смикаємо UseAbility, щоб AbilityManager вимкнув ефект аури на сцені
                 AbilityManager.Instance.UseAbility(equippedAbility);
                 Debug.Log($"[HUD Button] Активну ауру {equippedAbility.abilityName} вимкнено перед видаленням.");
             }
         }
 
-        // 2. ОНОВЛЕННЯ ДАНИХ: Записуємо нове вміння та СКИДАЄМО ВСІ СТАНИ
         equippedAbility = newAbility;
-        isToggled = false; // Нове вміння або порожній слот ЗАВЖДИ стартують як вимкнені
+        isToggled = false;
 
-        // 3. ВІЗУАЛ: Перемальовуємо кнопку на HUD
         UpdateVisuals();
     }
 
     private void OnButtonClicked()
     {
         if (equippedAbility == null || AbilityManager.Instance == null) return;
+
+        // Ефект фізичного відгуку (зменшуємо кнопку в момент кліку)
+        transform.localScale = originalScale * pressedScaleMultiplier;
 
         // Передаємо команду активації в менеджер вмінь
         AbilityManager.Instance.UseAbility(equippedAbility);
@@ -69,7 +82,7 @@ public class CombatAbilityButton : MonoBehaviour
         }
         else
         {
-            isToggled = false; // Звичайні скіли (напр. фаєрбол) не залишаються натиснутими
+            isToggled = false;
         }
 
         UpdateVisuals();
@@ -79,7 +92,6 @@ public class CombatAbilityButton : MonoBehaviour
     {
         Button mainButton = GetComponent<Button>();
 
-        // СТАН 1: Скіл НЕ екіпіровано або його ЗНЯЛИ (порожній слот на HUD)
         if (equippedAbility == null)
         {
             if (iconImage != null) iconImage.gameObject.SetActive(false);
@@ -87,11 +99,10 @@ public class CombatAbilityButton : MonoBehaviour
 
             if (mainButton != null)
             {
-                mainButton.interactable = false; // Кнопка повністю блокується на HUD
+                mainButton.interactable = false;
                 if (mainButton.targetGraphic != null) mainButton.targetGraphic.color = Color.white;
             }
         }
-        // СТАН 2: Скіл успішно вибрано і він відображається
         else
         {
             if (iconImage != null)
@@ -100,6 +111,11 @@ public class CombatAbilityButton : MonoBehaviour
                 {
                     iconImage.gameObject.SetActive(true);
                     iconImage.sprite = equippedAbility.abilityIcon;
+
+                    // 🌟 ОНОВЛЕНО: Зміна кольору самої іконки (спрайту) скіла.
+                    // Якщо аура увімкнена (isToggled) — робимо картинку сірішою/темнішою (сірий колір 0.6f).
+                    // Якщо вимкнена — повертаємо повну яскравість (білий колір).
+                    iconImage.color = isToggled ? new Color(0.55f, 0.55f, 0.55f, 1f) : Color.white;
                 }
                 else
                 {
@@ -116,13 +132,10 @@ public class CombatAbilityButton : MonoBehaviour
 
             if (mainButton != null)
             {
-                mainButton.interactable = true; // Робимо кнопку КЛІКАБЕЛЬНОЮ на головному екрані
+                mainButton.interactable = true;
 
-                // Зміна кольору кнопки залежно від стану аури
-                if (mainButton.targetGraphic != null)
-                {
-                    mainButton.targetGraphic.color = isToggled ? new Color(0.8f, 1f, 0.8f, 1f) : Color.white;
-                }
+                // Скидаємо колір заднього фону кнопки в дефолт, щоб він не заважав іконці
+                if (mainButton.targetGraphic != null) mainButton.targetGraphic.color = Color.white;
             }
         }
     }
@@ -131,6 +144,9 @@ public class CombatAbilityButton : MonoBehaviour
     public void ForceUntoggle()
     {
         isToggled = false;
+
+        // Повертаємо іконці нормальний яскравий колір
+        if (iconImage != null) iconImage.color = Color.white;
         if (activeOverlay != null) activeOverlay.gameObject.SetActive(false);
 
         Button mainButton = GetComponent<Button>();
