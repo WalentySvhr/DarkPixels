@@ -99,11 +99,11 @@ public class ItemInfoManager : MonoBehaviour
         // Якщо палець у правій половині екрану — показуємо вікно зліва від пальця
         if (mousePos.x > Screen.width / 2)
         {
-            newPos.x = mousePos.x - panelWidth - 40f;
+            newPos.x = mousePos.x - panelWidth - 120f;
         }
         else // Якщо у лівій половині — показуємо справа
         {
-            newPos.x = mousePos.x + 40f;
+            newPos.x = mousePos.x + 120f;
         }
 
         // --- ВЕРТИКАЛЬНЕ ПОЗИЦІОНУВАННЯ ---
