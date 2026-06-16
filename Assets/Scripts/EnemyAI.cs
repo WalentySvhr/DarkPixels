@@ -148,7 +148,20 @@ public class EnemyAI : MonoBehaviour
 
     void Update()
     {
-        if (target == null) return;
+        // === ДИНАМІЧНИЙ ПОШУК ГРАВЦЯ ПІСЛЯ ТЕЛЕПОРТАЦІЇ МІЖ СЦЕНАМИ ===
+        if (target == null)
+        {
+            GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
+            if (playerObj != null)
+            {
+                target = playerObj.transform;
+                targetHealth = playerObj.GetComponent<PlayerHealth>(); // Кешуємо здоров'я
+            }
+            else
+            {
+                return; // Гравця ще немає на сцені або він переміщається, пропускаємо кадр
+            }
+        }
 
         Vector2 currentPos = transform.position;
         Vector2 targetPos = target.position;
@@ -290,15 +303,31 @@ public class EnemyAI : MonoBehaviour
 
     IEnumerator AttackDelay()
     {
-        yield return attackDelayWait; // Оптимізовано: нуль сміття
+        yield return attackDelayWait;
 
-        if (target != null && (currentState == EnemyState.Chasing || currentState == EnemyState.Fleeing))
+        if (target != null)
         {
             float sqrDistance = (target.position - transform.position).sqrMagnitude;
+
+            // ЛОГ 1: Перевіряємо чи взагалі запускається удар і яка відстань
+            Debug.Log($"[ATTACK] Моб б'є! Стан: {currentState}. Відстань до гравця: {sqrDistance}, А повинна бути менша за: {attackRangeSqr}");
+
             if (sqrDistance <= attackRangeSqr)
             {
-                // Використовуємо закешоване посилання на здоров'я гравця безGetComponent
-                if (targetHealth != null) targetHealth.TakeDamage(damage);
+                if (targetHealth != null)
+                {
+                    // ЛОГ 2: Фіксуємо скільки шкоди намагається нанести моб
+                    Debug.Log($"[ATTACK] Влучання! Наносимо шкоду: {damage} об'єкту {target.name}");
+                    targetHealth.TakeDamage(damage);
+                }
+                else
+                {
+                    Debug.LogError("[ATTACK] Помилка: targetHealth дорівнює NULL!");
+                }
+            }
+            else
+            {
+                Debug.LogWarning("[ATTACK] Промах: Гравець вийшов з радіусу атаки перед ударом.");
             }
         }
     }

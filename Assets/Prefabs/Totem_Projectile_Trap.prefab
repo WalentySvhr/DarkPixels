@@ -506,6 +506,7 @@ GameObject:
   - component: {fileID: 7750082995221720305}
   - component: {fileID: 1175659418835897426}
   - component: {fileID: 2126124294136288046}
+  - component: {fileID: 3455605933398578856}
   m_Layer: 7
   m_Name: Totem_Projectile_Trap
   m_TagString: Enemy
@@ -739,6 +740,22 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.875, y: 1.8}
   m_EdgeRadius: 0
+--- !u!114 &3455605933398578856
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4329446355310443706}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35c825bdc2e2da64292516af9002c60a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LootDropper
+  lootTable: {fileID: 11400000, guid: e488a13ea5461704592bb56def7098df, type: 2}
+  dropRolls: 1
+  destroyItemsAfterTime: 1
+  itemLifetime: 15
 --- !u!1 &5742469165653069513
 GameObject:
   m_ObjectHideFlags: 0

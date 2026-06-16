@@ -135,6 +135,7 @@ public class CurrencyExchangeUI : MonoBehaviour
             // Оновлюємо інтерфейс
             InventoryManager.Instance.UpdateUI();
 
+            if (SaveManager.Instance != null) SaveManager.Instance.SaveGame();
             ShowStatus(slotSuccessMessage);
         }
         else
@@ -167,6 +168,7 @@ public class CurrencyExchangeUI : MonoBehaviour
             // Оновлюємо інтерфейс
             InventoryManager.Instance.UpdateUI();
 
+            if (SaveManager.Instance != null) SaveManager.Instance.SaveGame();
             ShowStatus(slotSuccessMessage);
         }
         else

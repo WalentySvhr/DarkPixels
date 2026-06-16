@@ -12,6 +12,8 @@ public class GameData
     public float posX, posY, posZ;
     public int coins;
     public int diamonds;
+    public int inventorySpace = 20;
+    public int petSpace = 6;
     public float currentHealth;
     public List<ItemSaveEntry> backpack = new List<ItemSaveEntry>();
     public List<ItemSaveEntry> petBackpack = new List<ItemSaveEntry>();
@@ -227,6 +229,9 @@ public class SaveManager : MonoBehaviour
                 if (stack?.item != null)
                     data.petBackpack.Add(new ItemSaveEntry { itemName = stack.item.name, amount = stack.amount });
             }
+
+            data.inventorySpace = InventoryManager.Instance.space;
+            data.petSpace = InventoryManager.Instance.petSpace;
         }
 
         // --- НОВЕ: ЗБЕРЕЖЕННЯ РІВНІВ МАГІЙ ---
@@ -302,6 +307,12 @@ public class SaveManager : MonoBehaviour
                 if (loadedItem != null)
                     InventoryManager.Instance.items.Add(new InventoryManager.ItemStack(loadedItem, entry.amount));
             }
+
+            if (data.inventorySpace > 0)
+                InventoryManager.Instance.space = data.inventorySpace;
+            if (data.petSpace > 0)
+                InventoryManager.Instance.petSpace = data.petSpace;
+
             InventoryManager.Instance.UpdateUI();
 
             InventoryManager.Instance.petItems.Clear();
@@ -380,11 +391,19 @@ public class SaveManager : MonoBehaviour
             string key = "";
             string baseSlotType = "";
 
+            // Старі слоти
             if (slot.isWeaponEquipmentSlot) { key = "Weapon"; baseSlotType = "Weapon"; }
             else if (slot.isAmuletEquipmentSlot) { key = "Amulet"; baseSlotType = "Amulet"; }
             else if (slot.isBeltEquipmentSlot) { key = "Belt"; baseSlotType = "Belt"; }
             else if (slot.isRingEquipmentSlot) { key = $"Ring_{slot.ringSlotIndex}"; baseSlotType = "Ring"; }
             else if (slot.isPetEquipmentSlot) { key = "Pet"; baseSlotType = "Pet"; }
+
+            // === НОВІ СЛОТИ ДЛЯ ШОЛОМА, НАГРУДНИКА, РУКАВИЦЬ ТА ЧЕРЕВИКІВ ===
+            // УВАГА: Перевір, чи саме так називаються ці змінні у твоєму скрипті InventorySlot!
+            else if (slot.isHelmetEquipmentSlot) { key = "Helmet"; baseSlotType = "Helmet"; }
+            else if (slot.isChestplateEquipmentSlot) { key = "Chestplate"; baseSlotType = "Chestplate"; }
+            else if (slot.isBracersEquipmentSlot) { key = "Bracers"; baseSlotType = "Bracers"; }
+            else if (slot.isBootsEquipmentSlot) { key = "Boots"; baseSlotType = "Boots"; }
 
             if (string.IsNullOrEmpty(key)) continue;
 

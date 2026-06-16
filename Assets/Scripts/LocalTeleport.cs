@@ -29,18 +29,19 @@ public class LocalTeleport : MonoBehaviour
             // 2. Переміщуємо гравця
             if (targetLocation != null)
             {
-                collision.transform.position = targetLocation.position;
+                // Примусово створюємо вектор із Z = 0, ігноруючи Z-координату точки targetLocation
+                Vector3 safeNewPosition = new Vector3(targetLocation.position.x, targetLocation.position.y, 0f);
+                collision.transform.position = safeNewPosition;
 
                 // 3. АВТОМАТИЧНИЙ ПОШУК КАМЕРИ
                 CinemachineVirtualCamera vcam = FindFirstObjectByType<CinemachineVirtualCamera>();
 
                 if (vcam != null)
                 {
-                    Vector3 delta = targetLocation.position - oldPos;
+                    Vector3 delta = safeNewPosition - oldPos; // Використовуємо безпечну позицію для дельти камери
                     vcam.OnTargetObjectWarped(collision.transform, delta);
                 }
             }
-
             // 4. Твій інший код (Announcer, TowerManager...)
             if (LocationAnnouncer.Instance != null)
                 LocationAnnouncer.Instance.ShowLocation(locationName);

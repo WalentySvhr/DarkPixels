@@ -198,53 +198,59 @@ public class PlayerCombat : MonoBehaviour
 
     void RangedShot()
     {
-        if (currentWeaponData.projectilePrefab != null)
+        if (currentWeaponData == null || currentWeaponData.projectilePrefab == null)
+            return;
+
+        // 🔹 Визначаємо точку спавну
+        Transform firePoint = null;
+        if (spawnedWeapon != null)
         {
-            // Визначаємо точку спавну стріли
-            Vector3 spawnPosition = attackPoint.position; // Значення за замовчуванням
+            firePoint = spawnedWeapon.transform.Find("FirePoint");
+        }
 
-            // Намагаємося знайти FirePoint всередині префаба поточної зброї
-            if (spawnedWeapon != null)
-            {
-                Transform customFirePoint = spawnedWeapon.transform.Find("FirePoint");
-                if (customFirePoint != null)
-                {
-                    spawnPosition = customFirePoint.position; // Використовуємо точку з префаба лука
-                }
-            }
+        Vector3 spawnPosition = (firePoint != null) ? firePoint.position : attackPoint.position;
 
-            Transform target = FindNearestEnemy();
-            Vector2 shootDirection;
+        // 🔹 Знаходимо ціль
+        Transform target = FindNearestEnemy();
+        Vector2 shootDirection;
 
-            if (target != null)
-            {
-                // Рахуємо напрямок від точки спавну до ворога
-                shootDirection = ((Vector2)target.position - (Vector2)spawnPosition).normalized;
-                FlipTowards(target.position.x);
-            }
-            else
-            {
-                shootDirection = new Vector2(Mathf.Sign(transform.localScale.x), 0);
-            }
+        if (target != null)
+        {
+            shootDirection = ((Vector2)target.position - (Vector2)spawnPosition).normalized;
+            FlipTowards(target.position.x);
+        }
+        else
+        {
+            shootDirection = new Vector2(Mathf.Sign(transform.localScale.x), 0);
+        }
 
-            float angle = Mathf.Atan2(shootDirection.y, shootDirection.x) * Mathf.Rad2Deg;
+        float angle = Mathf.Atan2(shootDirection.y, shootDirection.x) * Mathf.Rad2Deg;
 
-            // Створюємо стрілу в правильній точці spawnPosition
-            GameObject proj = Instantiate(currentWeaponData.projectilePrefab, spawnPosition, Quaternion.AngleAxis(angle, Vector3.forward));
+        // 🔹 Створюємо снаряд
+        GameObject proj = Instantiate(
+            currentWeaponData.projectilePrefab,
+            spawnPosition,
+            Quaternion.AngleAxis(angle, Vector3.forward)
+        );
 
-            Arrow arrowScript = proj.GetComponent<Arrow>();
-            if (arrowScript != null)
-            {
-                arrowScript.damage = CalculateFinalDamage(currentWeaponData.damage, out bool isCrit);
-                arrowScript.isCrit = isCrit;
+        // 🔹 Налаштовуємо скрипт снаряда
+        Arrow arrowScript = proj.GetComponent<Arrow>();
+        if (arrowScript != null)
+        {
+            arrowScript.damage = CalculateFinalDamage(currentWeaponData.damage, out bool isCrit);
+            arrowScript.isCrit = isCrit;
 
-                if (isCrit) Debug.Log("<color=yellow>Ranged Crit!</color>");
-            }
+            if (isCrit) Debug.Log("<color=yellow>Ranged Crit!</color>");
+        }
 
-            Rigidbody2D rbProj = proj.GetComponent<Rigidbody2D>();
-            if (rbProj != null) rbProj.AddForce(shootDirection * currentWeaponData.shootForce, ForceMode2D.Impulse);
+        // 🔹 Додаємо силу
+        Rigidbody2D rbProj = proj.GetComponent<Rigidbody2D>();
+        if (rbProj != null)
+        {
+            rbProj.AddForce(shootDirection * currentWeaponData.shootForce, ForceMode2D.Impulse);
         }
     }
+
 
     void FlipTowards(float targetX)
     {

@@ -22,6 +22,9 @@ public class WeaponData : Item
     public GameObject projectilePrefab;
     public float shootForce;
 
+    [Header("Optional Ranged Settings")]
+    public bool useWeaponFirePoint = false;
+
     [Header("Візуал")]
     public GameObject visualPrefab;
 
