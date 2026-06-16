@@ -14,15 +14,15 @@ public class EnemyAI : MonoBehaviour
     public float stopDistance = 0.8f;
 
     [Header("Hit Settings")]
-    public float hitStunDuration = 0.3f; // Скільки секунд моб стоїть на місці при ударі
+    public float hitStunDuration = 0.3f;
 
     [Header("Flee Settings")]
     public bool canFlee = false;
     public float fleeDuration = 2f;
     [Range(0, 100)]
-    public float fleeChancePercent = 15f; // Шанс у відсотках (наприклад, 15)
+    public float fleeChancePercent = 15f;
     private float currentFleeTimer = 0f;
-    private bool hasAttemptedToFlee = false; // Блокувальник повторних спроб
+    private bool hasAttemptedToFlee = false;
 
     [Header("Aggro Settings")]
     public float loseAggroDistance = 8f;
@@ -39,10 +39,9 @@ public class EnemyAI : MonoBehaviour
     public bool isAggroedByDamage = false;
     public bool spriteFacingLeft = false;
 
-    // === НАЛАШТУВАННЯ ОПТИМІЗАЦІЇ ДЛЯ ТЕЛЕФОНУ ===
     [Header("Mobile Optimization")]
-    [SerializeField] private float cullDistance = 15f;      // Дистанція, на якій моб "засинає"
-    [SerializeField] private float cullCheckInterval = 0.5f; // Як часто перевіряти відстань (сек)
+    [SerializeField] private float cullDistance = 15f;
+    [SerializeField] private float cullCheckInterval = 0.5f;
     private float cullTimer = 0f;
     private bool isCulled = false;
 
@@ -51,9 +50,24 @@ public class EnemyAI : MonoBehaviour
     private Animator anim;
     private Rigidbody2D rb;
     private Transform target;
+    private PlayerHealth targetHealth; // Закешований скрипт здоров'я гравця
     private Vector2 moveDirection;
     private Collider2D myCollider;
     private SpriteRenderer myRenderer;
+
+    // === ЗМІННІ ДЛЯ ОПТИМІЗАЦІЇ ПРЕДСТАВЛЕННЯ ТА ОБЧИСЛЕНЬ ===
+    private float checkRadiusSqr;
+    private float attackRangeSqr;
+    private float stopDistanceSqr;
+    private float loseAggroDistanceSqr;
+    private float cullDistanceSqr;
+
+    private WaitForSeconds hitStunWait;
+    private WaitForSeconds attackDelayWait;
+
+    private bool hasAnimator;
+    private bool hasHpBar;
+    private bool hasRigidbody;
 
     void Start()
     {
@@ -63,31 +77,44 @@ public class EnemyAI : MonoBehaviour
         myRenderer = GetComponent<SpriteRenderer>();
         startPosition = transform.position;
 
-        GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
-        if (playerObj != null) target = playerObj.transform;
+        // Попередній підрахунок квадратів відстаней (sqrMagnitude працює без квадратного кореня!)
+        checkRadiusSqr = checkRadius * checkRadius;
+        attackRangeSqr = attackRange * attackRange;
+        stopDistanceSqr = stopDistance * stopDistance;
+        loseAggroDistanceSqr = loseAggroDistance * loseAggroDistance;
+        cullDistanceSqr = cullDistance * cullDistance;
 
-        // Рандомізуємо старт таймера, щоб моби не робили перевірку в один і той самий кадр
+        // Кешуємо WaitForSeconds для корутин
+        hitStunWait = new WaitForSeconds(hitStunDuration);
+        attackDelayWait = new WaitForSeconds(0.3f);
+
+        // Прапорці для швидкої перевірки на null
+        hasAnimator = anim != null;
+        hasHpBar = hpBarTransform != null;
+        hasRigidbody = rb != null;
+
+        GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
+        if (playerObj != null)
+        {
+            target = playerObj.transform;
+            targetHealth = playerObj.GetComponent<PlayerHealth>(); // Кешуємо здоров'я ОДИН раз
+        }
+
         cullTimer = Random.Range(0f, cullCheckInterval);
 
-        // --- МАСШТАБУВАННЯ УРОНУ В БАШТІ ---
         if (TowerManager.Instance != null && TowerManager.Instance.IsTowerRunActive)
         {
-            // Визначаємо, який множник брати: для боса чи для звичайного моба
             float damageMultiplier = TowerManager.Instance.IsBossFloor()
                 ? TowerManager.Instance.GetBossDamageMultiplier()
                 : TowerManager.Instance.GetEnemyDamageMultiplier();
 
-            // Множимо базовий урон на коефіцієнт
             damage = Mathf.RoundToInt(damage * damageMultiplier);
-
-            Debug.Log($"[TowerAI] Ворогу {gameObject.name} успішно встановлено урон: {damage} (множник x{damageMultiplier})");
         }
     }
 
     public void OnTakeDamage()
     {
         isAggroedByDamage = true;
-
         if (currentState != EnemyState.Hit)
         {
             StartCoroutine(HitStunRoutine());
@@ -98,25 +125,20 @@ public class EnemyAI : MonoBehaviour
     {
         currentState = EnemyState.Hit;
         moveDirection = Vector2.zero;
-        if (anim != null) anim.SetFloat("Speed", 0f);
+        if (hasAnimator) anim.SetFloat("Speed", 0f);
 
-        // Чекаємо, поки моб оглушений і летить від відкидання
-        yield return new WaitForSeconds(hitStunDuration);
+        yield return hitStunWait; // Оптимізовано: нуль сміття
 
-        // === ВИПРАВЛЕННЯ: Скидаємо залишкову фізичну швидкість від відкидання, 
-        // щоб моб не продовжував ковзати або дьоргатись ===
-        if (rb != null) rb.linearVelocity = Vector2.zero;
+        if (hasRigidbody) rb.linearVelocity = Vector2.zero;
 
         if (canFlee && !hasAttemptedToFlee)
         {
             hasAttemptedToFlee = true;
-
             float randomRoll = Random.Range(0f, 100f);
             if (randomRoll <= fleeChancePercent)
             {
                 currentState = EnemyState.Fleeing;
                 currentFleeTimer = fleeDuration;
-                Debug.Log($"Ворог злякався ({randomRoll:F1}%) і тікає!");
                 yield break;
             }
         }
@@ -128,40 +150,42 @@ public class EnemyAI : MonoBehaviour
     {
         if (target == null) return;
 
-        // --- БЛОК ОПТИМІЗАЦІЇ ---
+        Vector2 currentPos = transform.position;
+        Vector2 targetPos = target.position;
+
+        // --- БЛОК ОПТИМІЗАЦІЇ CULLING ---
         cullTimer += Time.deltaTime;
         if (cullTimer >= cullCheckInterval)
         {
             cullTimer = 0f;
-            float distanceToPlayer = Vector2.Distance(transform.position, target.transform.position);
+            // Рахуємо квадрат відстані (це набагато швидше за Vector2.Distance)
+            float sqrDistanceToPlayer = (currentPos - targetPos).sqrMagnitude;
 
-            // Якщо ворог заагрений по шкоді, ми його НЕ ховаємо, поки він не заспокоїться
-            bool newCullState = (distanceToPlayer > cullDistance) && !isAggroedByDamage;
+            bool newCullState = (sqrDistanceToPlayer > cullDistanceSqr) && !isAggroedByDamage;
 
             if (newCullState != isCulled)
             {
                 isCulled = newCullState;
 
-                // Вимикаємо візуалізацію та колайдер
                 if (myCollider != null) myCollider.enabled = !isCulled;
                 if (myRenderer != null) myRenderer.enabled = !isCulled;
-                if (hpBarTransform != null) hpBarTransform.gameObject.SetActive(!isCulled);
+                if (hasHpBar) hpBarTransform.gameObject.SetActive(!isCulled);
 
-                // Якщо моб заснув, зупиняємо його фізично
-                if (isCulled && rb != null)
+                if (isCulled && hasRigidbody)
                 {
                     rb.linearVelocity = Vector2.zero;
                     moveDirection = Vector2.zero;
-                    if (anim != null) anim.SetFloat("Speed", 0f);
+                    if (hasAnimator) anim.SetFloat("Speed", 0f);
                 }
             }
         }
 
-        // Якщо моб оптимізований (заснув) — повністю виходимо з Update, нічого не рахуємо!
         if (isCulled) return;
-        // ------------------------
+        // --------------------------------
 
-        float distanceToPlayerActual = Vector2.Distance(transform.position, target.position);
+        // Вектор напрямку до гравця та квадрат фактичної відстані
+        Vector2 toTarget = targetPos - currentPos;
+        float sqrDistanceToPlayerActual = toTarget.sqrMagnitude;
 
         switch (currentState)
         {
@@ -171,7 +195,7 @@ public class EnemyAI : MonoBehaviour
 
             case EnemyState.Idle:
                 moveDirection = Vector2.zero;
-                if (distanceToPlayerActual <= checkRadius || isAggroedByDamage)
+                if (sqrDistanceToPlayerActual <= checkRadiusSqr || isAggroedByDamage)
                 {
                     currentState = EnemyState.Chasing;
                     currentLoseAggroTimer = 0f;
@@ -186,13 +210,13 @@ public class EnemyAI : MonoBehaviour
                 }
                 else
                 {
-                    moveDirection = (transform.position - target.position).normalized;
-                    HandleFlip(transform.position.x + moveDirection.x);
+                    moveDirection = (-toTarget).normalized;
+                    HandleFlip(currentPos.x + moveDirection.x, currentPos.x);
                 }
                 break;
 
             case EnemyState.Chasing:
-                if (distanceToPlayerActual > loseAggroDistance)
+                if (sqrDistanceToPlayerActual > loseAggroDistanceSqr)
                 {
                     currentLoseAggroTimer += Time.deltaTime;
                     if (currentLoseAggroTimer >= loseAggroTime)
@@ -207,17 +231,17 @@ public class EnemyAI : MonoBehaviour
                     currentLoseAggroTimer = 0f;
                 }
 
-                if (distanceToPlayerActual > stopDistance)
+                if (sqrDistanceToPlayerActual > stopDistanceSqr)
                 {
-                    moveDirection = (target.position - transform.position).normalized;
-                    HandleFlip(target.position.x);
+                    moveDirection = toTarget.normalized;
+                    HandleFlip(targetPos.x, currentPos.x);
                 }
                 else
                 {
                     moveDirection = Vector2.zero;
                 }
 
-                if (distanceToPlayerActual <= attackRange && Time.time >= nextAttackTime)
+                if (sqrDistanceToPlayerActual <= attackRangeSqr && Time.time >= nextAttackTime)
                 {
                     TriggerAttack();
                     nextAttackTime = Time.time + attackCooldown;
@@ -225,11 +249,13 @@ public class EnemyAI : MonoBehaviour
                 break;
 
             case EnemyState.Returning:
-                float distanceToStart = Vector2.Distance(transform.position, startPosition);
-                if (distanceToStart > 0.1f)
+                Vector2 toStart = startPosition - currentPos;
+                float sqrDistanceToStart = toStart.sqrMagnitude;
+
+                if (sqrDistanceToStart > 0.01f) // 0.1f у квадраті це 0.01f
                 {
-                    moveDirection = (startPosition - (Vector2)transform.position).normalized;
-                    HandleFlip(startPosition.x);
+                    moveDirection = toStart.normalized;
+                    HandleFlip(startPosition.x, currentPos.x);
                 }
                 else
                 {
@@ -238,16 +264,16 @@ public class EnemyAI : MonoBehaviour
                     hasAttemptedToFlee = false;
                 }
 
-                if (distanceToPlayerActual <= checkRadius || isAggroedByDamage)
+                if (sqrDistanceToPlayerActual <= checkRadiusSqr || isAggroedByDamage)
                 {
                     currentState = EnemyState.Chasing;
                 }
                 break;
         }
 
-        if (anim != null && currentState != EnemyState.Hit)
+        if (hasAnimator && currentState != EnemyState.Hit)
         {
-            anim.SetFloat("Speed", moveDirection.magnitude);
+            anim.SetFloat("Speed", moveDirection.sqrMagnitude); // Швидше, ніж .magnitude
         }
     }
 
@@ -258,48 +284,52 @@ public class EnemyAI : MonoBehaviour
 
     void TriggerAttack()
     {
-        if (anim != null) anim.SetTrigger("Attack");
+        if (hasAnimator) anim.SetTrigger("Attack");
         StartCoroutine(AttackDelay());
     }
 
     IEnumerator AttackDelay()
     {
-        yield return new WaitForSeconds(0.3f);
+        yield return attackDelayWait; // Оптимізовано: нуль сміття
+
         if (target != null && (currentState == EnemyState.Chasing || currentState == EnemyState.Fleeing))
         {
-            float distance = Vector2.Distance(transform.position, target.position);
-            if (distance <= attackRange)
+            float sqrDistance = (target.position - transform.position).sqrMagnitude;
+            if (sqrDistance <= attackRangeSqr)
             {
-                PlayerHealth playerHealth = target.GetComponent<PlayerHealth>();
-                if (playerHealth != null) playerHealth.TakeDamage(damage);
-                Debug.Log("Гравець отримав шкоду: " + damage);
+                // Використовуємо закешоване посилання на здоров'я гравця безGetComponent
+                if (targetHealth != null) targetHealth.TakeDamage(damage);
             }
         }
     }
 
     void FixedUpdate()
     {
-        // === Якщо моб за межами екрана — фізику руху взагалі не прораховуємо ===
         if (isCulled) return;
 
         if (currentState != EnemyState.Hit)
         {
             float currentSpeed = (currentState == EnemyState.Fleeing) ? fleeSpeed : speed;
-            rb.linearVelocity = moveDirection * currentSpeed;
+            if (hasRigidbody) rb.linearVelocity = moveDirection * currentSpeed;
         }
     }
 
-    void HandleFlip(float targetPosX)
+    // Передаємо також поточний X моба, щоб не викликати повторно transform.position.x всередині методу
+    void HandleFlip(float targetPosX, float currentPosX)
     {
-        float direction = targetPosX - transform.position.x;
+        float direction = targetPosX - currentPosX;
         if (Mathf.Abs(direction) > 0.1f)
         {
             float scaleX = (direction > 0) ? 1 : -1;
             if (spriteFacingLeft) scaleX *= -1;
-            transform.localScale = new Vector3(scaleX, 1, 1);
 
-            if (hpBarTransform != null)
-                hpBarTransform.localScale = new Vector3(scaleX, 1, 1);
+            // На телефонах зміна localScale щокадру може бути важкою, тому міняємо тільки якщо вона реально інша
+            Vector3 currentScale = transform.localScale;
+            if (Mathf.Abs(currentScale.x - scaleX) > 0.01f)
+            {
+                transform.localScale = new Vector3(scaleX, 1, 1);
+                if (hasHpBar) hpBarTransform.localScale = new Vector3(scaleX, 1, 1);
+            }
         }
     }
 }
