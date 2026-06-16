@@ -80,7 +80,7 @@ public class InventoryManager : MonoBehaviour
             return true;
         }
 
-        // --- КОД ДЛЯ ЗВИЧАЙНИХ ПРЕДМЕТІВ (Шолом, Нагрудник та Наручі йдуть сюди) ---
+        // --- КОД ДЛЯ ЗВИЧАЙНИХ ПРЕДМЕТІВ (Шолом, Нагрудник, Наручі та Чоботи йдуть сюди) ---
         if (item.isStackable)
         {
             ItemStack stack = items.Find(s => s.item == item && s.amount < item.maxStackSize);
@@ -198,7 +198,7 @@ public class InventoryManager : MonoBehaviour
 
         equippedItems[slotKey] = itemToEquip;
 
-        // --- ОДЯГАЄМО ПРЕДМЕТ НА ГРАВЦЯ (ОНОВЛЕНО ПІД НАРУЧІ) ---
+        // --- ОДЯГАЄМО ПРЕДМЕТ НА ГРАВЦЯ (ОНОВЛЕНО ПІД ЧОБОТИ) ---
         if (playerEquipment != null)
         {
             if (itemToEquip is WeaponData weapon) playerEquipment.EquipWeapon(weapon);
@@ -208,7 +208,8 @@ public class InventoryManager : MonoBehaviour
             else if (itemToEquip is RingData ring) playerEquipment.EquipRing(ring, slotIndex);
             else if (itemToEquip is HelmetData helmet) playerEquipment.EquipHelmet(helmet);
             else if (itemToEquip is ChestplateData chestplate) playerEquipment.EquipChestplate(chestplate);
-            else if (itemToEquip is BracersData bracers) playerEquipment.EquipBracers(bracers); // --- ДОДАНО ДЛЯ НАРУЧІВ ---
+            else if (itemToEquip is BracersData bracers) playerEquipment.EquipBracers(bracers);
+            else if (itemToEquip is BootsData boots) playerEquipment.EquipBoots(boots); // --- ДОДАНО ДЛЯ ЧОБІТ ---
         }
 
         Debug.Log($"[InventoryManager] В слот {slotKey} записано та одягнено {itemToEquip.name}");
@@ -223,7 +224,7 @@ public class InventoryManager : MonoBehaviour
             Item itemToReturn = equippedItems[slotKey];
             equippedItems.Remove(slotKey);
 
-            // --- ЗНІМАЄМО ПРЕДМЕТ З ГРАВЦЯ (ОНОВЛЕНО ПІД НАРУЧІ) ---
+            // --- ЗНІМАЄМО ПРЕДМЕТ З ГРАВЦЯ (ОНОВЛЕНО ПІД ЧОБОТИ) ---
             if (playerEquipment != null)
             {
                 if (itemToReturn is WeaponData) playerEquipment.UnequipWeapon();
@@ -233,7 +234,8 @@ public class InventoryManager : MonoBehaviour
                 else if (itemToReturn is RingData) playerEquipment.UnequipRing(slotIndex);
                 else if (itemToReturn is HelmetData) playerEquipment.UnequipHelmet();
                 else if (itemToReturn is ChestplateData) playerEquipment.UnequipChestplate();
-                else if (itemToReturn is BracersData) playerEquipment.UnequipBracers(); // --- ДОДАНО ДЛЯ НАРУЧІВ ---
+                else if (itemToReturn is BracersData) playerEquipment.UnequipBracers();
+                else if (itemToReturn is BootsData) playerEquipment.UnequipBoots(); // --- ДОДАНО ДЛЯ ЧОБІТ ---
             }
 
             Debug.Log($"[InventoryManager] Зі слота {slotKey} знято предмет: {itemToReturn.name}");

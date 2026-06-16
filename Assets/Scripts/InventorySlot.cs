@@ -14,7 +14,8 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     public bool isPetEquipmentSlot = false;
     public bool isHelmetEquipmentSlot = false;
     public bool isChestplateEquipmentSlot = false;
-    public bool isBracersEquipmentSlot = false; // --- НОВИЙ ТИП: СЛОТ ДЛЯ НАРУЧІВ ---
+    public bool isBracersEquipmentSlot = false;
+    public bool isBootsEquipmentSlot = false; // --- НОВИЙ ТИП: СЛОТ ДЛЯ ЧОБІТ ---
 
     [Tooltip("Для кілець: вкажи 1 або 2. Для інших слотів залиш 0.")]
     public int ringSlotIndex = 0;
@@ -103,10 +104,10 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     {
         if (ItemInfoManager.Instance != null) ItemInfoManager.Instance.HideInfo();
 
-        // Додано перевірку isBracersEquipmentSlot, щоб не можна було кліком зняти наручі у нікуди
+        // ➕ Додано isBootsEquipmentSlot, щоб не можна було кліком зняти чоботи "у повітря"
         if (isWeaponEquipmentSlot || isAmuletEquipmentSlot || isRingEquipmentSlot ||
             isBeltEquipmentSlot || isPetEquipmentSlot || isHelmetEquipmentSlot ||
-            isChestplateEquipmentSlot || isBracersEquipmentSlot) return;
+            isChestplateEquipmentSlot || isBracersEquipmentSlot || isBootsEquipmentSlot) return;
 
         Item itemToEquip = currentItem;
         string slotType = "";
@@ -119,7 +120,8 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         else if (itemToEquip is PetData) slotType = "Pet";
         else if (itemToEquip is HelmetData) slotType = "Helmet";
         else if (itemToEquip is ChestplateData) slotType = "Chestplate";
-        else if (itemToEquip is BracersData) slotType = "Bracers"; // --- ПЕРЕВІРКА КЛАСУ ДЛЯ НАРУЧІВ ---
+        else if (itemToEquip is BracersData) slotType = "Bracers";
+        else if (itemToEquip is BootsData) slotType = "Boots"; // --- ПЕРЕВІРКА КЛАСУ ДЛЯ ЧОБІТ ---
         else
         {
             InventoryManager.Instance.UseItem(itemToEquip);
@@ -158,7 +160,8 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
             else if (slotType == "Pet" && slot.isPetEquipmentSlot) slot.AddItem(itemToEquip, 1);
             else if (slotType == "Helmet" && slot.isHelmetEquipmentSlot) slot.AddItem(itemToEquip, 1);
             else if (slotType == "Chestplate" && slot.isChestplateEquipmentSlot) slot.AddItem(itemToEquip, 1);
-            else if (slotType == "Bracers" && slot.isBracersEquipmentSlot) slot.AddItem(itemToEquip, 1); // --- ЕКІПІРУВАННЯ В СЛОТ НАРУЧІВ ---
+            else if (slotType == "Bracers" && slot.isBracersEquipmentSlot) slot.AddItem(itemToEquip, 1);
+            else if (slotType == "Boots" && slot.isBootsEquipmentSlot) slot.AddItem(itemToEquip, 1); // --- ЕКІПІРУВАННЯ В СЛОТ ЧОБІТ ---
         }
 
         InventoryManager.Instance.UpdateUI();
@@ -242,7 +245,8 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         else if (isPetEquipmentSlot) InventoryManager.Instance.EquipItem(newItem, "Pet");
         else if (isHelmetEquipmentSlot) InventoryManager.Instance.EquipItem(newItem, "Helmet");
         else if (isChestplateEquipmentSlot) InventoryManager.Instance.EquipItem(newItem, "Chestplate");
-        else if (isBracersEquipmentSlot) InventoryManager.Instance.EquipItem(newItem, "Bracers"); // --- ПЕРЕДАЧА В ІНВЕНТАРНИЙ МЕНЕДЖЕР ---
+        else if (isBracersEquipmentSlot) InventoryManager.Instance.EquipItem(newItem, "Bracers");
+        else if (isBootsEquipmentSlot) InventoryManager.Instance.EquipItem(newItem, "Boots"); // --- ПЕРЕДАЧА ЧОБІТ В МЕНЕДЖЕР ---
     }
 
     public void ClearSlot()
@@ -254,7 +258,8 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         else if (isPetEquipmentSlot) InventoryManager.Instance.UnequipItem("Pet");
         else if (isHelmetEquipmentSlot) InventoryManager.Instance.UnequipItem("Helmet");
         else if (isChestplateEquipmentSlot) InventoryManager.Instance.UnequipItem("Chestplate");
-        else if (isBracersEquipmentSlot) InventoryManager.Instance.UnequipItem("Bracers"); // --- ЗНЯТТЯ НАРУЧІВ ---
+        else if (isBracersEquipmentSlot) InventoryManager.Instance.UnequipItem("Bracers");
+        else if (isBootsEquipmentSlot) InventoryManager.Instance.UnequipItem("Boots"); // --- ЗНЯТТЯ ЧОБІТ ---
 
         currentItem = null;
         currentAmount = 0;
@@ -275,7 +280,7 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         Item dragItem = sourceSlot.currentItem;
         if (dragItem == null) return;
 
-        // Перевірки валідності типу предмета для слотів (включаючи наручі)
+        // Перевірки валідності типу предмета для слотів (включаючи чоботи)
         if (this.isWeaponEquipmentSlot && !(dragItem is WeaponData)) return;
         if (this.isAmuletEquipmentSlot && !(dragItem is AmuletData)) return;
         if (this.isRingEquipmentSlot && !(dragItem is RingData)) return;
@@ -283,15 +288,17 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         if (this.isPetEquipmentSlot && !(dragItem is PetData)) return;
         if (this.isHelmetEquipmentSlot && !(dragItem is HelmetData)) return;
         if (this.isChestplateEquipmentSlot && !(dragItem is ChestplateData)) return;
-        if (this.isBracersEquipmentSlot && !(dragItem is BracersData)) return; // --- ЗАБОРОНА КЛАСТИ ІНШІ ПРЕДМЕТИ В СЛОТ НАРУЧІВ ---
+        if (this.isBracersEquipmentSlot && !(dragItem is BracersData)) return;
+        if (this.isBootsEquipmentSlot && !(dragItem is BootsData)) return; // --- ЗАБОРОНА КЛАСТИ ІНШІ ПРЕДМЕТИ В СЛОТ ЧОБІТ ---
 
+        // ➕ Враховуємо новий слот чобіт у загальних прапорцях перевірки екіпіровки
         bool isThisEquip = this.isWeaponEquipmentSlot || this.isAmuletEquipmentSlot || this.isRingEquipmentSlot ||
                            this.isBeltEquipmentSlot || this.isPetEquipmentSlot || this.isHelmetEquipmentSlot ||
-                           this.isChestplateEquipmentSlot || this.isBracersEquipmentSlot; // --- ДОДАНО ТУТ ---
+                           this.isChestplateEquipmentSlot || this.isBracersEquipmentSlot || this.isBootsEquipmentSlot;
 
         bool isSourceEquip = sourceSlot.isWeaponEquipmentSlot || sourceSlot.isAmuletEquipmentSlot || sourceSlot.isRingEquipmentSlot ||
                              sourceSlot.isBeltEquipmentSlot || sourceSlot.isPetEquipmentSlot || sourceSlot.isHelmetEquipmentSlot ||
-                             sourceSlot.isChestplateEquipmentSlot || sourceSlot.isBracersEquipmentSlot; // --- ДОДАНО ТУТ ---
+                             sourceSlot.isChestplateEquipmentSlot || sourceSlot.isBracersEquipmentSlot || sourceSlot.isBootsEquipmentSlot;
 
         Item replaceItem = this.currentItem;
 

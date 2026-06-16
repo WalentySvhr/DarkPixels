@@ -6,7 +6,7 @@ public class PlayerEquipment : MonoBehaviour
     public PlayerHealth playerHealth;
     public PlayerCombat playerCombat;
     public PlayerMovement playerMovement;
-    public PlayerMana playerMana; // 🌟 ДОДАНО ПОСИЛАННЯ НА МАНУ ГРАВЦЯ
+    public PlayerMana playerMana; // 🌟 ПОСИЛАННЯ НА МАНУ ГРАВЦЯ
 
     [Header("Поточна екіпіровка")]
     public AmuletData currentAmulet;
@@ -15,7 +15,8 @@ public class PlayerEquipment : MonoBehaviour
     public BeltData currentBelt;
     public HelmetData currentHelmet;
     public ChestplateData currentChestplate;
-    public BracersData currentBracers; // --- НОВИЙ ТИП: НАРУЧІ ---
+    public BracersData currentBracers;
+    public BootsData currentBoots; // --- НОВИЙ ТИП: ЧОБОТИ ---
     public PetData currentPet;
     public WeaponData currentWeapon;
 
@@ -150,6 +151,28 @@ public class PlayerEquipment : MonoBehaviour
         UpdateAllStats();
     }
 
+    // --- ЛОГІКА ЧОБІТ (ДОДАНО) ---
+    public void EquipBoots(BootsData newBoots)
+    {
+        if (newBoots == null || currentBoots == newBoots) return;
+        if (currentBoots != null) UnequipBoots();
+
+        currentBoots = newBoots;
+        if (playerHealth != null) playerHealth.AddBonusHealth(currentBoots.bonusMaxHealth);
+        UpdateAllStats();
+    }
+
+    public void UnequipBoots()
+    {
+        if (currentBoots == null) return;
+        if (playerHealth != null) playerHealth.RemoveBonusHealth(currentBoots.bonusMaxHealth);
+
+        if (playerMana != null) playerMana.RemoveManaEquipmentBonuses("Boots");
+
+        currentBoots = null;
+        UpdateAllStats();
+    }
+
     // --- ЛОГІКА КІЛЕЦЬ ---
     public void EquipRing(RingData newRing, int slotIndex)
     {
@@ -213,7 +236,6 @@ public class PlayerEquipment : MonoBehaviour
         float amCritM = (currentAmulet != null && currentAmulet.bonusCritMultiplier > 2f) ? currentAmulet.bonusCritMultiplier - 2f : 0f;
         int amRegen = currentAmulet?.healthRegenPerSecond ?? 0;
         float amArmor = currentAmulet?.bonusArmor ?? 0f;
-        // 🌟 Додаємо поля мани з Scriptable Object амулета (переконайся, що в змінних SO назва збігається)
         int amMaxMana = currentAmulet?.bonusMaxMana ?? 0;
         int amManaRegen = currentAmulet?.manaRegenPerSecond ?? 0;
 
@@ -258,6 +280,17 @@ public class PlayerEquipment : MonoBehaviour
         int brMaxMana = currentBracers?.bonusMaxMana ?? 0;
         int brManaRegen = currentBracers?.manaRegenPerSecond ?? 0;
 
+        // Стати чобіт (ДОДАНО)
+        int bootsDmg = currentBoots?.bonusDamage ?? 0;
+        float bootsAtkSpd = currentBoots?.bonusAttackSpeed ?? 0f;
+        float bootsMovSpd = currentBoots?.bonusMoveSpeed ?? 0f;
+        float bootsCrit = currentBoots?.bonusCritChance ?? 0f;
+        float bootsCritM = (currentBoots != null && currentBoots.bonusCritMultiplier > 2f) ? currentBoots.bonusCritMultiplier - 2f : 0f;
+        int bootsRegen = currentBoots?.healthRegenPerSecond ?? 0;
+        float bootsArmor = currentBoots?.bonusArmor ?? 0f;
+        int bootsMaxMana = currentBoots?.bonusMaxMana ?? 0;
+        int bootsManaRegen = currentBoots?.manaRegenPerSecond ?? 0;
+
         // Стати пета
         int petDmg = currentPet?.bonusDamage ?? 0;
 
@@ -296,19 +329,24 @@ public class PlayerEquipment : MonoBehaviour
         // Передача в системи бою (Combat)
         if (playerCombat != null)
         {
-            playerCombat.extraAmuletDamage = amDmg + bDmg + petDmg + cpDmg + brDmg;
+            // Додали bootsDmg до загального додаткового урону
+            playerCombat.extraAmuletDamage = amDmg + bDmg + petDmg + cpDmg + brDmg + bootsDmg;
             playerCombat.extraRingDamage = rDmg;
-            playerCombat.extraAttackSpeed = amAtkSpd + bAtkSpd + cpAtkSpd + brAtkSpd;
+
+            // Додали bootsAtkSpd до швидкості атаки
+            playerCombat.extraAttackSpeed = amAtkSpd + bAtkSpd + cpAtkSpd + brAtkSpd + bootsAtkSpd;
             playerCombat.extraRingAttackSpeed = rAtkSpd;
 
-            playerCombat.critChance = amCrit + bCrit + rCrit + hCrit + cpCrit + brCrit;
-            playerCombat.critMultiplier = 2f + amCritM + bCritM + rCritM + hCritM + cpCritM + brCritM;
+            // Додали крит та множник криту від чобіт
+            playerCombat.critChance = amCrit + bCrit + rCrit + hCrit + cpCrit + brCrit + bootsCrit;
+            playerCombat.critMultiplier = 2f + amCritM + bCritM + rCritM + hCritM + cpCritM + brCritM + bootsCritM;
         }
 
         // Передача в системи руху (Movement)
         if (playerMovement != null)
         {
-            playerMovement.extraSpeedMultiplier = amMovSpd + bMovSpd + cpMovSpd + brMovSpd;
+            // Додали bootsMovSpd до базового множника швидкості
+            playerMovement.extraSpeedMultiplier = amMovSpd + bMovSpd + cpMovSpd + brMovSpd + bootsMovSpd;
             playerMovement.extraRingSpeedMultiplier = rMovSpd;
         }
 
@@ -320,6 +358,7 @@ public class PlayerEquipment : MonoBehaviour
             playerHealth.StartBuffs(hRegen, hArmor, 2);                     // 2 = Шолом
             playerHealth.StartBuffs(cpRegen, cpArmor, 3);                   // 3 = Нагрудник
             playerHealth.StartBuffs(brRegen, brArmor, 4);                   // 4 = Наручі
+            playerHealth.StartBuffs(bootsRegen, bootsArmor, 5);             // 5 = Чоботи (Новий індекс бафу)
         }
 
         // 🌟 ЦЕНТРАЛІЗОВАНА ПЕРЕДАЧА В СИСТЕМУ МАНИ (PlayerMana)
@@ -330,6 +369,7 @@ public class PlayerEquipment : MonoBehaviour
             playerMana.AddManaEquipmentBonuses("Helmet", hMaxMana, hManaRegen);
             playerMana.AddManaEquipmentBonuses("Chestplate", cpMaxMana, cpManaRegen);
             playerMana.AddManaEquipmentBonuses("Bracers", brMaxMana, brManaRegen);
+            playerMana.AddManaEquipmentBonuses("Boots", bootsMaxMana, bootsManaRegen); // --- ДОДАНО ДЛЯ ЧОБІТ ---
             playerMana.AddManaEquipmentBonuses("Ring1", r1MaxMana, r1ManaRegen);
             playerMana.AddManaEquipmentBonuses("Ring2", r2MaxMana, r2ManaRegen);
         }

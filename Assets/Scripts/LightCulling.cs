@@ -14,24 +14,38 @@ public class LightCullingUnity6 : MonoBehaviour
     private float timer;
     private bool isLightOn = true;
 
+    // === ЗМІННІ ОПТИМІЗАЦІЇ ===
+    private float activationDistanceSqr; // Квадрат радіусу активації
+    private bool hasPlayer;
+    private bool hasLightHolder;
+
     void Start()
     {
         GameObject player = GameObject.FindWithTag("Player");
-        if (player != null) playerTransform = player.transform;
+        if (player != null)
+        {
+            playerTransform = player.transform;
+            hasPlayer = true;
+        }
 
-        // Якщо ти забув перетягнути об'єкт в інспекторі, 
-        // скрипт спробує взяти перший дочірній об'єкт автоматично
         if (lightHolder == null && transform.childCount > 0)
         {
             lightHolder = transform.GetChild(0).gameObject;
         }
 
+        hasLightHolder = lightHolder != null;
+
+        // Попередньо рахуємо квадрат відстані (радіус * радіус)
+        activationDistanceSqr = activationDistance * activationDistance;
+
+        // Рандомізуємо старт таймера, щоб усі лампи не робили перевірку в один і той самий кадр
         timer = Random.Range(0f, checkInterval);
     }
 
     void Update()
     {
-        if (playerTransform == null || lightHolder == null) return;
+        // Швидка перевірка через булеві змінні (набагато швидша за null-check об'єктів Unity)
+        if (!hasPlayer || !hasLightHolder) return;
 
         timer += Time.deltaTime;
         if (timer >= checkInterval)
@@ -43,14 +57,17 @@ public class LightCullingUnity6 : MonoBehaviour
 
     void CheckDistance()
     {
-        float distance = Vector2.Distance(transform.position, playerTransform.position);
-        bool shouldBeOn = distance <= activationDistance;
+        // Рахуємо квадрат відстані без обчислення квадратного кореня
+        float sqrDistance = ((Vector2)transform.position - (Vector2)playerTransform.position).sqrMagnitude;
+
+        // Порівнюємо квадрати відстаней
+        bool shouldBeOn = sqrDistance <= activationDistanceSqr;
 
         if (shouldBeOn != isLightOn)
         {
             isLightOn = shouldBeOn;
 
-            // Повністю деактивуємо об'єкт зі світлом. 
+            // Повністю деактивуємо об'єкт зі світлом.
             // В Unity 6 це примусово видаляє джерело з системи освітлення.
             lightHolder.SetActive(isLightOn);
         }

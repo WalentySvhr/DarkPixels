@@ -9,6 +9,7 @@ public class StatsUI : MonoBehaviour
     public PlayerCombat playerCombat;
     public PlayerHealth playerHealth;
     public PlayerMovement playerMovement;
+    public PlayerMana playerMana; // 🌟 ДОДАНО ПОСИЛАННЯ НА МАНУ ДЛЯ ПРАВИЛЬНОГО ВІДОБРАЖЕННЯ
 
     [Header("UI Текстові поля")]
     public TextMeshProUGUI damageText;
@@ -52,8 +53,9 @@ public class StatsUI : MonoBehaviour
         if (playerCombat == null) playerCombat = FindFirstObjectByType<PlayerCombat>();
         if (playerHealth == null) playerHealth = FindFirstObjectByType<PlayerHealth>();
         if (playerMovement == null) playerMovement = FindFirstObjectByType<PlayerMovement>();
+        if (playerMana == null) playerMana = FindFirstObjectByType<PlayerMana>(); // Знаходимо систему мани
 
-        // Отримуємо посилання на систему екіпіровки для підрахунку чистих бонусів з Scriptable Objects
+        // Отримуємо посилання на систему екіпіровки
         PlayerEquipment eq = FindFirstObjectByType<PlayerEquipment>();
 
         // --- 1. БОЙОВІ ХАРАКТЕРИСТИКИ ---
@@ -61,7 +63,7 @@ public class StatsUI : MonoBehaviour
         {
             // ⚔️ УРОН
             int baseDamage = playerCombat.currentWeaponData != null ? playerCombat.currentWeaponData.damage : playerCombat.unarmedDamage;
-            int bonusDamage = playerCombat.extraAmuletDamage + playerCombat.extraRingDamage;
+            int bonusDamage = playerCombat.extraAmuletDamage + playerCombat.extraRingDamage; // В PlayerEquipment сюди вже входить і урон від чобіт
             int totalDamage = baseDamage + bonusDamage;
 
             if (damageText != null)
@@ -74,7 +76,7 @@ public class StatsUI : MonoBehaviour
             if (attackSpeedText != null)
             {
                 float baseCd = playerCombat.currentWeaponData != null ? playerCombat.currentWeaponData.cooldown : playerCombat.unarmedCooldown;
-                float totalBonus = playerCombat.extraAttackSpeed + playerCombat.extraRingAttackSpeed;
+                float totalBonus = playerCombat.extraAttackSpeed + playerCombat.extraRingAttackSpeed; // Сюди також уже входить бонус від чобіт через PlayerEquipment
 
                 float baseAps = 1f / baseCd;
                 float totalAps = baseAps * (1f + totalBonus);
@@ -92,12 +94,13 @@ public class StatsUI : MonoBehaviour
 
                 if (eq != null)
                 {
-                    // Динамічно збираємо шанс крита з абсолютно всіх наявних слотів
+                    // ➕ ДОДАНО: eq.currentBoots?.bonusCritChance
                     bonusCritPct = ((eq.currentAmulet?.bonusCritChance ?? 0f) +
                                     (eq.currentBelt?.bonusCritChance ?? 0f) +
                                     (eq.currentHelmet?.bonusCritChance ?? 0f) +
                                     (eq.currentChestplate?.bonusCritChance ?? 0f) +
                                     (eq.currentBracers?.bonusCritChance ?? 0f) +
+                                    (eq.currentBoots?.bonusCritChance ?? 0f) +
                                     (eq.currentRing1?.bonusCritChance ?? 0f) +
                                     (eq.currentRing2?.bonusCritChance ?? 0f)) * 100f;
                 }
@@ -119,6 +122,8 @@ public class StatsUI : MonoBehaviour
                     if (eq.currentBracers != null && eq.currentBracers.bonusCritMultiplier > 2f) bonusCritM += eq.currentBracers.bonusCritMultiplier - 2f;
                     if (eq.currentRing1 != null && eq.currentRing1.bonusCritMultiplier > 2f) bonusCritM += eq.currentRing1.bonusCritMultiplier - 2f;
                     if (eq.currentRing2 != null && eq.currentRing2.bonusCritMultiplier > 2f) bonusCritM += eq.currentRing2.bonusCritMultiplier - 2f;
+                    // ➕ ДОДАНО ДЛЯ ЧОБІТ:
+                    if (eq.currentBoots != null && eq.currentBoots.bonusCritMultiplier > 2f) bonusCritM += eq.currentBoots.bonusCritMultiplier - 2f;
                 }
 
                 string bonusStr = bonusCritM > 0f ? $" <color={bonusColorTag}>(+{bonusCritM:F1}x)</color>" : "";
@@ -135,11 +140,13 @@ public class StatsUI : MonoBehaviour
                 int bonusHealth = 0;
                 if (eq != null)
                 {
+                    // ➕ ДОДАНО: eq.currentBoots?.bonusMaxHealth
                     bonusHealth = (eq.currentAmulet?.bonusMaxHealth ?? 0) +
                                   (eq.currentBelt?.bonusMaxHealth ?? 0) +
                                   (eq.currentHelmet?.bonusMaxHealth ?? 0) +
                                   (eq.currentChestplate?.bonusMaxHealth ?? 0) +
                                   (eq.currentBracers?.bonusMaxHealth ?? 0) +
+                                  (eq.currentBoots?.bonusMaxHealth ?? 0) +
                                   (eq.currentRing1?.bonusMaxHealth ?? 0) +
                                   (eq.currentRing2?.bonusMaxHealth ?? 0) +
                                   (int)(eq.currentPet?.bonusHealth ?? 0f);
@@ -155,30 +162,29 @@ public class StatsUI : MonoBehaviour
                 int bonusMana = 0;
                 if (eq != null)
                 {
+                    // ➕ ДОДАНО: eq.currentBoots?.bonusMaxMana
                     bonusMana = (eq.currentAmulet?.bonusMaxMana ?? 0) +
                                 (eq.currentBelt?.bonusMaxMana ?? 0) +
                                 (eq.currentHelmet?.bonusMaxMana ?? 0) +
                                 (eq.currentChestplate?.bonusMaxMana ?? 0) +
                                 (eq.currentBracers?.bonusMaxMana ?? 0) +
+                                (eq.currentBoots?.bonusMaxMana ?? 0) +
                                 (eq.currentRing1?.bonusMaxMana ?? 0) +
                                 (eq.currentRing2?.bonusMaxMana ?? 0);
                 }
 
                 string bonusStr = bonusMana > 0 ? $" <color={bonusColorTag}>(+{bonusMana})</color>" : "";
 
-                // Зверніть увагу: якщо maxMana лежить у PlayerMana, замініть playerHealth.maxHealth на посилання до мани.
-                // Поки що залишаємо заглушку або базове поле, щоб не було помилок компіляції.
-                int displayMana = bonusMana; // Або playerMana.maxMana;
+                // ✨ ВИПРАВЛЕНО ЗАГЛУШКУ: Отримуємо реальне значення макс. мани зі скрипта PlayerMana
+                int displayMana = playerMana != null ? playerMana.maxMana : bonusMana;
                 maxManaText.text = $"{maxManaLabel}{displayMana}{bonusStr}";
             }
 
-            // 🛡️ БРОНЯ (УНІВЕРСАЛЬНО ОПТИМІЗОВАНО)
+            // 🛡️ БРОНЯ
             if (armorText != null)
             {
-                // Отримуємо значення броні ОДНИМ викликом з нашого нового словника в PlayerHealth!
-                float totalArmor = playerHealth.GetTotalArmor();
+                float totalArmor = playerHealth.GetTotalArmor(); // В PlayerHealth вже враховано індекс бафу 5 (чоботи)
 
-                // Розраховуємо реальний відсоток поглинання шкоди (K = 400) за тією ж формулою
                 float K = 400f;
                 float multiplier = K / (K + totalArmor);
                 float damageReduction = (1f - multiplier) * 100f;
@@ -188,11 +194,10 @@ public class StatsUI : MonoBehaviour
                 armorText.text = $"{armorLabel}{totalArmor}{bonusStr}";
             }
 
-            // 🧪 РЕГЕНЕРАЦІЯ ХП (УНІВЕРСАЛЬНО ОПТИМІЗОВАНО)
+            // 🧪 РЕГЕНЕРАЦІЯ ХП
             if (healthRegenText != null)
             {
-                // Отримуємо сумарний реген ОДНИМ викликом зі словника PlayerHealth!
-                int totalRegen = playerHealth.GetTotalRegen();
+                int totalRegen = playerHealth.GetTotalRegen(); // Тут теж автоматично враховано реген від чобіт
 
                 string bonusStr = totalRegen > 0 ? $" <color={bonusColorTag}>(+{totalRegen})</color>" : "";
                 healthRegenText.text = $"{regenLabel}+{totalRegen} HP/s{bonusStr}";
@@ -204,11 +209,13 @@ public class StatsUI : MonoBehaviour
                 int totalManaRegen = 0;
                 if (eq != null)
                 {
+                    // ➕ ДОДАНО: eq.currentBoots?.manaRegenPerSecond
                     totalManaRegen = (eq.currentAmulet?.manaRegenPerSecond ?? 0) +
                                      (eq.currentBelt?.manaRegenPerSecond ?? 0) +
                                      (eq.currentHelmet?.manaRegenPerSecond ?? 0) +
                                      (eq.currentChestplate?.manaRegenPerSecond ?? 0) +
                                      (eq.currentBracers?.manaRegenPerSecond ?? 0) +
+                                     (eq.currentBoots?.manaRegenPerSecond ?? 0) +
                                      (eq.currentRing1?.manaRegenPerSecond ?? 0) +
                                      (eq.currentRing2?.manaRegenPerSecond ?? 0);
                 }
@@ -222,7 +229,13 @@ public class StatsUI : MonoBehaviour
         if (playerMovement != null && moveSpeedText != null)
         {
             float totalSpeedBonus = playerMovement.extraSpeedMultiplier + playerMovement.extraRingSpeedMultiplier;
-            if (eq != null && eq.currentBelt != null) totalSpeedBonus += eq.currentBelt.bonusMoveSpeed;
+
+            // ➕ ДОДАНО: Перевірка швидкості від чобіт (якщо пояс окремо перевірявся, чоботи мають бути тут обов'язково)
+            if (eq != null)
+            {
+                if (eq.currentBelt != null) totalSpeedBonus += eq.currentBelt.bonusMoveSpeed;
+                if (eq.currentBoots != null) totalSpeedBonus += eq.currentBoots.bonusMoveSpeed;
+            }
 
             float baseSpeed = playerMovement.moveSpeed;
             float finalSpeed = baseSpeed * (1f + totalSpeedBonus);

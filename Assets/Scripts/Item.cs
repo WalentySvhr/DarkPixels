@@ -1,7 +1,7 @@
 using UnityEngine;
 
-// Категорії предметів
-public enum ItemType { Food, Potion, Resource, Junk, Weapon, Amulet, Ring, Belt, Pet, Helmet, Chestplate, Bracers }
+// Категорії предметів (Додано Boots)
+public enum ItemType { Food, Potion, Resource, Junk, Weapon, Amulet, Ring, Belt, Pet, Helmet, Chestplate, Bracers, Boots }
 
 // Структура для розділеного опису предмета
 public struct ItemDescription
@@ -43,15 +43,24 @@ public class Item : ScriptableObject
         string main = $"Type: {typeDisplay}\n";
 
         if (healValue > 0)
+        {
             main += $"<color=green>Heal: +{healValue} HP</color>";
+        }
         else if (type == ItemType.Resource)
+        {
             main += "Material for crafting";
+        }
         else if (type == ItemType.Junk)
+        {
             main += "Has no practical value";
-        // --- ОНОВЛЕНО: Додано Helmet, Chestplate та Bracers у список екіпірування/аксесуарів ---
+        }
+        // --- ОНОВЛЕНО: Додано Boots у список магічного екіпірування/аксесуарів ---
         else if (type == ItemType.Ring || type == ItemType.Amulet || type == ItemType.Belt ||
-                 type == ItemType.Helmet || type == ItemType.Chestplate || type == ItemType.Bracers)
+                 type == ItemType.Helmet || type == ItemType.Chestplate || type == ItemType.Bracers ||
+                 type == ItemType.Boots)
+        {
             main += "Magical accessory";
+        }
 
         if (isQuestItem)
         {
@@ -93,8 +102,9 @@ public class Item : ScriptableObject
             case ItemType.Belt: return "Belt";
             case ItemType.Pet: return "Pet";
             case ItemType.Helmet: return "Helmet";
-            case ItemType.Chestplate: return "Chestplate"; // --- ДОДАНО ---
-            case ItemType.Bracers: return "Bracers";       // --- ДОДАНО ---
+            case ItemType.Chestplate: return "Chestplate";
+            case ItemType.Bracers: return "Bracers";
+            case ItemType.Boots: return "Boots";         // --- ДОДАНО ---
             default: return "Item";
         }
     }

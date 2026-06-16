@@ -1,6 +1,6 @@
 using UnityEngine;
 using System.Collections;
-using System.Collections.Generic; // Додано для списків
+using System.Collections.Generic;
 
 [RequireComponent(typeof(PolygonCollider2D))]
 public class PolygonAreaSpawner : MonoBehaviour
@@ -17,7 +17,6 @@ public class PolygonAreaSpawner : MonoBehaviour
     public float minSpawnDelay = 10f;
     public float maxSpawnDelay = 30f;
 
-    // === НОВЕ: НАЛАШТУВАННЯ ЗБЕРЕЖЕННЯ ТАЙМЕРА ===
     [Header("Long Respawn Save Settings")]
     [Tooltip("Увімкни це для елітних мобів/босів із довгим респавном (наприклад, 5 годин), щоб час кулдауну не скидався при перезапуску гри.")]
     public bool persistSpawnTimer = false;
@@ -28,14 +27,10 @@ public class PolygonAreaSpawner : MonoBehaviour
     public float maxLongBreakMinutes = 5f;
 
     [Header("Boss Settings (Optional)")]
-    [Tooltip("Залиш порожнім для відкритого світу")]
     public BossTrigger bossTrigger;
 
-    // === НАЛАШТУВАННЯ ПЕРЕВІРКИ ПЕРЕШКОД ===
     [Header("Obstacle Avoidance Settings")]
-    [Tooltip("Вибери тут шар, на якому знаходяться твої дерева/каміння (наприклад, Obstacles)")]
     public LayerMask obstacleLayer;
-    [Tooltip("Радіус фізичного кола для перевірки вільного місця навколо точки")]
     public float spawnCheckRadius = 0.4f;
 
     [Header("Optimization")]
@@ -52,26 +47,59 @@ public class PolygonAreaSpawner : MonoBehaviour
 
     public AreaQuestManager questManager;
 
-    // Ключ для збереження часу в PlayerPrefs (унікальний для кожного спавнера завдяки імені об'єкта)
-    private string SaveKey => "Spawner_" + gameObject.name + "_RespawnTime";
+    // === КЕШУВАННЯ ДЛЯ ОПТИМІЗАЦІЇ ===
+    private string cachedSaveKey;
+    private List<GameObject> validPrefabs = new List<GameObject>(); // Очищений список префабів у пам'яті
+    private float activationDistanceSqr; // Квадрат дистанції активації
+    private WaitForSeconds oneSecondWait;
+    private WaitForSeconds twoSecondWait;
+    private bool hasPlayer;
+    private bool hasBossTrigger;
+    private bool hasQuestManager;
 
     void Awake()
     {
         spawnArea = GetComponent<PolygonCollider2D>();
         spawnArea.isTrigger = true;
+
+        // Кешуємо ключ збереження один раз, щоб не склеювати рядки в процесі гри
+        cachedSaveKey = "Spawner_" + gameObject.name + "_RespawnTime";
     }
 
     void Start()
     {
         GameObject player = GameObject.FindGameObjectWithTag("Player");
-        if (player != null) playerTransform = player.transform;
+        if (player != null)
+        {
+            playerTransform = player.transform;
+            hasPlayer = true;
+        }
 
-        if (questManager != null)
+        hasBossTrigger = bossTrigger != null;
+        hasQuestManager = questManager != null;
+
+        if (hasQuestManager)
         {
             deathsBeforeLongBreak = questManager.killsRequired;
         }
 
-        // === ОНОВЛЕНО: Перевірка збереженого таймера при старті гри ===
+        // Попередній підрахунок квадрата відстані
+        activationDistanceSqr = activationDistance * activationDistance;
+
+        // Кешуємо WaitForSeconds для корутин
+        oneSecondWait = new WaitForSeconds(1f);
+        twoSecondWait = new WaitForSeconds(2f);
+
+        // Фільтруємо префаби ОДИН РАЗ на старті гри, замість того, щоб робити це при кожному спавні
+        validPrefabs.Clear();
+        if (enemyPrefabs != null && enemyPrefabs.Length > 0)
+        {
+            foreach (GameObject prefab in enemyPrefabs)
+            {
+                if (prefab != null) validPrefabs.Add(prefab);
+            }
+        }
+
         if (persistSpawnTimer)
         {
             StartCoroutine(CheckSavedSpawnAndFill());
@@ -84,11 +112,12 @@ public class PolygonAreaSpawner : MonoBehaviour
 
     void Update()
     {
-        if (!isSpawningActive || playerTransform == null || isOnLongBreak) return;
+        if (!isSpawningActive || !hasPlayer || isOnLongBreak) return;
 
-        float distance = Vector2.Distance(transform.position, playerTransform.position);
+        // Рахуємо квадрат відстані без квадратного кореня (заощаджує ресурси мобільного процесора)
+        float sqrDistance = ((Vector2)transform.position - (Vector2)playerTransform.position).sqrMagnitude;
 
-        if (distance > activationDistance || currentEnemyCount >= maxEnemies) return;
+        if (sqrDistance > activationDistanceSqr || currentEnemyCount >= maxEnemies) return;
 
         if (!isSpawning)
         {
@@ -96,20 +125,17 @@ public class PolygonAreaSpawner : MonoBehaviour
         }
     }
 
-    // Корутина перевірки збереженого часу кулдауну
     IEnumerator CheckSavedSpawnAndFill()
     {
         while (TimeManager.Instance == null || !TimeManager.Instance.IsReady()) yield return null;
 
-        if (PlayerPrefs.HasKey(SaveKey))
+        if (PlayerPrefs.HasKey(cachedSaveKey))
         {
-            long savedUnlockTime = long.Parse(PlayerPrefs.GetString(SaveKey));
+            long savedUnlockTime = long.Parse(PlayerPrefs.GetString(cachedSaveKey));
             long currentTime = TimeManager.Instance.GetCurrentUnixTime();
 
             if (currentTime < savedUnlockTime)
             {
-                // Час респавну ще не настав, моб залишається мертвим.
-                // Update() сам запустить кулдаун на залишок часу.
                 yield break;
             }
         }
@@ -136,12 +162,11 @@ public class PolygonAreaSpawner : MonoBehaviour
 
         long spawnTime = TimeManager.Instance.GetCurrentUnixTime() + (long)randomDelay;
 
-        // === ОНОВЛЕНО: Логіка збереження/зчитування майбутнього часу спавну ===
         if (persistSpawnTimer)
         {
-            if (PlayerPrefs.HasKey(SaveKey))
+            if (PlayerPrefs.HasKey(cachedSaveKey))
             {
-                long savedUnlockTime = long.Parse(PlayerPrefs.GetString(SaveKey));
+                long savedUnlockTime = long.Parse(PlayerPrefs.GetString(cachedSaveKey));
                 if (savedUnlockTime > TimeManager.Instance.GetCurrentUnixTime())
                 {
                     spawnTime = savedUnlockTime;
@@ -149,7 +174,7 @@ public class PolygonAreaSpawner : MonoBehaviour
             }
             else
             {
-                PlayerPrefs.SetString(SaveKey, spawnTime.ToString());
+                PlayerPrefs.SetString(cachedSaveKey, spawnTime.ToString());
                 PlayerPrefs.Save();
             }
         }
@@ -161,17 +186,16 @@ public class PolygonAreaSpawner : MonoBehaviour
                 isSpawning = false;
                 yield break;
             }
-            yield return new WaitForSeconds(1f);
+            yield return oneSecondWait; // Оптимізовано: нуль сміття
         }
 
         if (currentEnemyCount < maxEnemies && !isOnLongBreak && isSpawningActive)
         {
             SpawnInPolygon();
 
-            // Моб успішно з'явився, видаляємо запис кулдауну
             if (persistSpawnTimer)
             {
-                PlayerPrefs.DeleteKey(SaveKey);
+                PlayerPrefs.DeleteKey(cachedSaveKey);
                 PlayerPrefs.Save();
             }
         }
@@ -180,32 +204,16 @@ public class PolygonAreaSpawner : MonoBehaviour
 
     void SpawnInPolygon()
     {
-        if (spawnArea == null) return;
+        if (spawnArea == null || validPrefabs.Count == 0) return;
 
-        List<GameObject> validPrefabs = new List<GameObject>();
-        if (enemyPrefabs != null && enemyPrefabs.Length > 0)
-        {
-            foreach (GameObject prefab in enemyPrefabs)
-            {
-                if (prefab != null)
-                {
-                    validPrefabs.Add(prefab);
-                }
-            }
-        }
-
-        if (validPrefabs.Count == 0)
-        {
-            Debug.LogWarning("Spawner " + gameObject.name + " не має префабів ворогів!");
-            return;
-        }
-
+        // Вибираємо закешований префаб
         GameObject prefabToSpawn = validPrefabs[Random.Range(0, validPrefabs.Count)];
 
         Bounds bounds = spawnArea.bounds;
         Vector2 spawnPos = Vector2.zero;
         bool validPositionFound = false;
 
+        // Логіка оверлапу залишається математично правильною
         for (int i = 0; i < 30; i++)
         {
             float randomXPos = Random.Range(bounds.min.x, bounds.max.x);
@@ -230,7 +238,7 @@ public class PolygonAreaSpawner : MonoBehaviour
         GameObject enemy = Instantiate(prefabToSpawn, spawnPos, Quaternion.identity);
         currentEnemyCount++;
 
-        if (bossTrigger != null)
+        if (hasBossTrigger)
         {
             bossTrigger.RegisterEnemy(enemy);
         }
@@ -253,7 +261,7 @@ public class PolygonAreaSpawner : MonoBehaviour
         currentEnemyCount--;
         totalDeathsInSession++;
 
-        if (questManager != null)
+        if (hasQuestManager)
         {
             questManager.OnEnemyKilled();
         }
@@ -276,7 +284,7 @@ public class PolygonAreaSpawner : MonoBehaviour
 
         while (TimeManager.Instance.GetCurrentUnixTime() < unlockTime)
         {
-            yield return new WaitForSeconds(2f);
+            yield return twoSecondWait; // Оптимізовано: нуль сміття
         }
 
         isOnLongBreak = false;
@@ -285,7 +293,6 @@ public class PolygonAreaSpawner : MonoBehaviour
     public void StopSpawningPermanently()
     {
         isSpawningActive = false;
-        Debug.Log($"<color=red>Спавнер {gameObject.name} назавжди вимкнено (прийшов бос)!</color>");
     }
 
     private void OnDrawGizmos()
@@ -302,21 +309,18 @@ public class PolygonAreaSpawner : MonoBehaviour
     {
         isSpawningActive = true;
         isOnLongBreak = false;
-
         currentEnemyCount = 0;
         totalDeathsInSession = 0;
         isSpawning = false;
 
-        // === ОНОВЛЕНО: Очищення сейву таймера при примусовому рестарті спавнера ===
         if (persistSpawnTimer)
         {
-            PlayerPrefs.DeleteKey(SaveKey);
+            PlayerPrefs.DeleteKey(cachedSaveKey);
             PlayerPrefs.Save();
         }
 
+        // Безпечно зупиняємо корутини перед повторним запуском
         StopAllCoroutines();
         InitialFill();
-
-        Debug.Log($"<color=orange>Спавнер {gameObject.name} успішно перезавантажено для поверху {TowerManager.Instance.currentFloor}!</color>");
     }
 }
