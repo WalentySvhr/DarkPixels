@@ -1,5 +1,5 @@
 using UnityEngine;
-using Cinemachine; // Для вашої версії Cinemachine
+using Cinemachine;
 
 public class LocalTeleport : MonoBehaviour
 {
@@ -7,6 +7,10 @@ public class LocalTeleport : MonoBehaviour
     public Transform targetLocation;
     public bool isActive = false;
     public string locationName = "Відкритий світ";
+    public bool requireConfirmation = true;
+
+    [TextArea(2, 4)] // Робить поле зручним для введення тексту в кілька рядків
+    public string confirmationMessage = "Бажаєте телепортуватись?";
 
     [Header("Налаштування Башти")]
     public bool isEntranceToTower = false;
@@ -16,48 +20,56 @@ public class LocalTeleport : MonoBehaviour
     {
         if (isActive && collision.CompareTag("Player"))
         {
-            Vector3 oldPos = collision.transform.position;
-
-            // 1. Скидаємо швидкість
-            Rigidbody2D rb = collision.GetComponent<Rigidbody2D>();
-            if (rb != null)
+            if (requireConfirmation && TeleportConfirmationUI.Instance != null)
             {
-                rb.linearVelocity = Vector2.zero;
-                rb.angularVelocity = 0f;
+                // ПЕРЕДАЄМО ТЕКСТ разом з іншими даними
+                TeleportConfirmationUI.Instance.ShowDialog(this, collision.gameObject, confirmationMessage);
             }
-
-            // 2. Переміщуємо гравця
-            if (targetLocation != null)
+            else
             {
-                // Примусово створюємо вектор із Z = 0, ігноруючи Z-координату точки targetLocation
-                Vector3 safeNewPosition = new Vector3(targetLocation.position.x, targetLocation.position.y, 0f);
-                collision.transform.position = safeNewPosition;
-
-                // 3. АВТОМАТИЧНИЙ ПОШУК КАМЕРИ
-                CinemachineVirtualCamera vcam = FindFirstObjectByType<CinemachineVirtualCamera>();
-
-                if (vcam != null)
-                {
-                    Vector3 delta = safeNewPosition - oldPos; // Використовуємо безпечну позицію для дельти камери
-                    vcam.OnTargetObjectWarped(collision.transform, delta);
-                }
+                PerformTeleport(collision.gameObject);
             }
-            // 4. Твій інший код (Announcer, TowerManager...)
-            if (LocationAnnouncer.Instance != null)
-                LocationAnnouncer.Instance.ShowLocation(locationName);
+        }
+    }
 
-            if (TowerManager.Instance != null)
+    public void PerformTeleport(GameObject player)
+    {
+        Vector3 oldPos = player.transform.position;
+
+        Rigidbody2D rb = player.GetComponent<Rigidbody2D>();
+        if (rb != null)
+        {
+            rb.linearVelocity = Vector2.zero;
+            rb.angularVelocity = 0f;
+        }
+
+        if (targetLocation != null)
+        {
+            Vector3 safeNewPosition = new Vector3(targetLocation.position.x, targetLocation.position.y, 0f);
+            player.transform.position = safeNewPosition;
+
+            CinemachineVirtualCamera vcam = FindFirstObjectByType<CinemachineVirtualCamera>();
+            if (vcam != null)
             {
-                if (isEntranceToTower)
-                {
-                    TowerManager.Instance.IsPlayerInTower = true; // Блокуємо відкриття мапи
-                    TowerManager.Instance.StartTowerRun();
-                }
-                else if (resetTowerOnExit)
-                {
-                    TowerManager.Instance.IsPlayerInTower = false; // Розблоковуємо мапу
-                    TowerManager.Instance.ResetTowerProgress();
-                }
+                Vector3 delta = safeNewPosition - oldPos;
+                vcam.OnTargetObjectWarped(player.transform, delta);
+            }
+        }
+
+        if (LocationAnnouncer.Instance != null)
+            LocationAnnouncer.Instance.ShowLocation(locationName);
+
+        if (TowerManager.Instance != null)
+        {
+            if (isEntranceToTower)
+            {
+                TowerManager.Instance.IsPlayerInTower = true;
+                TowerManager.Instance.StartTowerRun();
+            }
+            else if (resetTowerOnExit)
+            {
+                TowerManager.Instance.IsPlayerInTower = false;
+                TowerManager.Instance.ResetTowerProgress();
             }
         }
     }
@@ -67,17 +79,5 @@ public class LocalTeleport : MonoBehaviour
         isActive = true;
         SpriteRenderer sr = GetComponent<SpriteRenderer>();
         if (sr != null) sr.color = Color.white;
-    }
-
-    private void OnDisable()
-    {
-        // Цей метод спрацює, якщо об'єкту роблять SetActive(false)
-        Debug.Log($"<color=yellow>[DEACTIVATED]</color> Двері '{gameObject.name}' були ВИМКНЕНІ! Перевір стек викликів нижче:", gameObject);
-    }
-
-    private void OnDestroy()
-    {
-        // Цей метод спрацює, якщо об'єкт видаляють через Destroy()
-        Debug.Log($"<color=red>[DESTROYED]</color> Двері '{gameObject.name}' були ЗНИЩЕНІ! Перевір стек викликів нижче:", gameObject);
     }
 }

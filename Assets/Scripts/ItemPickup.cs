@@ -12,7 +12,7 @@ public class ItemPickup : MonoBehaviour
     {
         // Запускаємо таймер на 0.8 секунд. 
         // Зміни цю цифру, якщо хочеш, щоб предмет лежав "недоторканим" довше або менше.
-        Invoke(nameof(EnablePickup), 0.8f);
+        Invoke(nameof(EnablePickup), 1.1f);
     }
 
     void EnablePickup()

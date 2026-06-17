@@ -10,7 +10,8 @@ public class MapZoom : MonoBehaviour
     [SerializeField] private Transform playerTransform;
     [SerializeField] private float minSize = 5f;
     [SerializeField] private float maxSize = 50f;
-    [SerializeField] private float zoomSpeed = 20f;
+    [SerializeField] private float zoomSpeedMouse = 20f;
+    [SerializeField] private float zoomSpeedTouch = 0.05f; // Швидкість зуму для тачу
 
     [Header("Піксельна сітка")]
     [Tooltip("Кількість пікселів на юніт у твоїх спрайтах (наприклад, 16 або 32)")]
@@ -27,17 +28,20 @@ public class MapZoom : MonoBehaviour
 
     private void Update()
     {
-        // ПЕРЕВІРКА: Якщо ми в башті, виходимо з Update і нічого не робимо
-        if (TowerManager.Instance != null && TowerManager.Instance.IsPlayerInTower)
-        {
-            return;
-        }
+        if (TowerManager.Instance != null && TowerManager.Instance.IsPlayerInTower) return;
 
-        HandleZoom();
-        HandleDrag();
+        // Перевіряємо, чи грають на телефоні (є хоча б один дотик)
+        if (Input.touchCount > 0)
+        {
+            HandleTouchControls();
+        }
+        else // Якщо тачів немає, працює керування для ПК
+        {
+            HandleMouseZoom();
+            HandleMouseDrag();
+        }
     }
 
-    // Камери завжди мають позиціонуватися в LateUpdate, щоб уникнути тремтіння (jittering)
     private void LateUpdate()
     {
         if (TowerManager.Instance != null && TowerManager.Instance.IsPlayerInTower) return;
@@ -46,29 +50,88 @@ public class MapZoom : MonoBehaviour
         ApplyPixelSnapping();
     }
 
-    private void HandleZoom()
+    #region КЕРУВАННЯ ДЛЯ ТЕЛЕФОНІВ (TOUCH)
+
+    private void HandleTouchControls()
+    {
+        // 1. ЗУМ ДВОМА ПАЛЬЦЯМИ (Pinch to Zoom)
+        if (Input.touchCount == 2)
+        {
+            Touch touchZero = Input.GetTouch(0);
+            Touch touchOne = Input.GetTouch(1);
+
+            // Знаходимо позицію пальців у попередньому кадрі
+            Vector2 touchZeroPrevPos = touchZero.position - touchZero.deltaPosition;
+            Vector2 touchOnePrevPos = touchOne.position - touchOne.deltaPosition;
+
+            // Рахуємо відстань між пальцями в цьому та попередньому кадрах
+            float prevTouchDeltaMag = (touchZeroPrevPos - touchOnePrevPos).magnitude;
+            float touchDeltaMag = (touchZero.position - touchOne.position).magnitude;
+
+            // Різниця показує, зводять пальці чи розводять
+            float deltaMagnitudeDiff = prevTouchDeltaMag - touchDeltaMag;
+
+            // Змінюємо розмір камери
+            mapCamera.orthographicSize = Mathf.Clamp(
+                mapCamera.orthographicSize + deltaMagnitudeDiff * zoomSpeedTouch,
+                minSize,
+                maxSize
+            );
+        }
+        // 2. ПЕРЕТЯГУВАННЯ ОДНИМ ПАЛЬЦЕМ
+        else if (Input.touchCount == 1)
+        {
+            Touch touch = Input.GetTouch(0);
+
+            if (touch.phase == TouchPhase.Began)
+            {
+                dragOrigin = mapCamera.ScreenToWorldPoint(touch.position);
+            }
+            else if (touch.phase == TouchPhase.Moved)
+            {
+                Vector3 currentTouchPos = mapCamera.ScreenToWorldPoint(touch.position);
+                Vector3 difference = dragOrigin - currentTouchPos;
+
+                // Зміщуємо камеру з урахуванням руху пальця
+                transform.position += difference;
+
+                // Оновлюємо origin, щоб перетягування було плавним і без ривків
+                dragOrigin = mapCamera.ScreenToWorldPoint(touch.position);
+            }
+        }
+    }
+
+    #endregion
+
+    #region КЕРУВАННЯ ДЛЯ ПК (MOUSE)
+
+    private void HandleMouseZoom()
     {
         float scroll = Input.GetAxis("Mouse ScrollWheel");
         if (scroll != 0)
         {
             Vector3 mouseBefore = mapCamera.ScreenToWorldPoint(Input.mousePosition);
-            mapCamera.orthographicSize = Mathf.Clamp(mapCamera.orthographicSize - scroll * zoomSpeed, minSize, maxSize);
+            mapCamera.orthographicSize = Mathf.Clamp(mapCamera.orthographicSize - scroll * zoomSpeedMouse, minSize, maxSize);
             Vector3 mouseAfter = mapCamera.ScreenToWorldPoint(Input.mousePosition);
             transform.position += (mouseBefore - mouseAfter);
         }
     }
 
-    private void HandleDrag()
+    private void HandleMouseDrag()
     {
         if (Input.GetMouseButtonDown(0))
             dragOrigin = mapCamera.ScreenToWorldPoint(Input.mousePosition);
 
         if (Input.GetMouseButton(0))
         {
-            Vector3 difference = dragOrigin - mapCamera.ScreenToWorldPoint(Input.mousePosition);
+            Vector3 currentMousePos = mapCamera.ScreenToWorldPoint(Input.mousePosition);
+            Vector3 difference = dragOrigin - currentMousePos;
             transform.position += difference;
+            dragOrigin = mapCamera.ScreenToWorldPoint(Input.mousePosition); // Виправлено баг ривків при зумі
         }
     }
+
+    #endregion
 
     private void ClampCamera()
     {
@@ -90,7 +153,6 @@ public class MapZoom : MonoBehaviour
     {
         if (!enablePixelSnapping || pixelsPerUnit <= 0) return;
 
-        // Округляємо фінальну позицію камери чітко до меж пікселів текстури
         Vector3 snappedPosition = transform.position;
         snappedPosition.x = Mathf.Round(snappedPosition.x * pixelsPerUnit) / pixelsPerUnit;
         snappedPosition.y = Mathf.Round(snappedPosition.y * pixelsPerUnit) / pixelsPerUnit;
