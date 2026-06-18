@@ -11,7 +11,7 @@ public class AbilityManager : MonoBehaviour
         public AbilitySO data;
         public bool isActive;
         public float nextTickTime;
-        public GameObject spawnedFX; // <-- ДОДАНО: зберігає посилання на створений на сцені ефект
+        public GameObject spawnedFX;
 
         public ActiveAbilityState(AbilitySO data)
         {
@@ -75,6 +75,9 @@ public class AbilityManager : MonoBehaviour
             var state = abilityStates.ContainsKey(ability); // Безпечна ініціалізація у Start
             RegisterAbility(ability);
         }
+
+        // 🌟 НОВЕ: Відновлюємо екіпірований скіл після завантаження
+        StartCoroutine(RestoreEquippedAbilityDelayed());
     }
 
     public void RegisterAbility(AbilitySO newAbility)
@@ -121,17 +124,12 @@ public class AbilityManager : MonoBehaviour
         {
             state.nextTickTime = 0f;
 
-            // 🌟 ОНОВЛЕНО: Спавнить візуальний ефект та автоматично підганяє його розмір під радіус скіла
             if (data.visualEffectPrefab != null && state.spawnedFX == null)
             {
-                // Створюємо ефект як дочірній об'єкт гравця (передаємо transform як параметр батька)
                 state.spawnedFX = Instantiate(data.visualEffectPrefab, transform.position, Quaternion.identity, transform);
-                state.spawnedFX.transform.localPosition = Vector3.zero; // Центруємо під гравцем
+                state.spawnedFX.transform.localPosition = Vector3.zero;
 
-                // 📐 АВТО-МАСШТАБУВАННЯ:
-                // Множимо радіус на 2, тому що радіус — це відстань від центра до краю (половина діаметра),
-                // а компонент Transform.localScale змінює загальний габаритний розмір (діаметр) об'єкта.
-                float visualScale = data.radius * 2f * 0.5f; // Якщо вогонь завеликий, зменшуємо вдвічі
+                float visualScale = data.radius * 2f * 0.5f;
                 state.spawnedFX.transform.localScale = new Vector3(visualScale, visualScale, 1f);
             }
         }
@@ -154,31 +152,24 @@ public class AbilityManager : MonoBehaviour
 
                 if (state.nextTickTime <= 0f)
                 {
-                    // Обчислюємо, скільки мани потрібно на один тік аури
                     float costPerTick = data.GetCurrentManaCost() * data.tickRate;
 
                     if (playerMana.TrySpendMana(costPerTick))
                     {
-                        // Мани вистачило — завдаємо шкоди ворогам і скидаємо таймер
                         ApplyAoEDamage(data);
                         state.nextTickTime = data.tickRate;
 
-                        // 🌟 ОНОВЛЕНО: Якщо ефект з якихось причин зник, створюємо його знову та масштабуємо під радіус
                         if (data.visualEffectPrefab != null && state.spawnedFX == null)
                         {
                             state.spawnedFX = Instantiate(data.visualEffectPrefab, transform.position, Quaternion.identity, transform);
                             state.spawnedFX.transform.localPosition = Vector3.zero;
 
-                            // Авто-масштабування під радіус з AbilitySO
                             float visualScale = data.radius * 2f;
                             state.spawnedFX.transform.localScale = new Vector3(visualScale, visualScale, 1f);
                         }
                     }
                     else
                     {
-                        // 🌟 ВИПРАВЛЕННЯ БАГУ СТИСКАННЯ: Якщо мани не вистачило навіть на один тік, 
-                        // ми повністю гасимо ауру через StopToggleableAbility.
-                        // Це акуратно видалить префаб і переведе стан абілки в isActive = false.
                         StopToggleableAbility(data);
                     }
                 }
@@ -217,8 +208,6 @@ public class AbilityManager : MonoBehaviour
                 state.spawnedFX = null;
             }
 
-            // 🌟 ДОДАЙ ЦЕЙ РЯДОК СЮДИ:
-            // Якщо вимкнена абілка — це та, яка зараз винесена на кнопку HUD, гасимо кнопку!
             if (CombatAbilityButton.Instance != null && CombatAbilityButton.Instance.equippedAbility == data)
             {
                 CombatAbilityButton.Instance.ForceUntoggle();
@@ -228,24 +217,62 @@ public class AbilityManager : MonoBehaviour
 
     private void SpawnVisualEffect(AbilitySO data)
     {
-        // Цей метод залишається для Instant скілів (ефекти, які самі знищуються через скрипт руйнування за часом)
         if (data.visualEffectPrefab != null)
         {
             Instantiate(data.visualEffectPrefab, transform.position, Quaternion.identity, transform);
         }
     }
+
     private void OnDrawGizmosSelected()
     {
-        // Якщо гра запущена і є активна абілка, малюємо її радіус
         if (activeAbilities != null)
         {
             foreach (var ability in activeAbilities)
             {
                 if (ability != null && ability.type == AbilityType.Toggleable)
                 {
-                    // Малюємо червоне напівпрозоре коло навколо гравця в редакторі
-                    Gizmos.color = new Color(1f, 0f, 0f, 0.3f); // Червоний колір з альфою 0.3
+                    Gizmos.color = new Color(1f, 0f, 0f, 0.3f);
                     Gizmos.DrawWireSphere(transform.position, ability.radius);
+                }
+            }
+        }
+    }
+
+    // 🌟 НОВЕ: Метод, який SaveManager викликає перед збереженням
+    public string GetEquippedAbilityIDForSave()
+    {
+        if (CombatAbilityButton.Instance != null && CombatAbilityButton.Instance.equippedAbility != null)
+        {
+            return CombatAbilityButton.Instance.equippedAbility.GetSaveKey();
+        }
+        return "";
+    }
+
+    // 🌟 ВИПРАВЛЕНО: Замінено пряме присвоєння на виклик методу EquipAbility()
+    private System.Collections.IEnumerator RestoreEquippedAbilityDelayed()
+    {
+        // Чекаємо кінця кадру, щоб кнопка (CombatAbilityButton) точно встигла ініціалізуватися
+        yield return new WaitForEndOfFrame();
+
+        if (SaveManager.Instance != null && !string.IsNullOrEmpty(SaveManager.Instance.CurrentData.equippedAbilityID))
+        {
+            string savedID = SaveManager.Instance.CurrentData.equippedAbilityID;
+
+            // Завантажуємо всі можливі вміння з Resources, щоб знайти потрібне
+            AbilitySO[] allAbilities = Resources.LoadAll<AbilitySO>("Abilities");
+            foreach (var ability in allAbilities)
+            {
+                if (ability != null && ability.GetSaveKey() == savedID)
+                {
+                    if (CombatAbilityButton.Instance != null)
+                    {
+                        // Було: CombatAbilityButton.Instance.equippedAbility = ability;
+                        // Стало (правильно):
+                        CombatAbilityButton.Instance.EquipAbility(ability);
+
+                        Debug.Log($"<color=cyan>[AbilityManager]</color> Відновлено скіл на кнопці: {ability.abilityName}");
+                    }
+                    break;
                 }
             }
         }

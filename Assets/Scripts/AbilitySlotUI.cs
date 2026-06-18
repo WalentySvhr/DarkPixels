@@ -30,7 +30,9 @@ public class AbilitySlotUI : MonoBehaviour
     [SerializeField] private string missingDescriptionTemplate = "<color=orange>Опис вміння відсутній!</color>";
 
     private AbilitySO targetAbility;
-    private static AbilitySO currentlyEquippedAbility;
+
+    // 🔴 ВИДАЛЕНО: private static AbilitySO currentlyEquippedAbility; 
+    // Більше не зберігаємо стан екіпірування в UI, щоб уникнути розсинхронізації при завантаженні сейвів.
 
     public void Initialize(AbilitySO data)
     {
@@ -69,7 +71,7 @@ public class AbilitySlotUI : MonoBehaviour
                 int displayLevel = targetAbility.currentLevel == 0 ? 1 : targetAbility.currentLevel;
                 int displayDamage = targetAbility.baseDamage + (displayLevel - 1) * targetAbility.damageIncreasePerLevel;
 
-                // ЗМІНЕНО: Додано розрахунок мани для відображення в UI
+                // Розрахунок мани для відображення в UI
                 float displayMana = targetAbility.manaCost + (displayLevel - 1) * targetAbility.manaCostIncreasePerLevel;
 
                 finalDescription = finalDescription.Replace("{name}", targetAbility.abilityName);
@@ -77,7 +79,7 @@ public class AbilitySlotUI : MonoBehaviour
                 finalDescription = finalDescription.Replace("{damage}", displayDamage.ToString());
                 finalDescription = finalDescription.Replace("{radius}", targetAbility.radius.ToString());
 
-                // ЗМІНЕНО: Додано обробку нових тегів {mana} та {price}
+                // Обробка нових тегів {mana} та {price}
                 finalDescription = finalDescription.Replace("{mana}", displayMana.ToString());
                 finalDescription = finalDescription.Replace("{price}", targetAbility.GetUpgradeCost().ToString());
             }
@@ -108,7 +110,8 @@ public class AbilitySlotUI : MonoBehaviour
             if (skillIconButton != null) skillIconButton.interactable = false;
             if (equippedOverlay != null) equippedOverlay.gameObject.SetActive(false);
         }
-        else if (currentlyEquippedAbility == targetAbility)
+        // 🌟 ОНОВЛЕНО: Перевіряємо безпосередньо через єдине джерело правди — CombatAbilityButton
+        else if (CombatAbilityButton.Instance != null && CombatAbilityButton.Instance.equippedAbility == targetAbility)
         {
             skillIcon.color = equippedColor;
             if (skillIconButton != null) skillIconButton.interactable = true;
@@ -149,19 +152,22 @@ public class AbilitySlotUI : MonoBehaviour
         {
             if (CombatAbilityButton.Instance != null)
             {
-                if (currentlyEquippedAbility == targetAbility)
+                // 🌟 ОНОВЛЕНО: Керуємо екіпіруванням безпосередньо через CombatAbilityButton
+                if (CombatAbilityButton.Instance.equippedAbility == targetAbility)
                 {
-                    currentlyEquippedAbility = null;
-                    CombatAbilityButton.Instance.EquipAbility(null);
+                    CombatAbilityButton.Instance.EquipAbility(null); // Знімаємо магію, якщо клікнули по вже активній
                 }
                 else
                 {
-                    currentlyEquippedAbility = targetAbility;
-                    CombatAbilityButton.Instance.EquipAbility(targetAbility);
+                    CombatAbilityButton.Instance.EquipAbility(targetAbility); // Екіпіруємо нову
                 }
 
+                // Оновлюємо візуальний вигляд усіх слотів у меню магії
                 var allSlots = transform.parent.GetComponentsInChildren<AbilitySlotUI>();
-                foreach (var slot in allSlots) slot.UpdateSlotVisualState();
+                foreach (var slot in allSlots)
+                {
+                    slot.UpdateSlotVisualState();
+                }
             }
         }
     }

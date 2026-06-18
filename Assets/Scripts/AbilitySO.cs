@@ -14,6 +14,8 @@ public class AbilitySO : ScriptableObject
 
     public Sprite abilityIcon; // Іконка для префабу та UI кнопки
     public AbilityType type;
+    // У твоєму файлі AbilitySO.cs додай поле, якщо його ще немає:
+    public string abilityID; // наприклад: "fire_aura", "dash_instant" тощо
 
     [Header("Економіка (Вартість манни)")]
     [Tooltip("Для Instant — ціна касту. Для Toggleable — ціна в секунду.")]

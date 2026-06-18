@@ -21,6 +21,7 @@ public class GameData
 
     // --- НОВЕ: Список для збереження куплених рівнів магій ---
     public List<AbilitySaveEntry> unlockedAbilities = new List<AbilitySaveEntry>();
+    public string equippedAbilityID; // Збереження ID вміння на кнопці
 
     public string currentQuestID;
     public int questProgress;
@@ -235,7 +236,6 @@ public class SaveManager : MonoBehaviour
         }
 
         // --- НОВЕ: ЗБЕРЕЖЕННЯ РІВНІВ МАГІЙ ---
-        // Завантажуємо всі файли абілок з папки Resources, щоб перевірити їхні поточні рівні
         data.unlockedAbilities.Clear();
         AbilitySO[] allAbilities = Resources.LoadAll<AbilitySO>("Abilities");
         foreach (var ability in allAbilities)
@@ -249,7 +249,17 @@ public class SaveManager : MonoBehaviour
                 });
             }
         }
-        // ------------------------------------
+
+        // 🌟 ОНОВЛЕННЯ: ЗБЕРЕЖЕННЯ ЕКІПІРОВАНОГО СКІЛА НА КНОПЦІ
+        if (AbilityManager.Instance != null)
+        {
+            data.equippedAbilityID = AbilityManager.Instance.GetEquippedAbilityIDForSave();
+        }
+        else
+        {
+            // Якщо менеджер недоступний, залишаємо попереднє значення, щоб не втратити його
+            data.equippedAbilityID = CurrentData.equippedAbilityID;
+        }
 
         if (QuestManager.Instance != null) data = QuestManager.Instance.CaptureQuestState(data);
         if (AdsChecker.Instance != null) data = AdsChecker.Instance.CaptureAdsState(data);
@@ -325,16 +335,14 @@ public class SaveManager : MonoBehaviour
             InventoryManager.Instance.UpdatePetUI();
         }
 
-        // --- ОНОВЛЕНЕ ТА ВИПРАВЛЕНЕ: ЗАВАНТАЖЕННЯ РІВНІВ МАГІЙ ---
+        // --- ЗАВАНТАЖЕННЯ РІВНІВ МАГІЙ ---
         AbilitySO[] allAbilities = Resources.LoadAll<AbilitySO>("Abilities");
         foreach (var ability in allAbilities)
         {
             if (ability != null)
             {
-                // Спочатку жорстко скидаємо в 0, щоб прибрати "сміття" з редактора Unity
                 ability.SetLoadedLevel(0);
 
-                // Шукаємо, чи є в нашому збереженні запис про цю конкретну магію
                 var savedEntry = data.unlockedAbilities.Find(x => x.abilityKey == ability.GetSaveKey());
                 if (savedEntry != null)
                 {
@@ -342,11 +350,9 @@ public class SaveManager : MonoBehaviour
                 }
                 else
                 {
-                    // ВИПРАВЛЕНО: Якщо запису немає (Нова гра) — рівень МАЄ БУТИ 0 (Заблоковано!)
                     ability.SetLoadedLevel(0);
                 }
 
-                // Змушуємо Unity Редактор миттєво оновити інспектор файлу на екрані
 #if UNITY_EDITOR
                 UnityEditor.EditorUtility.SetDirty(ability);
 #endif
@@ -354,10 +360,9 @@ public class SaveManager : MonoBehaviour
         }
 
 #if UNITY_EDITOR
-        // Зберігаємо очищені/оновлені файли на диск в Unity, щоб цифра 3 зникла
         UnityEditor.AssetDatabase.SaveAssets();
 #endif
-        // -------------------------------------------------------
+
         if (QuestManager.Instance != null) QuestManager.Instance.LoadQuestState(data);
         if (AdsChecker.Instance != null) AdsChecker.Instance.LoadAdsState(data);
         if (TowerManager.Instance != null) TowerManager.Instance.LoadTowerState(data);
@@ -391,15 +396,11 @@ public class SaveManager : MonoBehaviour
             string key = "";
             string baseSlotType = "";
 
-            // Старі слоти
             if (slot.isWeaponEquipmentSlot) { key = "Weapon"; baseSlotType = "Weapon"; }
             else if (slot.isAmuletEquipmentSlot) { key = "Amulet"; baseSlotType = "Amulet"; }
             else if (slot.isBeltEquipmentSlot) { key = "Belt"; baseSlotType = "Belt"; }
             else if (slot.isRingEquipmentSlot) { key = $"Ring_{slot.ringSlotIndex}"; baseSlotType = "Ring"; }
             else if (slot.isPetEquipmentSlot) { key = "Pet"; baseSlotType = "Pet"; }
-
-            // === НОВІ СЛОТИ ДЛЯ ШОЛОМА, НАГРУДНИКА, РУКАВИЦЬ ТА ЧЕРЕВИКІВ ===
-            // УВАГА: Перевір, чи саме так називаються ці змінні у твоєму скрипті InventorySlot!
             else if (slot.isHelmetEquipmentSlot) { key = "Helmet"; baseSlotType = "Helmet"; }
             else if (slot.isChestplateEquipmentSlot) { key = "Chestplate"; baseSlotType = "Chestplate"; }
             else if (slot.isBracersEquipmentSlot) { key = "Bracers"; baseSlotType = "Bracers"; }
